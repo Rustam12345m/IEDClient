@@ -1,0 +1,63 @@
+/*
+ *  main.cpp
+ *
+ *  Copyright 2023 Rustam Mustafin
+ *
+ *  This file is part of IEDMaster.
+ *
+ *  IEDMaster is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  IEDMaster is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with IEDMaster.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  See COPYING file for the complete license text.
+ * */
+
+#pragma once
+
+#include <QAbstractTableModel>
+
+#include "ied_fs_tree.h"
+
+/*
+ * This class represents the model for TableView which contains information
+ * about files on the IED
+ * */
+class FilesTableModel : public QAbstractTableModel
+{
+	Q_OBJECT
+	enum FS_ModelRole
+	{
+		FS_ROLE_NAME = Qt::UserRole + 1,
+		FS_ROLE_SIZE,
+		FS_ROLE_MTS
+	};
+
+private:
+	Core::FS_Tree&		m_tree;
+
+public:
+	FilesTableModel(QObject *t_parent, Core::FS_Tree &t_tree);
+	~FilesTableModel() override;
+
+	int			rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
+	int			columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
+
+	QHash<int, QByteArray>	roleNames() const override;
+	Qt::ItemFlags			flags(const QModelIndex &t_index) const override;
+
+	QVariant	headerData(int t_section, Qt::Orientation t_orientation,
+							int t_role = Qt::DisplayRole) const;
+	QVariant	data(const QModelIndex &t_index, int role = Qt::DisplayRole) const override;
+
+public slots:
+	void		slotDataUpdated();
+};

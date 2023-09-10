@@ -1,0 +1,210 @@
+/*
+ *  main.qml
+ *
+ *  Copyright 2023 Rustam Mustafin
+ *
+ *  This file is part of IEDMaster.
+ *
+ *  IEDMaster is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  IEDMaster is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with IEDMaster.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  See COPYING file for the complete license text.
+ * */
+
+import QtQuick
+import QtQuick.Controls
+
+Item {
+	signal nextPageSignal(int page)
+
+	Rectangle {
+		color: "lightgray"
+		anchors.fill: parent
+
+		Rectangle {
+			id: rectangle
+			anchors.centerIn: parent
+
+			width: 450
+			height: 250
+			color: "white"
+			border.width: 2
+			smooth: false
+
+			Text {
+				text: qsTr("New connection to IED")
+				x: 150
+				y: 14
+				width: 150
+
+				font.pixelSize: 16
+				font.bold: true
+
+				horizontalAlignment: Text.AlignHCenter
+				verticalAlignment: Text.AlignVCenter
+			}
+
+			Text {
+				text: qsTr("IP address")
+				x: 16
+				y: 67
+				width: 100
+				height: 25
+
+				font.pixelSize: 14
+				horizontalAlignment: Text.AlignRight
+				verticalAlignment: Text.AlignVCenter
+			}
+			Rectangle {
+				x: 135
+				y: 67
+				width: 180
+				height: 25
+				border.width: 1
+
+				TextInput {
+					id: ipAddrInput
+					anchors.fill: parent
+
+					text: qsTr("127.0.0.1")
+					font.pixelSize: 14
+					verticalAlignment: Text.AlignVCenter
+					leftPadding: 5
+					clip: true
+				}
+			}
+
+			Text {
+				x: 16
+				y: 101
+				width: 100
+				height: 25
+				text: qsTr("Port")
+				font.pixelSize: 14
+				horizontalAlignment: Text.AlignRight
+				verticalAlignment: Text.AlignVCenter
+			}
+			Rectangle {
+				x: 135
+				y: 101
+				width: 180
+				height: 25
+				border.width: 1
+
+				TextInput {
+					id: portInput
+					anchors.fill: parent
+
+					text: qsTr("102")
+					font.pixelSize: 14
+					verticalAlignment: Text.AlignVCenter
+					leftPadding: 5
+					clip: true
+				}
+			}
+
+			Button {
+				id: connButton
+				x: 336
+				y: 82
+				height: 25
+
+				text: qsTr("Connect")
+
+				onClicked: {
+					//console.log("QML: Connect to IED is clicked")
+					/*
+					AppCore.testClick()
+					AppCore.passData("Bla bla bla")
+					AppCore.passData(12345)
+					AppCore.passData(3.1415)
+					*/
+
+					globalProgressBar.startLoad()
+					mainPres.connectTo(ipAddrInput.text, portInput.text,
+									tlsSwitcher.checked, userNameInput.text, userPassInput.text)
+					nextPageSignal(SomeTricks.PageInStack.LD_PAGE)
+				}
+			}
+
+			Text {
+				text: qsTr("User")
+				x: 16
+				y: 147
+				width: 100
+				height: 25
+
+				font.pixelSize: 14
+				horizontalAlignment: Text.AlignRight
+				verticalAlignment: Text.AlignVCenter
+			}
+			Rectangle {
+				x: 135
+				y: 147
+				width: 180
+				height: 25
+				border.width: 1
+
+				TextInput {
+					id: userNameInput
+					anchors.fill: parent
+
+					text: qsTr("admin")
+					font.pixelSize: 14
+					verticalAlignment: Text.AlignVCenter
+					leftPadding: 5
+					clip: true
+				}
+			}
+
+			Text {
+				text: qsTr("Password")
+				x: 16
+				y: 182
+				width: 100
+				height: 25
+
+				font.pixelSize: 14
+				horizontalAlignment: Text.AlignRight
+				verticalAlignment: Text.AlignVCenter
+			}
+			Rectangle {
+				x: 135
+				y: 182
+				width: 180
+				height: 25
+				border.width: 1
+
+				TextInput {
+					id: userPassInput
+					anchors.fill: parent
+
+					text: qsTr("pass")
+					font.pixelSize: 14
+					verticalAlignment: Text.AlignVCenter
+					leftPadding: 5
+					clip: true
+					smooth: false
+				}
+			}
+
+			Switch {
+				id: tlsSwitcher
+				x: 334
+				y: 162
+				height: 30
+				text: qsTr("TLS")
+			}
+		}
+	}
+}
