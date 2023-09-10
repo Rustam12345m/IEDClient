@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>Start_Page.qml</file>
+        <file>DS_Page.qml</file>
+        <file>FS_Page.qml</file>
+        <file>LD_Page.qml</file>
+        <file>LN_Page.qml</file>
+        <file>RCB_Page.qml</file>
+        <file>PropertyPanel.qml</file>
+        <file>GlobalProgressBar.qml</file>
+        <file>AboutProgram.qml</file>
+        <file>EventsViewer.qml</file>
+        <file>LN_Table.qml</file>
+        <file>DO_Table.qml</file>
+        <file>TextDelegate.qml</file>
+        <file>FS_Delegate.qml</file>
+        <file>SomeTricks.qml</file>
+    </qresource>
+</RCC>
