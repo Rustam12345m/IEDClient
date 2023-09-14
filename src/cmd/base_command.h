@@ -64,5 +64,5 @@ namespace Core::Cmd
 		void	sigProgress(int t_perc, QString t_msg);
 		void	sigFinished();
 	};
-	typedef std::shared_ptr< IED_BaseCommand >	ptrCMD;
+	typedef QSharedPointer< IED_BaseCommand >	ptrCMD;
 }

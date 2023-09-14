@@ -40,7 +40,7 @@ class LN_TableModel : public QAbstractTableModel
 	};
 
 	Core::IED_Tree&	m_tree;
-	int					m_currentLD = -1; // current index of Logical Device
+	int				m_currentLD = -1; // current index of Logical Device
 
 public:
 	int		getCurrentLD() const {

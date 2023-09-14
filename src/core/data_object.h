@@ -93,7 +93,7 @@ namespace Core
 			m_value = t_value;
 		}
 	};
-	typedef std::shared_ptr< DataAttribute >	ptrDA;
+	typedef QSharedPointer< DataAttribute >	ptrDA;
 
 	/*
 	 * Representation a Data Object of Logical Node
@@ -145,7 +145,7 @@ namespace Core
 			m_ref = t_ref;
 		}
 
-		void		addChild(std::shared_ptr< DataAttribute > t_node) {
+		void		addChild(QSharedPointer< DataAttribute > t_node) {
 			m_child.push_back(t_node);
 
 			if (t_node->name() == "stVal" || t_node->name() == "mag") {
@@ -164,5 +164,5 @@ namespace Core
 
 
 	};
-	typedef std::shared_ptr< DataObject >		ptrDO;
+	typedef QSharedPointer< DataObject >		ptrDO;
 }

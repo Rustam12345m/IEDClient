@@ -36,12 +36,13 @@ Item {
 		id: splitView
 		anchors.fill: parent
 
+		// Delimiter
 		handle: Rectangle {
 			id: handleDelegate
 			implicitWidth: 4
 			implicitHeight: 4
-			color: SplitHandle.pressed ? "black"
-				: (SplitHandle.hovered ? "gray" : "gray")
+			color: SplitHandle.pressed ? "gray" : "lightgray"
+				//: (SplitHandle.hovered ? "gray" : "gray")
 
 			containmentMask: Item {
 				x: (handleDelegate.width - width) / 2
@@ -50,30 +51,31 @@ Item {
 			}
 		}
 
-		// Table of LN
+		// Area for LogicalNodes
 		Rectangle {
 			SplitView.minimumWidth: 300
 			SplitView.fillWidth: false
 			color: "white"
 
+			// Table
 			LN_Table {
 				id: tableLN
 				anchors.fill: parent
 
 				onSigCurrentLNodeChanged: function(t_ld, t_ln) {
-					console.log("DO_Table got signal from LN_Table: ld = ", t_ld, " ln = ", t_ln)
-
+					//console.log("DO_Table got signal from LN_Table: ld = ", t_ld, " ln = ", t_ln)
 					tableDO.updateLNodeIndex(t_ld, t_ln)
 				}
 			}
 		}
 
-		// Table of DO for this LN
+		// Area for DataObjects
 		Rectangle {
 			SplitView.minimumWidth: 100
 			SplitView.fillWidth: true
 			color: "white"
 
+			// Table
 			DO_Table {
 				id: tableDO
 				anchors.fill: parent
@@ -94,12 +96,9 @@ Item {
 		}
 
 		onVisibleChanged: {
-			//console.log("LN_Page: visible changed: " + visible)
 			if (visible) {
-				//console.log("LN_Page: Start update")
 				lnPageTimer.start()
 			} else {
-				//console.log("LN_Page: Stop update")
 				lnPageTimer.stop()
 			}
 		}

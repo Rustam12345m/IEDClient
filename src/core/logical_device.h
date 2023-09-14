@@ -42,7 +42,7 @@ namespace Core
 		{
 		}
 
-		void		addChild(std::shared_ptr< LogicalNode > t_node) {
+		void		addChild(QSharedPointer< LogicalNode > t_node) {
 			m_child.push_back(t_node);
 
 			QString name = t_node->name();
@@ -54,5 +54,5 @@ namespace Core
 			}
 		}
 	};
-	typedef std::shared_ptr< LogicalDevice >	ptrLD;
+	typedef QSharedPointer< LogicalDevice >	ptrLD;
 }

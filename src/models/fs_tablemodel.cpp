@@ -65,7 +65,7 @@ QVariant FilesTableModel::headerData(int t_section, Qt::Orientation t_orientatio
 		break;
 	}
 	}
-	return "HZ_" + QString::number(t_section + 1);
+	return "[ - ]";
 }
 
 QVariant FilesTableModel::data(const QModelIndex &t_index, int t_role) const

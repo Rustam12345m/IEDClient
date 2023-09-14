@@ -37,5 +37,5 @@ namespace Core
 		{
 		}
 	};
-	typedef std::shared_ptr< LogicalNode >		ptrLN;
+	typedef QSharedPointer< LogicalNode >		ptrLN;
 }

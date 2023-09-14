@@ -21,7 +21,7 @@ set(PROJECT_SOURCES
 	src/core/logical_device.h
 	src/core/dataset.h
 	src/core/report_block.h
-	src/core/ied_fs_tree.h
+	src/core/fs_tree.h
 	src/core/ied_tree.h
 	src/core/ied_tree.cpp
 
@@ -88,7 +88,7 @@ configure_file(builder_information.h.in ${CMAKE_SOURCE_DIR}/src/builder_informat
 
 # Qt
 set(Qt6_DIR /opt/Qt/6.5.2/gcc_64/lib/cmake/Qt6/)
-#set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 find_package(Qt6 6 COMPONENTS Core Qml Quick QuickControls2 QuickTemplates2 REQUIRED)

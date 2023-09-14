@@ -46,7 +46,6 @@ Window {
 
 			boundsBehavior: Flickable.StopAtBounds
 			syncView: tableID
-			clip: true
 
 			delegate: Rectangle {
 				implicitWidth: text.implicitWidth + 20
@@ -71,7 +70,6 @@ Window {
 		TableView {
 			id: tableID
 
-			clip: true
 			interactive: true
 			boundsBehavior: Flickable.StopAtBounds
 

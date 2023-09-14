@@ -25,6 +25,7 @@
 
 #include <QString>
 #include <QList>
+#include <QSharedPointer>
 #include <QDebug>
 
 #include <memory>
@@ -35,12 +36,12 @@ namespace Core
 	class FlatenTabRow
 	{
 		QString					m_path;
-		std::shared_ptr<TNode>	m_node;
+		QSharedPointer<TNode>	m_node;
 	public:
 		auto name() const { return m_path; }
 		auto node() { return m_node; }
 
-		FlatenTabRow(const QString &t_path, std::shared_ptr<TNode> &t_node) {
+		FlatenTabRow(const QString &t_path, QSharedPointer<TNode> &t_node) {
 			m_path = t_path;
 			m_node = t_node;
 		}
@@ -51,7 +52,7 @@ namespace Core
 	protected:
 		TNode*		m_parent = nullptr;
 		QString		m_name;
-		QList<std::shared_ptr<TNode>>	m_child;
+		QList<QSharedPointer<TNode>>	m_child;
 
 	public:
 		QString		name() const {
@@ -75,13 +76,13 @@ namespace Core
 		}
 
 		template<typename T>
-		std::shared_ptr< T >		getChildPtr(int t_inx) {
+		QSharedPointer< T >		getChildPtr(int t_inx) {
 			if (t_inx >= 0 && t_inx < m_child.size()) {
-				return std::static_pointer_cast<T>(m_child[t_inx]);
+				return m_child[t_inx].staticCast<T>();
 			}
 			return nullptr;
 		}
-		std::shared_ptr< TNode >	getChildPtr(int t_inx) {
+		QSharedPointer< TNode >	getChildPtr(int t_inx) {
 			if (t_inx >= 0 && t_inx < m_child.size()) {
 				return m_child[t_inx];
 			}
@@ -97,7 +98,7 @@ namespace Core
 		virtual ~TNode() {
 		}
 
-		virtual void		addChild(std::shared_ptr< TNode > t_child) {
+		virtual void		addChild(QSharedPointer< TNode > t_child) {
 			m_child.push_back(t_child);
 		}
 
@@ -113,7 +114,7 @@ namespace Core
 		}
 
 		static void	DFS(const QString &t_prefix, QList<FlatenTabRow> &t_table,
-						const QList<std::shared_ptr<TNode>> &t_graph) {
+						const QList<QSharedPointer<TNode>> &t_graph) {
 			for (auto node : t_graph) {
 				auto &subNode = node->getNodeList();
 				if (subNode.empty()) {
