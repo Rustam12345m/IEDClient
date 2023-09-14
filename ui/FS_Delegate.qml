@@ -56,8 +56,8 @@ Item {
 
 			let idx = tableID.model.index(row, 0);
 			tableID.selectionModel.setCurrentIndex(idx, ItemSelectionModel.Clear
-															| ItemSelectionModel.Select
-															| ItemSelectionModel.Rows);
+														| ItemSelectionModel.Select
+														| ItemSelectionModel.Rows);
 		}
 		onPressAndHold: function(mouse) {
 			if (mouse.source === Qt.MouseEventNotSynthesized) {

@@ -1,7 +1,7 @@
 /*
  *  main.cpp
  *
- *  Copyright 2023-2023 Rustam Mustafin
+ *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDMaster.
  *
@@ -28,7 +28,7 @@
 #include "cmd/cmd_thread.h"
 #include "cmd/lib61850_adapter.h"
 #include "core/ied_tree.h"
-#include "core/ied_fs_tree.h"
+#include "core/fs_tree.h"
 
 /*
  * AppCore -

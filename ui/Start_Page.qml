@@ -24,7 +24,7 @@
 import QtQuick
 import QtQuick.Controls
 
-Item {
+FocusScope {
 	signal nextPageSignal(int page)
 
 	Rectangle {
@@ -72,6 +72,7 @@ Item {
 				height: 25
 				border.width: 1
 
+				// Input box for IP address
 				TextInput {
 					id: ipAddrInput
 					anchors.fill: parent
@@ -81,6 +82,10 @@ Item {
 					verticalAlignment: Text.AlignVCenter
 					leftPadding: 5
 					clip: true
+					focus: true
+
+					KeyNavigation.backtab: connButton
+					KeyNavigation.tab: portInput
 				}
 			}
 
@@ -101,6 +106,7 @@ Item {
 				height: 25
 				border.width: 1
 
+				// Input box for MMS port
 				TextInput {
 					id: portInput
 					anchors.fill: parent
@@ -110,6 +116,9 @@ Item {
 					verticalAlignment: Text.AlignVCenter
 					leftPadding: 5
 					clip: true
+
+					KeyNavigation.backtab: ipAddrInput
+					KeyNavigation.tab: userNameInput
 				}
 			}
 
@@ -122,19 +131,14 @@ Item {
 				text: qsTr("Connect")
 
 				onClicked: {
-					//console.log("QML: Connect to IED is clicked")
-					/*
-					AppCore.testClick()
-					AppCore.passData("Bla bla bla")
-					AppCore.passData(12345)
-					AppCore.passData(3.1415)
-					*/
-
 					globalProgressBar.startLoad()
 					mainPres.connectTo(ipAddrInput.text, portInput.text,
 									tlsSwitcher.checked, userNameInput.text, userPassInput.text)
-					nextPageSignal(SomeTricks.PageInStack.LD_PAGE)
+					nextPageSignal(Enum.Page.LD)
 				}
+
+				KeyNavigation.backtab: tlsSwitcher
+				KeyNavigation.tab: ipAddrInput
 			}
 
 			Text {
@@ -155,6 +159,7 @@ Item {
 				height: 25
 				border.width: 1
 
+				// Input box user name
 				TextInput {
 					id: userNameInput
 					anchors.fill: parent
@@ -164,6 +169,9 @@ Item {
 					verticalAlignment: Text.AlignVCenter
 					leftPadding: 5
 					clip: true
+
+					KeyNavigation.backtab: portInput
+					KeyNavigation.tab: userPassInput
 				}
 			}
 
@@ -185,6 +193,7 @@ Item {
 				height: 25
 				border.width: 1
 
+				// Input box user password
 				TextInput {
 					id: userPassInput
 					anchors.fill: parent
@@ -195,6 +204,9 @@ Item {
 					leftPadding: 5
 					clip: true
 					smooth: false
+
+					KeyNavigation.backtab: userNameInput
+					KeyNavigation.tab: tlsSwitcher
 				}
 			}
 
@@ -204,6 +216,9 @@ Item {
 				y: 162
 				height: 30
 				text: qsTr("TLS")
+
+				KeyNavigation.backtab: userPassInput
+				KeyNavigation.tab: connButton
 			}
 		}
 	}

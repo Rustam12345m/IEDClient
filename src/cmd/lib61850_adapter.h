@@ -60,5 +60,5 @@ namespace Core::Cmd
 
 		int		updateDataObjects(Core::ptrLN t_node) override;
 	};
-	typedef std::shared_ptr< Lib61850 >	ptrIED_Adapter;
+	typedef QSharedPointer< Lib61850 >	ptrIED_Adapter;
 }

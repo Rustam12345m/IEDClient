@@ -38,9 +38,10 @@ Item {
 
 		model: mainPres.filesModel
 		syncView: tableID
-		clip: true
 
 		delegate: Rectangle {
+			property var columnIndex: model.column
+
 			implicitWidth: text.implicitWidth + cellTextMargin
 			implicitHeight: 30
 			color: "#f6f6f6"
@@ -56,6 +57,14 @@ Item {
 				text: model[headerID.textRole]
 				color: "#ff26282a"
 			}
+
+			MouseArea {
+				anchors.fill: parent
+
+				onClicked: function() {
+					console.log("FilesHeader clicked: " + columnIndex)
+				}
+			}
 		}
 	}
 
@@ -68,7 +77,7 @@ Item {
 		anchors.right: parent.right
 		anchors.bottom: parent.bottom
 
-		clip: false
+		focus: false
 		interactive: false
 		boundsBehavior: Flickable.StopAtBounds
 

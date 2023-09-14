@@ -24,12 +24,12 @@
 import QtQuick
 
 Item {
-	enum PageInStack {
-		START_PAGE = 0,
-		LD_PAGE,
-		LN_PAGE,
-		FS_PAGE,
-		RCB_PAGE,
-		DS_PAGE
+	enum Page {
+		START = 0,
+		LD,
+		LN,
+		FS,
+		RCB,
+		DS
 	}
 }

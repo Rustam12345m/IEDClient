@@ -183,7 +183,7 @@ Item {
 					//console.log("Double click on: " + index)
 
 					sigLDeviceChanged(gridView.currentIndex);
-					sigNextPageSignal(SomeTricks.PageInStack.LN_PAGE)
+					sigNextPageSignal(Enum.Page.LN)
 				}
 				onPressAndHold: function(msx) {
 					if (msx.source === Qt.MouseEventNotSynthesized) {
@@ -197,19 +197,19 @@ Item {
 					MenuItem {
 						text: "Logical nodes"
 						onTriggered: {
-							sigNextPageSignal(SomeTricks.PageInStack.LN_PAGE)
+							sigNextPageSignal(Enum.Page.LN)
 						}
 					}
 					MenuItem {
 						text: "Datasets"
 						onTriggered: {
-							sigNextPageSignal(SomeTricks.PageInStack.DS_PAGE)
+							sigNextPageSignal(Enum.Page.DS)
 						}
 					}
 					MenuItem {
 						text: "Report control blocks"
 						onTriggered: {
-							sigNextPageSignal(SomeTricks.PageInStack.RCB_PAGE)
+							sigNextPageSignal(Enum.Page.RCB)
 						}
 					}
 				}

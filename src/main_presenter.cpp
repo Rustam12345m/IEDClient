@@ -1,7 +1,7 @@
 /*
  *  main.cpp
  *
- *  Copyright 2023-2023 Rustam Mustafin
+ *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDMaster.
  *
@@ -41,11 +41,11 @@ MainPresenter::~MainPresenter()
 void MainPresenter::connectTo(const QString &t_ip, int t_port, bool t_tls,
 						const QString &t_name, const QString &t_pass)
 {
-	qDebug() << QString("Backend: ConnectTo %1:%2 %3 %4 %5").arg(t_ip).arg(t_port)
+	qDebug() << QString("Presenter: ConnectTo %1:%2 %3 %4 %5").arg(t_ip).arg(t_port)
 				.arg(t_tls).arg(t_name).arg(t_pass);
 
-	auto cmd = std::make_shared<Core::Cmd::ConnectCmd>(t_ip, t_port, t_tls, t_name,
-														t_pass, m_core.getIEDTree());
+	auto cmd = QSharedPointer<Core::Cmd::ConnectCmd>::create(t_ip, t_port, t_tls, t_name,
+															t_pass, m_core.getIEDTree());
 	putCmdToCore(cmd);
 }
 
@@ -55,20 +55,20 @@ void MainPresenter::disconnectFrom()
 
 void MainPresenter::viewFilesDirectory(const QString &t_path)
 {
-	qDebug() << "Backend: ViewFilesDirectory " + t_path;
+	qDebug() << "Presenter: ViewFilesDirectory " + t_path;
 
-	auto cmd = std::make_shared<Core::Cmd::GetFilelistCmd>(m_core.getFSTree(), t_path);
+	auto cmd = QSharedPointer<Core::Cmd::GetFilelistCmd>::create(m_core.getFSTree(), t_path);
 	putCmdToCore(cmd);
 }
 
 void MainPresenter::updateLNodeData(int t_ldIndex, int t_lnIndex)
 {
-	qDebug() << "Backend: UpdateLNodeData LD = " << t_ldIndex << ", LN = " << t_lnIndex;
+	//qDebug() << "Presenter: UpdateLNodeData LD = " << t_ldIndex << ", LN = " << t_lnIndex;
 	if (t_ldIndex < 0 || t_lnIndex < 0) {
 		return;
 	}
 
-	auto cmd = std::make_shared<Core::Cmd::UpdateLNodeCmd>(m_core.getIEDTree(), t_ldIndex, t_lnIndex);
+	auto cmd = QSharedPointer<Core::Cmd::UpdateLNodeCmd>::create(m_core.getIEDTree(), t_ldIndex, t_lnIndex);
 	putCmdToCore(cmd);
 }
 

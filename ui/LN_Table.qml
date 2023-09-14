@@ -50,10 +50,12 @@ Item {
 			right: parent.right
 		}
 
+		model: mainPres.lnModel
 		syncView: tableID
-		clip: true
 
 		delegate: Rectangle {
+			property var paramModel: model
+
 			implicitWidth: Math.max(textArea.implicitWidth + 10, delegateWidth)
 			implicitHeight: delegateHeight
 
@@ -69,6 +71,34 @@ Item {
 				//font.bold: true
 				text: model[header.textRole]
 				color: "#ff26282a"
+			}
+
+			MouseArea {
+				anchors.fill: parent
+
+				onClicked: function(ev) {
+					console.log("Table header clicked: " + model.column)
+				}
+			}
+
+			Component.onCompleted: {
+				/*
+				console.log()
+				console.log("!!!!!!!     Header delegate     !!!!!!!!");
+				listProperty(paramModel)
+				*/
+			}
+			function listProperty(item)
+			{
+				for (var p in item) {
+					//console.log(p + ": " + item[p]);
+
+					if (typeof item[p] != "function") {
+						if (p != "objectName") {
+							console.log(p + ":" + item[p]);
+						}
+					}
+				}
 			}
 		}
 	}
@@ -87,7 +117,6 @@ Item {
 		//columnSpacing: 1
 		//rowSpacing: 1
 
-		clip: true
 		interactive: true
 		boundsBehavior: Flickable.StopAtBounds
 

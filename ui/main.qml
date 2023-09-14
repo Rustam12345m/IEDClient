@@ -58,6 +58,7 @@ Window {
 		Rectangle {
 			id: menuBarRect
 			
+			z: 100500
 			border.width: 1
 			border.color: "black"
 			color: "lightgray"
@@ -264,11 +265,41 @@ Window {
 
 			// Pages
 			SplitView {
+				id: splitView
 				anchors.fill: parent
+
+				// Delimiter
+				handle: Rectangle {
+					id: handleDelegate
+					implicitWidth: 4
+					implicitHeight: 4
+					color: SplitHandle.pressed ? "gray" : "lightgray"
+						//: (SplitHandle.hovered ? "gray" : "gray")
+
+					containmentMask: Item {
+						x: (handleDelegate.width - width) / 2
+						width: 20
+						height: splitView.height
+					}
+
+					/*
+					MouseArea {
+						anchors.fill: parent
+
+						onDoubleClicked: function(m) {
+							console.log("Delimiter: clicked")
+						}
+						onClicked: function(m) {
+							console.log("Delimiter: clicked")
+						}
+					}
+					*/
+				}
 
 				// Tabs Area
 				Item {
 					id: tabsArea
+					SplitView.preferredWidth: 750
 					SplitView.minimumWidth: 600
 					SplitView.fillWidth: true
 
@@ -286,14 +317,17 @@ Window {
 						currentIndex: tabBar.currentIndex
 
 						Start_Page {
-							onVisibleChanged: {
-								//console.log("ConnectPage visible changed: " + visible)
-							}
+							focus: true
 
+							onVisibleChanged: {
+								if (visible) {
+									focus = true
+								}
+							}
 							onNextPageSignal: function(page) {
 								//console.log("Connect_Page: " + page)
 
-								mainStack.changePageInStack(page)
+								mainStack.changePage(page)
 							}
 						}
 
@@ -301,19 +335,16 @@ Window {
 							id: ldPage
 
 							onVisibleChanged: {
-								//console.log("LogicalDevicePage visible changed: " + visible)
 								if (visible) {
 									//globalProgressBar.startLoad()
 								}
 							}
-
 							onSigNextPageSignal: function(page) {
-								//console.log("LD_Page: " + page)
-								mainStack.changePageInStack(page)
+								//console.log("LD: " + page)
+								mainStack.changePage(page)
 							}
-
 							onSigLDeviceChanged: function(current) {
-								console.log("LN_Page: Current LD changed to " + current)
+								console.log("LN: Current LD changed to " + current)
 								lnPage.updateLDeviceIndex(current)
 							}
 						}
@@ -322,18 +353,17 @@ Window {
 							id: lnPage
 
 							onVisibleChanged: {
-								//console.log("LogicalNodePage visible changed: " + visible)
 								if (visible) {
 									//globalProgressBar.startLoad()
+									propertyPanel.SplitView.preferredWidth = 0
 								}
 							}
 						}
 
 						FS_Page {
 							onVisibleChanged: {
-								//console.log("FileBrowserPage visible changed: " + visible)
 								if (visible) {
-									globalProgressBar.startLoad()
+									//globalProgressBar.startLoad()
 									mainPres.viewFilesDirectory("/")
 								}
 							}
@@ -341,7 +371,6 @@ Window {
 
 						RCB_Page {
 							onVisibleChanged: {
-								//console.log("ReportCBPage visible changed: " + visible)
 								if (visible) {
 									//globalProgressBar.startLoad()
 								}
@@ -350,42 +379,37 @@ Window {
 
 						DS_Page {
 							onVisibleChanged: {
-								//console.log("DataSetsPage visible changed: " + visible)
 								if (visible) {
 									//globalProgressBar.startLoad()
 								}
 							}
 						}
 
-						StackLayout.onIndexChanged: {
-							//console.log("StackLayout Index changed")
-						}
-
-						function changePageInStack(page) {
-							console.log("changePageInStack: new index = " + page)
+						function changePage(page) {
+							console.log("ActivatePage: new index = " + page)
 
 							switch (page) {
-							case SomeTricks.PageInStack.START_PAGE: {
+							case Enum.Page.START: {
 								tabBar.currentIndex = 0;
 								break;
 							}
-							case SomeTricks.PageInStack.LD_PAGE: {
+							case Enum.Page.LD: {
 								tabBar.currentIndex = 1;
 								break;
 							}
-							case SomeTricks.PageInStack.LN_PAGE: {
+							case Enum.Page.LN: {
 								tabBar.currentIndex = 2;
 								break;
 							}
-							case SomeTricks.PageInStack.FS_PAGE: {
+							case Enum.Page.FS: {
 								tabBar.currentIndex = 3;
 								break;
 							}
-							case SomeTricks.PageInStack.DS_PAGE: {
+							case Enum.Page.DS: {
 								tabBar.currentIndex = 4;
 								break;
 							}
-							case SomeTricks.PageInStack.RCB_PAGE: {
+							case Enum.Page.RCB: {
 								tabBar.currentIndex = 5;
 								break;
 							}
@@ -444,6 +468,56 @@ Window {
 					width: 100
 
 					SplitView.fillWidth: false
+					SplitView.preferredWidth: 250
+
+					onWidthChanged: function() {
+						if (width < 10) {
+							width = 0;
+						}
+					}
+				}
+			}
+		}
+
+		Keys.onPressed: function(event) {
+			console.log("Window: Key pressed " + event.key)
+			if (event.key == Qt.Key_F5) {
+				console.log("Update data by F5")
+			}
+
+			// Alt
+			if (event.modifiers & Qt.AltModifier) {
+				switch (event.key) {
+				case Qt.Key_1: {
+					mainStack.changePage(Enum.Page.START)
+					event.accepted = true
+					break;
+				}
+				case Qt.Key_2: {
+					mainStack.changePage(Enum.Page.LD)
+					event.accepted = true
+					break;
+				}
+				case Qt.Key_3: {
+					mainStack.changePage(Enum.Page.LN)
+					event.accepted = true
+					break;
+				}
+				case Qt.Key_4: {
+					mainStack.changePage(Enum.Page.FS)
+					event.accepted = true
+					break;
+				}
+				case Qt.Key_5: {
+					mainStack.changePage(Enum.Page.DS)
+					event.accepted = true
+					break;
+				}
+				case Qt.Key_6: {
+					mainStack.changePage(Enum.Page.RCB)
+					event.accepted = true
+					break;
+				}
 				}
 			}
 		}

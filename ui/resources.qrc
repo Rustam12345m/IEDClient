@@ -15,6 +15,6 @@
         <file>DO_Table.qml</file>
         <file>TextDelegate.qml</file>
         <file>FS_Delegate.qml</file>
-        <file>SomeTricks.qml</file>
+        <file>Enum.qml</file>
     </qresource>
 </RCC>

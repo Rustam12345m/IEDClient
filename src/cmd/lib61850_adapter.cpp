@@ -136,7 +136,7 @@ namespace Core::Cmd
 				QString ldName = QString::fromLocal8Bit((char *)device->data);
 
 				// Found new LD
-				auto ldev = std::make_shared<Core::LogicalDevice>(&t_tree, ldName);
+				auto ldev = QSharedPointer<Core::LogicalDevice>::create(&t_tree, ldName);
 				t_tree.addChild(ldev);
 
 				LinkedList lnodes = IedConnection_getLogicalDeviceDirectory(m_libConn, &retval,
@@ -147,7 +147,7 @@ namespace Core::Cmd
 					while (node != nullptr) {
 						QString name = QString::fromLocal8Bit((char *)node->data);
 
-						auto ln = std::make_shared<Core::LogicalNode>(ldev.get(), name);
+						auto ln = QSharedPointer<Core::LogicalNode>::create(ldev.get(), name);
 						ldev->addChild(ln);
 
 						node = LinkedList_getNext(node); // next Logical Node
@@ -182,7 +182,7 @@ namespace Core::Cmd
 					QString name = QString::fromLocal8Bit((char *)obj->data);
 					QString ref = QString("%1/%2.%3").arg(t_node->parentName(), t_node->name(), name);
 
-					auto fDO = std::make_shared< Core::DataObject >(t_node.get(), name, ref);
+					auto fDO = QSharedPointer<Core::DataObject>::create(t_node.get(), name, ref);
 					t_node->addChild(fDO);
 
 					// Get list of DA for this DO
@@ -197,7 +197,7 @@ namespace Core::Cmd
 							int fcNum = FunctionalConstraint_fromString(fc.toLocal8Bit().data());
 							QString ref = QString("%1/%2.%3.%4").arg(t_node->parentName(), t_node->name(), fDO->name(), name);
 
-							auto fDA = std::make_shared< Core::DataAttribute >(fDO.get(), name, ref, fc, fcNum); // found DA
+							auto fDA = QSharedPointer<Core::DataAttribute>::create(fDO.get(), name, ref, fc, fcNum); // found DA
 							fDO->addChild(fDA);
 
 							attr = LinkedList_getNext(attr);
