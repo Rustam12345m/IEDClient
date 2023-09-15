@@ -27,7 +27,7 @@
 
 #include "cmd/cmd_thread.h"
 #include "cmd/lib61850_adapter.h"
-#include "core/ied_tree.h"
+#include "core/object_tree.h"
 #include "core/fs_tree.h"
 
 /*
@@ -36,27 +36,26 @@
 class AppCore : public QObject
 {
 	Q_OBJECT
-protected:
-	Core::Cmd::Lib61850		m_con;
-	Core::Cmd::CmdThread	m_cmdThread;
-
-	Core::IED_Tree		m_iedTree;
-	Core::FS_Tree		m_fsTree;
-
-public:
-	Core::IED_Tree&		getIEDTree() {
-		return m_iedTree;
-	}
-	Core::FS_Tree&		getFSTree() {
-		return m_fsTree;
-	}
-
 public:
 	AppCore(QObject *t_parent=nullptr);
 	~AppCore();
 
-	void	putCommand(Core::Cmd::ptrCMD t_cmd);
+	Core::ObjectTree&		getObjectTree() {
+		return m_objTree;
+	}
+	Core::FS_Tree&			getFSTree() {
+		return m_fsTree;
+	}
+
+	void		putCommand(Core::Cmd::ptrCMD t_cmd);
 
 signals:
-	void	mySignal(const QString &t_msg);
+	void		mySignal(const QString &t_msg);
+
+protected:
+	Core::ObjectTree		m_objTree;
+	Core::FS_Tree			m_fsTree;
+
+	Core::Cmd::Lib61850		m_con;
+	Core::Cmd::CmdThread	m_cmdThread;
 };

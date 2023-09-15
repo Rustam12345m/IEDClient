@@ -25,7 +25,7 @@
 
 namespace Core::Cmd
 {
-	void GetFilelistCmd::execute(LibInterface &t_con)
+	void GetFileList::execute(LibInterface &t_con)
 	{
 		if (!t_con.isConnected()) {
 			emit sigFinished();
@@ -35,7 +35,7 @@ namespace Core::Cmd
 		emit sigProgress(0, "Send query to device: GetDirectory " + m_path);
 
 		Core::DirOn dir(m_path);
-		int retval = t_con.getFileList(dir);
+		int retval = t_con.getFS_List(dir);
 		if (retval == 0) {
 		}
 

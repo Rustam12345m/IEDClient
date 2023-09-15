@@ -21,31 +21,39 @@
  *  See COPYING file for the complete license text.
  * */
 
-#pragma once
+#include "object_tree.h"
 
-#include <QObject>
-
-#include "logical_device.h"
+#include <QDebug>
 
 namespace Core
 {
-	/*
-	 * Representation a tree available by MMS of an IED
-	 * */
-	class IED_Tree : public QObject, public TNode
+	void ObjectTree::printTree()
 	{
-		Q_OBJECT
-	public:
-		IED_Tree() : TNode(nullptr, "")
-		{
-		}
+		qDebug() << "IED: " << m_name;
 
-		void	print();
-		void	update() {
-			emit sigUpdated();
-		}
+		for (size_t i=0;i<m_child.size();i++) {
+			qDebug() << "  LD: " << m_child[i]->name();
 
-	signals:
-		void	sigUpdated();
-	};
+			auto &lnList = m_child[i]->getChildList();
+			for (size_t j=0;j<lnList.size();j++) {
+				qDebug() << "    LN: " << lnList[j]->name();
+
+				auto &doList = lnList[j]->getChildList();
+				for (size_t k=0;k<doList.size();k++) {
+					qDebug() << "      DO: " << doList[k]->name();
+					qDebug() << "        Table:";
+					for (auto& row : doList[k]->getTable()) {
+						qDebug() << "          " << row.name();
+					}
+
+					/*
+					auto daList = doList[k]->getChildList();
+					for (size_t z=0;z<daList.size();z++) {
+						qDebug() << "				DA: " << daList[z]->name();// << " = " << daList[z]->value();
+					}
+					*/
+				}
+			}
+		}
+	}
 }

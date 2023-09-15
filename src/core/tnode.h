@@ -28,7 +28,7 @@
 #include <QSharedPointer>
 #include <QDebug>
 
-#include <memory>
+#include <functional>
 
 namespace Core
 {
@@ -37,6 +37,7 @@ namespace Core
 	{
 		QString					m_path;
 		QSharedPointer<TNode>	m_node;
+
 	public:
 		auto name() const { return m_path; }
 		auto node() { return m_node; }
@@ -52,7 +53,9 @@ namespace Core
 	protected:
 		TNode*		m_parent = nullptr;
 		QString		m_name;
-		QList<QSharedPointer<TNode>>	m_child;
+		QString 	m_delimetr = "/";
+		QList<QSharedPointer<TNode>>	m_child; // list of children
+		QList<FlatenTabRow> 			m_table;
 
 	public:
 		QString		name() const {
@@ -68,25 +71,37 @@ namespace Core
 			return m_parent;
 		}
 
-		auto&		getNodeList() const {
+		auto& 		getTable() const {
+			return m_table;
+		}
+		auto&		getChildList() const {
 			return m_child;
 		}
-		size_t		getNodeCount() const {
+		size_t		getChildCount() const {
 			return m_child.size();
 		}
 
 		template<typename T>
-		QSharedPointer< T >		getChildPtr(int t_inx) {
+		QSharedPointer< T >		getChild(int t_inx) {
 			if (t_inx >= 0 && t_inx < m_child.size()) {
 				return m_child[t_inx].staticCast<T>();
 			}
 			return nullptr;
 		}
-		QSharedPointer< TNode >	getChildPtr(int t_inx) {
+		QSharedPointer< TNode >	getChild(int t_inx) {
 			if (t_inx >= 0 && t_inx < m_child.size()) {
 				return m_child[t_inx];
 			}
 			return nullptr;
+		}
+
+		QString 	ref(TNode *t_root=nullptr) {
+			// Make full reference to Node in Tree
+			QString path;
+			if (m_parent && (m_parent != t_root)) {
+				path = m_parent->ref(t_root) + m_delimetr;
+			}
+			return path + m_name;
 		}
 
 	public:
@@ -102,25 +117,32 @@ namespace Core
 			m_child.push_back(t_child);
 		}
 
-		virtual size_t		flatten() {
-			QList<FlatenTabRow> table;
-			DFS("[BAZA]", table, m_child);
-
-			qDebug() << "DFS: " << m_name;
-			for (auto &row : table) {
-				qDebug() << "	" << row.name();
-			}
-			return table.size();
+		virtual void 		createTable() {
+			DFS(m_child, this, m_table);
 		}
 
-		static void	DFS(const QString &t_prefix, QList<FlatenTabRow> &t_table,
-						const QList<QSharedPointer<TNode>> &t_graph) {
+		void 				printTable() {
+			qDebug() << "FlattenTable for " << m_name;
+			for (auto &row : m_table) {
+				qDebug() << "	" << row.name();
+			}
+		}
+
+	protected:
+		static void		DFS(const QList<QSharedPointer<TNode>> &t_graph,
+							TNode *t_root, QList<FlatenTabRow> &t_table,
+							std::function<bool(QString)> t_filter = [](QString){ return true; }) {
+
 			for (auto node : t_graph) {
-				auto &subNode = node->getNodeList();
+				if (!t_filter(node->name())) {
+					continue;
+				}
+
+				auto &subNode = node->getChildList();
 				if (subNode.empty()) {
-					t_table.emplaceBack(FlatenTabRow(t_prefix + "/" + node->name(), node));
+					t_table.emplaceBack(FlatenTabRow(node->ref(t_root), node));
 				} else {
-					DFS(t_prefix + "/" + node->name(), t_table, subNode);
+					DFS(subNode, t_root, t_table, t_filter);
 				}
 			}
 		}

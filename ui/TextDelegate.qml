@@ -27,6 +27,7 @@ Item {
 	required property int delegateHeight
 	required property bool selected
 	property alias text: textFild.text
+	property alias textAlign: textFild.horizontalAlignment
 
 	implicitWidth: textFild.implicitWidth + 10
 	implicitHeight: delegateHeight
@@ -39,7 +40,11 @@ Item {
 
 		Text {
 			id: textFild
-			anchors.centerIn: parent
+
+			anchors.fill: parent
+			horizontalAlignment: Text.AlignHCenter
+			verticalAlignment: Text.AlignVCenter
+			leftPadding: 5
 			text: " - "
 		}
 	}

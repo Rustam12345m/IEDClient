@@ -1,7 +1,7 @@
 /*
  *  main.cpp
  *
- *  Copyright 2023-2023 Rustam Mustafin
+ *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDMaster.
  *
@@ -25,7 +25,7 @@
 
 #include <QAbstractTableModel>
 
-#include "ied_tree.h"
+#include "object_tree.h"
 
 class DO_TableModel : public QAbstractTableModel
 {
@@ -41,7 +41,7 @@ class DO_TableModel : public QAbstractTableModel
 		DescRole
 	};
 
-	Core::IED_Tree&	m_tree;
+	Core::ObjectTree&	m_tree;
 	int					m_currentLD = -1; // current index of Logical Device
 	int					m_currentLN = -1; // current index of Logical Node
 
@@ -52,7 +52,7 @@ public:
 	void		setCurrentLN(int t_inx);
 
 public:
-	DO_TableModel(QObject *t_parent, Core::IED_Tree &t_tree);
+	DO_TableModel(QObject *t_parent, Core::ObjectTree &t_tree);
 
 	QVariant headerData(int t_section, Qt::Orientation t_orientation,
 						int t_role = Qt::DisplayRole) const override;

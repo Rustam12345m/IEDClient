@@ -21,33 +21,31 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "ied_tree.h"
+#pragma once
 
-#include <QDebug>
+#include <QObject>
+
+#include "logical_device.h"
 
 namespace Core
 {
-	void IED_Tree::print()
+	/*
+	 * Representation of a tree available by MMS of an IED
+	 * */
+	class ObjectTree : public QObject, public TNode
 	{
-		qDebug() << "IED: " << m_name;
-
-		for (size_t i=0;i<m_child.size();i++) {
-			qDebug() << "	LD: " << m_child[i]->name();
-
-			auto &lnList = m_child[i]->getNodeList();
-			for (size_t j=0;j<lnList.size();j++) {
-				qDebug() << "		LN: " << lnList[j]->name();
-
-				auto &doList = lnList[j]->getNodeList();
-				for (size_t k=0;k<doList.size();k++) {
-					qDebug() << "			DO: " << doList[k]->name();
-
-					auto daList = doList[k]->getNodeList();
-					for (size_t z=0;z<daList.size();z++) {
-						qDebug() << "				DA: " << daList[z]->name();// << " = " << daList[z]->value();
-					}
-				}
-			}
+		Q_OBJECT
+	public:
+		ObjectTree() : TNode(nullptr, "") {
+			m_delimetr = ""; // There isn't a delimetr because it is a top node
 		}
-	}
+
+		void	printTree();
+		void	update() {
+			emit sigUpdated();
+		}
+
+	signals:
+		void	sigUpdated();
+	};
 }

@@ -1,7 +1,7 @@
 /*
  *  main.cpp
  *
- *  Copyright 2023-2023 Rustam Mustafin
+ *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDMaster.
  *
@@ -23,7 +23,7 @@
 
 #include "ld_listmodel.h"
 
-LD_ListModel::LD_ListModel(QObject *t_parent, Core::IED_Tree &t_tree)
+LD_ListModel::LD_ListModel(QObject *t_parent, Core::ObjectTree &t_tree)
 	: QAbstractListModel(t_parent), m_tree{t_tree}
 {
 	connect(&m_tree, SIGNAL(sigUpdated()), this, SLOT(slotDataUpdated()));
@@ -31,12 +31,12 @@ LD_ListModel::LD_ListModel(QObject *t_parent, Core::IED_Tree &t_tree)
 
 int LD_ListModel::rowCount(const QModelIndex &t_index) const
 {
-	return m_tree.getNodeCount();
+	return m_tree.getChildCount();
 }
 
 QVariant LD_ListModel::data(const QModelIndex &t_index, int t_role) const
 {
-	auto ld = m_tree.getChildPtr(t_index.row());
+	auto ld = m_tree.getChild(t_index.row());
 	if (ld) {
 		return ld->name();
 	}

@@ -1,7 +1,7 @@
 /*
  *  main.qml
  *
- *  Copyright 2023-2023 Rustam Mustafin
+ *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDMaster.
  *
@@ -77,7 +77,7 @@ Item {
 	}
 
 	function startLoad() {
-		console.log("ModalProgressBar: startLoad")
+		//console.log("ModalProgressBar: startLoad")
 
 		progressBar.value = 0
 		progressOverlay.visible = true;
@@ -90,7 +90,7 @@ Item {
 	}
 
 	function finishLoad() {
-		console.log("ModalProgressBar: finishLoad")
+		//console.log("ModalProgressBar: finishLoad")
 
 		progressOverlay.visible = false;
 		parent.enabled = true;

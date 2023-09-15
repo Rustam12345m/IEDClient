@@ -25,7 +25,7 @@
 
 #include <QAbstractTableModel>
 
-#include "ied_tree.h"
+#include "object_tree.h"
 
 class LN_TableModel : public QAbstractTableModel
 {
@@ -39,7 +39,7 @@ class LN_TableModel : public QAbstractTableModel
 		HealthRole
 	};
 
-	Core::IED_Tree&	m_tree;
+	Core::ObjectTree&	m_tree;
 	int				m_currentLD = -1; // current index of Logical Device
 
 public:
@@ -49,7 +49,7 @@ public:
 	void	setCurrentLD(int t_inx);
 
 public:
-	LN_TableModel(QObject *t_parent, Core::IED_Tree &t_tree);
+	LN_TableModel(QObject *t_parent, Core::ObjectTree &t_tree);
 
 	QVariant headerData(int t_section, Qt::Orientation t_orientation,
 						int t_role = Qt::DisplayRole) const override;

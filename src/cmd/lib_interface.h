@@ -25,7 +25,7 @@
 
 #include <QString>
 
-#include "core/ied_tree.h"
+#include "core/object_tree.h"
 #include "core/fs_tree.h"
 
 namespace Core::Cmd
@@ -42,10 +42,11 @@ namespace Core::Cmd
 								const QString &t_name, const QString &t_pass) = 0;
 		virtual void	disconnect() = 0;
 
-		virtual int		getFileList(Core::DirOn &t_dir) = 0;
-		virtual int		getLD_List(Core::IED_Tree &t_tree) = 0;
+		virtual int		getLD_List(Core::ObjectTree &t_tree) = 0;
 		virtual int		getDO_List(Core::ptrLN t_node) = 0;
 
-		virtual int		updateDataObjects(Core::ptrLN t_node) = 0;
+		virtual int		getFS_List(Core::DirOn &t_dir) = 0;
+
+		virtual int		updateDO_List(Core::ptrLN t_node) = 0;
 	};
 }
