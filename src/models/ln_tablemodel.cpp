@@ -23,7 +23,7 @@
 
 #include "ln_tablemodel.h"
 
-LN_TableModel::LN_TableModel(QObject *t_parent, Core::IED_Tree &t_tree)
+LN_TableModel::LN_TableModel(QObject *t_parent, Core::ObjectTree &t_tree)
 	: QAbstractTableModel(t_parent), m_tree{t_tree}
 {
 }
@@ -66,9 +66,9 @@ QHash<int, QByteArray> LN_TableModel::roleNames() const
 
 int LN_TableModel::rowCount(const QModelIndex &t_parent) const
 {
-	auto ld = m_tree.getChildPtr<Core::LogicalDevice>(m_currentLD);
+	auto ld = m_tree.getChild<Core::LogicalDevice>(m_currentLD);
 	if (ld) {
-		return ld->getNodeCount();
+		return ld->getChildCount();
 	}
 	return 0;
 }
@@ -80,9 +80,9 @@ int LN_TableModel::columnCount(const QModelIndex &t_parent) const
 
 QVariant LN_TableModel::data(const QModelIndex &t_index, int t_role) const
 {
-	auto ld = m_tree.getChildPtr<Core::LogicalDevice>(m_currentLD);
+	auto ld = m_tree.getChild<Core::LogicalDevice>(m_currentLD);
 	if (ld) {
-		auto ln = ld->getChildPtr<Core::LogicalNode>(t_index.row());
+		auto ln = ld->getChild<Core::LogicalNode>(t_index.row());
 		if (ln) {
 			switch (t_role) {
 			case NameRole: {

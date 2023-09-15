@@ -1,7 +1,7 @@
 /*
  *  main.cpp
  *
- *  Copyright 2023-2023 Rustam Mustafin
+ *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDMaster.
  *
@@ -63,6 +63,13 @@ namespace Core::Cmd
 	signals:
 		void	sigProgress(int t_perc, QString t_msg);
 		void	sigFinished();
+
+		/*
+		template<typename... Args>
+		static QSharedPointer<ConnectCmd> create(Args&&... args) {
+			return QSharedPointer<ConnectCmd>::create(std::forward<Args>(args)...);
+		}
+		*/
 	};
 	typedef QSharedPointer< IED_BaseCommand >	ptrCMD;
 }

@@ -4,7 +4,7 @@ project(IEDMaster VERSION "1.0.0" LANGUAGES CXX)
 
 set(PROJECT "IEDMaster")
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -22,8 +22,9 @@ set(PROJECT_SOURCES
 	src/core/dataset.h
 	src/core/report_block.h
 	src/core/fs_tree.h
-	src/core/ied_tree.h
-	src/core/ied_tree.cpp
+	src/core/object_tree.h
+	src/core/object_tree.cpp
+	src/core/tnode_factory.h
 
 	src/cmd/base_command.h
 	src/cmd/command_queue.h

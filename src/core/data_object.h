@@ -37,7 +37,7 @@ namespace Core
 	 * DO: SPCSO1, AnIn1
 	 * LN: GGIO1
 	 * */
-	class Attribute: public TNode
+	class SubAttribute: public TNode
 	{
 		QString		m_value;
 
@@ -45,13 +45,15 @@ namespace Core
 		QString		value() const {
 			return m_value;
 		}
+		void 		setValue(const QString &t_value) {
+			m_value = t_value;
+		}
 
 	public:
-		Attribute(TNode *t_parent, const QString &t_name, const QString &t_value)
+		SubAttribute(TNode *t_parent, const QString &t_name)
 			: TNode(t_parent, t_name)
 		{
-			m_name = t_name;
-			m_value = t_value;
+			m_delimetr = "."; // Between DAName and SAName
 		}
 	};
 
@@ -61,15 +63,11 @@ namespace Core
 	 * */
 	class DataAttribute : public TNode
 	{
-		QString		m_ref; // full path in the MMS tree
 		QString		m_fc;
 		int			m_fcNum = -1;
 		QString		m_value;
 
 	public:
-		QString		ref() const {
-			return m_ref;
-		}
 		QString		fc() const {
 			return m_fc;
 		}
@@ -81,19 +79,19 @@ namespace Core
 		}
 
 	public:
-		DataAttribute(TNode *t_parent, const QString &t_name, const QString t_ref,
-					  const QString &t_fc, int t_fcNum) : TNode(t_parent, t_name)
+		DataAttribute(TNode *t_parent, const QString &t_name, const QString &t_fc, int t_fcNum)
+			: TNode(t_parent, t_name)
 		{
-			m_ref = t_ref;
 			m_fc = t_fc;
 			m_fcNum = t_fcNum;
+			m_delimetr = "."; // Between DOName and DAName
 		}
 
 		void		update(const QString &t_value) {
 			m_value = t_value;
 		}
 	};
-	typedef QSharedPointer< DataAttribute >	ptrDA;
+	typedef QSharedPointer< DataAttribute >		ptrDA;
 
 	/*
 	 * Representation a Data Object of Logical Node
@@ -101,18 +99,12 @@ namespace Core
 	 * */
 	class DataObject : public TNode
 	{
-		QString		m_ref; // full path in the MMS tree
-
 		ptrDA		m_value;
 		ptrDA		m_quality;
 		ptrDA		m_timestamp;
 		ptrDA		m_description;
 
 	public:
-		QString		ref() const {
-			return m_ref;
-		}
-
 		QString		getValue() const {
 			if (m_value) {
 				return m_value->value();
@@ -139,10 +131,10 @@ namespace Core
 		}
 
 	public:
-		DataObject(TNode *t_parent, const QString &t_name, const QString &t_ref)
+		DataObject(TNode *t_parent, const QString &t_name)
 			: TNode(t_parent, t_name)
 		{
-			m_ref = t_ref;
+			m_delimetr = "."; // Between LNName and DOName
 		}
 
 		void		addChild(QSharedPointer< DataAttribute > t_node) {
@@ -161,8 +153,6 @@ namespace Core
 				m_description = t_node;
 			}
 		}
-
-
 	};
 	typedef QSharedPointer< DataObject >		ptrDO;
 }

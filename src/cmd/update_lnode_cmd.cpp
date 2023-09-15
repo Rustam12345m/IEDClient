@@ -25,14 +25,14 @@
 
 namespace Core::Cmd
 {
-	void UpdateLNodeCmd::execute(LibInterface &t_con)
+	void UpdateLNode::execute(LibInterface &t_con)
 	{
 		if (t_con.isConnected()) {
-			auto ld = m_tree.getChildPtr<LogicalDevice>(m_ldIndex);
+			auto ld = m_tree.getChild<LogicalDevice>(m_ldIndex);
 			if (ld) {
-				auto ln = ld->getChildPtr<LogicalNode>(m_lnIndex);
+				auto ln = ld->getChild<LogicalNode>(m_lnIndex);
 				if (ln) {
-					t_con.updateDataObjects(ln);
+					t_con.updateDO_List(ln);
 				}
 			}
 		}

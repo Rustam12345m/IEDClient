@@ -41,7 +41,7 @@ Window {
 		repeat: true
 		onTriggered: {
 			tick++
-			statusText.text = Qt.formatDateTime(new Date(), "hh:mm:ss") + " current tick: " + tick
+			statusText.text = Qt.formatDateTime(new Date(), "hh:mm:ss") + ". Uptime: " + tick
 		}
 	}
 

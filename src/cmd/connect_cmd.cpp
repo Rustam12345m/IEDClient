@@ -22,7 +22,7 @@
  * */
 
 #include "connect_cmd.h"
-#include "ied_tree.h"
+#include "object_tree.h"
 
 #include <QThread>
 #include <QDebug>
@@ -52,13 +52,13 @@ namespace Core::Cmd
 			int retval = t_con.getLD_List(m_tree);
 			if (retval == 0) {
 
-				for (size_t i=0;i<m_tree.getNodeCount();i++) {
-					auto ld = m_tree.getChildPtr<LogicalDevice>(i);
+				for (size_t i=0;i<m_tree.getChildCount();i++) {
+					auto ld = m_tree.getChild<LogicalDevice>(i);
 
-					emit sigProgress(50, QString("Received %1 for LD: %2").arg(ld->getNodeCount()).arg(ld->name()));
+					emit sigProgress(50, QString("Received %1 for LD: %2").arg(ld->getChildCount()).arg(ld->name()));
 
-					for (size_t j=0;j<ld->getNodeCount();j++) {
-						auto ln = ld->getChildPtr<LogicalNode>(j);
+					for (size_t j=0;j<ld->getChildCount();j++) {
+						auto ln = ld->getChild<LogicalNode>(j);
 
 						// Get LN's DataObjects
 						retval = t_con.getDO_List(ln);
@@ -66,11 +66,12 @@ namespace Core::Cmd
 						}
 
 						emit sigProgress(50, QString("Found %1 data object for %2/%3")
-												.arg(ln->getNodeCount()).arg(ld->name(), ln->name()));
+												.arg(ln->getChildCount()).arg(ld->name(), ln->name()));
 					}
 				}
 			}
 			m_tree.update();
+			m_tree.printTree();
 
 			emit sigProgress(100, QString("Successfully connected to %1:%2").arg(m_ip).arg(m_port));
 		} else {

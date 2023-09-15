@@ -40,6 +40,7 @@ namespace Core
 	public:
 		LogicalDevice(TNode *t_parent, const QString &t_name) : TNode(t_parent, t_name)
 		{
+			m_delimetr = ""; // There isn't a delimetr between IEDName and LDName
 		}
 
 		void		addChild(QSharedPointer< LogicalNode > t_node) {

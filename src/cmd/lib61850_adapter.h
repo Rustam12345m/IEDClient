@@ -1,7 +1,7 @@
 /*
  *  main.cpp
  *
- *  Copyright 2023-2023 Rustam Mustafin
+ *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDMaster.
  *
@@ -54,11 +54,11 @@ namespace Core::Cmd
 						const QString &t_name, const QString &t_pass) override;
 		void	disconnect() override;
 
-		int		getFileList(Core::DirOn &t_dir) override;
-		int		getLD_List(Core::IED_Tree &t_tree) override;
+		int		getLD_List(Core::ObjectTree &t_tree) override;
 		int		getDO_List(Core::ptrLN t_node) override;
+		int		updateDO_List(Core::ptrLN t_node) override;
 
-		int		updateDataObjects(Core::ptrLN t_node) override;
+		int		getFS_List(Core::DirOn &t_dir) override;
 	};
 	typedef QSharedPointer< Lib61850 >	ptrIED_Adapter;
 }

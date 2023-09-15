@@ -1,7 +1,7 @@
 /*
  *  main.cpp
  *
- *  Copyright 2023-2023 Rustam Mustafin
+ *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDMaster.
  *
@@ -23,7 +23,7 @@
 
 #include "do_tablemodel.h"
 
-DO_TableModel::DO_TableModel(QObject *t_parent, Core::IED_Tree &t_tree)
+DO_TableModel::DO_TableModel(QObject *t_parent, Core::ObjectTree &t_tree)
 	: QAbstractTableModel(t_parent), m_tree{t_tree}
 {
 }
@@ -78,11 +78,12 @@ QHash<int, QByteArray> DO_TableModel::roleNames() const
 
 int DO_TableModel::rowCount(const QModelIndex &t_parent) const
 {
-	auto ld = m_tree.getChildPtr<Core::LogicalDevice>(m_currentLD);
+	auto ld = m_tree.getChild<Core::LogicalDevice>(m_currentLD);
 	if (ld) {
-		auto ln = ld->getChildPtr<Core::LogicalNode>(m_currentLN);
+		auto ln = ld->getChild<Core::LogicalNode>(m_currentLN);
 		if (ln) {
-			return ln->getNodeCount();
+			return ln->getTable().size();
+			//return ln->getChildCount();
 		}
 	}
 	return 0;
@@ -95,11 +96,19 @@ int DO_TableModel::columnCount(const QModelIndex &t_parent) const
 
 QVariant DO_TableModel::data(const QModelIndex &t_index, int t_role) const
 {
-	auto ld = m_tree.getChildPtr<Core::LogicalDevice>(m_currentLD);
+	auto ld = m_tree.getChild<Core::LogicalDevice>(m_currentLD);
 	if (ld) {
-		auto ln = ld->getChildPtr<Core::LogicalNode>(m_currentLN);
+		auto ln = ld->getChild<Core::LogicalNode>(m_currentLN);
 		if (ln) {
-			auto dObj = ln->getChildPtr<Core::DataObject>(t_index.row());
+			auto &doTable = ln->getTable();
+			int row = t_index.row();
+			if (row >= 0 && row < doTable.size()) {
+				if (t_role == NameRole) {
+					return QVariant(doTable[row].name());
+				}
+			}
+			/*
+			auto dObj = ln->getChild<Core::DataObject>(t_index.row());
 			if (dObj) {
 				switch (t_role) {
 				case NameRole: {
@@ -119,6 +128,7 @@ QVariant DO_TableModel::data(const QModelIndex &t_index, int t_role) const
 				}
 				}
 			}
+			*/
 		}
 	}
 	return QVariant(" ? ");

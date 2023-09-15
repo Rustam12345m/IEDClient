@@ -35,6 +35,11 @@ namespace Core
 	public:
 		LogicalNode(TNode *t_parent, const QString &t_name) : TNode(t_parent, t_name)
 		{
+			m_delimetr = "/"; // Between LDName and LNName
+		}
+
+		void 		createTable() {
+			DFS(m_child, this, m_table, [](QString name) { return (name != "q") && (name != "t") && (name != "d"); } );
 		}
 	};
 	typedef QSharedPointer< LogicalNode >		ptrLN;

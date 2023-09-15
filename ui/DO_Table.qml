@@ -153,6 +153,7 @@ Item {
 				delegate: TextDelegate {
 					delegateHeight: defDelegateHeight
 					text: model.name
+					textAlign: Text.AlignLeft
 				}
 			}
 

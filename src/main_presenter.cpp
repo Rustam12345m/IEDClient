@@ -28,9 +28,9 @@ MainPresenter::MainPresenter(AppCore &t_core)
 	m_core(t_core),
 	m_eventsModel(this),
 	m_fsModel(this, m_core.getFSTree()),
-	m_ldModel(this, m_core.getIEDTree()),
-	m_lnModel(this, m_core.getIEDTree()),
-	m_doModel(this, m_core.getIEDTree())
+	m_ldModel(this, m_core.getObjectTree()),
+	m_lnModel(this, m_core.getObjectTree()),
+	m_doModel(this, m_core.getObjectTree())
 {
 }
 
@@ -44,8 +44,8 @@ void MainPresenter::connectTo(const QString &t_ip, int t_port, bool t_tls,
 	qDebug() << QString("Presenter: ConnectTo %1:%2 %3 %4 %5").arg(t_ip).arg(t_port)
 				.arg(t_tls).arg(t_name).arg(t_pass);
 
-	auto cmd = QSharedPointer<Core::Cmd::ConnectCmd>::create(t_ip, t_port, t_tls, t_name,
-															t_pass, m_core.getIEDTree());
+	auto cmd = Core::Cmd::ConnectCmd::create(t_ip, t_port, t_tls, t_name,
+											t_pass, m_core.getObjectTree());
 	putCmdToCore(cmd);
 }
 
@@ -55,20 +55,17 @@ void MainPresenter::disconnectFrom()
 
 void MainPresenter::viewFilesDirectory(const QString &t_path)
 {
-	qDebug() << "Presenter: ViewFilesDirectory " + t_path;
-
-	auto cmd = QSharedPointer<Core::Cmd::GetFilelistCmd>::create(m_core.getFSTree(), t_path);
+	auto cmd = Core::Cmd::GetFileList::create(m_core.getFSTree(), t_path);
 	putCmdToCore(cmd);
 }
 
 void MainPresenter::updateLNodeData(int t_ldIndex, int t_lnIndex)
 {
-	//qDebug() << "Presenter: UpdateLNodeData LD = " << t_ldIndex << ", LN = " << t_lnIndex;
 	if (t_ldIndex < 0 || t_lnIndex < 0) {
 		return;
 	}
 
-	auto cmd = QSharedPointer<Core::Cmd::UpdateLNodeCmd>::create(m_core.getIEDTree(), t_ldIndex, t_lnIndex);
+	auto cmd = Core::Cmd::UpdateLNode::create(m_core.getObjectTree(), t_ldIndex, t_lnIndex);
 	putCmdToCore(cmd);
 }
 

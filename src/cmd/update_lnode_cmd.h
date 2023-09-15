@@ -24,23 +24,28 @@
 #pragma once
 
 #include "base_command.h"
-#include "ied_tree.h"
+#include "object_tree.h"
 
 namespace Core::Cmd
 {
-	class UpdateLNodeCmd : public IED_BaseCommand
+	class UpdateLNode : public IED_BaseCommand
 	{
-		Core::IED_Tree&	m_tree;
+		Core::ObjectTree&	m_tree;
 		int				m_ldIndex = 0;
 		int				m_lnIndex = 0;
 
 	public:
-		UpdateLNodeCmd(Core::IED_Tree &t_tree, int t_ldIndex, int t_lnIndex)
+		UpdateLNode(Core::ObjectTree &t_tree, int t_ldIndex, int t_lnIndex)
 			: IED_BaseCommand(IED_CMD::UPDATE_LN),
 			  m_tree{t_tree}, m_ldIndex{t_ldIndex}, m_lnIndex{t_lnIndex}
 		{
 		}
 
 		void	execute(LibInterface &t_con) override;
+
+		template<typename... Args>
+		static QSharedPointer<UpdateLNode> create(Args&&... args) {
+			return QSharedPointer<UpdateLNode>::create(std::forward<Args>(args)...);
+		}
 	};
 }
