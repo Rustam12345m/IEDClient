@@ -32,7 +32,7 @@ Window {
 	width: 1000
 	height: 650
 	visible: true
-	color: "red"
+	color: "white"
 
 	Timer {
 		property int tick: 0
@@ -41,7 +41,7 @@ Window {
 		repeat: true
 		onTriggered: {
 			tick++
-			statusText.text = Qt.formatDateTime(new Date(), "hh:mm:ss") + ". Uptime: " + tick
+			statusText.text = Qt.formatDateTime(new Date(), "hh:mm:ss") + " Uptime: " + tick
 		}
 	}
 
@@ -146,13 +146,14 @@ Window {
 
 				// ToolBar
 				Item {
+					id: toolBar
 					width: toolBarRow.implicitWidth
 					height: parent.height
 					//anchors.verticalCenter: parent.verticalCenter
 
 					Row {
 						id: toolBarRow
-						anchors.centerIn: parent
+						anchors.fill: parent
 
 						//anchors.horizontalCenter: parent.horizontalCenter
         				//anchors.verticalCenter: parent.verticalCenter
@@ -204,17 +205,44 @@ Window {
 							}
 						}
 						Button {
-							text: "B2"
+							text: "Disconnect"
+							anchors.verticalCenter: parent.verticalCenter
 
 							onClicked: function() {
 								console.log("Clicked: " + text)
 							}
 						}
 						Button {
-							text: "B3"
+							text: "Update"
+							anchors.verticalCenter: parent.verticalCenter
 
 							onClicked: function() {
 								console.log("Clicked: " + text)
+							}
+						}
+						Item {
+							width: 150
+							height: toolBar.height
+
+							Row {
+								anchors.verticalCenter: parent.verticalCenter
+
+								Label {
+									text: "FC: "
+								}
+								ComboBox {
+									width: 150
+									enabled: lnPage.visible
+
+									model: ListModel {
+										ListElement { text: "State(ST, MX)" }
+										ListElement { text: "Control(CO)" }
+										ListElement { text: "Description(DO)" }
+									}
+									onActivated: function(index) {
+										console.log("ComboBox: Activate inx = " + index);
+									}
+								}
 							}
 						}
 					}
@@ -254,7 +282,8 @@ Window {
 
 			//border.width: 1
 			//border.color: "black"
-			color: "lightgray"
+			//color: "lightgray"
+			color: "white"
 
 			anchors {
 				top: menuBarRect.bottom
@@ -263,7 +292,7 @@ Window {
 				bottom: mainBack.bottom
 			}
 
-			// Pages
+			// Pages and Property panel
 			SplitView {
 				id: splitView
 				anchors.fill: parent
@@ -274,26 +303,12 @@ Window {
 					implicitWidth: 4
 					implicitHeight: 4
 					color: SplitHandle.pressed ? "gray" : "lightgray"
-						//: (SplitHandle.hovered ? "gray" : "gray")
 
 					containmentMask: Item {
 						x: (handleDelegate.width - width) / 2
 						width: 20
 						height: splitView.height
 					}
-
-					/*
-					MouseArea {
-						anchors.fill: parent
-
-						onDoubleClicked: function(m) {
-							console.log("Delimiter: clicked")
-						}
-						onClicked: function(m) {
-							console.log("Delimiter: clicked")
-						}
-					}
-					*/
 				}
 
 				// Tabs Area
@@ -462,7 +477,7 @@ Window {
 					}
 				}
 
-				// Properties table
+				// Property panel
 				PropertyPanel {
 					id: propertyPanel
 					width: 100
@@ -471,7 +486,7 @@ Window {
 					SplitView.preferredWidth: 250
 
 					onWidthChanged: function() {
-						if (width < 10) {
+						if (width < 50) {
 							width = 0;
 						}
 					}

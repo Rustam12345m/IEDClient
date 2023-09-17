@@ -28,12 +28,10 @@ import Qt.labs.qmlmodels
 // Table with DataObjects for concrete Logical Node
 Item {
 	readonly property int defDelegateHeight: 30
-	property int currentLDevice: tableID.model.currentLD
-	property int currentLNode: tableID.model.currentLN
 
 	function updateLNodeIndex(t_ld, t_ln) {
-		tableID.model.currentLD = t_ld;
-		tableID.model.currentLN = t_ln;
+		mainPres.currentLD = t_ld;
+		mainPres.currentLN = t_ln;
 	}
 
 	HorizontalHeaderView {
@@ -51,6 +49,10 @@ Item {
 		clip: true
 
 		delegate: Rectangle {
+			property int column: model.column
+            property int row: model.row
+			property int sortOrder: 0
+
 			implicitWidth: text.implicitWidth + 10
 			implicitHeight: defDelegateHeight
 
@@ -66,6 +68,20 @@ Item {
 				//font.bold: true
 				text: model[header.textRole]
 				color: "#ff26282a"
+			}
+			MouseArea {
+				anchors.fill: parent
+
+				onClicked: function(msx) {
+					console.log(`Header column [${parent.column}, ${parent.row}] clicked`)
+
+					tableID.model.sort(parent.column, sortOrder)
+					if (sortOrder == 0) {
+						sortOrder = 1
+					} else {
+						sortOrder = 0
+					}
+				}
 			}
 		}
 	}
@@ -117,8 +133,8 @@ Item {
 		//columnWidthProvider: calcGoodWidthFoColumn
 		columnWidthProvider: function(column) {
 			switch (column) {
-			case 4: {
-				return width - columnWidth(0) - columnWidth(1) - columnWidth(2) - columnWidth(3)
+			case 5: {
+				return width - columnWidth(0) - columnWidth(1) - columnWidth(2) - columnWidth(3) - columnWidth(4)
 			}
 			default: {
 				return Math.max(header.implicitColumnWidth(column), implicitColumnWidth(column))
@@ -131,7 +147,7 @@ Item {
 			model: tableID.model
 
 			onCurrentChanged: {
-				console.log("Select current changed: " + currentIndex)
+				//console.log("Select current changed: " + currentIndex)
 			}
 		}
 
@@ -152,48 +168,57 @@ Item {
 
 				delegate: TextDelegate {
 					delegateHeight: defDelegateHeight
-					text: model.name
 					textAlign: Text.AlignLeft
+					text: model.display
 				}
 			}
 
-			// Value column
 			DelegateChoice {
 				column: 1
 
 				delegate: TextDelegate {
 					delegateHeight: defDelegateHeight
-					text: model.value
+					text: model.display
 				}
 			}
 
-			// Quality column
+			// Value column
 			DelegateChoice {
 				column: 2
 
 				delegate: TextDelegate {
 					delegateHeight: defDelegateHeight
-					text: model.quality
+					text: model.display
 				}
 			}
 
-			// Timestamp column
+			// Quality column
 			DelegateChoice {
 				column: 3
 
 				delegate: TextDelegate {
 					delegateHeight: defDelegateHeight
-					text: model.timestamp
+					text: model.display
 				}
 			}
 
-			// Description column
+			// Timestamp column
 			DelegateChoice {
 				column: 4
 
 				delegate: TextDelegate {
 					delegateHeight: defDelegateHeight
-					text: model.desc
+					text: model.display
+				}
+			}
+
+			// Description column
+			DelegateChoice {
+				column: 5
+
+				delegate: TextDelegate {
+					delegateHeight: defDelegateHeight
+					text: model.display
 				}
 			}
 		}

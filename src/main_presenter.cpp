@@ -30,8 +30,10 @@ MainPresenter::MainPresenter(AppCore &t_core)
 	m_fsModel(this, m_core.getFSTree()),
 	m_ldModel(this, m_core.getObjectTree()),
 	m_lnModel(this, m_core.getObjectTree()),
-	m_doModel(this, m_core.getObjectTree())
+	m_doModel(this, m_core.getObjectTree()),
+	m_sortDOModel(this)
 {
+	m_sortDOModel.setSourceModel(&m_doModel);
 }
 
 MainPresenter::~MainPresenter()

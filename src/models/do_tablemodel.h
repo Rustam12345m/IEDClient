@@ -33,14 +33,6 @@ class DO_TableModel : public QAbstractTableModel
 	Q_PROPERTY(int currentLD READ getCurrentLD WRITE setCurrentLD NOTIFY sigChangedLD)
 	Q_PROPERTY(int currentLN READ getCurrentLN WRITE setCurrentLN NOTIFY sigChangedLN)
 
-	enum Roles {
-		NameRole	= Qt::UserRole + 1,
-		ValueRole,
-		QualityRole,
-		TimestampRole,
-		DescRole
-	};
-
 	Core::ObjectTree&	m_tree;
 	int					m_currentLD = -1; // current index of Logical Device
 	int					m_currentLN = -1; // current index of Logical Node

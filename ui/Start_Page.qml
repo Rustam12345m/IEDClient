@@ -28,8 +28,10 @@ FocusScope {
 	signal nextPageSignal(int page)
 
 	Rectangle {
-		color: "lightgray"
 		anchors.fill: parent
+
+		//color: "lightgray"
+		color: "white"
 
 		Rectangle {
 			id: rectangle
@@ -37,12 +39,14 @@ FocusScope {
 
 			width: 450
 			height: 250
-			color: "white"
+			//color: "white"
+			color: "lightgray"
+
 			border.width: 2
 			smooth: false
 
 			Text {
-				text: qsTr("New connection to IED")
+				text: qsTr("Connection to IED")
 				x: 150
 				y: 14
 				width: 150
@@ -54,6 +58,7 @@ FocusScope {
 				verticalAlignment: Text.AlignVCenter
 			}
 
+			// IP box
 			Text {
 				text: qsTr("IP address")
 				x: 16
@@ -65,63 +70,55 @@ FocusScope {
 				horizontalAlignment: Text.AlignRight
 				verticalAlignment: Text.AlignVCenter
 			}
-			Rectangle {
+			// Input box for IP address
+			TextField {
+				id: ipAddrInput
 				x: 135
 				y: 67
 				width: 180
 				height: 25
-				border.width: 1
 
-				// Input box for IP address
-				TextInput {
-					id: ipAddrInput
-					anchors.fill: parent
+				text: qsTr("127.0.0.1")
+				font.pixelSize: 14
+				verticalAlignment: Text.AlignVCenter
+				leftPadding: 5
+				clip: true
+				focus: true
 
-					text: qsTr("127.0.0.1")
-					font.pixelSize: 14
-					verticalAlignment: Text.AlignVCenter
-					leftPadding: 5
-					clip: true
-					focus: true
-
-					KeyNavigation.backtab: connButton
-					KeyNavigation.tab: portInput
-				}
+				KeyNavigation.backtab: connButton
+				KeyNavigation.tab: portInput
 			}
 
+			// Port of MMS server
 			Text {
 				x: 16
 				y: 101
 				width: 100
 				height: 25
-				text: qsTr("Port")
+				text: qsTr("MMS port")
 				font.pixelSize: 14
 				horizontalAlignment: Text.AlignRight
 				verticalAlignment: Text.AlignVCenter
 			}
-			Rectangle {
+			// Input box for MMS port
+			TextField {
+				id: portInput
 				x: 135
 				y: 101
 				width: 180
 				height: 25
-				border.width: 1
 
-				// Input box for MMS port
-				TextInput {
-					id: portInput
-					anchors.fill: parent
+				text: qsTr("102")
+				font.pixelSize: 14
+				verticalAlignment: Text.AlignVCenter
+				leftPadding: 5
+				clip: true
 
-					text: qsTr("102")
-					font.pixelSize: 14
-					verticalAlignment: Text.AlignVCenter
-					leftPadding: 5
-					clip: true
-
-					KeyNavigation.backtab: ipAddrInput
-					KeyNavigation.tab: userNameInput
-				}
+				KeyNavigation.backtab: ipAddrInput
+				KeyNavigation.tab: tlsSwitcher
 			}
 
+			// Connect
 			Button {
 				id: connButton
 				x: 336
@@ -137,88 +134,65 @@ FocusScope {
 					nextPageSignal(Enum.Page.LD)
 				}
 
-				KeyNavigation.backtab: tlsSwitcher
+				KeyNavigation.backtab: userPassInput
 				KeyNavigation.tab: ipAddrInput
 			}
 
-			Text {
-				text: qsTr("User")
-				x: 16
-				y: 147
-				width: 100
-				height: 25
-
-				font.pixelSize: 14
-				horizontalAlignment: Text.AlignRight
-				verticalAlignment: Text.AlignVCenter
-			}
-			Rectangle {
+			// Input box user name
+			TextField {
+				id: userNameInput
 				x: 135
 				y: 147
 				width: 180
 				height: 25
-				border.width: 1
 
-				// Input box user name
-				TextInput {
-					id: userNameInput
-					anchors.fill: parent
+				placeholderText: "Enter username"
+				placeholderTextColor: "lightgray"
 
-					text: qsTr("admin")
-					font.pixelSize: 14
-					verticalAlignment: Text.AlignVCenter
-					leftPadding: 5
-					clip: true
-
-					KeyNavigation.backtab: portInput
-					KeyNavigation.tab: userPassInput
-				}
-			}
-
-			Text {
-				text: qsTr("Password")
-				x: 16
-				y: 182
-				width: 100
-				height: 25
-
+				text: ""
 				font.pixelSize: 14
-				horizontalAlignment: Text.AlignRight
 				verticalAlignment: Text.AlignVCenter
+				leftPadding: 5
+				clip: true
+
+				KeyNavigation.backtab: tlsSwitcher
+				KeyNavigation.tab: userPassInput
 			}
-			Rectangle {
+
+			// Input box user password
+			TextField {
+				id: userPassInput
+
 				x: 135
 				y: 182
 				width: 180
 				height: 25
-				border.width: 1
 
-				// Input box user password
-				TextInput {
-					id: userPassInput
-					anchors.fill: parent
+				placeholderText: "Enter password"
+				placeholderTextColor: "lightgray"
+				echoMode: TextField.Password
 
-					text: qsTr("pass")
-					font.pixelSize: 14
-					verticalAlignment: Text.AlignVCenter
-					leftPadding: 5
-					clip: true
-					smooth: false
+				//text: qsTr("pass")
+				font.pixelSize: 14
+				verticalAlignment: Text.AlignVCenter
+				leftPadding: 5
+				clip: true
+				smooth: false
 
-					KeyNavigation.backtab: userNameInput
-					KeyNavigation.tab: tlsSwitcher
-				}
+				KeyNavigation.backtab: userNameInput
+				KeyNavigation.tab: connButton
 			}
 
+			// TLS switcher
 			Switch {
 				id: tlsSwitcher
-				x: 334
+				x: 35//334
 				y: 162
 				height: 30
 				text: qsTr("TLS")
 
-				KeyNavigation.backtab: userPassInput
-				KeyNavigation.tab: connButton
+				KeyNavigation.backtab: portInput
+				KeyNavigation.tab: userNameInput
 			}
 		}
 	}

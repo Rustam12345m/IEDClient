@@ -40,6 +40,14 @@ namespace Core
 			m_delimetr = ""; // There isn't a delimetr because it is a top node
 		}
 
+		ptrLN 	getLogicalNode(int t_ld, int t_ln) {
+			auto ld = getChild<Core::LogicalDevice>(t_ld);
+			if (ld) {
+				return ld->getChild<Core::LogicalNode>(t_ln);
+			}
+			return nullptr;
+		}
+
 		void	printTree();
 		void	update() {
 			emit sigUpdated();

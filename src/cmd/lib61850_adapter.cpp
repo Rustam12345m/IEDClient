@@ -34,6 +34,7 @@ extern "C"
 
 namespace Core::Cmd
 {
+	// static functions for this file
 	namespace
 	{
 		std::tuple<QString, QString, int> getFX_fromName(const char *t_data)
@@ -199,14 +200,8 @@ namespace Core::Cmd
 						LinkedList_destroy(daListFC);
 					}
 
-					//doNode->createTable(); // Plain representation of Object
-					//doNode->printTable();
-
-					dObj = LinkedList_getNext(dObj); // next Data Object
+					dObj = LinkedList_getNext(dObj); // next DO
 				}
-
-				t_lnNode->createTable();
-				t_lnNode->printTable();
 			}
 			LinkedList_destroy(doList);
 		}

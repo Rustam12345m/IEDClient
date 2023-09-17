@@ -24,11 +24,12 @@
 #pragma once
 
 #include "data_object.h"
+#include "ln_flat_state.h"
 
 namespace Core
 {
 	/*
-	 * Representation a Logical Node of Logical Device
+	 * Representation a Logical Node
 	 * */
 	class LogicalNode : public TNode
 	{
@@ -38,9 +39,15 @@ namespace Core
 			m_delimetr = "/"; // Between LDName and LNName
 		}
 
-		void 		createTable() {
-			DFS(m_child, this, m_table, [](QString name) { return (name != "q") && (name != "t") && (name != "d"); } );
+		auto& 	getDO_Table() {
+			return m_doTable;
 		}
+		void 	setDO_Table(QSharedPointer<LN_FlatState> t_table) {
+			m_doTable = t_table;
+		}
+
+	protected:
+		QSharedPointer<LN_FlatState>	m_doTable;
 	};
-	typedef QSharedPointer< LogicalNode >		ptrLN;
+	typedef QSharedPointer< LogicalNode >	ptrLN;
 }
