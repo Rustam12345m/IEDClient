@@ -41,17 +41,12 @@ namespace Core
 				auto &doList = lnList[j]->getChildList();
 				for (size_t k=0;k<doList.size();k++) {
 					qDebug() << "      DO: " << doList[k]->name();
-					qDebug() << "        Table:";
-					for (auto& row : doList[k]->getTable()) {
-						qDebug() << "          " << row.name();
-					}
 
-					/*
-					auto daList = doList[k]->getChildList();
-					for (size_t z=0;z<daList.size();z++) {
-						qDebug() << "				DA: " << daList[z]->name();// << " = " << daList[z]->value();
+					for (size_t z=0;z<doList[k]->getChildCount();z++) {
+						auto daAttr = doList[k]->getChild<DataAttribute>(z);
+
+						qDebug() << "        DA: " << daAttr->name() << ", FC = " << daAttr->fc();
 					}
-					*/
 				}
 			}
 		}

@@ -63,6 +63,9 @@ namespace Core::Cmd
 						// Get LN's DataObjects
 						retval = t_con.getDO_List(ln);
 						if (retval == 0) {
+							// Tables
+							auto doTable = LN_FlatBuilder::create(ln);
+							ln->setDO_Table(doTable);
 						}
 
 						emit sigProgress(50, QString("Found %1 data object for %2/%3")
@@ -71,7 +74,7 @@ namespace Core::Cmd
 				}
 			}
 			m_tree.update();
-			m_tree.printTree();
+			//m_tree.printTree();
 
 			emit sigProgress(100, QString("Successfully connected to %1:%2").arg(m_ip).arg(m_port));
 		} else {

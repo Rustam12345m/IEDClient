@@ -16,6 +16,7 @@ set(PROJECT_SOURCES
 	src/main_presenter.cpp
 
 	src/core/tnode.h
+	src/core/data_attribute.h
 	src/core/data_object.h
 	src/core/logical_node.h
 	src/core/logical_device.h
@@ -25,6 +26,9 @@ set(PROJECT_SOURCES
 	src/core/object_tree.h
 	src/core/object_tree.cpp
 	src/core/tnode_factory.h
+
+	src/core/ln_flat_state.h
+	src/core/ln_flat_state.cpp
 
 	src/cmd/base_command.h
 	src/cmd/command_queue.h
@@ -42,6 +46,8 @@ set(PROJECT_SOURCES
 	src/cmd/get_ldlist_cmd.h
 	src/cmd/get_ldlist_cmd.cpp
 
+	src/models/sort_proxy_model.h
+	src/models/sort_proxy_model.cpp
 	src/models/ld_listmodel.h
 	src/models/ld_listmodel.cpp
 	src/models/do_tablemodel.h

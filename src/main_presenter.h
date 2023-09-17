@@ -25,6 +25,7 @@
 
 #include "app_core.h"
 
+#include "models/sort_proxy_model.h"
 #include "models/fs_tablemodel.h"
 #include "models/events_tablemodel.h"
 #include "models/ld_listmodel.h"
@@ -41,9 +42,14 @@ class MainPresenter : public QObject
 	Q_PROPERTY(EventsTableModel* eventsModel READ getEventsModel CONSTANT)
 	Q_PROPERTY(LD_ListModel* ldModel READ getLD_Model CONSTANT)
 	Q_PROPERTY(LN_TableModel* lnModel READ getLN_Model CONSTANT)
-	Q_PROPERTY(DO_TableModel* doModel READ getDO_Model CONSTANT)
+	//Q_PROPERTY(DO_TableModel* doModel READ getDO_Model CONSTANT)
+	Q_PROPERTY(QAbstractItemModel* doModel READ getSortDO_Model CONSTANT)
 
-private:
+	// Current selected
+	Q_PROPERTY(int currentLD READ getCurrentLD WRITE setCurrentLD NOTIFY sigCurrentLD)
+	Q_PROPERTY(int currentLN READ getCurrentLN WRITE setCurrentLN NOTIFY sigCurrentLN)
+
+protected:
 	AppCore&			m_core;
 
 	// Models for Tables in GUI
@@ -52,6 +58,10 @@ private:
 	LD_ListModel		m_ldModel;
 	LN_TableModel		m_lnModel;
 	DO_TableModel		m_doModel;
+	SimpleProxyModel 	m_sortDOModel;
+
+	// Active selected by User
+	int 				m_currentLD = -1, m_currentLN = -1;
 
 public:
 	FilesTableModel*	getFilesModel() {
@@ -69,6 +79,25 @@ public:
 	DO_TableModel*		getDO_Model() {
 		return &m_doModel;
 	}
+	QAbstractItemModel* getSortDO_Model() {
+		return &m_sortDOModel;
+	}
+
+	int 		getCurrentLD() const {
+		return m_currentLD;
+	}
+	void 		setCurrentLD(int t_inx) {
+		m_currentLD = t_inx;
+		//m_lnModel.setCurrentLD(t_inx);
+		m_doModel.setCurrentLD(t_inx);
+	}
+	int 		getCurrentLN() const {
+		return m_currentLN;
+	}
+	void 		setCurrentLN(int t_inx) {
+		m_currentLN = t_inx;
+		m_doModel.setCurrentLN(t_inx);
+	}
 
 public:
 	MainPresenter(AppCore &t_core);
@@ -81,12 +110,14 @@ public:
 	Q_INVOKABLE void viewFilesDirectory(const QString &t_path);
 	Q_INVOKABLE void updateLNodeData(int t_ldIndex, int t_lnIndex);
 
-private:
+protected:
 	void	putCmdToCore(Core::Cmd::ptrCMD t_cmd);
 
 signals:
 	void	sigProgress(int t_perc, QString t_msg);
 	void	sigFinished();
+	void 	sigCurrentLD(int t_inx);
+	void 	sigCurrentLN(int t_inx);
 
 public slots:
 	void	slotCmdProcess(int t_proc, QString t_msg);
