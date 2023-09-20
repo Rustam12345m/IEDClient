@@ -1,5 +1,5 @@
 #!/bin/bash
-# Build script for IEDMaster
+# Build script for IEDClient
 
 # CMake
 # cmake -S rootdir/ -B builddir/

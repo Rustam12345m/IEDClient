@@ -3,20 +3,20 @@
  *
  *  Copyright 2023 Rustam Mustafin
  *
- *  This file is part of IEDMaster.
+ *  This file is part of IEDClient.
  *
- *  IEDMaster is free software: you can redistribute it and/or modify
+ *  IEDClient is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  IEDMaster is distributed in the hope that it will be useful,
+ *  IEDClient is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with IEDMaster.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with IEDClient.  If not, see <http://www.gnu.org/licenses/>.
  *
  *  See COPYING file for the complete license text.
  * */
@@ -208,13 +208,13 @@ namespace Core::Cmd
 		return 0;
 	}
 
-	int Lib61850::updateDO_List(Core::ptrLN t_node)
+	int Lib61850::updateDO_List(Core::ptrLN t_lnNode)
 	{
 		if (isConnected()) {
 			IedClientError retval = IED_ERROR_OK;
 
-			for (size_t i=0;i<t_node->getChildCount();i++) {
-				auto doNode = t_node->getChild< Core::DataObject >(i);
+			for (size_t i=0;i<t_lnNode->getChildCount();i++) {
+				auto doNode = t_lnNode->getChild< Core::DataObject >(i);
 
 				for (size_t j=0;j<doNode->getChildCount();j++) {
 					auto daNode = doNode->getChild< Core::DataAttribute >(j);

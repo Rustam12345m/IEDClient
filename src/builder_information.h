@@ -1,6 +1,6 @@
 #pragma once
 
-#define PROJECT_NAME			"IEDMaster"
+#define PROJECT_NAME			"IEDClient"
 #define PROJECT_VERSION 		"1.0.0"
 #define PROJECT_VERSION_MAJOR 	"1"
 #define PROJECT_VERSION_MINOR 	"0"
