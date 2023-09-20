@@ -21,7 +21,7 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "get_filelist_cmd.h"
+#include "get_filelist_cmd.hpp"
 
 namespace Core::Cmd
 {

@@ -21,7 +21,7 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "fs_tablemodel.h"
+#include "fs_tablemodel.hpp"
 #include <QDebug>
 
 FilesTableModel::FilesTableModel(QObject *t_parent, Core::FS_Tree &t_tree)

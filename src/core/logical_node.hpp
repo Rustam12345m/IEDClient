@@ -23,37 +23,31 @@
 
 #pragma once
 
-#include "logical_node.h"
-#include "dataset.h"
-#include "report_block.h"
+#include "data_object.hpp"
+#include "ln_flat_state.hpp"
 
 namespace Core
 {
 	/*
-	 * Representation a Logical Device of an IED
+	 * Representation a Logical Node
 	 * */
-	class LogicalDevice : public TNode
+	class LogicalNode : public TNode
 	{
-		ptrLN		m_lln0;
-		ptrLN		m_lphd;
-
 	public:
-		LogicalDevice(TNode *t_parent, const QString &t_name) : TNode(t_parent, t_name)
+		LogicalNode(TNode *t_parent, const QString &t_name) : TNode(t_parent, t_name)
 		{
-			m_delimetr = ""; // There isn't a delimetr between IEDName and LDName
+			m_delimetr = "/"; // Between LDName and LNName
 		}
 
-		void		addChild(QSharedPointer< LogicalNode > t_node) {
-			m_child.push_back(t_node);
-
-			QString name = t_node->name();
-			if (name.contains("LLN0")) {
-				m_lln0 = t_node;
-			}
-			else if (name.contains("LPHD")) {
-				m_lphd = t_node;
-			}
+		auto& 	getDO_Table() {
+			return m_doTable;
 		}
+		void 	setDO_Table(QSharedPointer<LN_FlatState> t_table) {
+			m_doTable = t_table;
+		}
+
+	protected:
+		QSharedPointer<LN_FlatState>	m_doTable;
 	};
-	typedef QSharedPointer< LogicalDevice >	ptrLD;
+	typedef QSharedPointer< LogicalNode >	ptrLN;
 }

@@ -23,32 +23,26 @@
 
 #pragma once
 
-#include <QThread>
+#include <QObject>
 
-#include "command_queue.h"
-#include "lib_interface.h"
+#include "dataset.hpp"
 
-// All known commands
-#include "connect_cmd.h"
-#include "get_filelist_cmd.h"
-#include "update_lnode_cmd.h"
-
-namespace Core::Cmd
+namespace Core
 {
-	class CmdThread : public QThread
+	/*
+	 * Representation a ReportControlBlock of LD
+	 * */
+	class ReportBlock : public QObject, public TNode
 	{
 		Q_OBJECT
-	private:
-		CommandQueue<ptrCMD>	m_queue;
-		LibInterface&			m_con;
-
 	public:
-		CmdThread(LibInterface &t_lib);
-		~CmdThread();
+		ReportBlock() : TNode(nullptr, "")
+		{
+		}
 
-		void	putCommand(ptrCMD t_cmd);
+		void	print() {}
 
-	private:
-		void	run();
+	signals:
+		void	sigUpdated();
 	};
 }

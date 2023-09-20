@@ -23,8 +23,8 @@
 
 #pragma once
 
-#include "tnode.h"
-#include "data_attribute.h"
+#include "tnode.hpp"
+#include "data_attribute.hpp"
 
 namespace Core
 {

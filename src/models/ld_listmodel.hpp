@@ -25,7 +25,7 @@
 
 #include <QAbstractListModel>
 
-#include "object_tree.h"
+#include "object_tree.hpp"
 
 class LD_ListModel : public QAbstractListModel
 {

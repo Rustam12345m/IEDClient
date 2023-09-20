@@ -23,37 +23,37 @@
 
 #pragma once
 
-#include <QObject>
-
-#include "logical_device.h"
+#include "logical_node.hpp"
+#include "dataset.hpp"
+#include "report_block.hpp"
 
 namespace Core
 {
 	/*
-	 * Representation of a tree available by MMS of an IED
+	 * Representation a Logical Device of an IED
 	 * */
-	class ObjectTree : public QObject, public TNode
+	class LogicalDevice : public TNode
 	{
-		Q_OBJECT
+		ptrLN		m_lln0;
+		ptrLN		m_lphd;
+
 	public:
-		ObjectTree() : TNode(nullptr, "") {
-			m_delimetr = ""; // There isn't a delimetr because it is a top node
+		LogicalDevice(TNode *t_parent, const QString &t_name) : TNode(t_parent, t_name)
+		{
+			m_delimetr = ""; // There isn't a delimetr between IEDName and LDName
 		}
 
-		ptrLN 	getLogicalNode(int t_ld, int t_ln) {
-			auto ld = getChild<Core::LogicalDevice>(t_ld);
-			if (ld) {
-				return ld->getChild<Core::LogicalNode>(t_ln);
+		void		addChild(QSharedPointer< LogicalNode > t_node) {
+			m_child.push_back(t_node);
+
+			QString name = t_node->name();
+			if (name.contains("LLN0")) {
+				m_lln0 = t_node;
 			}
-			return nullptr;
+			else if (name.contains("LPHD")) {
+				m_lphd = t_node;
+			}
 		}
-
-		void	printTree();
-		void	update() {
-			emit sigUpdated();
-		}
-
-	signals:
-		void	sigUpdated();
 	};
+	typedef QSharedPointer< LogicalDevice >	ptrLD;
 }

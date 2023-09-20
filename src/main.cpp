@@ -25,8 +25,8 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
-#include "app_core.h"
-#include "main_presenter.h"
+#include "app_core.hpp"
+#include "main_presenter.hpp"
 
 int main(int argc, char *argv[])
 {

@@ -25,7 +25,7 @@
 
 #include <QAbstractTableModel>
 
-#include "fs_tree.h"
+#include "fs_tree.hpp"
 
 /*
  * This class represents the model for TableView which contains information

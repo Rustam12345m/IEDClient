@@ -1,5 +1,5 @@
 
-#include "sort_proxy_model.h"
+#include "sort_proxy_model.hpp"
 
 #include <QDebug>
 

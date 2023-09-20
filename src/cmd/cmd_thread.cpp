@@ -21,7 +21,7 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "cmd_thread.h"
+#include "cmd_thread.hpp"
 
 namespace Core::Cmd
 {

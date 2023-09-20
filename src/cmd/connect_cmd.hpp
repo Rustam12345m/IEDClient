@@ -23,29 +23,43 @@
 
 #pragma once
 
-#include "base_command.h"
-#include "object_tree.h"
+#include "base_command.hpp"
 
 namespace Core::Cmd
 {
-	class UpdateLNode : public IED_BaseCommand
+	/*
+	 * This class realizes connecting to IED through pure TCP or TLS
+	 * */
+	class ConnectCmd : public IED_BaseCommand
 	{
+		Q_OBJECT
+
+		QString			m_ip;
+		unsigned		m_port;
+		bool			m_tls;
+		QString			m_user;
+		QString			m_password;
 		Core::ObjectTree&	m_tree;
-		int				m_ldIndex = 0;
-		int				m_lnIndex = 0;
 
 	public:
-		UpdateLNode(Core::ObjectTree &t_tree, int t_ldIndex, int t_lnIndex)
-			: IED_BaseCommand(IED_CMD::UPDATE_LN),
-			  m_tree{t_tree}, m_ldIndex{t_ldIndex}, m_lnIndex{t_lnIndex}
+		ConnectCmd(const QString &t_ip, unsigned t_port, bool t_tls,
+					const QString &t_user, const QString &t_pass,
+					ObjectTree &t_tree)
+				: IED_BaseCommand(IED_CMD::CONNECT),
+				  m_ip(t_ip), m_port(t_port), m_tls(t_tls),
+				  m_user(t_user), m_password(t_pass),
+				  m_tree(t_tree)
 		{
 		}
+		~ConnectCmd() {}
 
 		void	execute(LibInterface &t_con) override;
 
-		template<typename... Args>
-		static QSharedPointer<UpdateLNode> create(Args&&... args) {
-			return QSharedPointer<UpdateLNode>::create(std::forward<Args>(args)...);
+		// Create new command like Builder pattern
+		static QSharedPointer<ConnectCmd> create(const QString &t_ip, unsigned t_port, bool t_tls,
+												const QString &t_user, const QString &t_pass,
+												ObjectTree &t_tree) {
+			return QSharedPointer<ConnectCmd>::create(t_ip, t_port, t_tls, t_user, t_pass, t_tree);
 		}
 	};
 }

@@ -23,30 +23,42 @@
 
 #pragma once
 
-#include <QString>
+#include <memory>
 
-#include "core/object_tree.h"
-#include "core/fs_tree.h"
+#include "lib_interface.hpp"
+
+// Forward declaration
+struct sIedConnection;
 
 namespace Core::Cmd
 {
-	class LibInterface
+	/*
+	 * This class is Adapter for libiec61850 API
+	 * */
+	class Lib61850 : public LibInterface
 	{
+	private:
+		// libiec61850 stuff
+		sIedConnection* m_libConn = nullptr;
+
 	public:
-		virtual ~LibInterface() {}
+		Lib61850() {}
+		~Lib61850() override {}
 
-		virtual bool	isConnected() const = 0;
-		virtual void	printfVersion() const = 0;
+		bool	isConnected() const override {
+			return (m_libConn != nullptr);
+		}
+		void	printfVersion() const override;
 
-		virtual bool	connect(const QString &t_ip, unsigned int t_port, bool t_checked,
-								const QString &t_name, const QString &t_pass) = 0;
-		virtual void	disconnect() = 0;
+		bool	connect(const QString &t_ip, unsigned int t_port, bool t_checked,
+						const QString &t_name, const QString &t_pass) override;
+		void	disconnect() override;
 
-		virtual int		getLD_List(Core::ObjectTree &t_tree) = 0;
-		virtual int		getDO_List(Core::ptrLN t_node) = 0;
+		int		getLD_List(Core::ObjectTree &t_tree) override;
+		int		getDO_List(Core::ptrLN t_node) override;
+		int		updateDO_List(Core::ptrLN t_node) override;
 
-		virtual int		getFS_List(Core::DirOn &t_dir) = 0;
-
-		virtual int		updateDO_List(Core::ptrLN t_node) = 0;
+		int		getFS_List(Core::DirOn &t_dir) override;
 	};
+	typedef QSharedPointer< Lib61850 >	ptrIED_Adapter;
 }

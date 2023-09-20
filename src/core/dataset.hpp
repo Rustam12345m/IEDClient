@@ -23,31 +23,26 @@
 
 #pragma once
 
-#include "data_object.h"
-#include "ln_flat_state.h"
+#include <QObject>
+
+#include "data_object.hpp"
 
 namespace Core
 {
 	/*
-	 * Representation a Logical Node
+	 * Representation a DataSet of LD
 	 * */
-	class LogicalNode : public TNode
+	class Dataset : public QObject, public TNode
 	{
+		Q_OBJECT
 	public:
-		LogicalNode(TNode *t_parent, const QString &t_name) : TNode(t_parent, t_name)
+		Dataset() : TNode(nullptr, "")
 		{
-			m_delimetr = "/"; // Between LDName and LNName
 		}
 
-		auto& 	getDO_Table() {
-			return m_doTable;
-		}
-		void 	setDO_Table(QSharedPointer<LN_FlatState> t_table) {
-			m_doTable = t_table;
-		}
+		void	print() {}
 
-	protected:
-		QSharedPointer<LN_FlatState>	m_doTable;
+	signals:
+		void	sigUpdated();
 	};
-	typedef QSharedPointer< LogicalNode >	ptrLN;
 }

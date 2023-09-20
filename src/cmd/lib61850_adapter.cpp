@@ -21,8 +21,8 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "lib61850_adapter.h"
-#include "tnode_factory.h"
+#include "lib61850_adapter.hpp"
+#include "tnode_factory.hpp"
 
 #include <string>
 #include <QDebug>

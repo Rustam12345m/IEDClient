@@ -21,7 +21,7 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "update_lnode_cmd.h"
+#include "update_lnode_cmd.hpp"
 
 namespace Core::Cmd
 {

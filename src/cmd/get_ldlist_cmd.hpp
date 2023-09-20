@@ -23,26 +23,26 @@
 
 #pragma once
 
-#include <QObject>
+#include "base_command.hpp"
 
-#include "data_object.h"
-
-namespace Core
+namespace Core::Cmd
 {
 	/*
-	 * Representation a DataSet of LD
+	 * This request gets information about Logical Devices from IED:
+	 * 1. All LD with their working status: Mod, Beh, Health
+	 * 2. All LN within each LD with their working status: Mod, Beh, Health
+	 *
 	 * */
-	class Dataset : public QObject, public TNode
+	class UpdateLDList_Cmd : public IED_BaseCommand
 	{
-		Q_OBJECT
 	public:
-		Dataset() : TNode(nullptr, "")
+		UpdateLDList_Cmd() : IED_BaseCommand(IED_CMD::UPDATE_LD)
+		{
+		}
+		~UpdateLDList_Cmd()
 		{
 		}
 
-		void	print() {}
-
-	signals:
-		void	sigUpdated();
+		void		execute(LibInterface &t_con) override;
 	};
 }
