@@ -21,7 +21,7 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "app_core.h"
+#include "app_core.hpp"
 
 #include <QDebug>
 

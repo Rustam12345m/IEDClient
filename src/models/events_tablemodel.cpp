@@ -21,7 +21,7 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "events_tablemodel.h"
+#include "events_tablemodel.hpp"
 
 EventsTableModel::EventsTableModel(QObject *parent) : QAbstractTableModel{parent}
 {

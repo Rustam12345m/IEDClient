@@ -21,8 +21,8 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "ln_flat_state.h"
-#include "logical_node.h"
+#include "ln_flat_state.hpp"
+#include "logical_node.hpp"
 
 namespace Core
 {

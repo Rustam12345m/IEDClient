@@ -21,7 +21,7 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "do_tablemodel.h"
+#include "do_tablemodel.hpp"
 
 DO_TableModel::DO_TableModel(QObject *t_parent, Core::ObjectTree &t_tree)
 	: QAbstractTableModel(t_parent), m_tree{t_tree}

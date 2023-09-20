@@ -23,39 +23,30 @@
 
 #pragma once
 
-#include <QObject>
+#include <QString>
 
-#include "cmd/cmd_thread.h"
-#include "cmd/lib61850_adapter.h"
-#include "core/object_tree.h"
-#include "core/fs_tree.h"
+#include "core/object_tree.hpp"
+#include "core/fs_tree.hpp"
 
-/*
- * AppCore -
- * */
-class AppCore : public QObject
+namespace Core::Cmd
 {
-	Q_OBJECT
-public:
-	AppCore(QObject *t_parent=nullptr);
-	~AppCore();
+	class LibInterface
+	{
+	public:
+		virtual ~LibInterface() {}
 
-	Core::ObjectTree&		getObjectTree() {
-		return m_objTree;
-	}
-	Core::FS_Tree&			getFSTree() {
-		return m_fsTree;
-	}
+		virtual bool	isConnected() const = 0;
+		virtual void	printfVersion() const = 0;
 
-	void		putCommand(Core::Cmd::ptrCMD t_cmd);
+		virtual bool	connect(const QString &t_ip, unsigned int t_port, bool t_checked,
+								const QString &t_name, const QString &t_pass) = 0;
+		virtual void	disconnect() = 0;
 
-signals:
-	void		mySignal(const QString &t_msg);
+		virtual int		getLD_List(Core::ObjectTree &t_tree) = 0;
+		virtual int		getDO_List(Core::ptrLN t_node) = 0;
 
-protected:
-	Core::ObjectTree		m_objTree;
-	Core::FS_Tree			m_fsTree;
+		virtual int		getFS_List(Core::DirOn &t_dir) = 0;
 
-	Core::Cmd::Lib61850		m_con;
-	Core::Cmd::CmdThread	m_cmdThread;
-};
+		virtual int		updateDO_List(Core::ptrLN t_node) = 0;
+	};
+}

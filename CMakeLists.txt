@@ -10,53 +10,53 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(PROJECT_SOURCES
 	src/main.cpp
-	src/app_core.h
+	src/app_core.hpp
 	src/app_core.cpp
-	src/main_presenter.h
+	src/main_presenter.hpp
 	src/main_presenter.cpp
 
-	src/core/tnode.h
-	src/core/data_attribute.h
-	src/core/data_object.h
-	src/core/logical_node.h
-	src/core/logical_device.h
-	src/core/dataset.h
-	src/core/report_block.h
-	src/core/fs_tree.h
-	src/core/object_tree.h
+	src/core/tnode.hpp
+	src/core/data_attribute.hpp
+	src/core/data_object.hpp
+	src/core/logical_node.hpp
+	src/core/logical_device.hpp
+	src/core/dataset.hpp
+	src/core/report_block.hpp
+	src/core/fs_tree.hpp
+	src/core/object_tree.hpp
 	src/core/object_tree.cpp
-	src/core/tnode_factory.h
+	src/core/tnode_factory.hpp
 
-	src/core/ln_flat_state.h
+	src/core/ln_flat_state.hpp
 	src/core/ln_flat_state.cpp
 
-	src/cmd/base_command.h
-	src/cmd/command_queue.h
-	src/cmd/cmd_thread.h
+	src/cmd/base_command.hpp
+	src/cmd/command_queue.hpp
+	src/cmd/cmd_thread.hpp
 	src/cmd/cmd_thread.cpp
-	src/cmd/lib_interface.h
-	src/cmd/lib61850_adapter.h
+	src/cmd/lib_interface.hpp
+	src/cmd/lib61850_adapter.hpp
 	src/cmd/lib61850_adapter.cpp
-	src/cmd/update_lnode_cmd.h
+	src/cmd/update_lnode_cmd.hpp
 	src/cmd/update_lnode_cmd.cpp
-	src/cmd/get_filelist_cmd.h
+	src/cmd/get_filelist_cmd.hpp
 	src/cmd/get_filelist_cmd.cpp
-	src/cmd/connect_cmd.h
+	src/cmd/connect_cmd.hpp
 	src/cmd/connect_cmd.cpp
-	src/cmd/get_ldlist_cmd.h
+	src/cmd/get_ldlist_cmd.hpp
 	src/cmd/get_ldlist_cmd.cpp
 
-	src/models/sort_proxy_model.h
+	src/models/sort_proxy_model.hpp
 	src/models/sort_proxy_model.cpp
-	src/models/ld_listmodel.h
+	src/models/ld_listmodel.hpp
 	src/models/ld_listmodel.cpp
-	src/models/do_tablemodel.h
+	src/models/do_tablemodel.hpp
 	src/models/do_tablemodel.cpp
-	src/models/ln_tablemodel.h
+	src/models/ln_tablemodel.hpp
 	src/models/ln_tablemodel.cpp
-	src/models/fs_tablemodel.h
+	src/models/fs_tablemodel.hpp
 	src/models/fs_tablemodel.cpp
-	src/models/events_tablemodel.h
+	src/models/events_tablemodel.hpp
 	src/models/events_tablemodel.cpp
 
 	ui/resources.qrc
@@ -91,7 +91,7 @@ include_directories(
 )
 
 # Software version and other stub
-configure_file(builder_information.h.in ${CMAKE_SOURCE_DIR}/src/builder_information.h)
+configure_file(builder_information.hpp.in ${CMAKE_SOURCE_DIR}/src/builder_information.hpp)
 
 # Qt
 set(Qt6_DIR /opt/Qt/6.5.2/gcc_64/lib/cmake/Qt6/)

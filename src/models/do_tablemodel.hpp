@@ -25,31 +25,26 @@
 
 #include <QAbstractTableModel>
 
-#include "object_tree.h"
+#include "object_tree.hpp"
 
-class LN_TableModel : public QAbstractTableModel
+class DO_TableModel : public QAbstractTableModel
 {
 	Q_OBJECT
-	Q_PROPERTY(int currentLD READ getCurrentLD WRITE setCurrentLD NOTIFY sigCurrentLD)
-
-	enum Roles {
-		NameRole = Qt::UserRole + 1,
-		ModeRole,
-		BehRole,
-		HealthRole
-	};
+	Q_PROPERTY(int currentLD READ getCurrentLD WRITE setCurrentLD NOTIFY sigChangedLD)
+	Q_PROPERTY(int currentLN READ getCurrentLN WRITE setCurrentLN NOTIFY sigChangedLN)
 
 	Core::ObjectTree&	m_tree;
 	int					m_currentLD = -1; // current index of Logical Device
+	int					m_currentLN = -1; // current index of Logical Node
 
 public:
-	int		getCurrentLD() const {
-		return m_currentLD;
-	}
-	void	setCurrentLD(int t_inx);
+	int			getCurrentLD() const { return m_currentLD; }
+	int			getCurrentLN() const { return m_currentLN; }
+	void		setCurrentLD(int t_inx);
+	void		setCurrentLN(int t_inx);
 
 public:
-	LN_TableModel(QObject *t_parent, Core::ObjectTree &t_tree);
+	DO_TableModel(QObject *t_parent, Core::ObjectTree &t_tree);
 
 	QVariant headerData(int t_section, Qt::Orientation t_orientation,
 						int t_role = Qt::DisplayRole) const override;
@@ -62,5 +57,6 @@ public:
 	QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
 signals:
-	void	sigCurrentLD();
+	void	sigChangedLD(int t_new);
+	void	sigChangedLN(int t_new);
 };

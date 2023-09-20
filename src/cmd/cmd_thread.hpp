@@ -23,33 +23,32 @@
 
 #pragma once
 
-#include "base_command.h"
-#include "fs_tree.h"
+#include <QThread>
+
+#include "command_queue.hpp"
+#include "lib_interface.hpp"
+
+// All known commands
+#include "connect_cmd.hpp"
+#include "get_filelist_cmd.hpp"
+#include "update_lnode_cmd.hpp"
 
 namespace Core::Cmd
 {
-	class GetFileList : public IED_BaseCommand
+	class CmdThread : public QThread
 	{
 		Q_OBJECT
-		QString			m_path;
-		Core::FS_Tree&	m_fsTree;
+	private:
+		CommandQueue<ptrCMD>	m_queue;
+		LibInterface&			m_con;
 
 	public:
-		GetFileList(Core::FS_Tree &t_tree, const QString &t_path)
-			: IED_BaseCommand(IED_CMD::GET_FILELIST),
-			  m_fsTree(t_tree), m_path{t_path} {}
-		~GetFileList() {}
+		CmdThread(LibInterface &t_lib);
+		~CmdThread();
 
-		void		execute(LibInterface &t_con) override;
+		void	putCommand(ptrCMD t_cmd);
 
-		static QSharedPointer<GetFileList> create(Core::FS_Tree &t_tree, const QString &t_path) {
-			return QSharedPointer<GetFileList>::create(t_tree, t_path);
-		}
-		/*
-		template<typename... Args>
-		static QSharedPointer<GetFileList> create(Args&&... args) {
-			return QSharedPointer<GetFileList>::create(std::forward<Args>(args)...);
-		}
-		*/
+	private:
+		void	run();
 	};
 }

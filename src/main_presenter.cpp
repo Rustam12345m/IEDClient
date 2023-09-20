@@ -21,7 +21,7 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "main_presenter.h"
+#include "main_presenter.hpp"
 
 MainPresenter::MainPresenter(AppCore &t_core)
 	: QObject(nullptr),

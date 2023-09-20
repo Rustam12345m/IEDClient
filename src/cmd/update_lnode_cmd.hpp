@@ -23,26 +23,29 @@
 
 #pragma once
 
-#include <QObject>
+#include "base_command.hpp"
+#include "object_tree.hpp"
 
-#include "dataset.h"
-
-namespace Core
+namespace Core::Cmd
 {
-	/*
-	 * Representation a ReportControlBlock of LD
-	 * */
-	class ReportBlock : public QObject, public TNode
+	class UpdateLNode : public IED_BaseCommand
 	{
-		Q_OBJECT
+		Core::ObjectTree&	m_tree;
+		int				m_ldIndex = 0;
+		int				m_lnIndex = 0;
+
 	public:
-		ReportBlock() : TNode(nullptr, "")
+		UpdateLNode(Core::ObjectTree &t_tree, int t_ldIndex, int t_lnIndex)
+			: IED_BaseCommand(IED_CMD::UPDATE_LN),
+			  m_tree{t_tree}, m_ldIndex{t_ldIndex}, m_lnIndex{t_lnIndex}
 		{
 		}
 
-		void	print() {}
+		void	execute(LibInterface &t_con) override;
 
-	signals:
-		void	sigUpdated();
+		template<typename... Args>
+		static QSharedPointer<UpdateLNode> create(Args&&... args) {
+			return QSharedPointer<UpdateLNode>::create(std::forward<Args>(args)...);
+		}
 	};
 }

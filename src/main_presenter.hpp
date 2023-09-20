@@ -23,14 +23,14 @@
 
 #pragma once
 
-#include "app_core.h"
+#include "app_core.hpp"
 
-#include "models/sort_proxy_model.h"
-#include "models/fs_tablemodel.h"
-#include "models/events_tablemodel.h"
-#include "models/ld_listmodel.h"
-#include "models/ln_tablemodel.h"
-#include "models/do_tablemodel.h"
+#include "models/sort_proxy_model.hpp"
+#include "models/fs_tablemodel.hpp"
+#include "models/events_tablemodel.hpp"
+#include "models/ld_listmodel.hpp"
+#include "models/ln_tablemodel.hpp"
+#include "models/do_tablemodel.hpp"
 
 /*
  * Presenter for QML part

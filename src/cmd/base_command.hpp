@@ -23,42 +23,53 @@
 
 #pragma once
 
+#include <QObject>
+
 #include <memory>
 
-#include "lib_interface.h"
-
-// Forward declaration
-struct sIedConnection;
+#include "lib_interface.hpp"
 
 namespace Core::Cmd
 {
-	/*
-	 * This class is Adapter for libiec61850 API
-	 * */
-	class Lib61850 : public LibInterface
+	enum class IED_CMD
 	{
-	private:
-		// libiec61850 stuff
-		sIedConnection* m_libConn = nullptr;
+		UNDEFINED = 0,
+		CONNECT,
+		UPDATE_LD,
+		UPDATE_LN,
+		UPDATE_DIR,
+		GET_FILELIST,
+		GET_FILE,
+		REMOVE_FILE
+	};
+
+	/*
+	 * This is a basic class for all requests to IED through Lib61850_Adapter
+	 * */
+	class IED_BaseCommand : public QObject
+	{
+		Q_OBJECT
+	protected:
+		IED_CMD		m_type = IED_CMD::UNDEFINED;
 
 	public:
-		Lib61850() {}
-		~Lib61850() override {}
+		IED_BaseCommand() = delete;
+		IED_BaseCommand(IED_CMD t_type) : m_type(t_type) {}
+		virtual ~IED_BaseCommand() {}
 
-		bool	isConnected() const override {
-			return (m_libConn != nullptr);
+		virtual void	execute(LibInterface &t_con) {
 		}
-		void	printfVersion() const override;
 
-		bool	connect(const QString &t_ip, unsigned int t_port, bool t_checked,
-						const QString &t_name, const QString &t_pass) override;
-		void	disconnect() override;
+	signals:
+		void	sigProgress(int t_perc, QString t_msg);
+		void	sigFinished();
 
-		int		getLD_List(Core::ObjectTree &t_tree) override;
-		int		getDO_List(Core::ptrLN t_node) override;
-		int		updateDO_List(Core::ptrLN t_node) override;
-
-		int		getFS_List(Core::DirOn &t_dir) override;
+		/*
+		template<typename... Args>
+		static QSharedPointer<ConnectCmd> create(Args&&... args) {
+			return QSharedPointer<ConnectCmd>::create(std::forward<Args>(args)...);
+		}
+		*/
 	};
-	typedef QSharedPointer< Lib61850 >	ptrIED_Adapter;
+	typedef QSharedPointer< IED_BaseCommand >	ptrCMD;
 }

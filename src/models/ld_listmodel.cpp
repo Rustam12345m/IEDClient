@@ -21,7 +21,7 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "ld_listmodel.h"
+#include "ld_listmodel.hpp"
 
 LD_ListModel::LD_ListModel(QObject *t_parent, Core::ObjectTree &t_tree)
 	: QAbstractListModel(t_parent), m_tree{t_tree}

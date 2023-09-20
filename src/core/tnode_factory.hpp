@@ -23,10 +23,10 @@
 
 #include <QSharedPointer>
 
-#include "object_tree.h"
-#include "logical_device.h"
-#include "logical_node.h"
-#include "data_object.h"
+#include "object_tree.hpp"
+#include "logical_device.hpp"
+#include "logical_node.hpp"
+#include "data_object.hpp"
 
 namespace Core
 {

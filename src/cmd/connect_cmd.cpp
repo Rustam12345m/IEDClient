@@ -21,8 +21,8 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "connect_cmd.h"
-#include "object_tree.h"
+#include "connect_cmd.hpp"
+#include "object_tree.hpp"
 
 #include <QThread>
 #include <QDebug>

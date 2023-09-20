@@ -21,34 +21,41 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "object_tree.hpp"
+#pragma once
 
-#include <QDebug>
+#include <QObject>
 
-namespace Core
+#include "cmd/cmd_thread.hpp"
+#include "cmd/lib61850_adapter.hpp"
+#include "core/object_tree.hpp"
+#include "core/fs_tree.hpp"
+
+/*
+ * AppCore -
+ * */
+class AppCore : public QObject
 {
-	void ObjectTree::printTree()
-	{
-		qDebug() << "IED: " << m_name;
+	Q_OBJECT
+public:
+	AppCore(QObject *t_parent=nullptr);
+	~AppCore();
 
-		for (size_t i=0;i<m_child.size();i++) {
-			qDebug() << "  LD: " << m_child[i]->name();
-
-			auto &lnList = m_child[i]->getChildList();
-			for (size_t j=0;j<lnList.size();j++) {
-				qDebug() << "    LN: " << lnList[j]->name();
-
-				auto &doList = lnList[j]->getChildList();
-				for (size_t k=0;k<doList.size();k++) {
-					qDebug() << "      DO: " << doList[k]->name();
-
-					for (size_t z=0;z<doList[k]->getChildCount();z++) {
-						auto daAttr = doList[k]->getChild<DataAttribute>(z);
-
-						qDebug() << "        DA: " << daAttr->name() << ", FC = " << daAttr->fc();
-					}
-				}
-			}
-		}
+	Core::ObjectTree&		getObjectTree() {
+		return m_objTree;
 	}
-}
+	Core::FS_Tree&			getFSTree() {
+		return m_fsTree;
+	}
+
+	void		putCommand(Core::Cmd::ptrCMD t_cmd);
+
+signals:
+	void		mySignal(const QString &t_msg);
+
+protected:
+	Core::ObjectTree		m_objTree;
+	Core::FS_Tree			m_fsTree;
+
+	Core::Cmd::Lib61850		m_con;
+	Core::Cmd::CmdThread	m_cmdThread;
+};

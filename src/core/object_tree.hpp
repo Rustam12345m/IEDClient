@@ -25,51 +25,35 @@
 
 #include <QObject>
 
-#include <memory>
+#include "logical_device.hpp"
 
-#include "lib_interface.h"
-
-namespace Core::Cmd
+namespace Core
 {
-	enum class IED_CMD
-	{
-		UNDEFINED = 0,
-		CONNECT,
-		UPDATE_LD,
-		UPDATE_LN,
-		UPDATE_DIR,
-		GET_FILELIST,
-		GET_FILE,
-		REMOVE_FILE
-	};
-
 	/*
-	 * This is a basic class for all requests to IED through Lib61850_Adapter
+	 * Representation of a tree available by MMS of an IED
 	 * */
-	class IED_BaseCommand : public QObject
+	class ObjectTree : public QObject, public TNode
 	{
 		Q_OBJECT
-	protected:
-		IED_CMD		m_type = IED_CMD::UNDEFINED;
-
 	public:
-		IED_BaseCommand() = delete;
-		IED_BaseCommand(IED_CMD t_type) : m_type(t_type) {}
-		virtual ~IED_BaseCommand() {}
+		ObjectTree() : TNode(nullptr, "") {
+			m_delimetr = ""; // There isn't a delimetr because it is a top node
+		}
 
-		virtual void	execute(LibInterface &t_con) {
+		ptrLN 	getLogicalNode(int t_ld, int t_ln) {
+			auto ld = getChild<Core::LogicalDevice>(t_ld);
+			if (ld) {
+				return ld->getChild<Core::LogicalNode>(t_ln);
+			}
+			return nullptr;
+		}
+
+		void	printTree();
+		void	update() {
+			emit sigUpdated();
 		}
 
 	signals:
-		void	sigProgress(int t_perc, QString t_msg);
-		void	sigFinished();
-
-		/*
-		template<typename... Args>
-		static QSharedPointer<ConnectCmd> create(Args&&... args) {
-			return QSharedPointer<ConnectCmd>::create(std::forward<Args>(args)...);
-		}
-		*/
+		void	sigUpdated();
 	};
-	typedef QSharedPointer< IED_BaseCommand >	ptrCMD;
 }

@@ -23,26 +23,33 @@
 
 #pragma once
 
-#include "base_command.h"
+#include "base_command.hpp"
+#include "fs_tree.hpp"
 
 namespace Core::Cmd
 {
-	/*
-	 * This request gets information about Logical Devices from IED:
-	 * 1. All LD with their working status: Mod, Beh, Health
-	 * 2. All LN within each LD with their working status: Mod, Beh, Health
-	 *
-	 * */
-	class UpdateLDList_Cmd : public IED_BaseCommand
+	class GetFileList : public IED_BaseCommand
 	{
+		Q_OBJECT
+		QString			m_path;
+		Core::FS_Tree&	m_fsTree;
+
 	public:
-		UpdateLDList_Cmd() : IED_BaseCommand(IED_CMD::UPDATE_LD)
-		{
-		}
-		~UpdateLDList_Cmd()
-		{
-		}
+		GetFileList(Core::FS_Tree &t_tree, const QString &t_path)
+			: IED_BaseCommand(IED_CMD::GET_FILELIST),
+			  m_fsTree(t_tree), m_path{t_path} {}
+		~GetFileList() {}
 
 		void		execute(LibInterface &t_con) override;
+
+		static QSharedPointer<GetFileList> create(Core::FS_Tree &t_tree, const QString &t_path) {
+			return QSharedPointer<GetFileList>::create(t_tree, t_path);
+		}
+		/*
+		template<typename... Args>
+		static QSharedPointer<GetFileList> create(Args&&... args) {
+			return QSharedPointer<GetFileList>::create(std::forward<Args>(args)...);
+		}
+		*/
 	};
 }
