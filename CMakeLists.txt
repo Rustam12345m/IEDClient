@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.14)
 
-project(IEDMaster VERSION "1.0.0" LANGUAGES CXX)
+project(IEDClient VERSION "1.0.0" LANGUAGES CXX)
 
-set(PROJECT "IEDMaster")
+set(PROJECT "IEDClient")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -63,7 +63,7 @@ set(PROJECT_SOURCES
 )
 
 # External library - libiec61850
-# IEDMaster's options for 61850
+# IEDClient's options for 61850
 set(BUILD_EXAMPLES CACHE BOOL OFF)
 set(BUILD_PYTHON_BINDINGS CACHE BOOL OFF)
 set(CONFIG_INCLUDE_GOOSE_SUPPORT CACHE BOOL OFF)
@@ -101,14 +101,14 @@ set(CMAKE_AUTORCC ON)
 find_package(Qt6 6 COMPONENTS Core Qml Quick QuickControls2 QuickTemplates2 REQUIRED)
 
 qt6_add_resources(QRC_SOURCE ${CMAKE_SOURCE_DIR}/ui/resources.qrc)
-qt_add_executable(IEDMaster ${PROJECT_SOURCES} ${QRC_SOURCE})
+qt_add_executable(IEDClient ${PROJECT_SOURCES} ${QRC_SOURCE})
 
-target_link_libraries(IEDMaster PRIVATE Qt::Core Qt::Qml Qt::Quick)
-target_link_libraries(IEDMaster PRIVATE iec61850)
+target_link_libraries(IEDClient PRIVATE Qt::Core Qt::Qml Qt::Quick)
+target_link_libraries(IEDClient PRIVATE iec61850)
 
 # Unit-tests
 #enable_testing()
-#add_test(IEDMaster_utests test_version)
+#add_test(IEDClient_utests test_version)
 
 # CPack
-#install(TARGETS IEDMaster RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/bin)
+#install(TARGETS IEDClient RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/bin)
