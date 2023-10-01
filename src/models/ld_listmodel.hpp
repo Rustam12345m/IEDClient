@@ -25,7 +25,7 @@
 
 #include <QAbstractListModel>
 
-#include "object_tree.hpp"
+#include "core/ied_tree.hpp"
 
 class LD_ListModel : public QAbstractListModel
 {
@@ -34,10 +34,10 @@ class LD_ListModel : public QAbstractListModel
 		LD_ROLE_NAME = Qt::UserRole + 1
 	};
 
-	Core::ObjectTree&	m_tree;
+	Core::IED_Tree&	m_tree;
 
 public:
-	LD_ListModel(QObject *t_parent, Core::ObjectTree &t_tree);
+	LD_ListModel(QObject *t_parent, Core::IED_Tree &t_tree);
 
 	int			rowCount(const QModelIndex &t_index = QModelIndex()) const override;
 	QVariant	data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;

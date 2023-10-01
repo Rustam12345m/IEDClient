@@ -23,44 +23,44 @@
 
 #include <QSharedPointer>
 
-#include "object_tree.hpp"
+#include "ied_tree.hpp"
 #include "logical_device.hpp"
 #include "logical_node.hpp"
 #include "data_object.hpp"
 
 namespace Core
 {
-	class TNodeFactory
+	class ItemFactory
 	{
 	public:
 		// Object Tree <- base node for IED Data Object tree
-		static QSharedPointer<ObjectTree>		createObjectTree() {
-			return QSharedPointer<ObjectTree>::create();
+		static QSharedPointer<Item>		createTree() {
+			return QSharedPointer<IED_Tree>::create();
 		}
 
 		// Logical Device
-		static QSharedPointer<LogicalDevice>	createLD(TNode *t_parent, const QString &t_name) {
+		static QSharedPointer<Item>		createLD(Item *t_parent, const QString &t_name) {
 			return QSharedPointer<LogicalDevice>::create(t_parent, t_name);
 		}
 
 		// Logical Node
-		static QSharedPointer<LogicalNode>		createLN(TNode *t_parent, const QString &t_name) {
+		static QSharedPointer<Item>		createLN(Item *t_parent, const QString &t_name) {
 			return QSharedPointer<LogicalNode>::create(t_parent, t_name);
 		}
 
 		// Data Object
-		static QSharedPointer<DataObject>		createDO(TNode *t_parent, const QString &t_name) {
+		static QSharedPointer<Item>		createDO(Item *t_parent, const QString &t_name) {
 			return QSharedPointer<DataObject>::create(t_parent, t_name);
 		}
 
 		// Data Attribute
-		static QSharedPointer<DataAttribute>	createDA(TNode *t_parent, const QString &t_name,
-					  									const QString &t_fc, int t_fcNum) {
+		static QSharedPointer<Item>		createDA(Item *t_parent, const QString &t_name,
+					  							const QString &t_fc, int t_fcNum) {
 			return QSharedPointer<DataAttribute>::create(t_parent, t_name, t_fc, t_fcNum);
 		}
 
 		// Sub Attribute
-		static QSharedPointer<SubAttribute>		createSA(TNode *t_parent, const QString &t_name) {
+		static QSharedPointer<Item>		createSA(Item *t_parent, const QString &t_name) {
 			return QSharedPointer<SubAttribute>::create(t_parent, t_name);
 		}
 	};

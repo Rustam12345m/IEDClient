@@ -25,7 +25,7 @@
 
 #include <QAbstractTableModel>
 
-#include "object_tree.hpp"
+#include "core/ied_tree.hpp"
 
 class DO_TableModel : public QAbstractTableModel
 {
@@ -33,7 +33,7 @@ class DO_TableModel : public QAbstractTableModel
 	Q_PROPERTY(int currentLD READ getCurrentLD WRITE setCurrentLD NOTIFY sigChangedLD)
 	Q_PROPERTY(int currentLN READ getCurrentLN WRITE setCurrentLN NOTIFY sigChangedLN)
 
-	Core::ObjectTree&	m_tree;
+	Core::IED_Tree&	m_tree;
 	int					m_currentLD = -1; // current index of Logical Device
 	int					m_currentLN = -1; // current index of Logical Node
 
@@ -44,7 +44,7 @@ public:
 	void		setCurrentLN(int t_inx);
 
 public:
-	DO_TableModel(QObject *t_parent, Core::ObjectTree &t_tree);
+	DO_TableModel(QObject *t_parent, Core::IED_Tree &t_tree);
 
 	QVariant headerData(int t_section, Qt::Orientation t_orientation,
 						int t_role = Qt::DisplayRole) const override;

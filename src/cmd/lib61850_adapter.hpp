@@ -54,7 +54,7 @@ namespace Core::Cmd
 						const QString &t_name, const QString &t_pass) override;
 		void	disconnect() override;
 
-		int		getLD_List(Core::ObjectTree &t_tree) override;
+		int		getLD_List(Core::IED_Tree &t_tree) override;
 		int		getDO_List(Core::ptrLN t_node) override;
 		int		updateDO_List(Core::ptrLN t_node) override;
 

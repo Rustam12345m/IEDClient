@@ -23,7 +23,7 @@
 
 #include "ld_listmodel.hpp"
 
-LD_ListModel::LD_ListModel(QObject *t_parent, Core::ObjectTree &t_tree)
+LD_ListModel::LD_ListModel(QObject *t_parent, Core::IED_Tree &t_tree)
 	: QAbstractListModel(t_parent), m_tree{t_tree}
 {
 	connect(&m_tree, SIGNAL(sigUpdated()), this, SLOT(slotDataUpdated()));

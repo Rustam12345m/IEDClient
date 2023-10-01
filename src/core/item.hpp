@@ -26,20 +26,11 @@
 #include <QString>
 #include <QList>
 #include <QSharedPointer>
-#include <QDebug>
-
-#include <functional>
 
 namespace Core
 {
-	class TNode
+	class Item
 	{
-	protected:
-		TNode*		m_parent = nullptr;
-		QString		m_name;
-		QString 	m_delimetr = "/";
-		QList<QSharedPointer<TNode>>	m_child; // list of children
-
 	public:
 		QString		name() const {
 			return m_name;
@@ -50,7 +41,7 @@ namespace Core
 			}
 			return "";
 		}
-		TNode*		parentNode() const {
+		Item*		parenItem() const {
 			return m_parent;
 		}
 
@@ -63,20 +54,20 @@ namespace Core
 
 		template<typename T>
 		QSharedPointer< T >		getChild(int t_inx) {
-			if (t_inx >= 0 && t_inx < m_child.size()) {
+			if ((t_inx >= 0) && (t_inx < m_child.size())) {
 				return m_child[t_inx].staticCast<T>();
 			}
 			return nullptr;
 		}
-		QSharedPointer< TNode >	getChild(int t_inx) {
-			if (t_inx >= 0 && t_inx < m_child.size()) {
+		QSharedPointer< Item >	getChild(int t_inx) {
+			if ((t_inx >= 0) && (t_inx < m_child.size())) {
 				return m_child[t_inx];
 			}
 			return nullptr;
 		}
 
-		QString 	ref(TNode *t_root=nullptr) {
-			// Make full reference to Node in Tree
+		QString 	ref(Item *t_root=nullptr) {
+			// Make full reference to item in this tree
 			QString path;
 			if (m_parent && (m_parent != t_root)) {
 				path = m_parent->ref(t_root) + m_delimetr;
@@ -84,17 +75,23 @@ namespace Core
 			return path + m_name;
 		}
 
+		virtual void		addChild(QSharedPointer< Item > t_child) {
+			m_child.push_back(t_child);
+		}
+
 	public:
-		TNode() = delete;
-		TNode(TNode *t_parent, const QString &t_name)
+		Item() = delete;
+		Item(Item *t_parent, const QString &t_name)
 			: m_parent(t_parent), m_name(t_name)
 		{
 		}
-		virtual ~TNode() {
+		virtual ~Item() {
 		}
 
-		virtual void		addChild(QSharedPointer< TNode > t_child) {
-			m_child.push_back(t_child);
-		}
+	protected:
+		Item*						m_parent = nullptr;
+		QString						m_name;
+		QString 					m_delimetr = "/";
+		QList<QSharedPointer<Item>>	m_child; // list of children
 	};
 }

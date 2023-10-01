@@ -78,5 +78,5 @@ Thumbs.db
 # My files
 bin/
 build/
-depends/
+3rdparty/
 .vscode/

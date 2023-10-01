@@ -71,9 +71,9 @@ namespace Core
 
 	namespace
 	{
-		void		DFS(const QList<QSharedPointer<TNode>> &t_nodes,
+		void		DFS(const QList<QSharedPointer<Item>> &t_nodes,
 						QSharedPointer<LN_FlatState> t_table,
-						QSharedPointer<TNode> t_root,
+						QSharedPointer<Item> t_root,
 						QSharedPointer<DataObject> t_do,
 						const QString &t_fc)
 		{

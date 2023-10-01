@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include "tnode.hpp"
+#include "item.hpp"
 
 namespace Core
 {
@@ -37,7 +37,7 @@ namespace Core
 	 * DO: SPCSO1, AnIn1
 	 * LN: GGIO1
 	 * */
-	class SubAttribute: public TNode
+	class SubAttribute: public Item
 	{
 		QString		m_value;
 
@@ -50,8 +50,8 @@ namespace Core
 		}
 
 	public:
-		SubAttribute(TNode *t_parent, const QString &t_name)
-			: TNode(t_parent, t_name)
+		SubAttribute(Item *t_parent, const QString &t_name)
+			: Item(t_parent, t_name)
 		{
 			m_delimetr = "."; // Between DAName and SAName
 		}
@@ -62,7 +62,7 @@ namespace Core
 	 * Representation a Data Attribute of Data Object
 	 * Has important FunctionConstrain = FC
 	 * */
-	class DataAttribute : public TNode
+	class DataAttribute : public Item
 	{
 		QString		m_fc;
 		int			m_fcNum = -1;
@@ -80,8 +80,8 @@ namespace Core
 		}
 
 	public:
-		DataAttribute(TNode *t_parent, const QString &t_name, const QString &t_fc, int t_fcNum)
-			: TNode(t_parent, t_name)
+		DataAttribute(Item *t_parent, const QString &t_name, const QString &t_fc, int t_fcNum)
+			: Item(t_parent, t_name)
 		{
 			m_fc = t_fc;
 			m_fcNum = t_fcNum;

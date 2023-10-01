@@ -32,13 +32,10 @@ namespace Core
 	/*
 	 * Representation a Logical Device of an IED
 	 * */
-	class LogicalDevice : public TNode
+	class LogicalDevice : public Item
 	{
-		ptrLN		m_lln0;
-		ptrLN		m_lphd;
-
 	public:
-		LogicalDevice(TNode *t_parent, const QString &t_name) : TNode(t_parent, t_name)
+		LogicalDevice(Item *t_parent, const QString &t_name) : Item(t_parent, t_name)
 		{
 			m_delimetr = ""; // There isn't a delimetr between IEDName and LDName
 		}
@@ -54,6 +51,11 @@ namespace Core
 				m_lphd = t_node;
 			}
 		}
+
+	protected:
+		ptrLN		m_lln0;
+		ptrLN		m_lphd;
 	};
+
 	typedef QSharedPointer< LogicalDevice >	ptrLD;
 }

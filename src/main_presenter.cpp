@@ -22,6 +22,7 @@
  * */
 
 #include "main_presenter.hpp"
+#include "builder_information.hpp"
 
 MainPresenter::MainPresenter(AppCore &t_core)
 	: QObject(nullptr),
@@ -34,6 +35,8 @@ MainPresenter::MainPresenter(AppCore &t_core)
 	m_sortDOModel(this)
 {
 	m_sortDOModel.setSourceModel(&m_doModel);
+
+	qDebug() << "Application: " << PROJECT_VERSION << "\r\n";
 }
 
 MainPresenter::~MainPresenter()

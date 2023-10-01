@@ -39,12 +39,12 @@ namespace Core::Cmd
 		bool			m_tls;
 		QString			m_user;
 		QString			m_password;
-		Core::ObjectTree&	m_tree;
+		Core::IED_Tree&	m_tree;
 
 	public:
 		ConnectCmd(const QString &t_ip, unsigned t_port, bool t_tls,
 					const QString &t_user, const QString &t_pass,
-					ObjectTree &t_tree)
+					IED_Tree &t_tree)
 				: IED_BaseCommand(IED_CMD::CONNECT),
 				  m_ip(t_ip), m_port(t_port), m_tls(t_tls),
 				  m_user(t_user), m_password(t_pass),
@@ -58,7 +58,7 @@ namespace Core::Cmd
 		// Create new command like Builder pattern
 		static QSharedPointer<ConnectCmd> create(const QString &t_ip, unsigned t_port, bool t_tls,
 												const QString &t_user, const QString &t_pass,
-												ObjectTree &t_tree) {
+												IED_Tree &t_tree) {
 			return QSharedPointer<ConnectCmd>::create(t_ip, t_port, t_tls, t_user, t_pass, t_tree);
 		}
 	};

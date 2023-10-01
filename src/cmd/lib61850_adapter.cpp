@@ -22,7 +22,7 @@
  * */
 
 #include "lib61850_adapter.hpp"
-#include "tnode_factory.hpp"
+#include "core/item_factory.hpp"
 
 #include <string>
 #include <QDebug>
@@ -57,7 +57,7 @@ namespace Core::Cmd
 		}
 
 		void recursiveReadAttributes(IedConnection t_con, const QString &t_ref,
-									QSharedPointer<TNode> t_parent)
+									QSharedPointer<Item> t_parent)
 		{
 			IedClientError retval = IED_ERROR_OK;
 			LinkedList daList = IedConnection_getDataDirectory(t_con, &retval, t_ref.toLocal8Bit().data());
@@ -67,7 +67,7 @@ namespace Core::Cmd
 				while (attr != nullptr) {
 					QString name = QString::fromLocal8Bit((char *)attr->data);
 
-					auto subAttrNode = TNodeFactory::createSA(t_parent.get(), name);
+					auto subAttrNode = ItemFactory::createSA(t_parent.get(), name);
 					t_parent->addChild(subAttrNode);
 
 					QString ref = t_ref + "." + name;
@@ -121,7 +121,7 @@ namespace Core::Cmd
 		m_libConn = nullptr;
 	}
 
-	int Lib61850::getLD_List(Core::ObjectTree &t_objTree)
+	int Lib61850::getLD_List(Core::IED_Tree &t_objTree)
 	{
 		if (isConnected()) {
 			IedClientError retval = IED_ERROR_OK;
@@ -136,7 +136,7 @@ namespace Core::Cmd
 			while (device != nullptr) {
 				QString ldName = QString::fromLocal8Bit((char *)device->data);
 
-				auto ldev = TNodeFactory::createLD(&t_objTree, ldName); // Found LD
+				auto ldev = ItemFactory::createLD(&t_objTree, ldName); // Found LD
 				t_objTree.addChild(ldev);
 
 				LinkedList lnodes = IedConnection_getLogicalDeviceDirectory(m_libConn, &retval,
@@ -147,7 +147,7 @@ namespace Core::Cmd
 					while (node != nullptr) {
 						QString name = QString::fromLocal8Bit((char *)node->data);
 
-						auto ln = TNodeFactory::createLN(ldev.get(), name); // Found LN
+						auto ln = ItemFactory::createLN(ldev.get(), name); // Found LN
 						ldev->addChild(ln);
 
 						node = LinkedList_getNext(node); // next Logical Node
@@ -178,7 +178,7 @@ namespace Core::Cmd
 					QString name = QString::fromLocal8Bit((char *)dObj->data);
 					QString refDO = QString("%1.%2").arg(ref, name);
 
-					auto doNode = TNodeFactory::createDO(t_lnNode.get(), name); // found DO
+					auto doNode = ItemFactory::createDO(t_lnNode.get(), name); // found DO
 					t_lnNode->addChild(doNode);
 
 					// Get list of DA
@@ -189,7 +189,7 @@ namespace Core::Cmd
 						while (attrFC != nullptr) {
 							auto [name, fc, fcNum] = getFX_fromName((char *)attrFC->data);
 
-							auto daNode = TNodeFactory::createDA(doNode.get(), name, fc, fcNum); // found DA
+							auto daNode = ItemFactory::createDA(doNode.get(), name, fc, fcNum); // found DA
 							doNode->addChild(daNode);
 
 							// Recursive search SubAttr for DA

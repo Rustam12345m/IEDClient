@@ -32,11 +32,11 @@ namespace Core
 	/*
 	 * Representation of a tree available by MMS of an IED
 	 * */
-	class ObjectTree : public QObject, public TNode
+	class IED_Tree : public QObject, public Item
 	{
 		Q_OBJECT
 	public:
-		ObjectTree() : TNode(nullptr, "") {
+		IED_Tree() : Item(nullptr, "") {
 			m_delimetr = ""; // There isn't a delimetr because it is a top node
 		}
 

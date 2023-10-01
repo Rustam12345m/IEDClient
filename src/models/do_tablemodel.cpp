@@ -23,7 +23,7 @@
 
 #include "do_tablemodel.hpp"
 
-DO_TableModel::DO_TableModel(QObject *t_parent, Core::ObjectTree &t_tree)
+DO_TableModel::DO_TableModel(QObject *t_parent, Core::IED_Tree &t_tree)
 	: QAbstractTableModel(t_parent), m_tree{t_tree}
 {
 }

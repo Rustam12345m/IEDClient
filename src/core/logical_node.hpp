@@ -31,10 +31,10 @@ namespace Core
 	/*
 	 * Representation a Logical Node
 	 * */
-	class LogicalNode : public TNode
+	class LogicalNode : public Item
 	{
 	public:
-		LogicalNode(TNode *t_parent, const QString &t_name) : TNode(t_parent, t_name)
+		LogicalNode(Item *t_parent, const QString &t_name) : Item(t_parent, t_name)
 		{
 			m_delimetr = "/"; // Between LDName and LNName
 		}
