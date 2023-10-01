@@ -24,7 +24,7 @@
 #pragma once
 
 #include "base_command.hpp"
-#include "fs_tree.hpp"
+#include "core/fs_tree.hpp"
 
 namespace Core::Cmd
 {

@@ -27,7 +27,7 @@
 
 #include "cmd/cmd_thread.hpp"
 #include "cmd/lib61850_adapter.hpp"
-#include "core/object_tree.hpp"
+#include "core/ied_tree.hpp"
 #include "core/fs_tree.hpp"
 
 /*
@@ -40,10 +40,10 @@ public:
 	AppCore(QObject *t_parent=nullptr);
 	~AppCore();
 
-	Core::ObjectTree&		getObjectTree() {
+	Core::IED_Tree&		getObjectTree() {
 		return m_objTree;
 	}
-	Core::FS_Tree&			getFSTree() {
+	Core::FS_Tree&		getFSTree() {
 		return m_fsTree;
 	}
 
@@ -53,7 +53,7 @@ signals:
 	void		mySignal(const QString &t_msg);
 
 protected:
-	Core::ObjectTree		m_objTree;
+	Core::IED_Tree			m_objTree;
 	Core::FS_Tree			m_fsTree;
 
 	Core::Cmd::Lib61850		m_con;

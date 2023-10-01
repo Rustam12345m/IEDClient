@@ -32,11 +32,11 @@ namespace Core
 	/*
 	 * Representation a ReportControlBlock of LD
 	 * */
-	class ReportBlock : public QObject, public TNode
+	class ReportBlock : public QObject, public Item
 	{
 		Q_OBJECT
 	public:
-		ReportBlock() : TNode(nullptr, "")
+		ReportBlock() : Item(nullptr, "")
 		{
 		}
 

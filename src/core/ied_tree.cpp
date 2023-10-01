@@ -21,13 +21,13 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "object_tree.hpp"
+#include "ied_tree.hpp"
 
 #include <QDebug>
 
 namespace Core
 {
-	void ObjectTree::printTree()
+	void IED_Tree::printTree()
 	{
 		qDebug() << "IED: " << m_name;
 

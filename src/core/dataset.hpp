@@ -32,11 +32,11 @@ namespace Core
 	/*
 	 * Representation a DataSet of LD
 	 * */
-	class Dataset : public QObject, public TNode
+	class Dataset : public QObject, public Item
 	{
 		Q_OBJECT
 	public:
-		Dataset() : TNode(nullptr, "")
+		Dataset() : Item(nullptr, "")
 		{
 		}
 

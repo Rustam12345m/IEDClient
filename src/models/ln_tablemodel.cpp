@@ -23,7 +23,7 @@
 
 #include "ln_tablemodel.hpp"
 
-LN_TableModel::LN_TableModel(QObject *t_parent, Core::ObjectTree &t_tree)
+LN_TableModel::LN_TableModel(QObject *t_parent, Core::IED_Tree &t_tree)
 	: QAbstractTableModel(t_parent), m_tree{t_tree}
 {
 }

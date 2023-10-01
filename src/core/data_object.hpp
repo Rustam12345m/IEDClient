@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include "tnode.hpp"
+#include "item.hpp"
 #include "data_attribute.hpp"
 
 namespace Core
@@ -32,13 +32,8 @@ namespace Core
 	 * Representation a Data Object of Logical Node
 	 * DO have several DA in different FC
 	 * */
-	class DataObject : public TNode
+	class DataObject : public Item
 	{
-		ptrDA		m_value;
-		ptrDA		m_quality;
-		ptrDA		m_timestamp;
-		ptrDA		m_description;
-
 	public:
 		QString		getValue() const {
 			if (m_value) {
@@ -65,13 +60,6 @@ namespace Core
 			return " - ";
 		}
 
-	public:
-		DataObject(TNode *t_parent, const QString &t_name)
-			: TNode(t_parent, t_name)
-		{
-			m_delimetr = "."; // Between LNName and DOName
-		}
-
 		void		addChild(QSharedPointer< DataAttribute > t_node) {
 			m_child.push_back(t_node);
 
@@ -88,6 +76,20 @@ namespace Core
 				m_description = t_node;
 			}
 		}
+
+	public:
+		DataObject(Item *t_parent, const QString &t_name)
+			: Item(t_parent, t_name)
+		{
+			m_delimetr = "."; // Between LNName and DOName
+		}
+
+	protected:
+		ptrDA		m_value;
+		ptrDA		m_quality;
+		ptrDA		m_timestamp;
+		ptrDA		m_description;
 	};
+
 	typedef QSharedPointer< DataObject >		ptrDO;
 }

@@ -22,7 +22,7 @@
  * */
 
 #include "connect_cmd.hpp"
-#include "object_tree.hpp"
+#include "core/ied_tree.hpp"
 
 #include <QThread>
 #include <QDebug>
