@@ -32,7 +32,7 @@ Item {
 	readonly property int blkWidth: 240
 	readonly property int blkHeight: 200
 	readonly property int blkBottomH: 40
-	readonly property int ledRadius: 20
+	readonly property int ledRadius: 25
 
 	signal sigNextPageSignal(int page)
 	signal sigLDeviceChanged(int current)
@@ -44,8 +44,8 @@ Item {
 			required property var name
 			required property int index
 
-			width: blkWidth
-			height: blkHeight
+			width: blkWidth + 2 * blkBorder
+			height: blkHeight + 2 * blkBorder
 
 			border.color: GridView.isCurrentItem ? "black" : "gray"
 			border.width: blkBorder
@@ -53,11 +53,11 @@ Item {
 			Rectangle {
 				id: textRect
 
-				x: parent.border.width
-				y: parent.border.width
+				x: blkBorder
+				y: blkBorder
 
-				width: blkWidth - 2 * parent.border.width
-				height: blkHeight - blkBottomH - parent.border.width
+				width: blkWidth
+				height: blkHeight - blkBottomH - blkBorder
 				color: "white"
 
 				Text {
@@ -69,7 +69,10 @@ Item {
 					padding: 10
 
 					width: parent.width
-					wrapMode: Text.WordWrap
+					wrapMode: Text.Wrap
+
+					clip: true
+					elide: Text.ElideRight
 
 					font.bold: true
 					font.pointSize: 16
@@ -79,19 +82,19 @@ Item {
 			Rectangle {
 				id: separator
 
-				x: parent.border.width
-				y: textRect.height - parent.border.width
+				x: blkBorder
+				y: blkBorder + textRect.height
 
-				width: blkWidth - 2 * parent.border.width
-				height: parent.border.width
+				width: blkWidth
+				height: blkBorder
 
 				color: "gray"
 			}
 			Rectangle {
-				x: parent.border.width
-				y: textRect.height + separator.height - parent.border.width
+				x: blkBorder
+				y: blkBorder + textRect.height + separator.height
 
-				width: blkWidth - 2 * parent.border.width
+				width: blkWidth
 				height: blkBottomH
 
 				color: "white"
@@ -222,11 +225,12 @@ Item {
 		anchors.fill: parent
 		anchors.margins: blkSpace
 
-		cellWidth: blkWidth + 2*blkBorder + blkSpace
-		cellHeight: blkHeight + 3*blkBorder + blkSpace
+		cellWidth: blkWidth + 2 * blkBorder + blkSpace
+		cellHeight: blkHeight + 2 * blkBorder + blkSpace
 
 		focus: true
 		keyNavigationEnabled: true
+		boundsBehavior: Flickable.StopAtBounds
 
 		model: mainPres.ldModel
 

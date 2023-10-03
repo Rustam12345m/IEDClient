@@ -127,6 +127,8 @@ FocusScope {
 
 				text: qsTr("Connect")
 
+				icon.source: "qrc:/img/icons/call.svg"
+
 				onClicked: {
 					globalProgressBar.startLoad()
 					mainPres.connectTo(ipAddrInput.text, portInput.text,

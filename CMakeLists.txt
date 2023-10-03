@@ -17,8 +17,8 @@ add_subdirectory(src/)
 add_subdirectory(3rdparty/)
 
 # Unit-tests
-#enable_testing()
-#add_test(IEDClient_utests test_version)
+enable_testing()
+add_subdirectory(tests/)
 
 # CPack
 #install(TARGETS IEDClient RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/bin)

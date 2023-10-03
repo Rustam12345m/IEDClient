@@ -24,6 +24,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+//import ToolBarButton
 
 Window {
 	title: qsTr("IEDClient - Open source client for IEC 61850")
@@ -87,14 +88,18 @@ Window {
 
 						Menu {
 							title: qsTr("&Menu")
+
 							MenuItem {
 								text: qsTr("Connect")
+								icon.source: "qrc:/img/icons/call.svg"
 							}
 							MenuItem {
 								text: qsTr("Disconnect")
+								icon.source: "qrc:/img/icons/logout.svg"
 							}
 							MenuItem {
 								text: qsTr("Settings")
+								icon.source: "qrc:/img/icons/build.svg"
 							}
 							MenuSeparator {
 							}
@@ -104,15 +109,18 @@ Window {
 									console.log("Bye - bye. Exit")
 									Qt.quit()
 								}
+								icon.source: "qrc:/img/icons/close.svg"
 							}
 						}
 						Menu {
 							title: qsTr("&Tools")
 							MenuItem {
 								text: qsTr("Save model")
+								icon.source: "qrc:/img/icons/save.svg"
 							}
 							MenuItem {
 								text: qsTr("Check SCL")
+								icon.source: "qrc:/img/icons/task_alt.svg"
 							}
 							MenuSeparator {
 							}
@@ -123,12 +131,14 @@ Window {
 									onActivated: openEventLog()
 								}
 								onTriggered: openEventLog()
+								icon.source: "qrc:/img/icons/terminal.svg"
 							}
 						}
 						Menu {
 							title: qsTr("&Program")
 							MenuItem {
 								text: qsTr("Documentation")
+								icon.source: "qrc:/img/icons/school.svg"
 							}
 							MenuSeparator {
 							}
@@ -139,6 +149,7 @@ Window {
 									var aboutWindow = aboutComponent.createObject(rootWindow)
 									aboutWindow.show()
 								}
+								icon.source: "qrc:/img/icons/info.svg"
 							}
 						}
 					}
@@ -147,90 +158,91 @@ Window {
 				// ToolBar
 				Item {
 					id: toolBar
+					readonly property int btnHeight: 30
+
 					width: toolBarRow.implicitWidth
 					height: parent.height
 					//anchors.verticalCenter: parent.verticalCenter
 
+					// ToolBar buttons
 					Row {
 						id: toolBarRow
 						anchors.fill: parent
-
-						//anchors.horizontalCenter: parent.horizontalCenter
-        				//anchors.verticalCenter: parent.verticalCenter
 						spacing: 5
 
-						Button {
-							text: "B1"
-							width: 30
-							height: 30
+						// Home
+						ToolBarButton {
+							icon: "qrc:/img/icons/home.svg"
+							prompt: "Go to start page"
+							width: toolBar.btnHeight
+							height: toolBar.btnHeight
 
-							anchors.verticalCenter: parent.verticalCenter
-
-							onClicked: function() {
-								console.log("Clicked: " + text)
+							onSigClicked: function() {
+								mainStack.changePage(Enum.Page.START)
 							}
 						}
-						Rectangle {
-							id: myCustonBtn
+						// Disconnect
+						ToolBarButton {
+							icon: "qrc:/img/icons/logout.svg"
+							prompt: "Close the connection"
+							width: toolBar.btnHeight
+							height: toolBar.btnHeight
 
-							width: 30
-							height: width
-
-							anchors.verticalCenter: parent.verticalCenter
-
-							border.width: 1
-							border.color: "black"
-							color: "white"
-							radius: 5
-
-							Label {
-								anchors.centerIn: parent
-								text: "B4"
-								color: "black"
-							}
-
-							MouseArea {
-								anchors.fill: parent
-								acceptedButtons: Qt.LeftButton
-
-								onClicked: function(m) {
-									console.log("My custom btn: " + m)
-								}
-								onPressed: function(m) {
-									myCustonBtn.color = "gray"
-								}
-								onReleased: function(m) {
-									myCustonBtn.color = "white"
-								}
+							onSigClicked: function() {
+								//mainStack.changePage(Enum.Page.START)
 							}
 						}
-						Button {
-							text: "Disconnect"
-							anchors.verticalCenter: parent.verticalCenter
+						// Back
+						ToolBarButton {
+							icon: "qrc:/img/icons/arrow_back.svg"
+							prompt: "Back to previous page"
+							width: toolBar.btnHeight
+							height: toolBar.btnHeight
 
-							onClicked: function() {
-								console.log("Clicked: " + text)
+							onSigClicked: function() {
+								//mainStack.changePage(Enum.Page.START)
 							}
 						}
-						Button {
-							text: "Update"
-							anchors.verticalCenter: parent.verticalCenter
+						// Forward
+						ToolBarButton {
+							icon: "qrc:/img/icons/arrow_forward.svg"
+							prompt: "Go to next page"
+							width: toolBar.btnHeight
+							height: toolBar.btnHeight
 
-							onClicked: function() {
-								console.log("Clicked: " + text)
+							onSigClicked: function() {
+								//mainStack.changePage(Enum.Page.START)
 							}
 						}
+						// Update
+						ToolBarButton {
+							icon: "qrc:/img/icons/refresh.svg"
+							prompt: "Update data on this page"
+							width: toolBar.btnHeight
+							height: toolBar.btnHeight
+
+							onSigClicked: function() {
+								//mainStack.changePage(Enum.Page.START)
+							}
+						}
+
+						// FC selector
 						Item {
 							width: 150
 							height: toolBar.height
 
 							Row {
-								anchors.verticalCenter: parent.verticalCenter
+								anchors.fill: parent
 
 								Label {
 									text: "FC: "
+
+									anchors.verticalCenter: parent.verticalCenter
 								}
 								ComboBox {
+									anchors.verticalCenter: parent.verticalCenter
+
+									height: toolBar.btnHeight
 									width: 150
 									enabled: lnPage.visible
 

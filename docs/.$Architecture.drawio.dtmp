@@ -1,4 +1,4 @@
-<mxfile host="Electron" modified="2023-10-02T15:59:21.329Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.7.5 Chrome/114.0.5735.289 Electron/25.8.1 Safari/537.36" etag="UPL9HZSvb4B35HHEOb5q" version="21.7.5" type="device" pages="11">
+<mxfile host="Electron" modified="2023-10-02T15:59:24.477Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.7.5 Chrome/114.0.5735.289 Electron/25.8.1 Safari/537.36" etag="Qsvq9ZDfq129UVEIDLkH" version="21.7.5" type="device" pages="11">
   <diagram name="GUI" id="uyvv2UR52rGuvuCrab3i">
     <mxGraphModel dx="1596" dy="904" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="850" math="0" shadow="0">
       <root>
@@ -95,7 +95,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="TlMg702e9iY7e_oaSn0f" name="GUI LD">
-    <mxGraphModel dx="1130" dy="753" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="850" math="0" shadow="0">
+    <mxGraphModel dx="1330" dy="753" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="850" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
