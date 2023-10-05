@@ -32,7 +32,7 @@ MainPresenter::MainPresenter(AppCore &t_core)
 	m_ldModel(this, m_core.getObjectTree()),
 	m_lnModel(this, m_core.getObjectTree()),
 	m_doModel(this, m_core.getObjectTree()),
-	m_sortDOModel(this)
+	m_sortDOModel(this), m_lastConnModel(this, m_ini)
 {
 	m_sortDOModel.setSourceModel(&m_doModel);
 
@@ -51,17 +51,31 @@ void MainPresenter::connectTo(const QString &t_ip, int t_port, bool t_tls,
 
 	auto cmd = Core::Cmd::ConnectCmd::create(t_ip, t_port, t_tls, t_name,
 											t_pass, m_core.getObjectTree());
-	putCmdToCore(cmd);
+	putCmdToQueue(cmd);
 }
 
 void MainPresenter::disconnectFrom()
 {
 }
 
-void MainPresenter::viewFilesDirectory(const QString &t_path)
+void MainPresenter::updateFilesDirectory(const QString &t_path)
 {
 	auto cmd = Core::Cmd::GetFileList::create(m_core.getFSTree(), t_path);
-	putCmdToCore(cmd);
+	putCmdToQueue(cmd);
+}
+
+void MainPresenter::downloadFile(const QString &t_filename)
+{
+	qDebug() << "MainPresenter: Download file " << t_filename;
+	auto cmd = Core::Cmd::DownloadFile::create(t_filename);
+	putCmdToQueue(cmd);
+}
+
+void MainPresenter::removeFile(const QString &t_filename)
+{
+	qDebug() << "MainPresenter: Remove file " << t_filename;
+	auto cmd = Core::Cmd::RemoveFile::create(t_filename);
+	putCmdToQueue(cmd);
 }
 
 void MainPresenter::updateLNodeData(int t_ldIndex, int t_lnIndex)
@@ -71,10 +85,10 @@ void MainPresenter::updateLNodeData(int t_ldIndex, int t_lnIndex)
 	}
 
 	auto cmd = Core::Cmd::UpdateLNode::create(m_core.getObjectTree(), t_ldIndex, t_lnIndex);
-	putCmdToCore(cmd);
+	putCmdToQueue(cmd);
 }
 
-void MainPresenter::putCmdToCore(Core::Cmd::ptrCMD t_cmd)
+void MainPresenter::putCmdToQueue(Core::Cmd::ptrCMD t_cmd)
 {
 	connect(t_cmd.get(), SIGNAL(sigProgress(int,QString)), this, SLOT(slotCmdProcess(int,QString)));
 	connect(t_cmd.get(), SIGNAL(sigFinished()), this, SLOT(slotCmdFinished()));

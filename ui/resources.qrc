@@ -1,22 +1,28 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>ToolBarButton.qml</file>
-        <file>Start_Page.qml</file>
-        <file>DS_Page.qml</file>
-        <file>FS_Page.qml</file>
-        <file>LD_Page.qml</file>
-        <file>LN_Page.qml</file>
-        <file>RCB_Page.qml</file>
-        <file>PropertyPanel.qml</file>
-        <file>GlobalProgressBar.qml</file>
-        <file>AboutProgram.qml</file>
-        <file>EventsViewer.qml</file>
-        <file>LN_Table.qml</file>
-        <file>DO_Table.qml</file>
-        <file>TextDelegate.qml</file>
-        <file>FS_Delegate.qml</file>
-        <file>Enum.qml</file>
+
+        <file>global/ToolBarButton.qml</file>
+        <file>global/GlobalProgressBar.qml</file>
+        <file>global/TextDelegate.qml</file>
+        <file>global/Enum.qml</file>
+        <file>global/AboutProgram.qml</file>
+        <file>global/EventsViewer.qml</file>
+
+        <file>start/Page.qml</file>
+        <file>start/LastConnTable.qml</file>
+
+        <file>dataset/Page.qml</file>
+        <file>reports/Page.qml</file>
+
+        <file>logical_device/Page.qml</file>
+
+        <file>logical_node/Page.qml</file>
+        <file>logical_node/LN_Table.qml</file>
+        <file>logical_node/DO_Table.qml</file>
+        
+        <file>filesystem/Page.qml</file>
+        <file>filesystem/FileTableDelegate.qml</file>
     </qresource>
     <qresource prefix="/img">
         <file>icons/build.svg</file>
@@ -57,5 +63,6 @@
         <file>icons/school.svg</file>
         <file>icons/task_alt.svg</file>
         <file>icons/terminal.svg</file>
+        <file>icons/call_end.svg</file>
     </qresource>
 </RCC>

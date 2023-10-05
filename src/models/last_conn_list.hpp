@@ -1,5 +1,5 @@
 /*
- *  main.qml
+ *  main.cpp
  *
  *  Copyright 2023 Rustam Mustafin
  *
@@ -21,27 +21,35 @@
  *  See COPYING file for the complete license text.
  * */
 
-import QtQuick 2.2
-import QtQuick.Controls
+#pragma once
 
-Window {
-	width: 400
-	height: 200
+#include <QAbstractTableModel>
 
-	modality: Qt.ApplicationModal
-	flags: Qt.Dialog
+#include "app/settings.hpp"
 
-	Rectangle {
-		anchors.fill: parent
-		color: "white"
+class LastConn_TableModel : public QAbstractTableModel
+{
+	Q_OBJECT
+	enum Columns {
+		IED_NAME = 0,
+		IP_ADDR,
+		PORT_COLUMN,
+		COLUMNS_COUNT
+	};
+public:
+	LastConn_TableModel(QObject *t_parent, AppSettings &t_ini);
 
-		Text {
-			anchors.centerIn: parent
+	QVariant headerData(int t_section, Qt::Orientation t_orientation,
+						int t_role = Qt::DisplayRole) const override;
 
-			font.bold: true
-			font.pixelSize: 14
-			color: "black"
-			text: "About IEDClient"
-		}
-	}
-}
+	QHash<int, QByteArray> roleNames() const override;
+
+	int rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
+	int columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
+
+	QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
+
+protected:
+	AppSettings& 		m_ini;
+	QList<DevConInfo> 	m_con;
+};

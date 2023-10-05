@@ -1,5 +1,5 @@
 /*
- *  main.cpp
+ *  main.qml
  *
  *  Copyright 2023 Rustam Mustafin
  *
@@ -21,37 +21,15 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "cmd_thread.hpp"
+import QtQuick
 
-namespace Core::Cmd
-{
-	CmdThread::CmdThread(LibInterface &t_con) : m_con(t_con)
-	{
-		setObjectName("CmdThread");
-		start();
-	}
-
-	CmdThread::~CmdThread()
-	{
-		m_queue.stop();
-
-		if (isRunning()) {
-			wait();
-		}
-	}
-
-	void CmdThread::putCommand(ptrCMD t_cmd)
-	{
-		m_queue.push(t_cmd);
-	}
-
-	void CmdThread::run()
-	{
-		while (m_queue.isRunning()) {
-			ptrCMD cmd = m_queue.pop();
-			if (cmd) {
-				cmd->execute(m_con);
-			}
-		}
+Item {
+	enum Page {
+		START = 0,
+		LD,
+		LN,
+		FS,
+		RCB,
+		DS
 	}
 }

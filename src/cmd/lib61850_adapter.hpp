@@ -59,6 +59,7 @@ namespace Core::Cmd
 		int		updateDO_List(Core::ptrLN t_node) override;
 
 		int		getFS_List(Core::DirOn &t_dir) override;
+		int 	removeFile(const QString &t_filename) override;
 	};
 	typedef QSharedPointer< Lib61850 >	ptrIED_Adapter;
 }

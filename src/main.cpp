@@ -32,6 +32,10 @@ int main(int argc, char *argv[])
 {
 	QGuiApplication app(argc, argv);
 
+	QCoreApplication::setOrganizationName("OSI");
+    QCoreApplication::setOrganizationDomain("opensource.org");
+    QCoreApplication::setApplicationName("IEDClient");
+
 	AppCore appCore;
 	MainPresenter mainPres(appCore);
 

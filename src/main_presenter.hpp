@@ -31,6 +31,7 @@
 #include "models/ld_listmodel.hpp"
 #include "models/ln_tablemodel.hpp"
 #include "models/do_tablemodel.hpp"
+#include "models/last_conn_list.hpp"
 
 /*
  * Presenter for QML part
@@ -44,24 +45,11 @@ class MainPresenter : public QObject
 	Q_PROPERTY(LN_TableModel* lnModel READ getLN_Model CONSTANT)
 	//Q_PROPERTY(DO_TableModel* doModel READ getDO_Model CONSTANT)
 	Q_PROPERTY(QAbstractItemModel* doModel READ getSortDO_Model CONSTANT)
+	Q_PROPERTY(QAbstractItemModel* lastConnList READ getLastConn_Model CONSTANT)
 
 	// Current selected
 	Q_PROPERTY(int currentLD READ getCurrentLD WRITE setCurrentLD NOTIFY sigCurrentLD)
 	Q_PROPERTY(int currentLN READ getCurrentLN WRITE setCurrentLN NOTIFY sigCurrentLN)
-
-protected:
-	AppCore&			m_core;
-
-	// Models for Tables in GUI
-	EventsTableModel	m_eventsModel;
-	FilesTableModel		m_fsModel;
-	LD_ListModel		m_ldModel;
-	LN_TableModel		m_lnModel;
-	DO_TableModel		m_doModel;
-	SimpleProxyModel 	m_sortDOModel;
-
-	// Active selected by User
-	int 				m_currentLD = -1, m_currentLN = -1;
 
 public:
 	FilesTableModel*	getFilesModel() {
@@ -81,6 +69,9 @@ public:
 	}
 	QAbstractItemModel* getSortDO_Model() {
 		return &m_sortDOModel;
+	}
+	LastConn_TableModel* getLastConn_Model() {
+		return &m_lastConnModel;
 	}
 
 	int 		getCurrentLD() const {
@@ -107,11 +98,16 @@ public:
 								const QString &t_name, const QString &t_pass);
 	Q_INVOKABLE void disconnectFrom();
 
-	Q_INVOKABLE void viewFilesDirectory(const QString &t_path);
+	// LD & LN
 	Q_INVOKABLE void updateLNodeData(int t_ldIndex, int t_lnIndex);
 
+	// FS
+	Q_INVOKABLE void updateFilesDirectory(const QString &t_path);
+	Q_INVOKABLE void downloadFile(const QString &t_filename);
+	Q_INVOKABLE void removeFile(const QString &t_filename);
+
 protected:
-	void	putCmdToCore(Core::Cmd::ptrCMD t_cmd);
+	void	putCmdToQueue(Core::Cmd::ptrCMD t_cmd);
 
 signals:
 	void	sigProgress(int t_perc, QString t_msg);
@@ -122,4 +118,21 @@ signals:
 public slots:
 	void	slotCmdProcess(int t_proc, QString t_msg);
 	void	slotCmdFinished();
+
+protected:
+	AppCore&			m_core;
+	AppSettings			m_ini;
+
+	// Models for Tables in GUI
+	EventsTableModel	m_eventsModel;
+	FilesTableModel		m_fsModel;
+	LD_ListModel		m_ldModel;
+	LN_TableModel		m_lnModel;
+	DO_TableModel		m_doModel;
+	SimpleProxyModel 	m_sortDOModel;
+	LastConn_TableModel	m_lastConnModel;
+
+	// Active selected by User
+	int 				m_currentLD = -1;
+	int 				m_currentLN = -1;
 };

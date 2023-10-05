@@ -45,8 +45,9 @@ namespace Core::Cmd
 		virtual int		getLD_List(Core::IED_Tree &t_tree) = 0;
 		virtual int		getDO_List(Core::ptrLN t_node) = 0;
 
-		virtual int		getFS_List(Core::DirOn &t_dir) = 0;
-
 		virtual int		updateDO_List(Core::ptrLN t_node) = 0;
+
+		virtual int		getFS_List(Core::DirOn &t_dir) = 0;
+		virtual int 	removeFile(const QString &t_filename) = 0;
 	};
 }

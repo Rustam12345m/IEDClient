@@ -22,21 +22,22 @@
  * */
 
 import QtQuick
+import QtQuick.Controls
 
 Item {
-	required property int delegateHeight
 	required property bool selected
+	property int delegateHeight: 30
 	property alias text: textFild.text
-	property alias textAlign: textFild.horizontalAlignment
 
-	implicitWidth: textFild.implicitWidth + 10
+	implicitWidth: textFild.implicitWidth + 20
 	implicitHeight: delegateHeight
 
 	Rectangle {
 		anchors.fill: parent
 
-		color: (selected ? "lightgray" : "white")
+		border.width: 1
 		border.color: (selected ? "black" : "lightgray")
+		color: (selected ? "lightgray" : "white")
 
 		Text {
 			id: textFild
@@ -45,7 +46,8 @@ Item {
 			horizontalAlignment: Text.AlignHCenter
 			verticalAlignment: Text.AlignVCenter
 			leftPadding: 5
-			text: " - "
+
+			text: " "
 		}
 	}
 	MouseArea {
@@ -53,10 +55,48 @@ Item {
 		acceptedButtons: Qt.LeftButton | Qt.RightButton
 
 		onClicked: function(mouse) {
+			if (mouse.button === Qt.RightButton) {
+				contextMenu.popup()
+			}
+
 			let idx = tableID.model.index(row, 0);
 			tableID.selectionModel.setCurrentIndex(idx, ItemSelectionModel.Clear
 														| ItemSelectionModel.Select
 														| ItemSelectionModel.Rows);
+		}
+		onPressAndHold: function(mouse) {
+			if (mouse.source === Qt.MouseEventNotSynthesized) {
+				contextMenu.popup()
+			}
+		}
+		onDoubleClicked: function(mouse) {
+			mainPres.downloadFile(tableID.getFilename(row))
+		}
+
+		Menu {
+			id: contextMenu
+
+			MenuItem {
+				text: "Download"
+				onTriggered: {
+					console.log(text + " " + row)
+					mainPres.downloadFile(tableID.getFilename(row))
+				}
+			}
+			MenuItem {
+				text: "Remove"
+				onTriggered: {
+					console.log(text + " " + row)
+					mainPres.removeFile(tableID.getFilename(row))
+				}
+			}
+			MenuItem {
+				enabled: false
+				text: "Rename"
+				onTriggered: {
+					console.log(text + " " + row)
+				}
+			}
 		}
 	}
 }

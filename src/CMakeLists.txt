@@ -6,6 +6,9 @@ set(PROJECT_SOURCES
 	main_presenter.hpp
 	main_presenter.cpp
 
+	app/settings.hpp
+	app/settings.cpp
+
 	../ui/resources.qrc
 )
 

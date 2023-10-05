@@ -24,7 +24,14 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-//import ToolBarButton
+
+import "qrc:/global/"
+import "qrc:/start/" as Start
+import "qrc:/logical_device/" as LD
+import "qrc:/logical_node/" as LN
+import "qrc:/filesystem/" as FS
+import "qrc:/dataset/" as DS
+import "qrc:/reports/" as RCB
 
 Window {
 	title: qsTr("IEDClient - Open source client for IEC 61850")
@@ -51,6 +58,7 @@ Window {
 		id: globalProgressBar
 	}
 
+	// Main area
 	Rectangle {
 		id: mainBack
 		anchors.fill: parent
@@ -95,7 +103,7 @@ Window {
 							}
 							MenuItem {
 								text: qsTr("Disconnect")
-								icon.source: "qrc:/img/icons/logout.svg"
+								icon.source: "qrc:/img/icons/call_end.svg"
 							}
 							MenuItem {
 								text: qsTr("Settings")
@@ -145,7 +153,7 @@ Window {
 							MenuItem {
 								text: qsTr("About")
 								onTriggered: {
-									var aboutComponent = Qt.createComponent("AboutProgram.qml")
+									var aboutComponent = Qt.createComponent("global/AboutProgram.qml")
 									var aboutWindow = aboutComponent.createObject(rootWindow)
 									aboutWindow.show()
 								}
@@ -162,7 +170,6 @@ Window {
 
 					width: toolBarRow.implicitWidth
 					height: parent.height
-					//anchors.verticalCenter: parent.verticalCenter
 
 					// ToolBar buttons
 					Row {
@@ -183,13 +190,12 @@ Window {
 						}
 						// Disconnect
 						ToolBarButton {
-							icon: "qrc:/img/icons/logout.svg"
+							icon: "qrc:/img/icons/call_end.svg"
 							prompt: "Close the connection"
 							width: toolBar.btnHeight
 							height: toolBar.btnHeight
 
 							onSigClicked: function() {
-								//mainStack.changePage(Enum.Page.START)
 							}
 						}
 						// Back
@@ -200,7 +206,6 @@ Window {
 							height: toolBar.btnHeight
 
 							onSigClicked: function() {
-								//mainStack.changePage(Enum.Page.START)
 							}
 						}
 						// Forward
@@ -211,7 +216,6 @@ Window {
 							height: toolBar.btnHeight
 
 							onSigClicked: function() {
-								//mainStack.changePage(Enum.Page.START)
 							}
 						}
 						// Update
@@ -222,7 +226,6 @@ Window {
 							height: toolBar.btnHeight
 
 							onSigClicked: function() {
-								//mainStack.changePage(Enum.Page.START)
 							}
 						}
 
@@ -271,8 +274,6 @@ Window {
 				// Status
 				Rectangle {
 					color: "black"
-					//border.width: 1
-					//border.color: "black"
 
 					height: parent.height
 					width: Math.max(200, statusText.implicitWidth + 10)
@@ -291,10 +292,6 @@ Window {
 		// WorkArea
 		Rectangle {
 			id: workArea
-
-			//border.width: 1
-			//border.color: "black"
-			//color: "lightgray"
 			color: "white"
 
 			anchors {
@@ -323,14 +320,14 @@ Window {
 					}
 				}
 
-				// Tabs Area
+				// Pages Area
 				Item {
 					id: tabsArea
 					SplitView.preferredWidth: 750
 					SplitView.minimumWidth: 600
 					SplitView.fillWidth: true
 
-					// Tabs
+					// Pages
 					StackLayout {
 						id: mainStack
 
@@ -343,7 +340,8 @@ Window {
 
 						currentIndex: tabBar.currentIndex
 
-						Start_Page {
+						Start.Page {
+							id: startPage
 							focus: true
 
 							onVisibleChanged: {
@@ -352,22 +350,18 @@ Window {
 								}
 							}
 							onNextPageSignal: function(page) {
-								//console.log("Connect_Page: " + page)
-
 								mainStack.changePage(page)
 							}
 						}
 
-						LD_Page {
+						LD.Page {
 							id: ldPage
 
 							onVisibleChanged: {
 								if (visible) {
-									//globalProgressBar.startLoad()
 								}
 							}
 							onSigNextPageSignal: function(page) {
-								//console.log("LD: " + page)
 								mainStack.changePage(page)
 							}
 							onSigLDeviceChanged: function(current) {
@@ -376,38 +370,34 @@ Window {
 							}
 						}
 
-						LN_Page {
+						LN.Page {
 							id: lnPage
 
 							onVisibleChanged: {
 								if (visible) {
-									//globalProgressBar.startLoad()
 									propertyPanel.SplitView.preferredWidth = 0
 								}
 							}
 						}
 
-						FS_Page {
+						FS.Page {
 							onVisibleChanged: {
 								if (visible) {
-									//globalProgressBar.startLoad()
-									mainPres.viewFilesDirectory("/")
+									mainPres.updateFilesDirectory("/")
 								}
 							}
 						}
 
-						RCB_Page {
+						RCB.Page {
 							onVisibleChanged: {
 								if (visible) {
-									//globalProgressBar.startLoad()
 								}
 							}
 						}
 
-						DS_Page {
+						DS.Page {
 							onVisibleChanged: {
 								if (visible) {
-									//globalProgressBar.startLoad()
 								}
 							}
 						}
@@ -464,7 +454,6 @@ Window {
 							focusPolicy: Qt.NoFocus
 
 							Component.onCompleted: {
-								//KeyBlocker.blockKeys(tabBar);
 							}
 
 							TabButton {
@@ -490,12 +479,21 @@ Window {
 				}
 
 				// Property panel
-				PropertyPanel {
+				Item {
 					id: propertyPanel
 					width: 100
 
 					SplitView.fillWidth: false
 					SplitView.preferredWidth: 250
+
+					// Stack for Panels
+					StackLayout {
+						anchors.fill: parent
+
+						Start.LastConnTable {
+							id: lastConnPanel
+						}
+					}
 
 					onWidthChanged: function() {
 						if (width < 50) {
@@ -551,7 +549,7 @@ Window {
 	}
 
 	function openEventLog() {
-		var logsComponent = Qt.createComponent("EventsViewer.qml")
+		var logsComponent = Qt.createComponent("global/EventsViewer.qml")
 		var logsWindow = logsComponent.createObject(rootWindow)
 		logsWindow.show()
 	}
@@ -570,8 +568,12 @@ Window {
 	}
 
 	Component.onCompleted: function() {
+		// App to GUI
 		appCore.mySignal.connect(slotMySignal)
 		mainPres.sigProgress.connect(slotOnProgress)
 		mainPres.sigFinished.connect(slotOnFinished)
+
+		// GUI
+		lastConnPanel.sigDeviceSelected.connect(startPage.slotSetCurrentDevice)
 	}
 }

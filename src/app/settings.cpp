@@ -21,37 +21,42 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "cmd_thread.hpp"
+#include "settings.hpp"
 
-namespace Core::Cmd
+QList<DevConInfo> AppSettings::getDevConList()
 {
-	CmdThread::CmdThread(LibInterface &t_con) : m_con(t_con)
-	{
-		setObjectName("CmdThread");
-		start();
+	QList<DevConInfo> devs;
+
+	QSettings ini;
+	int size = ini.beginReadArray("devices");
+	for (int i=0;i<size;i++) {
+		ini.setArrayIndex(i);
+
+		devs.emplace_back(ini.value("name").toString(), ini.value("ip").toString(), ini.value("port").toInt());
 	}
+	ini.endArray();
 
-	CmdThread::~CmdThread()
-	{
-		m_queue.stop();
+	return devs;
+}
 
-		if (isRunning()) {
-			wait();
+void AppSettings::saveNewDevCon(const DevConInfo &t_dev)
+{
+	QList<DevConInfo> devs = getDevConList();
+	for (auto &d : devs) {
+		if (d == t_dev) {
+			return;
 		}
 	}
+	devs.push_front(t_dev);
 
-	void CmdThread::putCommand(ptrCMD t_cmd)
-	{
-		m_queue.push(t_cmd);
-	}
+	QSettings ini;
+	ini.beginWriteArray("devices");
+	for (int i=0;(i < devs.size()) && (i < SaveDevsHistoryLen);i++) {
+		ini.setArrayIndex(i);
 
-	void CmdThread::run()
-	{
-		while (m_queue.isRunning()) {
-			ptrCMD cmd = m_queue.pop();
-			if (cmd) {
-				cmd->execute(m_con);
-			}
-		}
+		ini.setValue("name", devs[i].name());
+		ini.setValue("ip", devs[i].ip());
+		ini.setValue("port", devs[i].port());
 	}
+	ini.endArray();
 }

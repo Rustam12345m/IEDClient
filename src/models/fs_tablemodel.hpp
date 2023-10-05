@@ -40,6 +40,12 @@ class FilesTableModel : public QAbstractTableModel
 		FS_ROLE_SIZE,
 		FS_ROLE_MTS
 	};
+	enum Columns
+	{
+		FS_NAME_COLUMN = 0,
+		FS_SIZE_COLUMN,
+		FS_DATE_COLUMN
+	};
 
 private:
 	Core::FS_Tree&		m_tree;

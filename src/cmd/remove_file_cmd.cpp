@@ -1,5 +1,5 @@
 /*
- *  main.qml
+ *  main.cpp
  *
  *  Copyright 2023 Rustam Mustafin
  *
@@ -21,15 +21,11 @@
  *  See COPYING file for the complete license text.
  * */
 
-import QtQuick
+#include "remove_file_cmd.hpp"
 
-Item {
-	enum Page {
-		START = 0,
-		LD,
-		LN,
-		FS,
-		RCB,
-		DS
+namespace Core::Cmd
+{
+	void RemoveFile::execute(LibInterface &t_con)
+	{
 	}
 }

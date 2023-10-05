@@ -21,12 +21,27 @@
  *  See COPYING file for the complete license text.
  * */
 
-import QtQuick
+import QtQuick 2.2
+import QtQuick.Controls
 
-Item {
+Window {
+	width: 400
+	height: 200
 
-	Text {
-		anchors.centerIn: parent
-		text: "Report control blocks page"
+	modality: Qt.ApplicationModal
+	flags: Qt.Dialog
+
+	Rectangle {
+		anchors.fill: parent
+		color: "white"
+
+		Text {
+			anchors.centerIn: parent
+
+			font.bold: true
+			font.pixelSize: 14
+			color: "black"
+			text: "About IEDClient"
+		}
 	}
 }

@@ -25,6 +25,8 @@ import QtQuick
 import QtQuick.Controls
 import Qt.labs.qmlmodels
 
+import "qrc:/global/"
+
 // Table with DataObjects for concrete Logical Node
 Item {
 	readonly property int defDelegateHeight: 30

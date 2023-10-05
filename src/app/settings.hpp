@@ -21,37 +21,43 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "cmd_thread.hpp"
+#pragma once
 
-namespace Core::Cmd
+#include <QSettings>
+
+class DevConInfo
 {
-	CmdThread::CmdThread(LibInterface &t_con) : m_con(t_con)
+public:
+	DevConInfo(const QString &t_name, const QString &t_ip, int t_port)
+		: m_name(t_name), m_ip(t_ip), m_port(t_port)
 	{
-		setObjectName("CmdThread");
-		start();
 	}
 
-	CmdThread::~CmdThread()
-	{
-		m_queue.stop();
+	QString 	name() const { return m_name; }
+	QString 	ip() const { return m_ip; }
+	int 		port() const { return m_port; }
 
-		if (isRunning()) {
-			wait();
-		}
+	bool operator==(const DevConInfo &t_right) {
+		return (m_name == t_right.name()) && (m_ip == t_right.ip()) && (m_port == t_right.port());
 	}
 
-	void CmdThread::putCommand(ptrCMD t_cmd)
-	{
-		m_queue.push(t_cmd);
-	}
+protected:
+	QString 	m_name;
+	QString 	m_ip;
+	int 		m_port = 102;
+};
 
-	void CmdThread::run()
-	{
-		while (m_queue.isRunning()) {
-			ptrCMD cmd = m_queue.pop();
-			if (cmd) {
-				cmd->execute(m_con);
-			}
-		}
-	}
-}
+/**
+ * @brief AppSettings is a class which get/set IEDClient's settings
+ */
+class AppSettings
+{
+public:
+	AppSettings() = default;
+	~AppSettings() = default;
+
+	QList<DevConInfo>	getDevConList();
+	void 				saveNewDevCon(const DevConInfo &t_dev);
+
+	const int SaveDevsHistoryLen = 10;
+};

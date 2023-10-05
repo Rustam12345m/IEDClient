@@ -25,6 +25,8 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
+import "qrc:/global/"
+
 // LD page
 Item {
 	readonly property int blkSpace: 30

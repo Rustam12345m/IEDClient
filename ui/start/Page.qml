@@ -24,14 +24,20 @@
 import QtQuick
 import QtQuick.Controls
 
+import "qrc:/global/"
+
 FocusScope {
 	signal nextPageSignal(int page)
+
+	function slotSetCurrentDevice(ip, port) {
+		ipAddrInput.text = ip
+		portInput.text = port
+	}
 
 	Rectangle {
 		anchors.fill: parent
 
-		//color: "lightgray"
-		color: "white"
+		color: "white" //"lightgray"
 
 		Rectangle {
 			id: rectangle
@@ -39,12 +45,12 @@ FocusScope {
 
 			width: 450
 			height: 250
-			//color: "white"
-			color: "lightgray"
+			color: "lightgray" //"white"
 
 			border.width: 2
 			smooth: false
 
+			// Label
 			Text {
 				text: qsTr("Connection to IED")
 				x: 150

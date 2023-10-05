@@ -16,6 +16,10 @@ set(SOURCES
 	connect_cmd.cpp
 	get_ldlist_cmd.hpp
 	get_ldlist_cmd.cpp
+	download_file_cmd.hpp
+	download_file_cmd.cpp
+	remove_file_cmd.hpp
+	remove_file_cmd.cpp
 )
 
 qt_add_library(cmd_lib STATIC ${SOURCES})
