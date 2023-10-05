@@ -13,6 +13,8 @@ set(SOURCES
 	ln_tablemodel.cpp
 	sort_proxy_model.hpp
 	sort_proxy_model.cpp
+	last_conn_list.hpp
+	last_conn_list.cpp
 )
 
 qt_add_library(models_lib STATIC ${SOURCES})

@@ -21,37 +21,30 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "cmd_thread.hpp"
+#pragma once
+
+#include "base_command.hpp"
 
 namespace Core::Cmd
 {
-	CmdThread::CmdThread(LibInterface &t_con) : m_con(t_con)
+	/*
+	 * This class realizes downloading file from the IED
+	 * */
+	class DownloadFile : public IED_BaseCommand
 	{
-		setObjectName("CmdThread");
-		start();
-	}
-
-	CmdThread::~CmdThread()
-	{
-		m_queue.stop();
-
-		if (isRunning()) {
-			wait();
+		Q_OBJECT
+	public:
+		DownloadFile(const QString &t_name)
+			: IED_BaseCommand(IED_CMD::UNDEFINED)
+		{
 		}
-	}
+		~DownloadFile() {}
 
-	void CmdThread::putCommand(ptrCMD t_cmd)
-	{
-		m_queue.push(t_cmd);
-	}
+		void	execute(LibInterface &t_con) override;
 
-	void CmdThread::run()
-	{
-		while (m_queue.isRunning()) {
-			ptrCMD cmd = m_queue.pop();
-			if (cmd) {
-				cmd->execute(m_con);
-			}
+		// Create new command like Builder pattern
+		static QSharedPointer<DownloadFile> create(const QString &t_name) {
+			return QSharedPointer<DownloadFile>::create(t_name);
 		}
-	}
+	};
 }

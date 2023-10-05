@@ -27,6 +27,6 @@ Item {
 
 	Text {
 		anchors.centerIn: parent
-		text: "DataSets page"
+		text: "Report control blocks page"
 	}
 }

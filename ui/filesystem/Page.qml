@@ -25,9 +25,9 @@ import QtQuick
 import QtQuick.Controls
 import Qt.labs.qmlmodels
 
-Item {
-	readonly property int cellTextMargin: 20
+import "qrc:/"
 
+Item {
 	HorizontalHeaderView {
 		id: headerID
 
@@ -42,7 +42,7 @@ Item {
 		delegate: Rectangle {
 			property var columnIndex: model.column
 
-			implicitWidth: text.implicitWidth + cellTextMargin
+			implicitWidth: text.implicitWidth + 20
 			implicitHeight: 30
 			color: "#f6f6f6"
 			border.color: "#e4e4e4"
@@ -72,20 +72,27 @@ Item {
 		id: tableID
 		model: mainPres.filesModel
 
-		anchors.left: parent.left
-		anchors.top: headerID.bottom
-		anchors.right: parent.right
-		anchors.bottom: parent.bottom
+		anchors {
+			left: parent.left
+			top: headerID.bottom
+			right: parent.right
+			bottom: parent.bottom
+		}
 
 		focus: false
 		interactive: false
 		boundsBehavior: Flickable.StopAtBounds
 
+		function getFilename(row) {
+			let idx = tableID.model.index(row, 0)
+			return tableID.model.data(idx, "display")
+		}
+
 		function setGoodColumnsWidth() {
 			const iw = []
 			let sum = 0, i = 0
 			for (i=0;i<columns;i++) {
-				iw[i] = Math.max(header.implicitColumnWidth(i), implicitColumnWidth(i))
+				iw[i] = Math.max(headerID.implicitColumnWidth(i), implicitColumnWidth(i))
 				sum = sum + iw[i]
 			}
 			if (sum === 0) {
@@ -98,20 +105,8 @@ Item {
 
 		onWidthChanged: function() {
 			tableID.forceLayout()
-			//setGoodColumnsWidth()
+			setGoodColumnsWidth()
 		}
-		/*
-		columnWidthProvider: function(col) {
-			switch (col) {
-			case 0: {
-				return width - columnWidth(1) - columnWidth(2)
-			}
-			default: {
-				return Math.max(headerID.implicitColumnWidth(col), implicitColumnWidth(col))
-			}
-			}
-		}
-		*/
 
 		selectionBehavior: TableView.SelectRows
 		selectionModel: ItemSelectionModel {
@@ -147,27 +142,24 @@ Item {
 			DelegateChoice {
 				column: 0
 
-				delegate: FS_Delegate {
-					delegateHeight: cellTextMargin
-					text: model.name
+				delegate: FileTableDelegate {
+					text: model.display
 				}
 			}
 			// File size column
 			DelegateChoice {
 				column: 1
 
-				delegate: FS_Delegate {
-					delegateHeight: cellTextMargin
-					text: model.size
+				delegate: FileTableDelegate {
+					text: model.display
 				}
 			}
 			// File last modified time column
 			DelegateChoice {
 				column: 2
 
-				delegate: FS_Delegate {
-					delegateHeight: cellTextMargin
-					text: model.mts
+				delegate: FileTableDelegate {
+					text: model.display
 				}
 			}
 		}

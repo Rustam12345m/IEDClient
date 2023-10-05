@@ -266,4 +266,11 @@ namespace Core::Cmd
 		}
 		return 0;
 	}
+
+	int Lib61850::removeFile(const QString &t_filename)
+	{
+		IedClientError retval = IED_ERROR_OK;
+		IedConnection_deleteFile(m_libConn, &retval, t_filename.toStdString().c_str());
+		return (retval != IED_ERROR_OK);
+	}
 }

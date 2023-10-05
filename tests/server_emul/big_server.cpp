@@ -59,6 +59,9 @@ int main(int argc, char* argv[])
 
 	IedServer iedServer = IedServer_create(model);
 
+	//
+	IedServer_setFilestoreBasepath(iedServer, "./files/");
+
 	/* MMS server will be instructed to start listening to client connections. */
 	IedServer_start(iedServer, tcpPort);
 

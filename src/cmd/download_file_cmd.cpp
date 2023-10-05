@@ -21,37 +21,11 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "cmd_thread.hpp"
+#include "download_file_cmd.hpp"
 
 namespace Core::Cmd
 {
-	CmdThread::CmdThread(LibInterface &t_con) : m_con(t_con)
+	void DownloadFile::execute(LibInterface &t_con)
 	{
-		setObjectName("CmdThread");
-		start();
-	}
-
-	CmdThread::~CmdThread()
-	{
-		m_queue.stop();
-
-		if (isRunning()) {
-			wait();
-		}
-	}
-
-	void CmdThread::putCommand(ptrCMD t_cmd)
-	{
-		m_queue.push(t_cmd);
-	}
-
-	void CmdThread::run()
-	{
-		while (m_queue.isRunning()) {
-			ptrCMD cmd = m_queue.pop();
-			if (cmd) {
-				cmd->execute(m_con);
-			}
-		}
 	}
 }

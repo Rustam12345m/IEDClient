@@ -32,6 +32,8 @@
 #include "connect_cmd.hpp"
 #include "get_filelist_cmd.hpp"
 #include "update_lnode_cmd.hpp"
+#include "download_file_cmd.hpp"
+#include "remove_file_cmd.hpp"
 
 namespace Core::Cmd
 {

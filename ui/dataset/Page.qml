@@ -22,54 +22,11 @@
  * */
 
 import QtQuick
-import QtQuick.Controls
-import QtQuick.Layouts
 
 Item {
-	Rectangle {
-		id: root
-		anchors.fill: parent
-		color: "white"//"lightgrey"
 
-		ScrollView {
-			anchors.fill: parent
-
-			ListView {
-				id: listView
-				width: parent.width
-
-				model: ListModel {
-					id: propertyModel
-
-					ListElement {
-						name: "Name N1"
-						value: "1"
-					}
-					ListElement {
-						name: "Name N2"
-						value: "2"
-					}
-					ListElement {
-						name: "Name N3"
-						value: "3"
-					}
-				}
-
-				delegate: RowLayout {
-					width: listView.width
-					height: childrenRect.height
-
-					Label {
-						text: model.name
-						Layout.fillWidth: true
-					}
-					TextField {
-						text: model.value
-						Layout.fillWidth: true
-					}
-				}
-
-			}
-		}
+	Text {
+		anchors.centerIn: parent
+		text: "DataSets page"
 	}
 }

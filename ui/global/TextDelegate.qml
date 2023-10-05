@@ -22,70 +22,49 @@
  * */
 
 import QtQuick
-import QtQuick.Controls
 
 Item {
 	required property int delegateHeight
 	required property bool selected
 	property alias text: textFild.text
+	property alias textAlign: textFild.horizontalAlignment
 
-	implicitWidth: textFild.implicitWidth + cellTextMargin
+	implicitWidth: textFild.implicitWidth + 10
 	implicitHeight: delegateHeight
+
+	signal sigClick(int row, int col)
+	signal sigDoubleClick(int row, int col)
 
 	Rectangle {
 		anchors.fill: parent
 
-		border.width: 1
-		border.color: (selected ? "black" : "lightgray")
 		color: (selected ? "lightgray" : "white")
+		border.color: (selected ? "black" : "lightgray")
 
 		Text {
 			id: textFild
-			anchors.centerIn: parent
+
+			anchors.fill: parent
+			horizontalAlignment: Text.AlignHCenter
+			verticalAlignment: Text.AlignVCenter
+			leftPadding: 5
 			text: " - "
 		}
 	}
+
 	MouseArea {
 		anchors.fill: parent
 		acceptedButtons: Qt.LeftButton | Qt.RightButton
 
 		onClicked: function(mouse) {
-			if (mouse.button === Qt.RightButton) {
-				contextMenu.popup()
-			}
-
 			let idx = tableID.model.index(row, 0);
 			tableID.selectionModel.setCurrentIndex(idx, ItemSelectionModel.Clear
 														| ItemSelectionModel.Select
 														| ItemSelectionModel.Rows);
+			sigClick(row, 1)
 		}
-		onPressAndHold: function(mouse) {
-			if (mouse.source === Qt.MouseEventNotSynthesized) {
-				contextMenu.popup()
-			}
-		}
-
-		Menu {
-			id: contextMenu
-
-			MenuItem {
-				text: "Download"
-				onTriggered: {
-					console.log(text)
-				}
-			}
-			MenuItem {
-				text: "Remove"
-				onTriggered: {
-					console.log(text)
-				}
-			}
-			MenuItem {
-				text: "Rename"
-				onTriggered: {
-					console.log(text)
-				}
-			}
+		onDoubleClicked: function(mouse) {
+			sigDoubleClick(row, 1)
 		}
 	}
 }

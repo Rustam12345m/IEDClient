@@ -46,7 +46,7 @@ int FilesTableModel::columnCount(const QModelIndex &t_parent) const
 
 QHash<int, QByteArray> FilesTableModel::roleNames() const
 {
-	return { { FS_ROLE_NAME, "name" }, { FS_ROLE_SIZE, "size" }, { FS_ROLE_MTS, "mts" } };
+	return { { Qt::DisplayRole, "display"} };
 }
 
 Qt::ItemFlags FilesTableModel::flags(const QModelIndex &t_index) const
@@ -58,7 +58,7 @@ QVariant FilesTableModel::headerData(int t_section, Qt::Orientation t_orientatio
 {
 	switch (t_orientation) {
 	case Qt::Horizontal: {
-		const char* labels[] = { "File", "Size", "Last modification" };
+		const char* labels[] = { "File name", "Size", "Last modification" };
 		return QVariant(labels[t_section % 3]);
 	}
 	case Qt::Vertical: {
@@ -71,26 +71,18 @@ QVariant FilesTableModel::headerData(int t_section, Qt::Orientation t_orientatio
 QVariant FilesTableModel::data(const QModelIndex &t_index, int t_role) const
 {
 	int row = t_index.row();
-
-	switch (t_role) {
-	case FS_ROLE_NAME: {
-		if (row >= 0 && row < m_tree.m_dir.m_file.size()) {
+	if (row >= 0 && row < m_tree.m_dir.m_file.size()) {
+		switch (t_index.column()) {
+		case FS_NAME_COLUMN: {
 			return m_tree.m_dir.m_file[row].m_fileName;
 		}
-		break;
-	}
-	case FS_ROLE_SIZE: {
-		if (row >= 0 && row < m_tree.m_dir.m_file.size()) {
-			return QString::number(m_tree.m_dir.m_file[row].m_size);
+		case FS_SIZE_COLUMN: {
+			return QString::number((double)m_tree.m_dir.m_file[row].m_size / 1024, 'f', 1) + " KB";
 		}
-		break;
-	}
-	case FS_ROLE_MTS: {
-		if (row >= 0 && row < m_tree.m_dir.m_file.size()) {
+		case FS_DATE_COLUMN: {
 			return QString::number(m_tree.m_dir.m_file[row].m_mts);
 		}
-		break;
-	}
+		}
 	}
 	return QVariant(" - ");
 }
