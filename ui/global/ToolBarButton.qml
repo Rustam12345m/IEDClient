@@ -38,9 +38,8 @@ Item {
 		anchors.fill: parent
 
 		onClicked: function() {
-			console.log("Clicked: " + prompt)
+			//console.log("Clicked: " + prompt)
 			sigClicked()
-			//mainStack.changePage(Enum.Page.START)
 		}
 	}
 	ToolTip {

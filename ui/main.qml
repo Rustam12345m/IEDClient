@@ -34,7 +34,7 @@ import "qrc:/dataset/" as DS
 import "qrc:/reports/" as RCB
 
 Window {
-	title: qsTr("IEDClient - Open source client for IEC 61850")
+	title: qsTr("IEDClient - An Open-Source Client for IEC 61850 Protocols")
 
 	id: rootWindow
 	width: 1000
@@ -49,11 +49,11 @@ Window {
 		repeat: true
 		onTriggered: {
 			tick++
-			statusText.text = Qt.formatDateTime(new Date(), "hh:mm:ss") + " Uptime: " + tick
+			//statusTextBox.text = Qt.formatDateTime(new Date(), "hh:mm:ss") + " Uptime: " + tick
 		}
 	}
 
-	GlobalProgressBar {
+	ModalProgressBar {
 		anchors.centerIn: parent
 		id: globalProgressBar
 	}
@@ -63,7 +63,7 @@ Window {
 		id: mainBack
 		anchors.fill: parent
 
-		// Area for Menu + ToolBar
+		// Menu + ToolBar
 		Rectangle {
 			id: menuBarRect
 			
@@ -81,8 +81,11 @@ Window {
 
 			// Menu + ToolBar
 			RowLayout {
-				anchors.fill: parent
-				width: parent.width
+				anchors {
+					fill: parent
+					leftMargin: 0
+					rightMargin: 2
+				}
 				spacing: 10
 
 				// Menu
@@ -185,7 +188,7 @@ Window {
 							height: toolBar.btnHeight
 
 							onSigClicked: function() {
-								mainStack.changePage(Enum.Page.START)
+								rootWindow.setActivePage(Globals.Page.START)
 							}
 						}
 						// Disconnect
@@ -226,6 +229,7 @@ Window {
 							height: toolBar.btnHeight
 
 							onSigClicked: function() {
+								rootWindow.updateActivePage()
 							}
 						}
 
@@ -238,22 +242,24 @@ Window {
 								anchors.fill: parent
 
 								Label {
-									text: "FC: "
-
 									anchors.verticalCenter: parent.verticalCenter
+
+									text: "FC: "
 								}
 								ComboBox {
+									id: comboBox
 									anchors.verticalCenter: parent.verticalCenter
-
 									height: toolBar.btnHeight
-									width: 150
+
 									enabled: lnPage.visible
+									implicitContentWidthPolicy: ComboBox.WidestText
 
 									model: ListModel {
 										ListElement { text: "State(ST, MX)" }
 										ListElement { text: "Control(CO)" }
 										ListElement { text: "Description(DO)" }
 									}
+
 									onActivated: function(index) {
 										console.log("ComboBox: Activate inx = " + index);
 									}
@@ -267,29 +273,33 @@ Window {
 				Item {
 					Layout.fillWidth: true
 
-					width: 10
-					height: parent.height
+					width: 20
+					height: toolBar.height
 				}
 
 				// Status
 				Rectangle {
-					color: "black"
+					color: "white"//"lightgray" //"black"
+					clip: true
 
-					height: parent.height
-					width: Math.max(200, statusText.implicitWidth + 10)
+					height: toolBar.btnHeight
+					width: Math.max(200, statusTextBox.implicitWidth + 10)
 
 					Text {
-						id: statusText
-						anchors.centerIn: parent
-						color: "white"
+						id: statusTextBox
+						anchors.fill: parent
 
-						text: " - "
+						horizontalAlignment: Text.AlignHCenter
+						verticalAlignment: Text.AlignVCenter
+
+						color: "black" //"white"
+						text: ""
 					}
 				}
 			}
 		}
 
-		// WorkArea
+		// Work Area
 		Rectangle {
 			id: workArea
 			color: "white"
@@ -330,6 +340,7 @@ Window {
 					// Pages
 					StackLayout {
 						id: mainStack
+						clip: true
 
 						anchors {
 							top: tabsArea.top
@@ -350,7 +361,7 @@ Window {
 								}
 							}
 							onNextPageSignal: function(page) {
-								mainStack.changePage(page)
+								rootWindow.setActivePage(page)
 							}
 						}
 
@@ -359,14 +370,16 @@ Window {
 
 							onVisibleChanged: {
 								if (visible) {
+									hidePropertyPanel()
 								}
 							}
 							onSigNextPageSignal: function(page) {
-								mainStack.changePage(page)
+								rootWindow.setActivePage(page)
 							}
-							onSigLDeviceChanged: function(current) {
-								console.log("LN: Current LD changed to " + current)
-								lnPage.updateLDeviceIndex(current)
+							onSigLDeviceChanged: function(index, name) {
+								//console.log("LN: Current LD changed to " + current)
+								lnPage.updateLDeviceIndex(index)
+								setStatusText(name)
 							}
 						}
 
@@ -375,7 +388,7 @@ Window {
 
 							onVisibleChanged: {
 								if (visible) {
-									propertyPanel.SplitView.preferredWidth = 0
+									hidePropertyPanel()
 								}
 							}
 						}
@@ -384,6 +397,7 @@ Window {
 							onVisibleChanged: {
 								if (visible) {
 									mainPres.updateFilesDirectory("/")
+									hidePropertyPanel()
 								}
 							}
 						}
@@ -399,37 +413,6 @@ Window {
 							onVisibleChanged: {
 								if (visible) {
 								}
-							}
-						}
-
-						function changePage(page) {
-							console.log("ActivatePage: new index = " + page)
-
-							switch (page) {
-							case Enum.Page.START: {
-								tabBar.currentIndex = 0;
-								break;
-							}
-							case Enum.Page.LD: {
-								tabBar.currentIndex = 1;
-								break;
-							}
-							case Enum.Page.LN: {
-								tabBar.currentIndex = 2;
-								break;
-							}
-							case Enum.Page.FS: {
-								tabBar.currentIndex = 3;
-								break;
-							}
-							case Enum.Page.DS: {
-								tabBar.currentIndex = 4;
-								break;
-							}
-							case Enum.Page.RCB: {
-								tabBar.currentIndex = 5;
-								break;
-							}
 							}
 						}
 					}
@@ -469,10 +452,12 @@ Window {
 								text: qsTr("File Browser")
 							}
 							TabButton {
-								text: qsTr("RCB")
+								text: qsTr("DataSets")
+								enabled: false
 							}
 							TabButton {
-								text: qsTr("DataSets")
+								text: qsTr("RCB")
+								enabled: false
 							}
 						}
 					}
@@ -514,32 +499,32 @@ Window {
 			if (event.modifiers & Qt.AltModifier) {
 				switch (event.key) {
 				case Qt.Key_1: {
-					mainStack.changePage(Enum.Page.START)
+					rootWindow.setActivePage(Globals.Page.START)
 					event.accepted = true
 					break;
 				}
 				case Qt.Key_2: {
-					mainStack.changePage(Enum.Page.LD)
+					rootWindow.setActivePage(Globals.Page.LD)
 					event.accepted = true
 					break;
 				}
 				case Qt.Key_3: {
-					mainStack.changePage(Enum.Page.LN)
+					rootWindow.setActivePage(Globals.Page.LN)
 					event.accepted = true
 					break;
 				}
 				case Qt.Key_4: {
-					mainStack.changePage(Enum.Page.FS)
+					rootWindow.setActivePage(Globals.Page.FS)
 					event.accepted = true
 					break;
 				}
 				case Qt.Key_5: {
-					mainStack.changePage(Enum.Page.DS)
+					rootWindow.setActivePage(Globals.Page.DS)
 					event.accepted = true
 					break;
 				}
 				case Qt.Key_6: {
-					mainStack.changePage(Enum.Page.RCB)
+					rootWindow.setActivePage(Globals.Page.RCB)
 					event.accepted = true
 					break;
 				}
@@ -548,28 +533,91 @@ Window {
 		}
 	}
 
+	// Common functions
+	function hidePropertyPanel() {
+		propertyPanel.SplitView.preferredWidth = 0
+	}
+
 	function openEventLog() {
 		var logsComponent = Qt.createComponent("global/EventsViewer.qml")
 		var logsWindow = logsComponent.createObject(rootWindow)
 		logsWindow.show()
 	}
 
-	function slotMySignal(msg) {
-		console.log(msg)
+	function setStatusText(msg) {
+		statusTextBox.text = msg
 	}
+
+	function setActivePage(page) {
+		//console.log("ActivatePage: new index = " + page)
+
+		switch (page) {
+		case Globals.Page.START: {
+			tabBar.currentIndex = 0;
+			break;
+		}
+		case Globals.Page.LD: {
+			tabBar.currentIndex = 1;
+			break;
+		}
+		case Globals.Page.LN: {
+			tabBar.currentIndex = 2;
+			break;
+		}
+		case Globals.Page.FS: {
+			tabBar.currentIndex = 3;
+			break;
+		}
+		case Globals.Page.DS: {
+			tabBar.currentIndex = 4;
+			break;
+		}
+		case Globals.Page.RCB: {
+			tabBar.currentIndex = 5;
+			break;
+		}
+		}
+	}
+
+	function updateActivePage() {
+		console.log("F5: Update active page")
+
+		switch (tabBar.currentIndex) {
+		case Globals.Page.START: {
+			break;
+		}
+		case Globals.Page.LD: {
+			break;
+		}
+		case Globals.Page.LN: {
+			break;
+		}
+		case Globals.Page.FS: {
+			mainPres.updateFilesDirectory("/")
+			break;
+		}
+		case Globals.Page.DS: {
+			break;
+		}
+		case Globals.Page.RCB: {
+			break;
+		}
+		}
+	}
+
 	function slotOnProgress(t_perc, t_msg) {
 		if (!globalProgressBar.isActive()) {
 			globalProgressBar.startLoad()
 		}
 		globalProgressBar.updateLoad(t_perc, t_msg)
 	}
+
 	function slotOnFinished() {
 		globalProgressBar.finishLoad()
 	}
 
 	Component.onCompleted: function() {
 		// App to GUI
-		appCore.mySignal.connect(slotMySignal)
 		mainPres.sigProgress.connect(slotOnProgress)
 		mainPres.sigFinished.connect(slotOnFinished)
 

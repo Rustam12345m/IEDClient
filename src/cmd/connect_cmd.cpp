@@ -41,6 +41,7 @@ namespace Core::Cmd
 		emit sigFinished();
 		return;
 		*/
+		//QThread::msleep(10 * 1000);
 
 		if (t_con.connect(m_ip, m_port, m_tls, m_user, m_password)) {
 			qDebug() << QString("Connected to %1:%2").arg(m_ip).arg(m_port);

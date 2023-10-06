@@ -37,7 +37,7 @@ Item {
 	}
 
 	HorizontalHeaderView {
-		id: header
+		id: headerID
 
 		boundsBehavior: Flickable.StopAtBounds
 		anchors {
@@ -68,7 +68,7 @@ Item {
 				verticalAlignment: Text.AlignVCenter
 
 				//font.bold: true
-				text: model[header.textRole]
+				text: model[headerID.textRole]
 				color: "#ff26282a"
 			}
 			MouseArea {
@@ -94,7 +94,7 @@ Item {
 			leftMargin: 5
 			left: parent.left
 			right: parent.right
-			top: header.bottom
+			top: headerID.bottom
 			bottom: parent.bottom
 		}
 		model: mainPres.doModel
@@ -107,7 +107,7 @@ Item {
 			const iw = []
 			let sum = 0
 			for (let i=0;i<columns;i++) {
-				iw[i] = Math.max(header.implicitColumnWidth(i), implicitColumnWidth(i))
+				iw[i] = Math.max(headerID.implicitColumnWidth(i), implicitColumnWidth(i))
 				sum = sum + iw[i]
 			}
 			if (sum === 0) sum = 1
@@ -117,7 +117,7 @@ Item {
 			const iw = []
 			let sum = 0, i = 0
 			for (i=0;i<columns;i++) {
-				iw[i] = Math.max(header.implicitColumnWidth(i), implicitColumnWidth(i))
+				iw[i] = Math.max(headerID.implicitColumnWidth(i), implicitColumnWidth(i))
 				sum = sum + iw[i]
 			}
 			if (sum === 0) {
@@ -139,7 +139,7 @@ Item {
 				return width - columnWidth(0) - columnWidth(1) - columnWidth(2) - columnWidth(3) - columnWidth(4)
 			}
 			default: {
-				return Math.max(header.implicitColumnWidth(column), implicitColumnWidth(column))
+				return Math.max(headerID.implicitColumnWidth(column), implicitColumnWidth(column))
 			}
 			}
 		}

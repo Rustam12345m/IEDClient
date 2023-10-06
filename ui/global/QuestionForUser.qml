@@ -1,5 +1,5 @@
 /*
- *  main.cpp
+ *  main.qml
  *
  *  Copyright 2023 Rustam Mustafin
  *
@@ -21,41 +21,25 @@
  *  See COPYING file for the complete license text.
  * */
 
-#pragma once
+import QtQuick
+import QtQuick.Controls
 
-#include <QObject>
+Item {
+	Dialog {
+		id: root
 
-#include "cmd/cmd_thread.hpp"
-#include "cmd/lib61850_adapter.hpp"
-#include "core/ied_tree.hpp"
-#include "core/fs_tree.hpp"
+		width: Math.max(400, progressText.implicitWidth + 50)
+		height: 120
 
-/*
- * AppCore -
- * */
-class AppCore : public QObject
-{
-	Q_OBJECT
-public:
-	AppCore(QObject *t_parent=nullptr);
-	~AppCore();
+		visible: false
+		anchors.centerIn: parent
 
-	Core::IED_Tree&		getObjectTree() {
-		return m_objTree;
+		modal: true
+		closePolicy: Dialog.NoAutoClose
+
+		Rectangle {
+			color: "gray"
+			anchors.fill: parent
+		}
 	}
-	Core::FS_Tree&		getFSTree() {
-		return m_fsTree;
-	}
-
-	void		putCommand(Core::Cmd::ptrCMD t_cmd);
-
-signals:
-	void		mySignal(const QString &t_msg);
-
-protected:
-	Core::IED_Tree			m_objTree;
-	Core::FS_Tree			m_fsTree;
-
-	Core::Cmd::Lib61850		m_con;
-	Core::Cmd::CmdThread	m_cmdThread;
-};
+}

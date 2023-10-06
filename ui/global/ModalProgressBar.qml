@@ -26,15 +26,17 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 Item {
-	Dialog {
+	Popup {
 		id: progressOverlay
+
+		anchors.centerIn: parent
+
 		width: Math.max(400, progressText.implicitWidth + 50)
 		height: 120
-		visible: false
-		anchors.centerIn: parent
 
 		modal: true
 		closePolicy: Dialog.NoAutoClose
+		visible: false
 
 		Rectangle {
 			color: "gray"
@@ -69,7 +71,6 @@ Item {
 				}
 			}
 		}
-
 	}
 
 	function isActive() {

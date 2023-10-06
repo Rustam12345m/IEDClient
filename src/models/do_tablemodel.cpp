@@ -30,7 +30,7 @@ DO_TableModel::DO_TableModel(QObject *t_parent, Core::IED_Tree &t_tree)
 
 void DO_TableModel::setCurrentLD(int t_inx)
 {
-	qDebug() << "DO_TableModel: setCurrentLD " << t_inx;
+	//qDebug() << "DO_TableModel: setCurrentLD " << t_inx;
 
 	beginResetModel();
 	m_currentLD = t_inx;
@@ -41,7 +41,7 @@ void DO_TableModel::setCurrentLD(int t_inx)
 
 void DO_TableModel::setCurrentLN(int t_inx)
 {
-	qDebug() << "DO_TableModel: setCurrentLN " << t_inx;
+	//qDebug() << "DO_TableModel: setCurrentLN " << t_inx;
 
 	beginResetModel();
 	m_currentLN = t_inx;

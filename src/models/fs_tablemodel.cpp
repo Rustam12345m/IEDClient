@@ -22,7 +22,20 @@
  * */
 
 #include "fs_tablemodel.hpp"
+
+#include <QDateTime>
 #include <QDebug>
+
+namespace {
+	QString 	convertTimestampMsToUserString(uint64_t t_ms)
+	{
+		uint64_t sec = t_ms / 1000;
+		QDateTime dt = QDateTime::fromSecsSinceEpoch(sec);
+
+		return dt.toString("HH:mm:ss dd.MM.yyyy"); // ms isn't important
+	}
+}
+
 
 FilesTableModel::FilesTableModel(QObject *t_parent, Core::FS_Tree &t_tree)
 	: QAbstractTableModel(t_parent), m_tree{t_tree}
@@ -41,7 +54,7 @@ int FilesTableModel::rowCount(const QModelIndex &t_parent) const
 
 int FilesTableModel::columnCount(const QModelIndex &t_parent) const
 {
-	return 3;
+	return FS_COLUMN_COUNT;
 }
 
 QHash<int, QByteArray> FilesTableModel::roleNames() const
@@ -58,8 +71,8 @@ QVariant FilesTableModel::headerData(int t_section, Qt::Orientation t_orientatio
 {
 	switch (t_orientation) {
 	case Qt::Horizontal: {
-		const char* labels[] = { "File name", "Size", "Last modification" };
-		return QVariant(labels[t_section % 3]);
+		const char* labels[] = { "Last modification",  "Name", "Size", "Control" };
+		return QVariant(labels[t_section % FS_COLUMN_COUNT]);
 	}
 	case Qt::Vertical: {
 		break;
@@ -71,7 +84,7 @@ QVariant FilesTableModel::headerData(int t_section, Qt::Orientation t_orientatio
 QVariant FilesTableModel::data(const QModelIndex &t_index, int t_role) const
 {
 	int row = t_index.row();
-	if (row >= 0 && row < m_tree.m_dir.m_file.size()) {
+	if ((row >= 0) && (row < m_tree.m_dir.m_file.size())) {
 		switch (t_index.column()) {
 		case FS_NAME_COLUMN: {
 			return m_tree.m_dir.m_file[row].m_fileName;
@@ -80,7 +93,7 @@ QVariant FilesTableModel::data(const QModelIndex &t_index, int t_role) const
 			return QString::number((double)m_tree.m_dir.m_file[row].m_size / 1024, 'f', 1) + " KB";
 		}
 		case FS_DATE_COLUMN: {
-			return QString::number(m_tree.m_dir.m_file[row].m_mts);
+			return convertTimestampMsToUserString(m_tree.m_dir.m_file[row].m_mts);
 		}
 		}
 	}
