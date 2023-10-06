@@ -54,8 +54,15 @@ Window {
 	}
 
 	ModalProgressBar {
-		anchors.centerIn: parent
 		id: globalProgressBar
+
+		anchors.centerIn: parent
+	}
+
+	QuestionForUser {
+		id: globalQuestionWindow
+
+		anchors.centerIn: parent
 	}
 
 	// Main area
@@ -66,7 +73,7 @@ Window {
 		// Menu + ToolBar
 		Rectangle {
 			id: menuBarRect
-			
+
 			z: 100500
 			border.width: 1
 			border.color: "black"
@@ -84,7 +91,7 @@ Window {
 				anchors {
 					fill: parent
 					leftMargin: 0
-					rightMargin: 2
+					rightMargin: 5
 				}
 				spacing: 10
 
@@ -199,6 +206,7 @@ Window {
 							height: toolBar.btnHeight
 
 							onSigClicked: function() {
+								globalQuestionWindow.open("Disconnect from ... ?")
 							}
 						}
 						// Back
@@ -279,11 +287,14 @@ Window {
 
 				// Status
 				Rectangle {
-					color: "white"//"lightgray" //"black"
-					clip: true
-
 					height: toolBar.btnHeight
-					width: Math.max(200, statusTextBox.implicitWidth + 10)
+					width: Math.max(250, statusTextBox.implicitWidth + 20)
+
+					border.width: 1
+					border.color: "gray"
+
+					color: "white"// "lightgray" //"black"
+					clip: true
 
 					Text {
 						id: statusTextBox
@@ -294,6 +305,7 @@ Window {
 
 						color: "black" //"white"
 						text: ""
+						font.bold: true
 					}
 				}
 			}

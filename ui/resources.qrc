@@ -3,11 +3,12 @@
         <file>main.qml</file>
 
         <file>global/ToolBarButton.qml</file>
-        <file>global/ModalProgressBar.qml</file>
         <file>global/TextDelegate.qml</file>
         <file>global/Globals.qml</file>
         <file>global/AboutProgram.qml</file>
         <file>global/EventsViewer.qml</file>
+        <file>global/QuestionForUser.qml</file>
+        <file>global/ModalProgressBar.qml</file>
 
         <file>start/Page.qml</file>
         <file>start/LastConnTable.qml</file>

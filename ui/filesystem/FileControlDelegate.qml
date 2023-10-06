@@ -27,6 +27,9 @@ import QtQuick.Controls
 Item {
 	required property bool selected
 
+	signal sigRemoveFile(int row)
+	signal sigDownloadFile(int row)
+
 	id: root
 	implicitWidth: downloadBtn.width + progressBar.width + removeBtn.width + 5
 
@@ -53,8 +56,7 @@ Item {
 				icon.source: "qrc:/img/icons/download.svg"
 
 				onClicked: function() {
-					console.log("Control: Download file N" + row)
-					//mainPres.removeFile(tableID.getFilename(row))
+					sigDownloadFile(row)
 				}
 			}
 
@@ -85,8 +87,7 @@ Item {
 				icon.source: "qrc:/img/icons/clear.svg"
 
 				onClicked: function() {
-					console.log("Control: Remove file N" + row)
-					mainPres.removeFile(tableID.getFilename(row))
+					sigRemoveFile(row)
 				}
 			}
 		}
