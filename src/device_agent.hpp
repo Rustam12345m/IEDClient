@@ -21,27 +21,38 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include <QGuiApplication>
-#include <QQmlApplicationEngine>
-#include <QQmlContext>
+#pragma once
 
-#include "device_agent.hpp"
-#include "main_presenter.hpp"
+#include <QObject>
 
-int main(int argc, char *argv[])
+#include "cmd/cmd_thread.hpp"
+#include "cmd/lib61850_adapter.hpp"
+#include "core/ied_tree.hpp"
+#include "core/fs_tree.hpp"
+
+class DeviceAgent : public QObject
 {
-	QGuiApplication app(argc, argv);
+	Q_OBJECT
+public:
+	DeviceAgent(QObject *t_parent=nullptr);
+	~DeviceAgent();
 
-	QCoreApplication::setOrganizationName("OSI");
-    QCoreApplication::setOrganizationDomain("opensource.org");
-    QCoreApplication::setApplicationName("IEDClient");
+	Core::IED_Tree&		getObjectTree() {
+		return m_objTree;
+	}
+	Core::FS_Tree&		getFileTree() {
+		return m_fsTree;
+	}
 
-	MainPresenter mainPres;
+	void		putCommand(Core::Cmd::ptrCMD t_cmd);
 
-	QQmlApplicationEngine engine;
-	QQmlContext *context = engine.rootContext();
-	context->setContextProperty("mainPres", &mainPres);
+signals:
+	void		mySignal(const QString &t_msg);
 
-	engine.load(QStringLiteral("qrc:/main.qml"));
-	return app.exec();
-}
+protected:
+	Core::IED_Tree			m_objTree;
+	Core::FS_Tree			m_fsTree;
+
+	Core::Cmd::Lib61850		m_con;
+	Core::Cmd::CmdThread	m_cmdThread;
+};

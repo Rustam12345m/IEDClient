@@ -27,6 +27,8 @@ import QtQuick.Controls
 import "qrc:/global/"
 
 FocusScope {
+	id: root
+
 	signal nextPageSignal(int page)
 
 	function slotSetCurrentDevice(ip, port) {
@@ -34,14 +36,16 @@ FocusScope {
 		portInput.text = port
 	}
 
+	// Page rectangle (screen)
 	Rectangle {
 		anchors.fill: parent
 
 		color: "white" //"lightgray"
 
+		// mini-window
 		Rectangle {
-			id: rectangle
-			anchors.centerIn: parent
+			id: window
+			//anchors.centerIn: parent
 
 			width: 450
 			height: 250
@@ -49,6 +53,11 @@ FocusScope {
 
 			border.width: 2
 			smooth: false
+
+			MouseArea {
+				anchors.fill: parent
+				drag.target: window
+			}
 
 			// Label
 			Text {
@@ -139,7 +148,7 @@ FocusScope {
 					globalProgressBar.startLoad()
 					mainPres.connectTo(ipAddrInput.text, portInput.text,
 									tlsSwitcher.checked, userNameInput.text, userPassInput.text)
-					nextPageSignal(Enum.Page.LD)
+					nextPageSignal(Globals.Page.LD)
 				}
 
 				KeyNavigation.backtab: userPassInput
@@ -203,5 +212,13 @@ FocusScope {
 				KeyNavigation.tab: userNameInput
 			}
 		}
+	}
+
+	onWidthChanged: moveToCenter()
+	onHeightChanged: moveToCenter()
+
+	function moveToCenter() {
+		window.x = (root.width - window.width) / 2
+		window.y = (root.height - window.height) / 2
 	}
 }

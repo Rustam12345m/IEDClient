@@ -1,15 +1,15 @@
 # C++ source code
 set(PROJECT_SOURCES
 	main.cpp
-	app_core.hpp
-	app_core.cpp
+	device_agent.hpp
+	device_agent.cpp
 	main_presenter.hpp
 	main_presenter.cpp
 
 	app/settings.hpp
 	app/settings.cpp
 
-	../ui/resources.qrc
+	${CMAKE_SOURCE_DIR}/ui/resources.qrc
 )
 
 include_directories(

@@ -35,26 +35,23 @@ namespace Core
 {
 	class FileOn
 	{
-		QString m_fileName;
-		uint32_t m_size = 0;
-		uint64_t m_mts = 0; // last modified ts
-
 	public:
 		FileOn(const QString &t_name, uint32_t t_size, uint64_t t_ts)
-			: m_fileName{t_name}, m_size{t_size}, m_mts(t_ts)
+			: m_fileName{t_name}, m_size{t_size}, m_mts{t_ts}
 		{
 		}
-
 		FileOn() = delete;
+
+	private:
+		QString 	m_fileName;
+		uint32_t 	m_size = 0;
+		uint64_t 	m_mts = 0; // last modified ts
 
 		friend class ::FilesTableModel;
 	};
 
 	class DirOn
 	{
-		QString m_name;
-		QList<FileOn> m_file;
-
 	public:
 		QString name()
 		{
@@ -70,28 +67,30 @@ namespace Core
 			m_file.push_back(t_file);
 		}
 
+	private:
+		QString 		m_name;
+		QList<FileOn> 	m_file;
+
 		friend class ::FilesTableModel;
 	};
 
 	class FS_Tree : public QObject
 	{
 		Q_OBJECT
-		DirOn m_dir;
-
 	public:
 		FS_Tree(QObject *t_parent = nullptr) : QObject(t_parent) {}
 
 		void put(const DirOn &t_dir)
 		{
 			m_dir = t_dir;
-
 			emit sigFS_Updated();
 		}
 
 	signals:
 		void sigFS_Updated();
 
-	public slots:
+	private:
+		DirOn 			m_dir;
 
 		friend class ::FilesTableModel;
 	};

@@ -63,7 +63,6 @@ Item {
 				anchors.fill: parent
 
 				onSigCurrentLNodeChanged: function(t_ld, t_ln) {
-					//console.log("DO_Table got signal from LN_Table: ld = ", t_ld, " ln = ", t_ln)
 					tableDO.updateLNodeIndex(t_ld, t_ln)
 				}
 			}

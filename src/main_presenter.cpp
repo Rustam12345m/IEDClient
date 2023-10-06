@@ -24,19 +24,19 @@
 #include "main_presenter.hpp"
 #include "builder_information.hpp"
 
-MainPresenter::MainPresenter(AppCore &t_core)
-	: QObject(nullptr),
-	m_core(t_core),
-	m_eventsModel(this),
-	m_fsModel(this, m_core.getFSTree()),
-	m_ldModel(this, m_core.getObjectTree()),
-	m_lnModel(this, m_core.getObjectTree()),
-	m_doModel(this, m_core.getObjectTree()),
-	m_sortDOModel(this), m_lastConnModel(this, m_ini)
+MainPresenter::MainPresenter(QObject *t_parent) : QObject(t_parent)
 {
-	m_sortDOModel.setSourceModel(&m_doModel);
+	m_dev = new DeviceAgent(this);
+	m_eventsModel = new EventsTableModel(this);
 
-	qDebug() << "Application: " << PROJECT_VERSION << "\r\n";
+	m_fsModel = new FilesTableModel(this, m_dev->getFileTree());
+	m_ldModel = new LD_ListModel(this, m_dev->getObjectTree());
+	m_lnModel = new LN_TableModel(this, m_dev->getObjectTree());
+	m_doModel = new DO_TableModel(this, m_dev->getObjectTree());
+	m_sortDOModel = new SimpleProxyModel(this);
+	m_lastConnModel = new LastConn_TableModel(this, m_ini);
+
+	m_sortDOModel->setSourceModel(m_doModel);
 }
 
 MainPresenter::~MainPresenter()
@@ -50,7 +50,7 @@ void MainPresenter::connectTo(const QString &t_ip, int t_port, bool t_tls,
 				.arg(t_tls).arg(t_name).arg(t_pass);
 
 	auto cmd = Core::Cmd::ConnectCmd::create(t_ip, t_port, t_tls, t_name,
-											t_pass, m_core.getObjectTree());
+											t_pass, m_dev->getObjectTree());
 	putCmdToQueue(cmd);
 }
 
@@ -60,7 +60,7 @@ void MainPresenter::disconnectFrom()
 
 void MainPresenter::updateFilesDirectory(const QString &t_path)
 {
-	auto cmd = Core::Cmd::GetFileList::create(m_core.getFSTree(), t_path);
+	auto cmd = Core::Cmd::GetFileList::create(m_dev->getFileTree(), t_path);
 	putCmdToQueue(cmd);
 }
 
@@ -84,7 +84,7 @@ void MainPresenter::updateLNodeData(int t_ldIndex, int t_lnIndex)
 		return;
 	}
 
-	auto cmd = Core::Cmd::UpdateLNode::create(m_core.getObjectTree(), t_ldIndex, t_lnIndex);
+	auto cmd = Core::Cmd::UpdateLNode::create(m_dev->getObjectTree(), t_ldIndex, t_lnIndex);
 	putCmdToQueue(cmd);
 }
 
@@ -93,7 +93,7 @@ void MainPresenter::putCmdToQueue(Core::Cmd::ptrCMD t_cmd)
 	connect(t_cmd.get(), SIGNAL(sigProgress(int,QString)), this, SLOT(slotCmdProcess(int,QString)));
 	connect(t_cmd.get(), SIGNAL(sigFinished()), this, SLOT(slotCmdFinished()));
 
-	m_core.putCommand(t_cmd);
+	m_dev->putCommand(t_cmd);
 }
 
 void MainPresenter::slotCmdProcess(int t_proc, QString t_msg)

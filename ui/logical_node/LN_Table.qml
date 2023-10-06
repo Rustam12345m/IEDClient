@@ -40,7 +40,7 @@ Item {
 	}
 
 	HorizontalHeaderView {
-		id: header
+		id: headerID
 
 		boundsBehavior: Flickable.StopAtBounds
 		anchors {
@@ -69,7 +69,7 @@ Item {
 				verticalAlignment: Text.AlignVCenter
 
 				//font.bold: true
-				text: model[header.textRole]
+				text: model[headerID.textRole]
 				color: "#ff26282a"
 			}
 
@@ -77,7 +77,7 @@ Item {
 				anchors.fill: parent
 
 				onClicked: function(ev) {
-					console.log("Table header clicked: " + model.column)
+					console.log("Table headerID clicked: " + model.column)
 				}
 			}
 
@@ -109,7 +109,7 @@ Item {
 			rightMargin: 5
 			left: parent.left
 			right: parent.right
-			top: header.bottom
+			top: headerID.bottom
 			bottom: parent.bottom
 		}
 		model: mainPres.lnModel

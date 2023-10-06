@@ -3,9 +3,9 @@
         <file>main.qml</file>
 
         <file>global/ToolBarButton.qml</file>
-        <file>global/GlobalProgressBar.qml</file>
+        <file>global/ModalProgressBar.qml</file>
         <file>global/TextDelegate.qml</file>
-        <file>global/Enum.qml</file>
+        <file>global/Globals.qml</file>
         <file>global/AboutProgram.qml</file>
         <file>global/EventsViewer.qml</file>
 
@@ -16,27 +16,38 @@
         <file>reports/Page.qml</file>
 
         <file>logical_device/Page.qml</file>
+        <file>logical_device/LogDeviceDelegate.qml</file>
 
         <file>logical_node/Page.qml</file>
         <file>logical_node/LN_Table.qml</file>
         <file>logical_node/DO_Table.qml</file>
-        
+
         <file>filesystem/Page.qml</file>
         <file>filesystem/FileTableDelegate.qml</file>
+        <file>filesystem/FileControlDelegate.qml</file>
     </qresource>
     <qresource prefix="/img">
+        <file>icons/arrow_back.svg</file>
+        <file>icons/arrow_forward.svg</file>
         <file>icons/build.svg</file>
+        <file>icons/call_end.svg</file>
         <file>icons/call.svg</file>
         <file>icons/clear_all.svg</file>
         <file>icons/clear.svg</file>
         <file>icons/close.svg</file>
+        <file>icons/done.svg</file>
+        <file>icons/download.svg</file>
+        <file>icons/electric_bolt.svg</file>
         <file>icons/error_outline.svg</file>
         <file>icons/error.svg</file>
+        <file>icons/grade.svg</file>
         <file>icons/height.svg</file>
         <file>icons/home.svg</file>
         <file>icons/info.svg</file>
         <file>icons/input.svg</file>
         <file>icons/keyboard_arrow_down.svg</file>
+        <file>icons/keyboard_arrow_left.svg</file>
+        <file>icons/keyboard_arrow_right.svg</file>
         <file>icons/keyboard_arrow_up.svg</file>
         <file>icons/logo_dev.svg</file>
         <file>icons/logout.svg</file>
@@ -54,15 +65,12 @@
         <file>icons/reorder.svg</file>
         <file>icons/save_as.svg</file>
         <file>icons/save.svg</file>
+        <file>icons/school.svg</file>
+        <file>icons/task_alt.svg</file>
+        <file>icons/terminal.svg</file>
         <file>icons/text_rotate_up.svg</file>
         <file>icons/text_rotation_down.svg</file>
         <file>icons/upload_file.svg</file>
         <file>icons/upload.svg</file>
-        <file>icons/arrow_back.svg</file>
-        <file>icons/arrow_forward.svg</file>
-        <file>icons/school.svg</file>
-        <file>icons/task_alt.svg</file>
-        <file>icons/terminal.svg</file>
-        <file>icons/call_end.svg</file>
     </qresource>
 </RCC>

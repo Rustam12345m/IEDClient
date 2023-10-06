@@ -37,6 +37,7 @@ Item {
 
 		border.width: 1
 		border.color: (selected ? "black" : "lightgray")
+		//border.color: "lightgray"
 		color: (selected ? "lightgray" : "white")
 
 		Text {
@@ -55,14 +56,13 @@ Item {
 		acceptedButtons: Qt.LeftButton | Qt.RightButton
 
 		onClicked: function(mouse) {
-			if (mouse.button === Qt.RightButton) {
-				contextMenu.popup()
-			}
-
 			let idx = tableID.model.index(row, 0);
 			tableID.selectionModel.setCurrentIndex(idx, ItemSelectionModel.Clear
 														| ItemSelectionModel.Select
 														| ItemSelectionModel.Rows);
+			if (mouse.button === Qt.RightButton) {
+				contextMenu.popup()
+			}
 		}
 		onPressAndHold: function(mouse) {
 			if (mouse.source === Qt.MouseEventNotSynthesized) {

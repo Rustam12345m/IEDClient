@@ -35,7 +35,7 @@ namespace Core::Cmd
 		Q_OBJECT
 	public:
 		RemoveFile(const QString &t_name)
-			: IED_BaseCommand(IED_CMD::UNDEFINED)
+			: IED_BaseCommand(IED_CMD::UNDEFINED), m_filename(t_name)
 		{
 		}
 		~RemoveFile() {}
@@ -46,5 +46,8 @@ namespace Core::Cmd
 		static QSharedPointer<RemoveFile> create(const QString &t_name) {
 			return QSharedPointer<RemoveFile>::create(t_name);
 		}
+
+	protected:
+		QString 	m_filename;
 	};
 }

@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include "app_core.hpp"
+#include "device_agent.hpp"
 
 #include "models/sort_proxy_model.hpp"
 #include "models/fs_tablemodel.hpp"
@@ -39,39 +39,39 @@
 class MainPresenter : public QObject
 {
 	Q_OBJECT
-	Q_PROPERTY(FilesTableModel* filesModel READ getFilesModel CONSTANT)
-	Q_PROPERTY(EventsTableModel* eventsModel READ getEventsModel CONSTANT)
-	Q_PROPERTY(LD_ListModel* ldModel READ getLD_Model CONSTANT)
-	Q_PROPERTY(LN_TableModel* lnModel READ getLN_Model CONSTANT)
-	//Q_PROPERTY(DO_TableModel* doModel READ getDO_Model CONSTANT)
-	Q_PROPERTY(QAbstractItemModel* doModel READ getSortDO_Model CONSTANT)
-	Q_PROPERTY(QAbstractItemModel* lastConnList READ getLastConn_Model CONSTANT)
+	Q_PROPERTY(FilesTableModel* 	filesModel 		READ getFilesModel 		CONSTANT)
+	Q_PROPERTY(EventsTableModel* 	eventsModel 	READ getEventsModel 	CONSTANT)
+	Q_PROPERTY(LD_ListModel* 		ldModel 		READ getLD_Model		CONSTANT)
+	Q_PROPERTY(LN_TableModel* 		lnModel 		READ getLN_Model 		CONSTANT)
+	//Q_PROPERTY(DO_TableModel* 	doModel 		READ getDO_Model 		CONSTANT)
+	Q_PROPERTY(QAbstractItemModel* 	doModel 		READ getSortDO_Model 	CONSTANT)
+	Q_PROPERTY(QAbstractItemModel* 	lastConnList 	READ getLastConn_Model 	CONSTANT)
 
 	// Current selected
-	Q_PROPERTY(int currentLD READ getCurrentLD WRITE setCurrentLD NOTIFY sigCurrentLD)
-	Q_PROPERTY(int currentLN READ getCurrentLN WRITE setCurrentLN NOTIFY sigCurrentLN)
+	Q_PROPERTY(int 	currentLD 	READ getCurrentLD 	WRITE setCurrentLD 	NOTIFY sigCurrentLD)
+	Q_PROPERTY(int 	currentLN 	READ getCurrentLN 	WRITE setCurrentLN 	NOTIFY sigCurrentLN)
 
 public:
 	FilesTableModel*	getFilesModel() {
-		return &m_fsModel;
+		return m_fsModel;
 	}
 	EventsTableModel*	getEventsModel() {
-		return &m_eventsModel;
+		return m_eventsModel;
 	}
 	LD_ListModel*		getLD_Model() {
-		return &m_ldModel;
+		return m_ldModel;
 	}
 	LN_TableModel*		getLN_Model() {
-		return &m_lnModel;
+		return m_lnModel;
 	}
 	DO_TableModel*		getDO_Model() {
-		return &m_doModel;
+		return m_doModel;
 	}
 	QAbstractItemModel* getSortDO_Model() {
-		return &m_sortDOModel;
+		return m_sortDOModel;
 	}
 	LastConn_TableModel* getLastConn_Model() {
-		return &m_lastConnModel;
+		return m_lastConnModel;
 	}
 
 	int 		getCurrentLD() const {
@@ -80,18 +80,18 @@ public:
 	void 		setCurrentLD(int t_inx) {
 		m_currentLD = t_inx;
 		//m_lnModel.setCurrentLD(t_inx);
-		m_doModel.setCurrentLD(t_inx);
+		m_doModel->setCurrentLD(t_inx);
 	}
 	int 		getCurrentLN() const {
 		return m_currentLN;
 	}
 	void 		setCurrentLN(int t_inx) {
 		m_currentLN = t_inx;
-		m_doModel.setCurrentLN(t_inx);
+		m_doModel->setCurrentLN(t_inx);
 	}
 
 public:
-	MainPresenter(AppCore &t_core);
+	MainPresenter(QObject *t_parent=nullptr);
 	~MainPresenter();
 
 	Q_INVOKABLE void connectTo(const QString &t_ip, int t_port, bool t_tls,
@@ -120,19 +120,18 @@ public slots:
 	void	slotCmdFinished();
 
 protected:
-	AppCore&			m_core;
-	AppSettings			m_ini;
+	AppSettings				m_ini;
+	DeviceAgent*			m_dev = nullptr;
 
 	// Models for Tables in GUI
-	EventsTableModel	m_eventsModel;
-	FilesTableModel		m_fsModel;
-	LD_ListModel		m_ldModel;
-	LN_TableModel		m_lnModel;
-	DO_TableModel		m_doModel;
-	SimpleProxyModel 	m_sortDOModel;
-	LastConn_TableModel	m_lastConnModel;
+	EventsTableModel*		m_eventsModel = nullptr;
+	FilesTableModel*		m_fsModel = nullptr;
+	LD_ListModel*			m_ldModel = nullptr;
+	LN_TableModel*			m_lnModel = nullptr;
+	DO_TableModel*			m_doModel = nullptr;
+	SimpleProxyModel* 		m_sortDOModel = nullptr;
+	LastConn_TableModel*	m_lastConnModel = nullptr;
 
 	// Active selected by User
-	int 				m_currentLD = -1;
-	int 				m_currentLN = -1;
+	int 					m_currentLD = -1, m_currentLN = -1;
 };

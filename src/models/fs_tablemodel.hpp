@@ -34,17 +34,14 @@
 class FilesTableModel : public QAbstractTableModel
 {
 	Q_OBJECT
-	enum FS_ModelRole
-	{
-		FS_ROLE_NAME = Qt::UserRole + 1,
-		FS_ROLE_SIZE,
-		FS_ROLE_MTS
-	};
 	enum Columns
 	{
-		FS_NAME_COLUMN = 0,
+		FS_DATE_COLUMN = 0,
+		FS_NAME_COLUMN,
 		FS_SIZE_COLUMN,
-		FS_DATE_COLUMN
+		FS_FILE_COLUMN,
+
+		FS_COLUMN_COUNT
 	};
 
 private:

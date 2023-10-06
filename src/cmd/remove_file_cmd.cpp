@@ -27,5 +27,6 @@ namespace Core::Cmd
 {
 	void RemoveFile::execute(LibInterface &t_con)
 	{
+		t_con.removeFile(m_filename);
 	}
 }

@@ -25,8 +25,6 @@ import QtQuick
 import QtQuick.Controls
 import Qt.labs.qmlmodels
 
-import "qrc:/"
-
 Item {
 	HorizontalHeaderView {
 		id: headerID
@@ -77,10 +75,11 @@ Item {
 			top: headerID.bottom
 			right: parent.right
 			bottom: parent.bottom
+			//rightMargin: 5
 		}
 
 		focus: false
-		interactive: false
+		clip: true
 		boundsBehavior: Flickable.StopAtBounds
 
 		function getFilename(row) {
@@ -104,7 +103,7 @@ Item {
 		}
 
 		onWidthChanged: function() {
-			tableID.forceLayout()
+			//tableID.forceLayout()
 			setGoodColumnsWidth()
 		}
 
@@ -138,7 +137,7 @@ Item {
 		*/
 
 		delegate: DelegateChooser {
-			// File name column
+			// Last modified time
 			DelegateChoice {
 				column: 0
 
@@ -146,7 +145,7 @@ Item {
 					text: model.display
 				}
 			}
-			// File size column
+			// File name
 			DelegateChoice {
 				column: 1
 
@@ -154,12 +153,19 @@ Item {
 					text: model.display
 				}
 			}
-			// File last modified time column
+			// File size
 			DelegateChoice {
 				column: 2
 
 				delegate: FileTableDelegate {
 					text: model.display
+				}
+			}
+			// Controls
+			DelegateChoice {
+				column: 3
+
+				delegate: FileControlDelegate {
 				}
 			}
 		}

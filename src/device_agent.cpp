@@ -21,20 +21,20 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "app_core.hpp"
+#include "device_agent.hpp"
 
 #include <QDebug>
 
-AppCore::AppCore(QObject *t_parent) : QObject(t_parent), m_cmdThread(m_con)
+DeviceAgent::DeviceAgent(QObject *t_parent) : QObject(t_parent), m_cmdThread(m_con)
 {
 }
 
-AppCore::~AppCore()
+DeviceAgent::~DeviceAgent()
 {
 	m_con.disconnect();
 }
 
-void AppCore::putCommand(Core::Cmd::ptrCMD t_cmd)
+void DeviceAgent::putCommand(Core::Cmd::ptrCMD t_cmd)
 {
 	m_cmdThread.putCommand(t_cmd);
 }
