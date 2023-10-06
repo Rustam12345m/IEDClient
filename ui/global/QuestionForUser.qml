@@ -23,23 +23,66 @@
 
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
 
 Item {
+	property alias text: msgText.text
+
+	signal sigResult(bool t_user)
+
 	Dialog {
 		id: root
 
-		width: Math.max(400, progressText.implicitWidth + 50)
-		height: 120
-
-		visible: false
 		anchors.centerIn: parent
+
+		width: Math.max(400, msgText.implicitWidth + 50)
+		height: 120
 
 		modal: true
 		closePolicy: Dialog.NoAutoClose
+		visible: false
 
-		Rectangle {
-			color: "gray"
-			anchors.fill: parent
+		Label {
+			id: msgText
+
+			anchors.centerIn: parent
+
+			text: ""
 		}
+
+		footer: DialogButtonBox {
+			Button {
+				text: "Ok"
+				onClicked: {
+					console.log("Ok Button Clicked!")
+					root.close()
+
+					sigResult(true)
+				}
+			}
+
+			Button {
+				text: "Cancel"
+				onClicked: {
+					console.log("Cancel Button Clicked!")
+					root.close()
+
+					sigResult(false)
+				}
+			}
+		}
+	}
+
+	function isActive() {
+		return root.visible
+	}
+
+	function open(msg) {
+		msgText.text = msg
+		root.visible = true;
+	}
+
+	function close() {
+		root.visible = false;
 	}
 }

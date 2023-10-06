@@ -166,6 +166,14 @@ Item {
 				column: 3
 
 				delegate: FileControlDelegate {
+					onSigDownloadFile: function(row) {
+						console.log("Control: Download file N" + row)
+					}
+
+					onSigRemoveFile: function(row) {
+						console.log("Control: Remove file N" + row)
+						//mainPres.removeFile(tableID.getFilename(row))
+					}
 				}
 			}
 		}
