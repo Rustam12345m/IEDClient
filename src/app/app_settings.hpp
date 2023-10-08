@@ -23,22 +23,44 @@
 
 #pragma once
 
-#include "base_command.hpp"
+#include <QSettings>
 
-namespace Core::Cmd
+namespace App
 {
-	/*
-	 * This request gets information about Logical Devices from IED:
-	 * 1. All LD with their working status: Mod, Beh, Health
-	 * 2. All LN within each LD with their working status: Mod, Beh, Health
-	 *
-	 * */
-	class UpdateLDList_Cmd : public IED_BaseCommand
+	class DevConInfo
 	{
 	public:
-		UpdateLDList_Cmd() : IED_BaseCommand(IED_CMD::UPDATE_LD) {}
-		~UpdateLDList_Cmd() = default;
+		DevConInfo(const QString &t_name, const QString &t_ip, int t_port)
+			: m_name(t_name), m_ip(t_ip), m_port(t_port)
+		{
+		}
 
-		void		execute(LibInterface &t_con) override;
+		QString 	name() const { return m_name; }
+		QString 	ip() const { return m_ip; }
+		int 		port() const { return m_port; }
+
+		bool operator==(const DevConInfo &t_right) {
+			return (m_name == t_right.name()) && (m_ip == t_right.ip()) && (m_port == t_right.port());
+		}
+
+	protected:
+		QString 	m_name;
+		QString 	m_ip;
+		int 		m_port = 102;
+	};
+
+	/**
+	 * @brief AppSettings is a class which get/set IEDClient's settings
+	 */
+	class AppSettings
+	{
+	public:
+		AppSettings() = default;
+		~AppSettings() = default;
+
+		QList<DevConInfo>	getDevConList();
+		void 				saveNewDevCon(const DevConInfo &t_dev);
+
+		const int SaveDevsHistoryLen = 10;
 	};
 }

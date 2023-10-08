@@ -70,7 +70,7 @@ Item {
 			}
 		}
 		onDoubleClicked: function(mouse) {
-			mainPres.downloadFile(tableID.getFilename(row))
+			fsBackend.downloadFile(tableID.getFilename(row))
 		}
 
 		Menu {
@@ -80,14 +80,14 @@ Item {
 				text: "Download"
 				onTriggered: {
 					console.log(text + " " + row)
-					mainPres.downloadFile(tableID.getFilename(row))
+					fsBackend.downloadFile(tableID.getFilename(row))
 				}
 			}
 			MenuItem {
 				text: "Remove"
 				onTriggered: {
 					console.log(text + " " + row)
-					mainPres.removeFile(tableID.getFilename(row))
+					fsBackend.removeFile(tableID.getFilename(row))
 				}
 			}
 			MenuItem {

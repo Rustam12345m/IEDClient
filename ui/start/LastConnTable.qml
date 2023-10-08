@@ -80,7 +80,7 @@ Item {
 		boundsBehavior: Flickable.StopAtBounds
 		clip: true
 
-		model: mainPres.lastConnList
+		model: comBackend.lastConnList
 		interactive: true
 
 		selectionBehavior: TableView.SelectRows

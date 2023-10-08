@@ -24,35 +24,39 @@
 #pragma once
 
 #include <QObject>
+#include <QQmlContext>
 
-#include "cmd/cmd_thread.hpp"
-#include "cmd/lib61850_adapter.hpp"
-#include "core/ied_tree.hpp"
-#include "core/fs_tree.hpp"
+// bk
+#include "app/com_backend.hpp"
+#include "app/fs_backend.hpp"
+#include "app/ld_backend.hpp"
 
-class DeviceAgent : public QObject
+namespace App
 {
-	Q_OBJECT
-public:
-	DeviceAgent(QObject *t_parent=nullptr);
-	~DeviceAgent();
+	/*
+	 * Presenter for QML contains specific backends like FS, LD
+	 * */
+	class Presenter : public QObject
+	{
+		Q_OBJECT
+	public:
+		Presenter();
+		~Presenter() = default;
 
-	Core::IED_Tree&		getObjectTree() {
-		return m_objTree;
-	}
-	Core::FS_Tree&		getFileTree() {
-		return m_fsTree;
-	}
+		void 				setContext(QQmlContext *t_context);
 
-	void		putCommand(Core::Cmd::ptrCMD t_cmd);
+		Q_INVOKABLE QString getAppVersion();
 
-signals:
-	void		mySignal(const QString &t_msg);
+		Q_INVOKABLE void 	connectTo(const QString &t_ip, unsigned int t_port, bool t_checked,
+										const QString &t_name, const QString &t_pass);
+		Q_INVOKABLE void 	disconnectFrom();
 
-protected:
-	Core::IED_Tree			m_objTree;
-	Core::FS_Tree			m_fsTree;
+	protected:
+		ConnectionObject	m_con; // Complex component of IED's stub
 
-	Core::Cmd::Lib61850		m_con;
-	Core::Cmd::CmdThread	m_cmdThread;
-};
+		// many presenters - backends
+		ComBackend			m_comBackend;
+		FS_Backend			m_fsBackend;
+		LD_Backend			m_ldBackend;
+	};
+}

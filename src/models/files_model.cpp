@@ -21,7 +21,7 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "fs_tablemodel.hpp"
+#include "files_model.hpp"
 
 #include <QDateTime>
 #include <QDebug>
@@ -37,19 +37,27 @@ namespace {
 }
 
 
-FilesTableModel::FilesTableModel(QObject *t_parent, Core::FS_Tree &t_tree)
-	: QAbstractTableModel(t_parent), m_tree{t_tree}
+FilesTableModel::FilesTableModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied)
+	: QAbstractTableModel(t_parent), m_ied(t_ied)
 {
-	connect(&m_tree, SIGNAL(sigFS_Updated()), this, SLOT(slotDataUpdated()));
+	connect(&m_ied->fs(), SIGNAL(sigFS_Updated()), this, SLOT(slotDataUpdated()));
 }
 
 FilesTableModel::~FilesTableModel()
 {
 }
 
+void FilesTableModel::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
+{
+	beginResetModel();
+	m_ied = t_ied;
+	connect(&m_ied->fs(), SIGNAL(sigFS_Updated()), this, SLOT(slotDataUpdated()));
+	endResetModel();
+}
+
 int FilesTableModel::rowCount(const QModelIndex &t_parent) const
 {
-	return m_tree.m_dir.m_file.size();
+	return m_ied->fs().m_dir.m_file.size();
 }
 
 int FilesTableModel::columnCount(const QModelIndex &t_parent) const
@@ -84,20 +92,34 @@ QVariant FilesTableModel::headerData(int t_section, Qt::Orientation t_orientatio
 QVariant FilesTableModel::data(const QModelIndex &t_index, int t_role) const
 {
 	int row = t_index.row();
-	if ((row >= 0) && (row < m_tree.m_dir.m_file.size())) {
+	if ((row >= 0) && (row < m_ied->fs().m_dir.m_file.size())) {
 		switch (t_index.column()) {
 		case FS_NAME_COLUMN: {
-			return m_tree.m_dir.m_file[row].m_fileName;
+			return m_ied->fs().m_dir.m_file[row].m_fileName;
 		}
 		case FS_SIZE_COLUMN: {
-			return QString::number((double)m_tree.m_dir.m_file[row].m_size / 1024, 'f', 1) + " KB";
+			return QString::number((double)m_ied->fs().m_dir.m_file[row].m_size / 1024, 'f', 1) + " KB";
 		}
 		case FS_DATE_COLUMN: {
-			return convertTimestampMsToUserString(m_tree.m_dir.m_file[row].m_mts);
+			return convertTimestampMsToUserString(m_ied->fs().m_dir.m_file[row].m_mts);
 		}
 		}
 	}
 	return QVariant(" - ");
+}
+
+void FilesTableModel::slotRemoveFile(int t_row)
+{
+	if (t_row < 0 || t_row >= m_ied->fs().getCount()) {
+		return;
+	}
+
+	beginRemoveRows(QModelIndex(), t_row, t_row);
+
+	// Remove from Tree
+	m_ied->fs().removeFileFromList(t_row);
+
+	endRemoveRows();
 }
 
 void FilesTableModel::slotDataUpdated()

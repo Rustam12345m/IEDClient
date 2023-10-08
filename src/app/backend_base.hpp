@@ -21,20 +21,34 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "device_agent.hpp"
+#pragma once
 
-#include <QDebug>
+#include "connection_object.hpp"
 
-DeviceAgent::DeviceAgent(QObject *t_parent) : QObject(t_parent), m_cmdThread(m_con)
+/*
+ * Interface for all Backends
+ * */
+class BackendBase : public QObject
 {
-}
+	Q_OBJECT
 
-DeviceAgent::~DeviceAgent()
-{
-	m_con.disconnect();
-}
+	BackendBase() = delete;
+public:
+	BackendBase(ConnectionObject &t_con) : m_con(t_con) {};
+	virtual ~BackendBase() {}
 
-void DeviceAgent::putCommand(Core::Cmd::ptrCMD t_cmd)
-{
-	m_cmdThread.putCommand(t_cmd);
-}
+protected:
+	void	putCmdToQueue(Core::Cmd::ptrCMD t_cmd);
+
+signals:
+	void	sigProgress(int t_perc, QString t_msg);
+	void	sigFinished();
+
+public slots:
+	void	slotCmdProcess(int t_proc, QString t_msg);
+	void	slotCmdFinished();
+	virtual void 	slotNewIED();
+
+protected:
+	ConnectionObject& 	m_con;
+};

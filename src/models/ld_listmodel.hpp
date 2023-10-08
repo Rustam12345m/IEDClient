@@ -25,7 +25,7 @@
 
 #include <QAbstractListModel>
 
-#include "core/ied_tree.hpp"
+#include "core/ied_object.hpp"
 
 class LD_ListModel : public QAbstractListModel
 {
@@ -33,18 +33,20 @@ class LD_ListModel : public QAbstractListModel
 	enum LD_ModelRole {
 		LD_ROLE_NAME = Qt::UserRole + 1
 	};
-
-	Core::IED_Tree&	m_tree;
-
 public:
-	LD_ListModel(QObject *t_parent, Core::IED_Tree &t_tree);
+	LD_ListModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
+
+	void 		setNewIED(QSharedPointer<Core::IED_Object> t_ied);
 
 	int			rowCount(const QModelIndex &t_index = QModelIndex()) const override;
 	QVariant	data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
-protected:
+private:
 	QHash<int, QByteArray> roleNames() const override;
 
 public slots:
 	void		slotDataUpdated();
+
+private:
+	QSharedPointer<Core::IED_Object>	m_ied;
 };

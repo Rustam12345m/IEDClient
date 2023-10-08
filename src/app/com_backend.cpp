@@ -21,24 +21,21 @@
  *  See COPYING file for the complete license text.
  * */
 
-#pragma once
+#include "com_backend.hpp"
 
-#include "base_command.hpp"
-
-namespace Core::Cmd
+namespace App
 {
-	/*
-	 * This request gets information about Logical Devices from IED:
-	 * 1. All LD with their working status: Mod, Beh, Health
-	 * 2. All LN within each LD with their working status: Mod, Beh, Health
-	 *
-	 * */
-	class UpdateLDList_Cmd : public IED_BaseCommand
+	ComBackend::ComBackend(ConnectionObject &t_con) : BackendBase(t_con)
 	{
-	public:
-		UpdateLDList_Cmd() : IED_BaseCommand(IED_CMD::UPDATE_LD) {}
-		~UpdateLDList_Cmd() = default;
+		m_eventsModel = new EventsTableModel(this);
+		m_lastConnModel = new LastConn_TableModel(this, m_ini);
+	}
 
-		void		execute(LibInterface &t_con) override;
-	};
+	ComBackend::~ComBackend()
+	{
+	}
+
+	void ComBackend::slotNewIED()
+	{
+	}
 }

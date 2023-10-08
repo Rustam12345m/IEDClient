@@ -23,22 +23,34 @@
 
 #pragma once
 
-#include "base_command.hpp"
+#include "backend_base.hpp"
+#include "models/files_model.hpp"
 
-namespace Core::Cmd
+namespace App
 {
 	/*
-	 * This request gets information about Logical Devices from IED:
-	 * 1. All LD with their working status: Mod, Beh, Health
-	 * 2. All LN within each LD with their working status: Mod, Beh, Health
-	 *
-	 * */
-	class UpdateLDList_Cmd : public IED_BaseCommand
+	* Presenter of Filesystem on IED for QML page
+	* */
+	class FS_Backend : public BackendBase
 	{
+		Q_OBJECT
 	public:
-		UpdateLDList_Cmd() : IED_BaseCommand(IED_CMD::UPDATE_LD) {}
-		~UpdateLDList_Cmd() = default;
+		FS_Backend(ConnectionObject &t_con);
+		~FS_Backend() = default;
 
-		void		execute(LibInterface &t_con) override;
+		// Properties for QML
+		Q_PROPERTY(FilesTableModel* filesModel READ getFilesModel CONSTANT)
+		FilesTableModel*	getFilesModel() const { return m_fsModel; }
+
+		// API for QML
+		Q_INVOKABLE QString getFS_TextStatus();
+		Q_INVOKABLE void 	updateFilesDirectory(const QString &t_path);
+		Q_INVOKABLE void 	downloadFile(const QString &t_filename);
+		Q_INVOKABLE void 	removeFile(const QString &t_filename, int t_row);
+
+		void 				slotNewIED() override;
+
+	protected:
+		FilesTableModel*	m_fsModel = nullptr;
 	};
 }

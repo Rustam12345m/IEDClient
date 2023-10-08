@@ -25,7 +25,7 @@
 
 #include <QAbstractTableModel>
 
-#include "core/fs_tree.hpp"
+#include "core/ied_object.hpp"
 
 /*
  * This class represents the model for TableView which contains information
@@ -45,11 +45,13 @@ class FilesTableModel : public QAbstractTableModel
 	};
 
 private:
-	Core::FS_Tree&		m_tree;
+	QSharedPointer<Core::IED_Object> m_ied;
 
 public:
-	FilesTableModel(QObject *t_parent, Core::FS_Tree &t_tree);
+	FilesTableModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
 	~FilesTableModel() override;
+
+	void 		setNewIED(QSharedPointer<Core::IED_Object> t_ied);
 
 	int			rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
 	int			columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
@@ -63,4 +65,5 @@ public:
 
 public slots:
 	void		slotDataUpdated();
+	void 		slotRemoveFile(int t_row);
 };

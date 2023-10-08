@@ -78,7 +78,7 @@ Window {
 			anchors.right: parent.right
 			anchors.bottom: parent.bottom
 
-			model: mainPres.eventsModel
+			model: comBackend.eventsModel
 
 			selectionBehavior: TableView.SelectRows
 			selectionModel: ItemSelectionModel {

@@ -21,42 +21,30 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "settings.hpp"
+#pragma once
 
-QList<DevConInfo> AppSettings::getDevConList()
+#include "core/ied_object.hpp"
+#include "cmd/cmd_thread.hpp"
+#include "cmd/lib61850_adapter.hpp"
+
+class ConnectionObject
 {
-	QList<DevConInfo> devs;
-
-	QSettings ini;
-	int size = ini.beginReadArray("devices");
-	for (int i=0;i<size;i++) {
-		ini.setArrayIndex(i);
-
-		devs.emplace_back(ini.value("name").toString(), ini.value("ip").toString(), ini.value("port").toInt());
+public:
+	ConnectionObject() {
+		reset();
 	}
-	ini.endArray();
 
-	return devs;
-}
+	void 	reset() {
+		m_cmdQueue.clear();
+		m_lib.clear();
+		m_ied.clear();
 
-void AppSettings::saveNewDevCon(const DevConInfo &t_dev)
-{
-	QList<DevConInfo> devs = getDevConList();
-	for (auto &d : devs) {
-		if (d == t_dev) {
-			return;
-		}
+		m_ied = QSharedPointer<Core::IED_Object>::create();
+		m_lib = QSharedPointer<Core::Cmd::Lib61850>::create();
+		m_cmdQueue = QSharedPointer<Core::Cmd::CmdThread>::create(m_lib);
 	}
-	devs.push_front(t_dev);
 
-	QSettings ini;
-	ini.beginWriteArray("devices");
-	for (int i=0;(i < devs.size()) && (i < SaveDevsHistoryLen);i++) {
-		ini.setArrayIndex(i);
-
-		ini.setValue("name", devs[i].name());
-		ini.setValue("ip", devs[i].ip());
-		ini.setValue("port", devs[i].port());
-	}
-	ini.endArray();
-}
+	QSharedPointer<Core::IED_Object>		m_ied;
+	QSharedPointer<Core::Cmd::LibInterface>	m_lib;
+	QSharedPointer<Core::Cmd::CmdThread>	m_cmdQueue;
+};

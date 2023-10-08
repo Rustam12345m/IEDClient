@@ -23,20 +23,28 @@
 
 #include "ld_listmodel.hpp"
 
-LD_ListModel::LD_ListModel(QObject *t_parent, Core::IED_Tree &t_tree)
-	: QAbstractListModel(t_parent), m_tree{t_tree}
+LD_ListModel::LD_ListModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied)
+	: QAbstractListModel(t_parent), m_ied(t_ied)
 {
-	connect(&m_tree, SIGNAL(sigUpdated()), this, SLOT(slotDataUpdated()));
+	connect(&m_ied->tree(), SIGNAL(sigUpdated()), this, SLOT(slotDataUpdated()));
+}
+
+void LD_ListModel::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
+{
+	beginResetModel();
+	m_ied = t_ied;
+	connect(&m_ied->tree(), SIGNAL(sigUpdated()), this, SLOT(slotDataUpdated()));
+	endResetModel();
 }
 
 int LD_ListModel::rowCount(const QModelIndex &t_index) const
 {
-	return m_tree.getChildCount();
+	return m_ied->tree().getChildCount();
 }
 
 QVariant LD_ListModel::data(const QModelIndex &t_index, int t_role) const
 {
-	auto ld = m_tree.getChild(t_index.row());
+	auto ld = m_ied->tree().getChild(t_index.row());
 	if (ld) {
 		return ld->name();
 	}

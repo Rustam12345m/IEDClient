@@ -370,6 +370,8 @@ Window {
 							onVisibleChanged: {
 								if (visible) {
 									focus = true
+
+									setStatusText(presenter.getAppVersion())
 								}
 							}
 							onNextPageSignal: function(page) {
@@ -408,8 +410,10 @@ Window {
 						FS.Page {
 							onVisibleChanged: {
 								if (visible) {
-									mainPres.updateFilesDirectory("/")
+									fsBackend.updateFilesDirectory("/")
 									hidePropertyPanel()
+
+									setStatusText(fsBackend.getFS_TextStatus())
 								}
 							}
 						}
@@ -605,7 +609,7 @@ Window {
 			break;
 		}
 		case Globals.Page.FS: {
-			mainPres.updateFilesDirectory("/")
+			fsBackend.updateFilesDirectory("/")
 			break;
 		}
 		case Globals.Page.DS: {
@@ -630,10 +634,16 @@ Window {
 
 	Component.onCompleted: function() {
 		// App to GUI
-		mainPres.sigProgress.connect(slotOnProgress)
-		mainPres.sigFinished.connect(slotOnFinished)
+		ldBackend.sigProgress.connect(slotOnProgress)
+		ldBackend.sigFinished.connect(slotOnFinished)
+
+		fsBackend.sigProgress.connect(slotOnProgress)
+		fsBackend.sigFinished.connect(slotOnFinished)
 
 		// GUI
 		lastConnPanel.sigDeviceSelected.connect(startPage.slotSetCurrentDevice)
+
+		// Start status
+		setStatusText(presenter.getAppVersion())
 	}
 }

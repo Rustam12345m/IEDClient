@@ -25,8 +25,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
-#include "device_agent.hpp"
-#include "main_presenter.hpp"
+#include "presenter.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -36,11 +35,11 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationDomain("opensource.org");
     QCoreApplication::setApplicationName("IEDClient");
 
-	MainPresenter mainPres;
+	App::Presenter presenter; // have to be created befor engine
 
 	QQmlApplicationEngine engine;
-	QQmlContext *context = engine.rootContext();
-	context->setContextProperty("mainPres", &mainPres);
+
+	presenter.setContext(engine.rootContext());
 
 	engine.load(QStringLiteral("qrc:/main.qml"));
 	return app.exec();

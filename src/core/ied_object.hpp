@@ -23,41 +23,25 @@
 
 #pragma once
 
-#include <QSettings>
+#include <QObject>
 
-class DevConInfo
+#include "ied_tree.hpp"
+#include "fs_tree.hpp"
+
+namespace Core
 {
-public:
-	DevConInfo(const QString &t_name, const QString &t_ip, int t_port)
-		: m_name(t_name), m_ip(t_ip), m_port(t_port)
+	class IED_Object : public QObject
 	{
-	}
+		Q_OBJECT
+	public:
+		IED_Object(QObject *t_parent=nullptr);
+		~IED_Object() = default;
 
-	QString 	name() const { return m_name; }
-	QString 	ip() const { return m_ip; }
-	int 		port() const { return m_port; }
+		Core::IED_Tree&		tree() { return m_objTree; }
+		Core::FS_Tree&		fs() { return m_fsTree; }
 
-	bool operator==(const DevConInfo &t_right) {
-		return (m_name == t_right.name()) && (m_ip == t_right.ip()) && (m_port == t_right.port());
-	}
-
-protected:
-	QString 	m_name;
-	QString 	m_ip;
-	int 		m_port = 102;
-};
-
-/**
- * @brief AppSettings is a class which get/set IEDClient's settings
- */
-class AppSettings
-{
-public:
-	AppSettings() = default;
-	~AppSettings() = default;
-
-	QList<DevConInfo>	getDevConList();
-	void 				saveNewDevCon(const DevConInfo &t_dev);
-
-	const int SaveDevsHistoryLen = 10;
-};
+	protected:
+		Core::IED_Tree		m_objTree;
+		Core::FS_Tree		m_fsTree;
+	};
+}

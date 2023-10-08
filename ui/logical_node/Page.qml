@@ -90,7 +90,7 @@ Item {
 			repeat: true
 
 			onTriggered: function() {
-				mainPres.updateLNodeData(tableDO.currentLDevice, tableDO.currentLNode)
+				ldBackend.updateLNodeData(tableDO.currentLDevice, tableDO.currentLNode)
 			}
 		}
 

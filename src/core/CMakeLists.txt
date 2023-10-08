@@ -10,10 +10,15 @@ set(CORE_SOURCES
 	dataset.hpp
 	report_block.hpp
 	fs_tree.hpp
+
 	ied_tree.hpp
 	ied_tree.cpp
+
 	ln_flat_state.hpp
 	ln_flat_state.cpp
+
+	ied_object.hpp
+	ied_object.cpp
 )
 
 qt_add_library(core_lib STATIC ${CORE_SOURCES})

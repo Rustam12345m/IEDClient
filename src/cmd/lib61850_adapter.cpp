@@ -78,6 +78,21 @@ namespace Core::Cmd
 				LinkedList_destroy(daList);
 			}
 		}
+
+		bool getFileAsyncHandler(uint32_t invokeId, void* parameter, IedClientError err, uint32_t originalInvokeId,
+								uint8_t* buffer, uint32_t bytesRead, bool moreFollows)
+		{
+			if ((err != IED_ERROR_OK) || (moreFollows == false)) {
+				if (err == IED_ERROR_OK) {
+					printf("Received %d bytes\n", bytesRead);
+				}
+				printf("File transfer complete (err:%d)\n", err);
+			}
+			else {
+				printf("Received %d bytes\n", bytesRead);
+			}
+			return true;
+		}
 	}
 
 	void Lib61850::printfVersion() const
@@ -272,5 +287,12 @@ namespace Core::Cmd
 		IedClientError retval = IED_ERROR_OK;
 		IedConnection_deleteFile(m_libConn, &retval, t_filename.toStdString().c_str());
 		return (retval != IED_ERROR_OK);
+	}
+	
+	void Lib61850::downloadFile(const QString &t_filename)
+	{
+		IedClientError error = IED_ERROR_OK;
+		uint32_t id = IedConnection_getFileAsync(m_libConn, &error, t_filename.toStdString().c_str(),
+												getFileAsyncHandler, nullptr);
 	}
 }

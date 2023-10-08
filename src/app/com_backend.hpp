@@ -23,22 +23,36 @@
 
 #pragma once
 
-#include "base_command.hpp"
+#include "backend_base.hpp"
+#include "app/app_settings.hpp"
 
-namespace Core::Cmd
+#include "models/events_tablemodel.hpp"
+#include "models/last_conn_list.hpp"
+
+namespace App
 {
 	/*
-	 * This request gets information about Logical Devices from IED:
-	 * 1. All LD with their working status: Mod, Beh, Health
-	 * 2. All LN within each LD with their working status: Mod, Beh, Health
-	 *
-	 * */
-	class UpdateLDList_Cmd : public IED_BaseCommand
+	* Presenter of others small tables
+	* */
+	class ComBackend : public BackendBase
 	{
+		Q_OBJECT
 	public:
-		UpdateLDList_Cmd() : IED_BaseCommand(IED_CMD::UPDATE_LD) {}
-		~UpdateLDList_Cmd() = default;
+		ComBackend(ConnectionObject &t_con);
+		~ComBackend();
 
-		void		execute(LibInterface &t_con) override;
+		Q_PROPERTY(EventsTableModel* 	eventsModel 	READ getEventsModel 	CONSTANT)
+		Q_PROPERTY(QAbstractItemModel* 	lastConnList 	READ getLastConn_Model 	CONSTANT)
+
+		EventsTableModel*	getEventsModel() const { return m_eventsModel; }
+		LastConn_TableModel* getLastConn_Model() const { return m_lastConnModel; }
+
+		void 		slotNewIED() override;
+
+	protected:
+		AppSettings		m_ini;
+
+		EventsTableModel*		m_eventsModel = nullptr;
+		LastConn_TableModel*	m_lastConnModel = nullptr;
 	};
 }

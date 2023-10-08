@@ -21,24 +21,11 @@
  *  See COPYING file for the complete license text.
  * */
 
-#pragma once
+#include "ied_object.hpp"
 
-#include "base_command.hpp"
-
-namespace Core::Cmd
+namespace Core
 {
-	/*
-	 * This request gets information about Logical Devices from IED:
-	 * 1. All LD with their working status: Mod, Beh, Health
-	 * 2. All LN within each LD with their working status: Mod, Beh, Health
-	 *
-	 * */
-	class UpdateLDList_Cmd : public IED_BaseCommand
+	IED_Object::IED_Object(QObject *t_parent) : QObject(t_parent)
 	{
-	public:
-		UpdateLDList_Cmd() : IED_BaseCommand(IED_CMD::UPDATE_LD) {}
-		~UpdateLDList_Cmd() = default;
-
-		void		execute(LibInterface &t_con) override;
-	};
+	}
 }

@@ -46,6 +46,7 @@ Item {
 				rightMargin: 5
 				fill: parent
 			}
+			spacing: 5
 
 			Button {
 				id: downloadBtn

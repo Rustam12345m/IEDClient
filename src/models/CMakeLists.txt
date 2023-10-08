@@ -1,12 +1,12 @@
-# Building cmd's classes to a static library
+# Building models's classes to a static library
 
 set(SOURCES
 	do_tablemodel.hpp
 	do_tablemodel.cpp
 	events_tablemodel.hpp
 	events_tablemodel.cpp
-	fs_tablemodel.hpp
-	fs_tablemodel.cpp
+	files_model.hpp
+	files_model.cpp
 	ld_listmodel.hpp
 	ld_listmodel.cpp
 	ln_tablemodel.hpp
@@ -19,7 +19,7 @@ set(SOURCES
 
 qt_add_library(models_lib STATIC ${SOURCES})
 
-target_link_libraries(models_lib PUBLIC core_lib cmd_lib)
+target_link_libraries(models_lib PUBLIC app_lib core_lib cmd_lib)
 target_link_libraries(models_lib PRIVATE Qt6::Core)
 
 target_include_directories(models_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

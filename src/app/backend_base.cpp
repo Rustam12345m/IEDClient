@@ -21,24 +21,26 @@
  *  See COPYING file for the complete license text.
  * */
 
-#pragma once
+#include "backend_base.hpp"
 
-#include "base_command.hpp"
-
-namespace Core::Cmd
+void BackendBase::putCmdToQueue(Core::Cmd::ptrCMD t_cmd)
 {
-	/*
-	 * This request gets information about Logical Devices from IED:
-	 * 1. All LD with their working status: Mod, Beh, Health
-	 * 2. All LN within each LD with their working status: Mod, Beh, Health
-	 *
-	 * */
-	class UpdateLDList_Cmd : public IED_BaseCommand
-	{
-	public:
-		UpdateLDList_Cmd() : IED_BaseCommand(IED_CMD::UPDATE_LD) {}
-		~UpdateLDList_Cmd() = default;
+	connect(t_cmd.get(), SIGNAL(sigProgress(int,QString)), this, SLOT(slotCmdProcess(int,QString)));
+	connect(t_cmd.get(), SIGNAL(sigFinished()), this, SLOT(slotCmdFinished()));
 
-		void		execute(LibInterface &t_con) override;
-	};
+	m_con.m_cmdQueue->putCommand(t_cmd);
+}
+
+void BackendBase::slotCmdProcess(int t_proc, QString t_msg)
+{
+	emit sigProgress(t_proc, t_msg);
+}
+
+void BackendBase::slotCmdFinished()
+{
+	emit sigFinished();
+}
+
+void BackendBase::slotNewIED()
+{
 }

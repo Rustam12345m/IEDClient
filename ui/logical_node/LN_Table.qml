@@ -50,7 +50,6 @@ Item {
 			right: parent.right
 		}
 
-		model: mainPres.lnModel
 		syncView: tableID
 
 		delegate: Rectangle {
@@ -112,7 +111,7 @@ Item {
 			top: headerID.bottom
 			bottom: parent.bottom
 		}
-		model: mainPres.lnModel
+		model: ldBackend.lnModel
 
 		//columnSpacing: 1
 		//rowSpacing: 1

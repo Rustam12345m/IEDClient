@@ -21,24 +21,34 @@
  *  See COPYING file for the complete license text.
  * */
 
-#pragma once
+#include "ld_backend.hpp"
 
-#include "base_command.hpp"
-
-namespace Core::Cmd
+namespace App
 {
-	/*
-	 * This request gets information about Logical Devices from IED:
-	 * 1. All LD with their working status: Mod, Beh, Health
-	 * 2. All LN within each LD with their working status: Mod, Beh, Health
-	 *
-	 * */
-	class UpdateLDList_Cmd : public IED_BaseCommand
+	LD_Backend::LD_Backend(ConnectionObject &t_con) : BackendBase(t_con)
 	{
-	public:
-		UpdateLDList_Cmd() : IED_BaseCommand(IED_CMD::UPDATE_LD) {}
-		~UpdateLDList_Cmd() = default;
+		m_ldModel = new LD_ListModel(this, m_con.m_ied);
+		m_lnModel = new LN_TableModel(this, m_con.m_ied);
+		m_doModel = new DO_TableModel(this, m_con.m_ied);
+		m_sortDOModel = new SimpleProxyModel(this);
 
-		void		execute(LibInterface &t_con) override;
-	};
+		m_sortDOModel->setSourceModel(m_doModel);
+	}
+
+	void LD_Backend::updateLNodeData(int t_ldIndex, int t_lnIndex)
+	{
+		if (t_ldIndex < 0 || t_lnIndex < 0) {
+			return;
+		}
+
+		auto cmd = Core::Cmd::UpdateLNode::create(m_con.m_ied->tree(), t_ldIndex, t_lnIndex);
+		putCmdToQueue(cmd);
+	}
+
+	void LD_Backend::slotNewIED()
+	{
+		m_ldModel->setNewIED(m_con.m_ied);
+		m_lnModel->setNewIED(m_con.m_ied);
+		m_doModel->setNewIED(m_con.m_ied);
+	}
 }

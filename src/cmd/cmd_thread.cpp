@@ -25,7 +25,7 @@
 
 namespace Core::Cmd
 {
-	CmdThread::CmdThread(LibInterface &t_con) : m_con(t_con)
+	CmdThread::CmdThread(QSharedPointer<LibInterface> &t_con) : m_con(t_con)
 	{
 		setObjectName("CmdThread");
 		start();
@@ -50,7 +50,7 @@ namespace Core::Cmd
 		while (m_queue.isRunning()) {
 			ptrCMD cmd = m_queue.pop();
 			if (cmd) {
-				cmd->execute(m_con);
+				cmd->execute(*m_con);
 			}
 		}
 	}
