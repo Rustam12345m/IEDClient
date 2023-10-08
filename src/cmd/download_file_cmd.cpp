@@ -22,10 +22,14 @@
  * */
 
 #include "download_file_cmd.hpp"
+#include <QDebug>
 
 namespace Core::Cmd
 {
 	void DownloadFile::execute(LibInterface &t_con)
 	{
+		qDebug() << "CMD: DownloadFile " << m_filename;
+
+		t_con.downloadFile(m_filename);
 	}
 }

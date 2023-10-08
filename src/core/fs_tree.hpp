@@ -42,6 +42,16 @@ namespace Core
 		}
 		FileOn() = delete;
 
+		QString 	name() const {
+			return m_fileName;
+		}
+		uint32_t 	size() const {
+			return m_size;
+		}
+		uint64_t 	timestamp() const {
+			return m_mts;
+		}
+
 	private:
 		QString 	m_fileName;
 		uint32_t 	m_size = 0;
@@ -62,9 +72,24 @@ namespace Core
 		DirOn() {}
 		DirOn(const QString &t_name) : m_name{t_name} {}
 
-		void put(const FileOn &t_file)
+		void 		put(const FileOn &t_file)
 		{
 			m_file.push_back(t_file);
+		}
+
+		std::tuple<size_t, size_t> 		getDirectoryInfo() {
+			size_t total = 0;
+			for (auto &f : m_file) {
+				total += f.size();
+			}
+			size_t count = m_file.size();
+			return std::make_tuple(count, total);
+		}
+		size_t 		getCount() {
+			return m_file.size();
+		}
+		void 		removeFileFromList(int t_index) {
+			m_file.removeAt(t_index);
 		}
 
 	private:
@@ -84,6 +109,16 @@ namespace Core
 		{
 			m_dir = t_dir;
 			emit sigFS_Updated();
+		}
+
+		auto 		getFS_StatInfo() {
+			return m_dir.getDirectoryInfo();
+		}
+		size_t 		getCount() {
+			return m_dir.getCount();
+		}
+		void 		removeFileFromList(int t_index) {
+			m_dir.removeFileFromList(t_index);
 		}
 
 	signals:

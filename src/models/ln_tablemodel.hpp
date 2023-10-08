@@ -25,31 +25,25 @@
 
 #include <QAbstractTableModel>
 
-#include "core/ied_tree.hpp"
+#include "core/ied_object.hpp"
 
 class LN_TableModel : public QAbstractTableModel
 {
 	Q_OBJECT
-	Q_PROPERTY(int currentLD READ getCurrentLD WRITE setCurrentLD NOTIFY sigCurrentLD)
-
 	enum Roles {
 		NameRole = Qt::UserRole + 1,
 		ModeRole,
 		BehRole,
 		HealthRole
 	};
-
-	Core::IED_Tree&	m_tree;
-	int					m_currentLD = -1; // current index of Logical Device
-
 public:
-	int		getCurrentLD() const {
-		return m_currentLD;
-	}
+	LN_TableModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
+
+	void 	setNewIED(QSharedPointer<Core::IED_Object> t_ied);
+
+	Q_PROPERTY(int currentLD READ getCurrentLD WRITE setCurrentLD NOTIFY sigCurrentLD)
+	int		getCurrentLD() const { return m_currentLD; }
 	void	setCurrentLD(int t_inx);
-
-public:
-	LN_TableModel(QObject *t_parent, Core::IED_Tree &t_tree);
 
 	QVariant headerData(int t_section, Qt::Orientation t_orientation,
 						int t_role = Qt::DisplayRole) const override;
@@ -63,4 +57,8 @@ public:
 
 signals:
 	void	sigCurrentLD();
+
+private:
+	QSharedPointer<Core::IED_Object> 	m_ied;
+	int					m_currentLD = -1; // current index of Logical Device
 };

@@ -25,8 +25,6 @@
 
 #include <QObject>
 
-#include <memory>
-
 #include "lib_interface.hpp"
 
 namespace Core::Cmd

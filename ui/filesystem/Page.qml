@@ -34,7 +34,6 @@ Item {
 		anchors.top: parent.top
 		anchors.right: parent.right
 
-		model: mainPres.filesModel
 		syncView: tableID
 
 		delegate: Rectangle {
@@ -68,7 +67,7 @@ Item {
 
 	TableView {
 		id: tableID
-		model: mainPres.filesModel
+		model: fsBackend.filesModel
 
 		anchors {
 			left: parent.left
@@ -83,7 +82,7 @@ Item {
 		boundsBehavior: Flickable.StopAtBounds
 
 		function getFilename(row) {
-			let idx = tableID.model.index(row, 0)
+			let idx = tableID.model.index(row, 1)
 			return tableID.model.data(idx, "display")
 		}
 
@@ -168,11 +167,12 @@ Item {
 				delegate: FileControlDelegate {
 					onSigDownloadFile: function(row) {
 						console.log("Control: Download file N" + row)
+						fsBackend.downloadFile(tableID.getFilename(row))
 					}
 
 					onSigRemoveFile: function(row) {
 						console.log("Control: Remove file N" + row)
-						//mainPres.removeFile(tableID.getFilename(row))
+						fsBackend.removeFile(tableID.getFilename(row), row)
 					}
 				}
 			}

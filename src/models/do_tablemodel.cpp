@@ -23,15 +23,21 @@
 
 #include "do_tablemodel.hpp"
 
-DO_TableModel::DO_TableModel(QObject *t_parent, Core::IED_Tree &t_tree)
-	: QAbstractTableModel(t_parent), m_tree{t_tree}
+DO_TableModel::DO_TableModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied)
+	: QAbstractTableModel(t_parent), m_ied(t_ied)
 {
+}
+
+void DO_TableModel::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
+{
+	beginResetModel();
+	m_ied = t_ied;
+	endResetModel();
 }
 
 void DO_TableModel::setCurrentLD(int t_inx)
 {
 	//qDebug() << "DO_TableModel: setCurrentLD " << t_inx;
-
 	beginResetModel();
 	m_currentLD = t_inx;
 	endResetModel();
@@ -42,7 +48,6 @@ void DO_TableModel::setCurrentLD(int t_inx)
 void DO_TableModel::setCurrentLN(int t_inx)
 {
 	//qDebug() << "DO_TableModel: setCurrentLN " << t_inx;
-
 	beginResetModel();
 	m_currentLN = t_inx;
 	endResetModel();
@@ -72,7 +77,7 @@ QHash<int, QByteArray> DO_TableModel::roleNames() const
 
 int DO_TableModel::rowCount(const QModelIndex &t_parent) const
 {
-	auto ld = m_tree.getChild<Core::LogicalDevice>(m_currentLD);
+	auto ld = m_ied->tree().getChild<Core::LogicalDevice>(m_currentLD);
 	if (ld) {
 		auto ln = ld->getChild<Core::LogicalNode>(m_currentLN);
 		if (ln) {
@@ -92,7 +97,7 @@ QVariant DO_TableModel::data(const QModelIndex &t_index, int t_role) const
 	//qDebug() << "DO_TableModel: " << QString("index = %1 %2, role = %3").arg(t_index.row()).arg(t_index.column()).arg(t_role);
 	int row = t_index.row(), column = t_index.column();
 
-	auto ln = m_tree.getLogicalNode(m_currentLD, m_currentLN);
+	auto ln = m_ied->tree().getLogicalNode(m_currentLD, m_currentLN);
 	if (ln) {
 		auto doTable = ln->getDO_Table();
 		switch (column) {

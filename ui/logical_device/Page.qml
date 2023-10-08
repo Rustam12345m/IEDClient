@@ -53,7 +53,7 @@ Item {
 		keyNavigationEnabled: true
 		boundsBehavior: Flickable.StopAtBounds
 
-		model: mainPres.ldModel
+		model: ldBackend.ldModel
 
 		delegate: LogDeviceDelegate {
 			blkWidth: root.blkWidth

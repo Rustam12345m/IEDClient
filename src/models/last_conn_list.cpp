@@ -23,11 +23,11 @@
 
 #include "last_conn_list.hpp"
 
-LastConn_TableModel::LastConn_TableModel(QObject *t_parent, AppSettings &t_ini)
+LastConn_TableModel::LastConn_TableModel(QObject *t_parent, App::AppSettings &t_ini)
 	: QAbstractTableModel(t_parent), m_ini(t_ini)
 {
 	m_con = m_ini.getDevConList();
-	m_con.push_front(DevConInfo("Test", "127.0.0.1", 102));
+	m_con.push_front(App::DevConInfo("Test", "127.0.0.1", 102));
 }
 
 QVariant LastConn_TableModel::headerData(int t_section, Qt::Orientation t_orientation, int t_role) const

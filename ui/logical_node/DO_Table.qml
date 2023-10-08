@@ -32,8 +32,8 @@ Item {
 	readonly property int defDelegateHeight: 30
 
 	function updateLNodeIndex(t_ld, t_ln) {
-		mainPres.currentLD = t_ld;
-		mainPres.currentLN = t_ln;
+		ldBackend.currentLD = t_ld;
+		ldBackend.currentLN = t_ln;
 	}
 
 	HorizontalHeaderView {
@@ -97,7 +97,7 @@ Item {
 			top: headerID.bottom
 			bottom: parent.bottom
 		}
-		model: mainPres.doModel
+		model: ldBackend.doModel
 
 		clip: true
 		interactive: true

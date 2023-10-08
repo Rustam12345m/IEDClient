@@ -41,11 +41,11 @@ namespace Core::Cmd
 	{
 		Q_OBJECT
 	private:
-		CommandQueue<ptrCMD>	m_queue;
-		LibInterface&			m_con;
+		CommandQueue<ptrCMD>			m_queue;
+		QSharedPointer<LibInterface>	m_con;
 
 	public:
-		CmdThread(LibInterface &t_lib);
+		CmdThread(QSharedPointer<LibInterface> &t_lib);
 		~CmdThread();
 
 		void	putCommand(ptrCMD t_cmd);

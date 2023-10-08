@@ -37,6 +37,7 @@ namespace Core::Cmd
 		DownloadFile(const QString &t_name)
 			: IED_BaseCommand(IED_CMD::UNDEFINED)
 		{
+			m_filename = t_name;
 		}
 		~DownloadFile() {}
 
@@ -46,5 +47,8 @@ namespace Core::Cmd
 		static QSharedPointer<DownloadFile> create(const QString &t_name) {
 			return QSharedPointer<DownloadFile>::create(t_name);
 		}
+	
+	private:
+		QString 	m_filename;
 	};
 }

@@ -145,9 +145,9 @@ FocusScope {
 				icon.source: "qrc:/img/icons/call.svg"
 
 				onClicked: {
-					globalProgressBar.startLoad()
-					mainPres.connectTo(ipAddrInput.text, portInput.text,
-									tlsSwitcher.checked, userNameInput.text, userPassInput.text)
+					//globalProgressBar.startLoad()
+					presenter.connectTo(ipAddrInput.text, portInput.text,
+										tlsSwitcher.checked, userNameInput.text, userPassInput.text)
 					nextPageSignal(Globals.Page.LD)
 				}
 

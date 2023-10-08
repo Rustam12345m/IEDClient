@@ -60,6 +60,8 @@ namespace Core::Cmd
 
 		int		getFS_List(Core::DirOn &t_dir) override;
 		int 	removeFile(const QString &t_filename) override;
+
+		void 	downloadFile(const QString &t_filename) override;
 	};
 	typedef QSharedPointer< Lib61850 >	ptrIED_Adapter;
 }

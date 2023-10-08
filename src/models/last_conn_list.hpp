@@ -25,7 +25,7 @@
 
 #include <QAbstractTableModel>
 
-#include "app/settings.hpp"
+#include "app/app_settings.hpp"
 
 class LastConn_TableModel : public QAbstractTableModel
 {
@@ -37,7 +37,7 @@ class LastConn_TableModel : public QAbstractTableModel
 		COLUMNS_COUNT
 	};
 public:
-	LastConn_TableModel(QObject *t_parent, AppSettings &t_ini);
+	LastConn_TableModel(QObject *t_parent, App::AppSettings &t_ini);
 
 	QVariant headerData(int t_section, Qt::Orientation t_orientation,
 						int t_role = Qt::DisplayRole) const override;
@@ -50,6 +50,6 @@ public:
 	QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
 protected:
-	AppSettings& 		m_ini;
-	QList<DevConInfo> 	m_con;
+	App::AppSettings& 		m_ini;
+	QList<App::DevConInfo> 	m_con;
 };
