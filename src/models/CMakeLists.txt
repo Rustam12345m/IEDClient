@@ -1,18 +1,26 @@
 # Building models's classes to a static library
 
 set(SOURCES
+	models_stub.hpp
+	
 	do_tablemodel.hpp
 	do_tablemodel.cpp
-	events_tablemodel.hpp
-	events_tablemodel.cpp
+	
+	app_events_model.hpp
+	app_events_model.cpp
+
 	files_model.hpp
 	files_model.cpp
+
 	ld_listmodel.hpp
 	ld_listmodel.cpp
+
 	ln_tablemodel.hpp
 	ln_tablemodel.cpp
+
 	sort_proxy_model.hpp
 	sort_proxy_model.cpp
+
 	last_conn_list.hpp
 	last_conn_list.cpp
 )

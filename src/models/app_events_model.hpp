@@ -25,26 +25,26 @@
 
 #include <QAbstractTableModel>
 
-class EventsTableModel : public QAbstractTableModel
+class AppEventsModel : public QAbstractTableModel
 {
 	Q_OBJECT
+	enum Columns {
+		DATE_COLUMN = 0,
+		SOURCE_COLUMN,
+		DESC_COLUMN
+	};
 public:
-	explicit EventsTableModel(QObject *parent = nullptr);
-	~EventsTableModel() override;
+	explicit AppEventsModel(QObject *parent = nullptr);
+	~AppEventsModel() = default;
 
 	int rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
 	int columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
 
-	QHash<int, QByteArray> roleNames() const override {
-		return { {Qt::DisplayRole, "display"} };
-	}
-	Qt::ItemFlags flags(const QModelIndex &t_index) const override {
-		return QAbstractTableModel::flags(t_index) | Qt::ItemIsEditable;
-	}
+	QHash<int, QByteArray> roleNames() const override;
+	Qt::ItemFlags flags(const QModelIndex &t_index) const override;
 
 	Q_INVOKABLE QVariant headerData(int t_section, Qt::Orientation t_orientation,
 									int t_role = Qt::DisplayRole) const;
 
 	QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
-	bool setData(const QModelIndex &t_index, const QVariant &t_value, int t_role = Qt::EditRole) override;
 };

@@ -51,6 +51,18 @@ namespace App
 										const QString &t_name, const QString &t_pass);
 		Q_INVOKABLE void 	disconnectFrom();
 
+	public slots:
+		void		slotConProcess(int t_proc, QString t_msg) {
+			emit sigConProgress(t_proc, t_msg);
+		}
+		void 		slotConnected() {
+			emit sigConnected();
+		}
+
+	signals:
+		void		sigConProgress(int t_perc, QString t_msg);
+		void 		sigConnected();
+
 	protected:
 		ConnectionObject	m_con; // Complex component of IED's stub
 

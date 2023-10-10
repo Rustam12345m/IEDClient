@@ -1,37 +1,42 @@
 
 #include "sort_proxy_model.hpp"
+#include "models_stub.hpp"
 
 #include <QDebug>
 
-bool SimpleProxyModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
+bool SortProxyModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
-	//qDebug() << "SimpleProxyModel: filterAcceptsRow row " << source_row;
+	//qDebug() << "SortProxyModel: filterAcceptsRow row " << source_row;
 	return true;
 }
 
-bool SimpleProxyModel::filterAcceptsColumn(int source_column, const QModelIndex &source_parent) const
+bool SortProxyModel::filterAcceptsColumn(int source_column, const QModelIndex &source_parent) const
 {
-	//qDebug() << "SimpleProxyModel: filterAcceptsColumn row " << source_column;
+	//qDebug() << "SortProxyModel: filterAcceptsColumn row " << source_column;
 	return true;
 }
 
-bool SimpleProxyModel::lessThan(const QModelIndex &t_left, const QModelIndex &t_right) const
+bool SortProxyModel::lessThan(const QModelIndex &t_left, const QModelIndex &t_right) const
 {
-	//qDebug() << "SimpleProxyModel: lessThan L = " << t_left.row() << ", R = " << t_right.row();
+	//qDebug() << "SortProxyModel: lessThan L = " << t_left.row() << ", R = " << t_right.row();
 
 	QAbstractItemModel *m = sourceModel();
 	if (m != nullptr) {
-		QVariant l = m->data(t_left);
-		QVariant r = m->data(t_right);
+		QVariant l = m->data(t_left, ComRoles::ROLE_SORT_VALUE),
+				 r = m->data(t_right, ComRoles::ROLE_SORT_VALUE);
 
-		/*
-		qDebug() << "SimpleProxyModel: lessThan "
-				<< QString("L = (%1 %2 %3)").arg(t_left.row()).arg(t_left.column()).arg(l.toString())
-				<< QString(", R = (%1 %2 %3)").arg(t_right.row()).arg(t_right.column()).arg(r.toString());
-		*/
-
-		if (l.toString() < r.toString()) {
-			return true;
+		if (l.typeId() == r.typeId()) {
+			switch (l.typeId()) {
+			case QVariant::LongLong: {
+				return (l.toLongLong() < r.toLongLong());
+			}
+			case QVariant::Double: {
+				return (l.toDouble() < r.toDouble());
+			}
+			case QVariant::String: {
+				return (l.toString() < r.toString());
+			}
+			}
 		}
 	}
 	return false;

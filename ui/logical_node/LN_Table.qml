@@ -26,14 +26,15 @@ import QtQuick.Controls
 import Qt.labs.qmlmodels
 
 // Table of all Logical Nodes for one Logical Device
-Item {
+FocusScope {
 	readonly property int delegateHeight: 30
 	readonly property int delegateWidth: 60
 
 	property int currentLDeviceIndex: tableID.model.currentLD
 	property alias currentLNodeIndex: tableID.currentRow
 
-	signal sigCurrentLNodeChanged(int t_ld, int t_ln);
+	signal sigLNodeSelected(int t_ld, int t_ln);
+	signal sigLeftOrRightKey()
 
 	function updateLDeviceIndex(t_ld) {
 		tableID.model.currentLD = t_ld
@@ -42,13 +43,13 @@ Item {
 	HorizontalHeaderView {
 		id: headerID
 
-		boundsBehavior: Flickable.StopAtBounds
 		anchors {
 			rightMargin: 5
 			left: parent.left
 			top: parent.top
 			right: parent.right
 		}
+		boundsBehavior: Flickable.StopAtBounds
 
 		syncView: tableID
 
@@ -81,31 +82,16 @@ Item {
 			}
 
 			Component.onCompleted: {
-				/*
-				console.log()
-				console.log("!!!!!!!     Header delegate     !!!!!!!!");
-				listProperty(paramModel)
-				*/
-			}
-			function listProperty(item)
-			{
-				for (var p in item) {
-					//console.log(p + ": " + item[p]);
-
-					if (typeof item[p] != "function") {
-						if (p != "objectName") {
-							console.log(p + ":" + item[p]);
-						}
-					}
-				}
 			}
 		}
 	}
 
 	TableView {
 		id: tableID
+
 		anchors {
 			rightMargin: 5
+
 			left: parent.left
 			right: parent.right
 			top: headerID.bottom
@@ -113,9 +99,7 @@ Item {
 		}
 		model: ldBackend.lnModel
 
-		//columnSpacing: 1
-		//rowSpacing: 1
-
+		focus: true
 		interactive: true
 		boundsBehavior: Flickable.StopAtBounds
 
@@ -124,13 +108,15 @@ Item {
 			model: tableID.model
 
 			onCurrentChanged: {
-				sigCurrentLNodeChanged(model.currentLD, currentIndex.row)
+				sigLNodeSelected(model.currentLD, currentIndex.row)
 			}
 		}
 
+		/*
 		onWidthChanged: function() {
-			//tableID.forceLayout()
+			tableID.forceLayout()
 		}
+		*/
 		columnWidthProvider: function(column) {
 			switch (column) {
 			case 0: {
@@ -146,23 +132,14 @@ Item {
 			}
 		}
 
-		ScrollBar.vertical: ScrollBar {
-			policy: ScrollBar.AsNeeded
-			active: true
-			onActiveChanged: {
-				if (!active) {
-					active = true;
-				}
-			}
-		}
-
 		delegate: DelegateChooser {
 			// Name column
 			DelegateChoice {
 				column: 0
 
 				delegate: Item {
-					required property bool selected
+					property bool selected: (tableID.currentRow == row)
+
 					implicitWidth: textName.implicitWidth + 10
 					implicitHeight: delegateHeight
 
@@ -196,7 +173,7 @@ Item {
 				column: 1
 
 				delegate: Item {
-					required property bool selected
+					property bool selected: (tableID.currentRow == row)
 					implicitWidth: delegateWidth
 					implicitHeight: delegateHeight
 
@@ -230,7 +207,7 @@ Item {
 				column: 2
 
 				delegate: Item {
-					required property bool selected
+					property bool selected: (tableID.currentRow == row)
 					implicitWidth: delegateWidth
 					implicitHeight: delegateHeight
 
@@ -264,7 +241,7 @@ Item {
 				column: 3
 
 				delegate: Item {
-					required property bool selected
+					property bool selected: (tableID.currentRow == row)
 					implicitWidth: delegateWidth
 					implicitHeight: delegateHeight
 
@@ -294,8 +271,38 @@ Item {
 			}
 		}
 
+		ScrollBar.vertical: ScrollBar {
+			policy: ScrollBar.AsNeeded
+			active: true
+			onActiveChanged: {
+				if (!active) {
+					active = true;
+				}
+			}
+		}
+
 		Component.onCompleted: function() {
 			//tableID.forceLayout()
 		}
+
+		Keys.onPressed: function(event) {
+			//console.log("LN_Table: Key pressed " + event.key)
+			if (event.key == Qt.Key_Left || event.key == Qt.Key_Right || event.key == Qt.Key_Tab) {
+				sigLeftOrRightKey()
+				event.accepted = true
+			}
+			event.accepted = false
+		}
+	}
+
+	onVisibleChanged: {
+		//console.log("LN_Table: Focus " + visible)
+		/*
+		if (visible) {
+			tableID.focus = true
+		} else {
+			tableID.focus = false
+		}
+		*/
 	}
 }

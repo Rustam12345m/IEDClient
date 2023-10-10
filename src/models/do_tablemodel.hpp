@@ -23,13 +23,20 @@
 
 #pragma once
 
-#include <QAbstractTableModel>
-
+#include "models_stub.hpp"
 #include "core/ied_object.hpp"
 
 class DO_TableModel : public QAbstractTableModel
 {
 	Q_OBJECT
+	enum Columns {
+		DO_NAME_COLUMN = 0,
+		DO_FC_COLUMN,
+		DO_VALUE_COLUMN,
+		DO_QUALITY_COLUMN,
+		DO_TS_COLUMN,
+		DO_DESC_COLUMN
+	};
 public:
 	DO_TableModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
 
@@ -45,12 +52,10 @@ public:
 
 	QVariant headerData(int t_section, Qt::Orientation t_orientation,
 						int t_role = Qt::DisplayRole) const override;
-
 	QHash<int, QByteArray> roleNames() const override;
 
-	int rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
-	int columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
-
+	int 	rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
+	int 	columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
 	QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
 signals:
@@ -59,6 +64,6 @@ signals:
 
 private:
 	QSharedPointer<Core::IED_Object> m_ied;
-	int					m_currentLD = -1; // current index of Logical Device
-	int					m_currentLN = -1; // current index of Logical Node
+	int		m_currentLD = -1; // current index of Logical Device
+	int		m_currentLN = -1; // current index of Logical Node
 };

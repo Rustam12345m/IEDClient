@@ -55,6 +55,9 @@ namespace App
 		connect(cmd.get(), &Core::Cmd::ConnectCmd::sigFinished, &m_fsBackend, &BackendBase::slotNewIED);
 		connect(cmd.get(), &Core::Cmd::ConnectCmd::sigFinished, &m_ldBackend, &BackendBase::slotNewIED);
 
+		connect(cmd.get(), &Core::Cmd::ConnectCmd::sigFinished, this, &Presenter::slotConnected);
+		connect(cmd.get(), &Core::Cmd::ConnectCmd::sigProgress, this, &Presenter::slotConProcess);
+
 		m_con.m_cmdQueue->putCommand(cmd);
 	}
 

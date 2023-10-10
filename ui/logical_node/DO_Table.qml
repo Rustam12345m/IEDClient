@@ -28,8 +28,9 @@ import Qt.labs.qmlmodels
 import "qrc:/global/"
 
 // Table with DataObjects for concrete Logical Node
-Item {
+FocusScope {
 	readonly property int defDelegateHeight: 30
+	signal sigLeftOrRightKey()
 
 	function updateLNodeIndex(t_ld, t_ln) {
 		ldBackend.currentLD = t_ld;
@@ -39,50 +40,69 @@ Item {
 	HorizontalHeaderView {
 		id: headerID
 
-		boundsBehavior: Flickable.StopAtBounds
+		property int sortOrder: 0
+		property int sortedColumn: 0
+
 		anchors {
-			leftMargin: 5
-			left: parent.left
+			left: tableID.left
 			top: parent.top
 			right: parent.right
 		}
+		boundsBehavior: Flickable.StopAtBounds
+		resizableColumns: false
 
 		syncView: tableID
-		clip: true
 
 		delegate: Rectangle {
 			property int column: model.column
-            property int row: model.row
-			property int sortOrder: 0
+			property bool sortable: model.display.sortable
 
-			implicitWidth: text.implicitWidth + 10
-			implicitHeight: defDelegateHeight
+			implicitWidth: labelID.implicitWidth + 24 + 10
+			implicitHeight: 30
 
 			color: "#f6f6f6"
 			border.color: "#e4e4e4"
 
-			Label {
-				id: text
-				anchors.centerIn: parent
-				horizontalAlignment: Text.AlignHCenter
-				verticalAlignment: Text.AlignVCenter
+			Row {
+				id: rowID
 
-				//font.bold: true
-				text: model[headerID.textRole]
-				color: "#ff26282a"
+				anchors.centerIn: parent
+				spacing: 5
+
+				Label {
+					id: labelID
+
+					text: model.display.text
+					color: "#ff26282a"
+				}
+				Image {
+					visible: (headerID.sortedColumn == column)
+					source: (headerID.sortOrder == 0) ? "qrc:/img/icons/keyboard_arrow_down.svg"
+													  : "qrc:/img/icons/keyboard_arrow_up.svg"
+
+					width: 24
+					height: 24
+				}
 			}
 			MouseArea {
 				anchors.fill: parent
 
 				onClicked: function(msx) {
-					console.log(`Header column [${parent.column}, ${parent.row}] clicked`)
-
-					tableID.model.sort(parent.column, sortOrder)
-					if (sortOrder == 0) {
-						sortOrder = 1
-					} else {
-						sortOrder = 0
+					if (sortable == false) {
+						return
 					}
+
+					if (headerID.sortedColumn != column) {
+						headerID.sortedColumn = column
+						headerID.sortOrder = 0
+					}
+
+					if (headerID.sortOrder == 0) {
+						headerID.sortOrder = 1
+					} else {
+						headerID.sortOrder = 0
+					}
+					tableID.model.sort(parent.column, headerID.sortOrder)
 				}
 			}
 		}
@@ -90,6 +110,7 @@ Item {
 
 	TableView {
 		id: tableID
+
 		anchors {
 			leftMargin: 5
 			left: parent.left
@@ -97,42 +118,14 @@ Item {
 			top: headerID.bottom
 			bottom: parent.bottom
 		}
+
 		model: ldBackend.doModel
 
+		focus: true
 		clip: true
 		interactive: true
 		boundsBehavior: Flickable.StopAtBounds
 
-		function calcGoodWidthFoColumn(col) {
-			const iw = []
-			let sum = 0
-			for (let i=0;i<columns;i++) {
-				iw[i] = Math.max(headerID.implicitColumnWidth(i), implicitColumnWidth(i))
-				sum = sum + iw[i]
-			}
-			if (sum === 0) sum = 1
-			return width * (iw[col] / sum)
-		}
-		function setGoodColumnsWidth() {
-			const iw = []
-			let sum = 0, i = 0
-			for (i=0;i<columns;i++) {
-				iw[i] = Math.max(headerID.implicitColumnWidth(i), implicitColumnWidth(i))
-				sum = sum + iw[i]
-			}
-			if (sum === 0) {
-				sum = 1
-			}
-			for (i=0;i<columns;i++) {
-				setColumnWidth(i, width * iw[i] / sum)
-			}
-		}
-
-		onWidthChanged: function() {
-			//setGoodColumnsWidth()
-			//tableID.forceLayout()
-		}
-		//columnWidthProvider: calcGoodWidthFoColumn
 		columnWidthProvider: function(column) {
 			switch (column) {
 			case 5: {
@@ -153,6 +146,76 @@ Item {
 			}
 		}
 
+		delegate: DelegateChooser {
+			// Name
+			DelegateChoice {
+				column: 0
+
+				delegate: TextDelegate {
+					delegateHeight: defDelegateHeight
+					selected: (tableID.currentRow == row)
+
+					textAlign: Text.AlignLeft
+					text: model.display
+				}
+			}
+			// FC
+			DelegateChoice {
+				column: 1
+
+				delegate: TextDelegate {
+					delegateHeight: defDelegateHeight
+					selected: (tableID.currentRow == row)
+
+					text: model.display
+				}
+			}
+			// Value
+			DelegateChoice {
+				column: 2
+
+				delegate: TextDelegate {
+					delegateHeight: defDelegateHeight
+					selected: (tableID.currentRow == row)
+
+					text: model.display
+				}
+			}
+			// Quality
+			DelegateChoice {
+				column: 3
+
+				delegate: TextDelegate {
+					delegateHeight: defDelegateHeight
+					selected: (tableID.currentRow == row)
+
+					text: model.display
+				}
+			}
+			// Timestamp
+			DelegateChoice {
+				column: 4
+
+				delegate: TextDelegate {
+					delegateHeight: defDelegateHeight
+					selected: (tableID.currentRow == row)
+
+					text: model.display
+				}
+			}
+			// Description
+			DelegateChoice {
+				column: 5
+
+				delegate: TextDelegate {
+					delegateHeight: defDelegateHeight
+					selected: (tableID.currentRow == row)
+
+					text: model.display
+				}
+			}
+		}
+
 		ScrollBar.vertical: ScrollBar {
 			policy: ScrollBar.AsNeeded
 			active: true
@@ -163,66 +226,24 @@ Item {
 			}
 		}
 
-		delegate: DelegateChooser {
-			// Name column
-			DelegateChoice {
-				column: 0
-
-				delegate: TextDelegate {
-					delegateHeight: defDelegateHeight
-					textAlign: Text.AlignLeft
-					text: model.display
-				}
+		Keys.onPressed: function(event) {
+			//console.log("DO_Table: Key pressed " + event.key)
+			if (event.key == Qt.Key_Left || event.key == Qt.Key_Right || event.key == Qt.Key_Tab) {
+				sigLeftOrRightKey()
+				event.accepted = true
 			}
-
-			DelegateChoice {
-				column: 1
-
-				delegate: TextDelegate {
-					delegateHeight: defDelegateHeight
-					text: model.display
-				}
-			}
-
-			// Value column
-			DelegateChoice {
-				column: 2
-
-				delegate: TextDelegate {
-					delegateHeight: defDelegateHeight
-					text: model.display
-				}
-			}
-
-			// Quality column
-			DelegateChoice {
-				column: 3
-
-				delegate: TextDelegate {
-					delegateHeight: defDelegateHeight
-					text: model.display
-				}
-			}
-
-			// Timestamp column
-			DelegateChoice {
-				column: 4
-
-				delegate: TextDelegate {
-					delegateHeight: defDelegateHeight
-					text: model.display
-				}
-			}
-
-			// Description column
-			DelegateChoice {
-				column: 5
-
-				delegate: TextDelegate {
-					delegateHeight: defDelegateHeight
-					text: model.display
-				}
-			}
+			event.accepted = false
 		}
+	}
+
+	onVisibleChanged: {
+		//console.log("DO_Table: Focus " + visible)
+		/*
+		if (visible) {
+			tableID.focus = true
+		} else {
+			tableID.focus = false
+		}
+		*/
 	}
 }

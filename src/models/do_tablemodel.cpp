@@ -55,34 +55,45 @@ void DO_TableModel::setCurrentLN(int t_inx)
 	emit sigChangedLN(t_inx);
 }
 
-QVariant DO_TableModel::headerData(int t_section, Qt::Orientation t_orientation, int t_role) const
+QVariant DO_TableModel::headerData(int t_column, Qt::Orientation t_orientation, int t_role) const
 {
-	switch (t_orientation) {
-	case Qt::Horizontal: {
-		const char* labels[] = { "Name", "FC", "Value", "Quality", "Timestamp", "Description" };
-		return QVariant(labels[t_section % 6]);
-		break;
+	if (t_orientation != Qt::Horizontal) {
+		return QVariant();
 	}
-	case Qt::Vertical: {
-		break;
+
+	switch (t_column) {
+	case DO_NAME_COLUMN: {
+		return QVariant::fromValue(SortHeaderValue("Name", true));
+	}
+	case DO_FC_COLUMN: {
+		return QVariant::fromValue(SortHeaderValue("FC", true));
+	}
+	case DO_VALUE_COLUMN: {
+		return QVariant::fromValue(SortHeaderValue("Value", true));
+	}
+	case DO_QUALITY_COLUMN: {
+		return QVariant::fromValue(SortHeaderValue("Quality", true));
+	}
+	case DO_TS_COLUMN: {
+		return QVariant::fromValue(SortHeaderValue("Timestamp", true));
+	}
+	case DO_DESC_COLUMN: {
+		return QVariant::fromValue(SortHeaderValue("Description", false));
 	}
 	}
-	return QString::number(t_section + 1);
+	return QVariant("");
 }
 
 QHash<int, QByteArray> DO_TableModel::roleNames() const
 {
-	return { { Qt::DisplayRole, "display" } };
+	return { { Qt::DisplayRole, "display" }, { Qt::UserRole + 1, "sort_value" } };
 }
 
 int DO_TableModel::rowCount(const QModelIndex &t_parent) const
 {
-	auto ld = m_ied->tree().getChild<Core::LogicalDevice>(m_currentLD);
-	if (ld) {
-		auto ln = ld->getChild<Core::LogicalNode>(m_currentLN);
-		if (ln) {
-			return ln->getDO_Table()->size();
-		}
+	auto ln = m_ied->tree().getLogicalNode(m_currentLD, m_currentLN);
+	if (ln) {
+		return ln->getDO_Table()->size();
 	}
 	return 0;
 }
@@ -100,25 +111,57 @@ QVariant DO_TableModel::data(const QModelIndex &t_index, int t_role) const
 	auto ln = m_ied->tree().getLogicalNode(m_currentLD, m_currentLN);
 	if (ln) {
 		auto doTable = ln->getDO_Table();
-		switch (column) {
-		case 0: {
-			return QVariant(doTable->name(row));
-		}
-		case 1: {
-			return QVariant(doTable->fc(row));
-		}
-		case 2: {
-			return QVariant(doTable->value(row));
-		}
-		case 3: {
-			return QVariant(doTable->quality(row));
-		}
-		case 4: {
-			return QVariant(doTable->timestamp(row));
-		}
-		case 5: {
-			return QVariant(doTable->description(row));
-		}
+		if (t_role == ComRoles::ROLE_SORT_VALUE) {
+			// for sorting process
+			switch (column) {
+			case DO_NAME_COLUMN: {
+				return QVariant(doTable->name(row));
+			}
+			case DO_FC_COLUMN: {
+				return QVariant(doTable->fc(row));
+			}
+			case DO_VALUE_COLUMN: {
+				return QVariant(doTable->value(row));
+			}
+			case DO_QUALITY_COLUMN: {
+				return QVariant(doTable->quality(row));
+			}
+			case DO_TS_COLUMN: {
+				return QVariant(doTable->timestamp(row));
+			}
+			case DO_DESC_COLUMN: {
+				return QVariant(doTable->description(row));
+			}
+			}
+		} else {
+			// for user interface
+			switch (column) {
+			case DO_NAME_COLUMN: {
+				// remove: .stVal and .mag.f
+				QString name = doTable->name(row);
+				if (name.endsWith(".stVal")) {
+					name = name.first(name.size() - 6);
+				} else if (name.endsWith(".mag.f")) {
+					name = name.first(name.size() - 6);
+				}
+				return QVariant(name);
+			}
+			case DO_FC_COLUMN: {
+				return QVariant(doTable->fc(row));
+			}
+			case DO_VALUE_COLUMN: {
+				return QVariant(doTable->value(row));
+			}
+			case DO_QUALITY_COLUMN: {
+				return QVariant(doTable->quality(row));
+			}
+			case DO_TS_COLUMN: {
+				return QVariant(doTable->timestamp(row));
+			}
+			case DO_DESC_COLUMN: {
+				return QVariant(doTable->description(row));
+			}
+			}
 		}
 	}
 	return QVariant(" ? ");

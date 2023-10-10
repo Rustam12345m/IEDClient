@@ -26,7 +26,11 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 // LN page
-Item {
+FocusScope {
+	id: root
+
+	signal sigLNodeSelected()
+
 	function updateLDeviceIndex(t_ld) {
 		tableLN.updateLDeviceIndex(t_ld)
 		tableDO.updateLNodeIndex(t_ld, tableLN.currentLNodeIndex)
@@ -34,6 +38,7 @@ Item {
 
 	SplitView {
 		id: splitView
+
 		anchors.fill: parent
 
 		// Delimiter
@@ -51,7 +56,7 @@ Item {
 			}
 		}
 
-		// Area for LogicalNodes
+		// Area for LogicalNode's table
 		Rectangle {
 			SplitView.minimumWidth: 300
 			SplitView.fillWidth: false
@@ -60,15 +65,22 @@ Item {
 			// Table
 			LN_Table {
 				id: tableLN
+
 				anchors.fill: parent
 
-				onSigCurrentLNodeChanged: function(t_ld, t_ln) {
+				onSigLNodeSelected: function(t_ld, t_ln) {
 					tableDO.updateLNodeIndex(t_ld, t_ln)
+					root.sigLNodeSelected()
+				}
+				onSigLeftOrRightKey: function() {
+					console.log("LN_Page: Activate DO_Table")
+					tableLN.focus = false
+					tableDO.focus = true
 				}
 			}
 		}
 
-		// Area for DataObjects
+		// Area for DataObject's table
 		Rectangle {
 			SplitView.minimumWidth: 100
 			SplitView.fillWidth: true
@@ -77,7 +89,14 @@ Item {
 			// Table
 			DO_Table {
 				id: tableDO
+
 				anchors.fill: parent
+
+				onSigLeftOrRightKey: function() {
+					console.log("LN_Page: Activate LN_Table")
+					tableLN.focus = true
+					tableDO.focus = false
+				}
 			}
 		}
 
@@ -93,13 +112,36 @@ Item {
 				ldBackend.updateLNodeData(tableDO.currentLDevice, tableDO.currentLNode)
 			}
 		}
+	}
 
-		onVisibleChanged: {
-			if (visible) {
-				lnPageTimer.start()
-			} else {
-				lnPageTimer.stop()
-			}
+	onVisibleChanged: {
+		if (visible) {
+			tableLN.focus = true
+			tableDO.focus = false
+
+			lnPageTimer.start()
+		} else {
+			tableLN.focus = false
+			tableDO.focus = false
+
+			lnPageTimer.stop()
+		}
+	}
+
+	Keys.onPressed: function(event) {
+		console.log("LN_Page: Key pressed " + event.key)
+
+		if (event.key == Qt.Key_Left) {
+			console.log("LN_Page: Activate LN_Table")
+			tableLN.focus = true
+			tableDO.focus = false
+			event.accepted = true
+		}
+		if (event.key == Qt.Key_Right) {
+			console.log("LN_Page: Activate DO_Table")
+			tableLN.focus = false
+			tableDO.focus = true
+			event.accepted = true
 		}
 	}
 }

@@ -36,15 +36,10 @@ namespace {
 	}
 }
 
-
 FilesTableModel::FilesTableModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied)
 	: QAbstractTableModel(t_parent), m_ied(t_ied)
 {
 	connect(&m_ied->fs(), SIGNAL(sigFS_Updated()), this, SLOT(slotDataUpdated()));
-}
-
-FilesTableModel::~FilesTableModel()
-{
 }
 
 void FilesTableModel::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
@@ -67,7 +62,7 @@ int FilesTableModel::columnCount(const QModelIndex &t_parent) const
 
 QHash<int, QByteArray> FilesTableModel::roleNames() const
 {
-	return { { Qt::DisplayRole, "display"} };
+	return { { Qt::DisplayRole, "display"}, { ROLE_SORT_VALUE, "sort_value" } };
 }
 
 Qt::ItemFlags FilesTableModel::flags(const QModelIndex &t_index) const
@@ -75,34 +70,76 @@ Qt::ItemFlags FilesTableModel::flags(const QModelIndex &t_index) const
 	return QAbstractTableModel::flags(t_index) | Qt::ItemIsSelectable;
 }
 
-QVariant FilesTableModel::headerData(int t_section, Qt::Orientation t_orientation, int t_role) const
+QVariant FilesTableModel::headerData(int t_column, Qt::Orientation t_orientation, int t_role) const
 {
-	switch (t_orientation) {
-	case Qt::Horizontal: {
-		const char* labels[] = { "Last modification",  "Name", "Size", "Control" };
-		return QVariant(labels[t_section % FS_COLUMN_COUNT]);
+	if (t_orientation != Qt::Horizontal) {
+		return QVariant();
 	}
-	case Qt::Vertical: {
-		break;
+
+	switch (t_column) {
+	case FS_INDEX_COLUMN: {
+		return QVariant::fromValue(SortHeaderValue("N", true));
+	}
+	case FS_DATE_COLUMN: {
+		return QVariant::fromValue(SortHeaderValue("Last modification", true));
+	}
+	case FS_NAME_COLUMN: {
+		return QVariant::fromValue(SortHeaderValue("Name", true));
+	}
+	case FS_SIZE_COLUMN: {
+		return QVariant::fromValue(SortHeaderValue("Size", true));
+	}
+	case FS_FILE_COLUMN: {
+		return QVariant::fromValue(SortHeaderValue("Controls", false));
 	}
 	}
-	return "[ - ]";
+	return QVariant("");
 }
 
 QVariant FilesTableModel::data(const QModelIndex &t_index, int t_role) const
 {
+	//qDebug() << "FS: Data " << t_index.column() << " role = " << t_role;
+
 	int row = t_index.row();
 	if ((row >= 0) && (row < m_ied->fs().m_dir.m_file.size())) {
-		switch (t_index.column()) {
-		case FS_NAME_COLUMN: {
-			return m_ied->fs().m_dir.m_file[row].m_fileName;
-		}
-		case FS_SIZE_COLUMN: {
-			return QString::number((double)m_ied->fs().m_dir.m_file[row].m_size / 1024, 'f', 1) + " KB";
-		}
-		case FS_DATE_COLUMN: {
-			return convertTimestampMsToUserString(m_ied->fs().m_dir.m_file[row].m_mts);
-		}
+		if (t_role == ComRoles::ROLE_SORT_VALUE) {
+			// values for sorting process
+			switch (t_index.column()) {
+			case FS_INDEX_COLUMN: {
+				return QVariant(qlonglong(row + 1));
+			}
+			case FS_DATE_COLUMN: {
+				return QVariant(qlonglong(m_ied->fs().m_dir.m_file[row].m_mts));
+			}
+			case FS_NAME_COLUMN: {
+				return m_ied->fs().m_dir.m_file[row].m_fileName;
+			}
+			case FS_SIZE_COLUMN: {
+				return QVariant(qlonglong(m_ied->fs().m_dir.m_file[row].m_size));
+			}
+			case FS_FILE_COLUMN: {
+				return "";
+			}
+			}
+		} else {
+			// for user
+			switch (t_index.column()) {
+			case FS_INDEX_COLUMN: {
+				return QString("%1").arg(row + 1);
+			}
+			case FS_DATE_COLUMN: {
+				return convertTimestampMsToUserString(m_ied->fs().m_dir.m_file[row].m_mts);
+			}
+			case FS_NAME_COLUMN: {
+				return m_ied->fs().m_dir.m_file[row].m_fileName;
+			}
+			case FS_SIZE_COLUMN: {
+				return QString::number((double)m_ied->fs().m_dir.m_file[row].m_size / 1024, 'f', 1) + " KB";
+			}
+			case FS_FILE_COLUMN: {
+				return "";
+			}
+			}
 		}
 	}
 	return QVariant(" - ");

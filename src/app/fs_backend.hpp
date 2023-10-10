@@ -24,6 +24,7 @@
 #pragma once
 
 #include "backend_base.hpp"
+#include "models/sort_proxy_model.hpp"
 #include "models/files_model.hpp"
 
 namespace App
@@ -39,8 +40,11 @@ namespace App
 		~FS_Backend() = default;
 
 		// Properties for QML
-		Q_PROPERTY(FilesTableModel* filesModel READ getFilesModel CONSTANT)
-		FilesTableModel*	getFilesModel() const { return m_fsModel; }
+		Q_PROPERTY(FilesTableModel* 	filesModel 	READ getModel 		CONSTANT)
+		Q_PROPERTY(QAbstractItemModel* 	sortModel 	READ getSortedModel CONSTANT)
+
+		FilesTableModel*	getModel() const { return m_fsModel; }
+		QAbstractItemModel* getSortedModel() const { return m_sortedModel; }
 
 		// API for QML
 		Q_INVOKABLE QString getFS_TextStatus();
@@ -52,5 +56,6 @@ namespace App
 
 	protected:
 		FilesTableModel*	m_fsModel = nullptr;
+		SortProxyModel* 	m_sortedModel = nullptr;
 	};
 }

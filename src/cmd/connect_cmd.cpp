@@ -31,23 +31,13 @@ namespace Core::Cmd
 {
 	void ConnectCmd::execute(LibInterface &t_con)
 	{
-		/*
-		qDebug() << QString("Connect request to %1:%2").arg(m_ip).arg(m_port);
-		for (int i=0;i<10;i++) {
-			emit sigProgress(i * 10, "Perc msg = " + QString::number(i * 10));
-
-			QThread::msleep(500);
-		}
-		emit sigFinished();
-		return;
-		*/
-		//QThread::msleep(10 * 1000);
+		emit sigProgress(0, QString("Send connection request to %1:%2").arg(m_ip).arg(m_port));
 
 		if (t_con.connect(m_ip, m_port, m_tls, m_user, m_password)) {
 			qDebug() << QString("Connected to %1:%2").arg(m_ip).arg(m_port);
 
-			emit sigProgress(30, QString("Successfully connected to %1:%2").arg(m_ip).arg(m_port));
-			QThread::sleep(1); // Debug
+			emit sigProgress(25, QString("Successfully connected to %1:%2").arg(m_ip).arg(m_port));
+			//QThread::sleep(1); // Debug
 
 			// Get LD & LN list
 			int retval = t_con.getLD_List(m_tree);
@@ -69,7 +59,7 @@ namespace Core::Cmd
 							ln->setDO_Table(doTable);
 						}
 
-						emit sigProgress(50, QString("Found %1 data object for %2/%3")
+						emit sigProgress(50, QString("Found %1 data objects for %2/%3")
 												.arg(ln->getChildCount()).arg(ld->name(), ln->name()));
 					}
 				}

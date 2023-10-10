@@ -25,49 +25,81 @@ import QtQuick
 import QtQuick.Controls
 import Qt.labs.qmlmodels
 
-Item {
+// Filesystem page
+FocusScope {
 	HorizontalHeaderView {
 		id: headerID
 
+		property int sortOrder: 0
+		property int sortedColumn: 0
+
+		anchors {
+			left: tableID.left
+			top: parent.top
+			right: parent.right
+		}
 		boundsBehavior: Flickable.StopAtBounds
-		anchors.left: tableID.left
-		anchors.top: parent.top
-		anchors.right: parent.right
+		resizableColumns: false
 
 		syncView: tableID
 
 		delegate: Rectangle {
-			property var columnIndex: model.column
+			property int column: model.column
+			property bool sortable: model.display.sortable
 
-			implicitWidth: text.implicitWidth + 20
+			implicitWidth: labelID.implicitWidth + 10
 			implicitHeight: 30
+
 			color: "#f6f6f6"
 			border.color: "#e4e4e4"
 
-			Label {
-				id: text
-
+			Row {
 				anchors.centerIn: parent
-				horizontalAlignment: Text.AlignHCenter
-				verticalAlignment: Text.AlignVCenter
+				spacing: 5
 
-				text: model[headerID.textRole]
-				color: "#ff26282a"
+				Label {
+					id: labelID
+
+					text: model.display.text
+					color: "#ff26282a"
+				}
+				Image {
+					visible: (headerID.sortedColumn == column)
+					source: (headerID.sortOrder == 0) ? "qrc:/img/icons/keyboard_arrow_down.svg"
+													  : "qrc:/img/icons/keyboard_arrow_up.svg"
+
+					width: 24
+					height: 24
+				}
 			}
-
 			MouseArea {
 				anchors.fill: parent
 
-				onClicked: function() {
-					console.log("FilesHeader clicked: " + columnIndex)
+				onClicked: function(msx) {
+					if (sortable == false) {
+						return
+					}
+
+					if (headerID.sortedColumn != column) {
+						headerID.sortedColumn = column
+						headerID.sortOrder = 0
+					}
+
+					if (headerID.sortOrder == 0) {
+						headerID.sortOrder = 1
+					} else {
+						headerID.sortOrder = 0
+					}
+					tableID.model.sort(parent.column, headerID.sortOrder)
 				}
 			}
 		}
 	}
 
+	// Table of files on the IED
 	TableView {
 		id: tableID
-		model: fsBackend.filesModel
+		model: fsBackend.sortModel//filesModel
 
 		anchors {
 			left: parent.left
@@ -77,17 +109,21 @@ Item {
 			//rightMargin: 5
 		}
 
-		focus: false
+		focus: true
+		keyNavigationEnabled: true
+		reuseItems: true
+
+		interactive: true
 		clip: true
 		boundsBehavior: Flickable.StopAtBounds
 
 		function getFilename(row) {
-			let idx = tableID.model.index(row, 1)
+			let idx = tableID.model.index(row, 2)
 			return tableID.model.data(idx, "display")
 		}
 
 		function setGoodColumnsWidth() {
-			const iw = []
+			var iw = []
 			let sum = 0, i = 0
 			for (i=0;i<columns;i++) {
 				iw[i] = Math.max(headerID.implicitColumnWidth(i), implicitColumnWidth(i))
@@ -100,18 +136,133 @@ Item {
 				setColumnWidth(i, width * iw[i] / sum)
 			}
 		}
+		function calcColumnsWidth(t_column) {
+			var iw = []
+			let sum = 0, i = 0
+			for (i=0;i<columns;i++) {
+				iw[i] = Math.max(headerID.implicitColumnWidth(i), implicitColumnWidth(i))
+				sum = sum + iw[i]
+			}
+			if (sum === 0) {
+				sum = 1
+			}
+			return (width * iw[t_column] / sum)
+		}
+		function setSelectedRow(t_row) {
+			if (tableID.currentRow === t_row) {
+				return;
+			}
+			let idx = tableID.model.index(t_row, 0);
+			tableID.selectionModel.setCurrentIndex(idx, ItemSelectionModel.Clear
+														| ItemSelectionModel.Select
+														| ItemSelectionModel.Rows);
+		}
+		function callDownloadFile(t_row) {
+			console.log("FS_Table: Download file N" + t_row)
 
-		onWidthChanged: function() {
-			//tableID.forceLayout()
-			setGoodColumnsWidth()
+			setSelectedRow(t_row)
+			fsBackend.downloadFile(tableID.getFilename(t_row))
+		}
+
+		columnWidthProvider: function(t_column) {
+			return calcColumnsWidth(t_column)
 		}
 
 		selectionBehavior: TableView.SelectRows
 		selectionModel: ItemSelectionModel {
 			model: tableID.model
-
+			/*
 			onCurrentChanged: {
-				//console.log(currentIndex)
+				console.log(currentIndex)
+			}
+			*/
+		}
+
+		delegate: DelegateChooser {
+			// Index
+			DelegateChoice {
+				column: 0
+
+				delegate: FileTableDelegate {
+					selected: (tableID.currentRow == row)
+					text: model.display
+
+					onSigSelectRow: function(t_row) {
+						tableID.setSelectedRow(t_row)
+					}
+					onSigDownloadFile: function(t_row) {
+						tableID.callDownloadFile(t_row)
+					}
+				}
+			}
+
+			// Last modified time
+			DelegateChoice {
+				column: 1
+
+				delegate: FileTableDelegate {
+					selected: (tableID.currentRow == row)
+					text: model.display
+
+					onSigSelectRow: function(t_row) {
+						tableID.setSelectedRow(t_row)
+					}
+					onSigDownloadFile: function(t_row) {
+						tableID.callDownloadFile(t_row)
+					}
+				}
+			}
+
+			// File name
+			DelegateChoice {
+				column: 2
+
+				delegate: FileTableDelegate {
+					selected: (tableID.currentRow == row)
+					text: model.display
+
+					onSigSelectRow: function(t_row) {
+						tableID.setSelectedRow(t_row)
+					}
+					onSigDownloadFile: function(t_row) {
+						tableID.callDownloadFile(t_row)
+					}
+				}
+			}
+
+			// File size
+			DelegateChoice {
+				column: 3
+
+				delegate: FileTableDelegate {
+					selected: (tableID.currentRow == row)
+					text: model.display
+
+					onSigSelectRow: function(t_row) {
+						tableID.setSelectedRow(t_row)
+					}
+					onSigDownloadFile: function(t_row) {
+						tableID.callDownloadFile(t_row)
+					}
+				}
+			}
+
+			// Controls
+			DelegateChoice {
+				column: 4
+
+				delegate: FileControlDelegate {
+					selected: (tableID.currentRow == row)
+
+					onSigDownloadFile: function(t_row) {
+						tableID.callDownloadFile(t_row)
+					}
+
+					onSigRemoveFile: function(row) {
+						console.log("Control: Remove file N" + row)
+						fsBackend.removeFile(tableID.getFilename(row), row)
+					}
+				}
 			}
 		}
 
@@ -124,58 +275,22 @@ Item {
 				}
 			}
 		}
-		/*
-		ScrollBar.horizontal: ScrollBar {
-			policy: ScrollBar.AsNeeded
-			active: true
-			onActiveChanged: {
-				if (!active)
-					active = true;
+
+		Keys.onPressed: function(event) {
+			//console.log("FS_Table: Key pressed " + event.key + ", currentIndex = " + tableID.currentRow)
+
+			if (event.key == Qt.Key_Return || event.key == Qt.Key_Enter) {
+				fsBackend.downloadFile(tableID.getFilename(tableID.currentRow))
 			}
 		}
-		*/
+	}
 
-		delegate: DelegateChooser {
-			// Last modified time
-			DelegateChoice {
-				column: 0
-
-				delegate: FileTableDelegate {
-					text: model.display
-				}
-			}
-			// File name
-			DelegateChoice {
-				column: 1
-
-				delegate: FileTableDelegate {
-					text: model.display
-				}
-			}
-			// File size
-			DelegateChoice {
-				column: 2
-
-				delegate: FileTableDelegate {
-					text: model.display
-				}
-			}
-			// Controls
-			DelegateChoice {
-				column: 3
-
-				delegate: FileControlDelegate {
-					onSigDownloadFile: function(row) {
-						console.log("Control: Download file N" + row)
-						fsBackend.downloadFile(tableID.getFilename(row))
-					}
-
-					onSigRemoveFile: function(row) {
-						console.log("Control: Remove file N" + row)
-						fsBackend.removeFile(tableID.getFilename(row), row)
-					}
-				}
-			}
+	onVisibleChanged: {
+		//console.log("FS_Table: Focus " + visible)
+		if (visible) {
+			tableID.focus = true
+		} else {
+			tableID.focus = false
 		}
 	}
 }

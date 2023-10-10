@@ -27,8 +27,8 @@ import QtQuick.Controls
 Item {
 	required property bool selected
 
-	signal sigRemoveFile(int row)
 	signal sigDownloadFile(int row)
+	signal sigRemoveFile(int row)
 
 	id: root
 	implicitWidth: downloadBtn.width + progressBar.width + removeBtn.width + 5
