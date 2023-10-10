@@ -29,6 +29,9 @@ Item {
 	property int delegateHeight: 30
 	property alias text: textFild.text
 
+	signal sigSelectRow(int t_row)
+	signal sigDownloadFile(int row)
+
 	implicitWidth: textFild.implicitWidth + 20
 	implicitHeight: delegateHeight
 
@@ -56,47 +59,10 @@ Item {
 		acceptedButtons: Qt.LeftButton | Qt.RightButton
 
 		onClicked: function(mouse) {
-			let idx = tableID.model.index(row, 0);
-			tableID.selectionModel.setCurrentIndex(idx, ItemSelectionModel.Clear
-														| ItemSelectionModel.Select
-														| ItemSelectionModel.Rows);
-			if (mouse.button === Qt.RightButton) {
-				contextMenu.popup()
-			}
-		}
-		onPressAndHold: function(mouse) {
-			if (mouse.source === Qt.MouseEventNotSynthesized) {
-				contextMenu.popup()
-			}
+			sigSelectRow(row)
 		}
 		onDoubleClicked: function(mouse) {
-			fsBackend.downloadFile(tableID.getFilename(row))
-		}
-
-		Menu {
-			id: contextMenu
-
-			MenuItem {
-				text: "Download"
-				onTriggered: {
-					console.log(text + " " + row)
-					fsBackend.downloadFile(tableID.getFilename(row))
-				}
-			}
-			MenuItem {
-				text: "Remove"
-				onTriggered: {
-					console.log(text + " " + row)
-					fsBackend.removeFile(tableID.getFilename(row))
-				}
-			}
-			MenuItem {
-				enabled: false
-				text: "Rename"
-				onTriggered: {
-					console.log(text + " " + row)
-				}
-			}
+			sigDownloadFile(row)
 		}
 	}
 }

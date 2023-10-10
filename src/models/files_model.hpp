@@ -23,8 +23,7 @@
 
 #pragma once
 
-#include <QAbstractTableModel>
-
+#include "models_stub.hpp"
 #include "core/ied_object.hpp"
 
 /*
@@ -36,7 +35,8 @@ class FilesTableModel : public QAbstractTableModel
 	Q_OBJECT
 	enum Columns
 	{
-		FS_DATE_COLUMN = 0,
+		FS_INDEX_COLUMN = 0,
+		FS_DATE_COLUMN,
 		FS_NAME_COLUMN,
 		FS_SIZE_COLUMN,
 		FS_FILE_COLUMN,
@@ -49,7 +49,7 @@ private:
 
 public:
 	FilesTableModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
-	~FilesTableModel() override;
+	~FilesTableModel() = default;
 
 	void 		setNewIED(QSharedPointer<Core::IED_Object> t_ied);
 

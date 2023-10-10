@@ -21,17 +21,28 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "com_backend.hpp"
+#pragma once
 
-namespace App
+#include <QAbstractTableModel>
+
+class SortHeaderValue
 {
-	ComBackend::ComBackend(ConnectionObject &t_con) : BackendBase(t_con)
-	{
-		m_eventsModel = new AppEventsModel(this);
-		m_lastConnModel = new LastConn_TableModel(this, m_ini);
-	}
+	// hack
+	Q_GADGET
+public:
+	SortHeaderValue() {}
+	SortHeaderValue(const QString &t_text, bool t_sort)
+		: m_text(t_text), m_sortable(t_sort) {}
 
-	void ComBackend::slotNewIED()
-	{
-	}
-}
+	QString		m_text;
+	bool 		m_sortable = false;
+
+	Q_PROPERTY(int 		sortable 	MEMBER 	m_sortable)
+    Q_PROPERTY(QString 	text 		MEMBER 	m_text)
+};
+Q_DECLARE_METATYPE(SortHeaderValue)
+
+enum ComRoles
+{
+	ROLE_SORT_VALUE = Qt::UserRole + 1
+};

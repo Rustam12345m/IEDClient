@@ -31,15 +31,15 @@ Item {
 
 		anchors.centerIn: parent
 
-		width: Math.max(400, progressText.implicitWidth + 50)
-		height: 120
+		width: Math.max(600, progressText.implicitWidth + 50)
+		height: 150
 
 		modal: true
 		closePolicy: Dialog.NoAutoClose
 		visible: false
 
 		Rectangle {
-			color: "gray"
+			color: "lightgray"
 			anchors.fill: parent
 
 			ColumnLayout {
@@ -68,6 +68,16 @@ Item {
 					from: 0.0
 					to: 100.0
 					value: 0.0
+
+					Text {
+						id: progressValue
+
+						anchors.centerIn: parent
+						z: 1
+
+						text: ""
+						color: "black"
+					}
 				}
 			}
 		}
@@ -87,6 +97,8 @@ Item {
 
 	function updateLoad(t_perc, t_msg) {
 		progressBar.value = t_perc
+		progressValue.text = t_perc + " %"
+
 		progressText.text = t_msg
 	}
 

@@ -175,15 +175,18 @@ Window {
 
 				// ToolBar
 				Item {
+					Layout.preferredWidth: toolBarRow.implicitWidth
+
 					id: toolBar
 					readonly property int btnHeight: 30
 
-					width: toolBarRow.implicitWidth
+					//width: toolBarRow.implicitWidth
 					height: parent.height
 
 					// ToolBar buttons
 					Row {
 						id: toolBarRow
+
 						anchors.fill: parent
 						spacing: 5
 
@@ -287,8 +290,11 @@ Window {
 
 				// Status
 				Rectangle {
+					//Layout.fillWidth: true
+					Layout.preferredWidth: Math.max(250, statusTextBox.implicitWidth + 20)
+
 					height: toolBar.btnHeight
-					width: Math.max(250, statusTextBox.implicitWidth + 20)
+					//width: Math.max(250, statusTextBox.implicitWidth + 20)
 
 					border.width: 1
 					border.color: "gray"
@@ -372,10 +378,13 @@ Window {
 									focus = true
 
 									setStatusText(presenter.getAppVersion())
+								} else {
+									focus = false
 								}
 							}
-							onNextPageSignal: function(page) {
-								rootWindow.setActivePage(page)
+							onSigConnectTo: function(ip, port, tls, user, pass) {
+								globalProgressBar.startLoad()
+								presenter.connectTo(ip, port, tls, user, pass)
 							}
 						}
 
@@ -384,10 +393,14 @@ Window {
 
 							onVisibleChanged: {
 								if (visible) {
+									focus = true
+
 									hidePropertyPanel()
+								} else {
+									focus = false
 								}
 							}
-							onSigNextPageSignal: function(page) {
+							onSigActivatePage: function(page) {
 								rootWindow.setActivePage(page)
 							}
 							onSigLDeviceChanged: function(index, name) {
@@ -402,18 +415,29 @@ Window {
 
 							onVisibleChanged: {
 								if (visible) {
+									focus = true
+
 									hidePropertyPanel()
+								} else {
+									focus = false
 								}
+							}
+							onSigLNodeSelected: {
+								setStatusText(ldBackend.getLN_TextStatus())
 							}
 						}
 
 						FS.Page {
 							onVisibleChanged: {
 								if (visible) {
+									focus = true
+
 									fsBackend.updateFilesDirectory("/")
 									hidePropertyPanel()
 
 									setStatusText(fsBackend.getFS_TextStatus())
+								} else {
+									focus = false
 								}
 							}
 						}
@@ -551,6 +575,7 @@ Window {
 
 	// Common functions
 	function hidePropertyPanel() {
+		propertyPanel.visible = false
 		propertyPanel.SplitView.preferredWidth = 0
 	}
 
@@ -610,6 +635,7 @@ Window {
 		}
 		case Globals.Page.FS: {
 			fsBackend.updateFilesDirectory("/")
+			setStatusText(fsBackend.getFS_TextStatus())
 			break;
 		}
 		case Globals.Page.DS: {
@@ -632,8 +658,18 @@ Window {
 		globalProgressBar.finishLoad()
 	}
 
+	function slotOnConnected() {
+		globalProgressBar.finishLoad()
+
+		rootWindow.setActivePage(Globals.Page.LD)
+	}
+
 	Component.onCompleted: function() {
-		// App to GUI
+		// App
+		presenter.sigConnected.connect(slotOnConnected)
+		presenter.sigConProgress.connect(slotOnProgress)
+
+		// Backends to GUI
 		ldBackend.sigProgress.connect(slotOnProgress)
 		ldBackend.sigFinished.connect(slotOnFinished)
 

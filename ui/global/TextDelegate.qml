@@ -26,6 +26,7 @@ import QtQuick
 Item {
 	required property int delegateHeight
 	required property bool selected
+
 	property alias text: textFild.text
 	property alias textAlign: textFild.horizontalAlignment
 

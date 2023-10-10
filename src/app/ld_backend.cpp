@@ -30,9 +30,18 @@ namespace App
 		m_ldModel = new LD_ListModel(this, m_con.m_ied);
 		m_lnModel = new LN_TableModel(this, m_con.m_ied);
 		m_doModel = new DO_TableModel(this, m_con.m_ied);
-		m_sortDOModel = new SimpleProxyModel(this);
 
+		m_sortDOModel = new SortProxyModel(this);
 		m_sortDOModel->setSourceModel(m_doModel);
+	}
+
+	QString LD_Backend::getLN_TextStatus()
+	{
+		auto ln = m_con.m_ied->tree().getLogicalNode(m_currentLD, m_currentLN);
+		if (ln) {
+			return QString("%1 / %2").arg(ln->parentName()).arg(ln->name());
+		}
+		return "";
 	}
 
 	void LD_Backend::updateLNodeData(int t_ldIndex, int t_lnIndex)

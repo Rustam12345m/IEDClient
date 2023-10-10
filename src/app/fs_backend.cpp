@@ -28,6 +28,9 @@ namespace App
 	FS_Backend::FS_Backend(ConnectionObject &t_con) : BackendBase(t_con)
 	{
 		m_fsModel = new FilesTableModel(this, m_con.m_ied);
+
+		m_sortedModel = new SortProxyModel(this);
+		m_sortedModel->setSourceModel(m_fsModel);
 	}
 
 	Q_INVOKABLE QString FS_Backend::getFS_TextStatus()

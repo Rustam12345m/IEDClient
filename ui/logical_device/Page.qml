@@ -28,7 +28,7 @@ import QtQuick.Controls
 import "qrc:/global/"
 
 // LD page
-Item {
+FocusScope {
 	id: root
 
 	readonly property int blkSpace: 30
@@ -36,7 +36,7 @@ Item {
 	readonly property int blkHeight: 200
 	readonly property int blkBorder: 4
 
-	signal sigNextPageSignal(int page)
+	signal sigActivatePage(int page)
 	signal sigLDeviceChanged(int current, string name)
 
 	// Grid of Logical devices
@@ -77,21 +77,37 @@ Item {
 				//console.log("Double click on: " + index)
 
 				sigLDeviceChanged(index, name)
-				sigNextPageSignal(Globals.Page.LN)
+				sigActivatePage(Globals.Page.LN)
 			}
 			onSigLN_Page: {
-				sigNextPageSignal(Globals.Page.LN)
+				sigActivatePage(Globals.Page.LN)
 			}
 			onSigDS_Page: {
-				sigNextPageSignal(Globals.Page.DS)
+				sigActivatePage(Globals.Page.DS)
 			}
 			onSigRCB_Page: {
-				sigNextPageSignal(Globals.Page.RCB)
+				sigActivatePage(Globals.Page.RCB)
 			}
 		}
 
 		onCurrentIndexChanged: function() {
 			sigLDeviceChanged(currentIndex, currentItem.name);
+		}
+	}
+
+	Keys.onPressed: function(event) {
+		console.log("LD_Page: Key pressed " + event.key)
+		if (event.key == Qt.Key_Return || event.key == Qt.Key_Enter) {
+			sigActivatePage(Globals.Page.LN)
+		}
+	}
+
+	onVisibleChanged: {
+		//console.log("LD_Grid: Focus " + visible)
+		if (visible) {
+			gridView.focus = true
+		} else {
+			gridView.focus = false
 		}
 	}
 }

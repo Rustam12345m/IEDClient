@@ -46,31 +46,31 @@ namespace App
 		Q_PROPERTY(LN_TableModel* 		lnModel 		READ getLN_Model 		CONSTANT)
 		Q_PROPERTY(QAbstractItemModel* 	doModel 		READ getSortDO_Model 	CONSTANT)
 		//Q_PROPERTY(DO_TableModel* 	doModel 		READ getDO_Model 		CONSTANT)
-
-		// Active LD & LN in models
-		Q_PROPERTY(int 	currentLD 	READ getCurrentLD 	WRITE setCurrentLD 	NOTIFY sigCurrentLD)
-		Q_PROPERTY(int 	currentLN 	READ getCurrentLN 	WRITE setCurrentLN 	NOTIFY sigCurrentLN)
-
-		// LD & LN
-		Q_INVOKABLE void updateLNodeData(int t_ldIndex, int t_lnIndex);
-
 		LD_ListModel*		getLD_Model() const { return m_ldModel; }
 		LN_TableModel*		getLN_Model() const { return m_lnModel; }
 		DO_TableModel*		getDO_Model() const { return m_doModel; }
 		QAbstractItemModel* getSortDO_Model() const { return m_sortDOModel; }
 
-		int 		getCurrentLD() const { return m_currentLD; }
-		void 		setCurrentLD(int t_inx) {
+		// Active LD & LN in models
+		Q_PROPERTY(int 	currentLD 	READ getCurrentLD 	WRITE setCurrentLD 	NOTIFY sigCurrentLD)
+		int 	getCurrentLD() const { return m_currentLD; }
+		void 	setCurrentLD(int t_inx) {
 			m_currentLD = t_inx;
 			//m_lnModel.setCurrentLD(t_inx);
 			m_doModel->setCurrentLD(t_inx);
 		}
-		
-		int 		getCurrentLN() const { return m_currentLN; }
-		void 		setCurrentLN(int t_inx) {
+
+		Q_PROPERTY(int 	currentLN 	READ getCurrentLN 	WRITE setCurrentLN 	NOTIFY sigCurrentLN)
+		int 	getCurrentLN() const { return m_currentLN; }
+		void 	setCurrentLN(int t_inx) {
 			m_currentLN = t_inx;
 			m_doModel->setCurrentLN(t_inx);
 		}
+
+
+		// LD & LN
+		Q_INVOKABLE QString getLN_TextStatus();
+		Q_INVOKABLE void updateLNodeData(int t_ldIndex, int t_lnIndex);
 
 		void 	slotNewIED() override;
 
@@ -83,7 +83,7 @@ namespace App
 		LD_ListModel*		m_ldModel = nullptr;
 		LN_TableModel*		m_lnModel = nullptr;
 		DO_TableModel*		m_doModel = nullptr;
-		SimpleProxyModel* 	m_sortDOModel = nullptr;
+		SortProxyModel* 	m_sortDOModel = nullptr;
 
 		// Active selected by User
 		int 				m_currentLD = -1;

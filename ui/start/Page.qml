@@ -29,7 +29,7 @@ import "qrc:/global/"
 FocusScope {
 	id: root
 
-	signal nextPageSignal(int page)
+	signal sigConnectTo(string ip, int port, bool tls, string user, string pass)
 
 	function slotSetCurrentDevice(ip, port) {
 		ipAddrInput.text = ip
@@ -145,10 +145,8 @@ FocusScope {
 				icon.source: "qrc:/img/icons/call.svg"
 
 				onClicked: {
-					//globalProgressBar.startLoad()
-					presenter.connectTo(ipAddrInput.text, portInput.text,
-										tlsSwitcher.checked, userNameInput.text, userPassInput.text)
-					nextPageSignal(Globals.Page.LD)
+					sigConnectTo(ipAddrInput.text, portInput.text,
+								tlsSwitcher.checked, userNameInput.text, userPassInput.text)
 				}
 
 				KeyNavigation.backtab: userPassInput
@@ -211,6 +209,13 @@ FocusScope {
 				KeyNavigation.backtab: portInput
 				KeyNavigation.tab: userNameInput
 			}
+		}
+	}
+
+	Keys.onPressed: function(event) {
+		console.log("StartPage: Key pressed " + event.key)
+		if (event.key == Qt.Key_Return || event.key == Qt.Key_Enter) {
+			connButton.onClicked()
 		}
 	}
 

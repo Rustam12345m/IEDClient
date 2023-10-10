@@ -26,33 +26,33 @@
 #include "backend_base.hpp"
 #include "app/app_settings.hpp"
 
-#include "models/events_tablemodel.hpp"
+#include "models/app_events_model.hpp"
 #include "models/last_conn_list.hpp"
 
 namespace App
 {
 	/*
-	* Presenter of others small tables
+	* Presenter of other small tables
 	* */
 	class ComBackend : public BackendBase
 	{
 		Q_OBJECT
 	public:
 		ComBackend(ConnectionObject &t_con);
-		~ComBackend();
+		~ComBackend() = default;
 
-		Q_PROPERTY(EventsTableModel* 	eventsModel 	READ getEventsModel 	CONSTANT)
+		Q_PROPERTY(AppEventsModel* 		eventsModel 	READ getEventsModel 	CONSTANT)
 		Q_PROPERTY(QAbstractItemModel* 	lastConnList 	READ getLastConn_Model 	CONSTANT)
 
-		EventsTableModel*	getEventsModel() const { return m_eventsModel; }
-		LastConn_TableModel* getLastConn_Model() const { return m_lastConnModel; }
+		AppEventsModel*			getEventsModel() const { return m_eventsModel; }
+		LastConn_TableModel* 	getLastConn_Model() const { return m_lastConnModel; }
 
 		void 		slotNewIED() override;
 
 	protected:
-		AppSettings		m_ini;
+		AppSettings				m_ini;
 
-		EventsTableModel*		m_eventsModel = nullptr;
+		AppEventsModel*			m_eventsModel = nullptr;
 		LastConn_TableModel*	m_lastConnModel = nullptr;
 	};
 }
