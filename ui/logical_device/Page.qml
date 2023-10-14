@@ -32,8 +32,8 @@ FocusScope {
 	id: root
 
 	readonly property int blkSpace: 30
-	readonly property int blkWidth: 240
-	readonly property int blkHeight: 200
+	readonly property int blkWidth: 200
+	readonly property int blkHeight: 150
 	readonly property int blkBorder: 4
 
 	signal sigActivatePage(int page)
@@ -55,7 +55,7 @@ FocusScope {
 
 		model: ldBackend.ldModel
 
-		delegate: LogDeviceDelegate {
+		delegate: LD_GridDelegate {
 			blkWidth: root.blkWidth
 			blkHeight: root.blkHeight
 			blkBorder: root.blkBorder

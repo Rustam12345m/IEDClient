@@ -12,8 +12,10 @@ set(SOURCES
 	files_model.hpp
 	files_model.cpp
 
-	ld_listmodel.hpp
-	ld_listmodel.cpp
+	ld_grid_model.hpp
+	ld_grid_model.cpp
+	ld_property_model.hpp
+	ld_property_model.cpp
 
 	ln_tablemodel.hpp
 	ln_tablemodel.cpp

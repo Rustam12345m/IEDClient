@@ -17,7 +17,8 @@
         <file>reports/Page.qml</file>
 
         <file>logical_device/Page.qml</file>
-        <file>logical_device/LogDeviceDelegate.qml</file>
+        <file>logical_device/LD_GridDelegate.qml</file>
+        <file>logical_device/LD_InfoList.qml</file>
 
         <file>logical_node/Page.qml</file>
         <file>logical_node/LN_Table.qml</file>

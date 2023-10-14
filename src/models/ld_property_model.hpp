@@ -24,29 +24,34 @@
 #pragma once
 
 #include <QAbstractListModel>
+#include <QStringList>
 
-#include "core/ied_object.hpp"
-
-class LD_ListModel : public QAbstractListModel
+class LD_PropertyModel : public QAbstractListModel
 {
 	Q_OBJECT
-	enum LD_ModelRole {
-		LD_ROLE_NAME = Qt::UserRole + 1
+	enum Roles
+	{
+		SECTION_ROLE = Qt::UserRole + 1,
+		NAME_ROLE,
+		VALUE_ROLE
 	};
+
 public:
-	LD_ListModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
+	explicit LD_PropertyModel(QObject *t_parent = nullptr);
 
-	void 		setNewIED(QSharedPointer<Core::IED_Object> t_ied);
-
-	int			rowCount(const QModelIndex &t_index = QModelIndex()) const override;
-	QVariant	data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
-
-private:
+	int rowCount(const QModelIndex &t_index = QModelIndex()) const override;
+	QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 	QHash<int, QByteArray> roleNames() const override;
 
-public slots:
-	void		slotDataUpdated();
+	void addData(const QString &t_sect, const QString &t_name, const QString &t_value);
 
 private:
-	QSharedPointer<Core::IED_Object>	m_ied;
+	struct ListItem
+	{
+		QString		section;
+		QString 	name;
+		QString 	value;
+	};
+
+	QList<ListItem> m_data;
 };

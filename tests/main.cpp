@@ -1,5 +1,5 @@
 /*
- *  main.qml
+ *  main.cpp
  *
  *  Copyright 2023 Rustam Mustafin
  *
@@ -21,31 +21,10 @@
  *  See COPYING file for the complete license text.
  * */
 
-import QtQuick
+#include "core_tests.hpp"
 
-Item {
-	enum Page {
-		START = 0,
-		LD,
-		LN,
-		FS,
-		RCB,
-		DS
-	}
-
-	enum Panel {
-		HIDE = 0,
-		LAST_CONN,
-		LD_INFO
-	}
-
-	function printObjectToConsole(item) {
-		for (var p in item) {
-			if (typeof item[p] != "function") {
-				if (p != "objectName") {
-					console.log(p + ":" + item[p]);
-				}
-			}
-		}
-	}
+int main(int argc, char **argv)
+{
+	::testing::InitGoogleTest(&argc, argv);
+	return RUN_ALL_TESTS();
 }

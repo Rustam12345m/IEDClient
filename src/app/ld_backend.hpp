@@ -26,7 +26,8 @@
 #include "backend_base.hpp"
 
 #include "models/sort_proxy_model.hpp"
-#include "models/ld_listmodel.hpp"
+#include "models/ld_grid_model.hpp"
+#include "models/ld_property_model.hpp"
 #include "models/ln_tablemodel.hpp"
 #include "models/do_tablemodel.hpp"
 
@@ -42,11 +43,13 @@ namespace App
 		LD_Backend(ConnectionObject &t_con);
 		~LD_Backend() = default;
 
-		Q_PROPERTY(LD_ListModel* 		ldModel 		READ getLD_Model		CONSTANT)
+		Q_PROPERTY(LD_GridModel* 		ldModel 		READ getLD_Model		CONSTANT)
+		Q_PROPERTY(LD_PropertyModel* 	ldPropModel 	READ getLD_PropModel	CONSTANT)
 		Q_PROPERTY(LN_TableModel* 		lnModel 		READ getLN_Model 		CONSTANT)
 		Q_PROPERTY(QAbstractItemModel* 	doModel 		READ getSortDO_Model 	CONSTANT)
 		//Q_PROPERTY(DO_TableModel* 	doModel 		READ getDO_Model 		CONSTANT)
-		LD_ListModel*		getLD_Model() const { return m_ldModel; }
+		LD_GridModel*		getLD_Model() const { return m_ldModel; }
+		LD_PropertyModel*	getLD_PropModel() const { return m_ldPropModel; }
 		LN_TableModel*		getLN_Model() const { return m_lnModel; }
 		DO_TableModel*		getDO_Model() const { return m_doModel; }
 		QAbstractItemModel* getSortDO_Model() const { return m_sortDOModel; }
@@ -80,7 +83,8 @@ namespace App
 
 	protected:
 		// Models for Tables in GUI
-		LD_ListModel*		m_ldModel = nullptr;
+		LD_GridModel*		m_ldModel = nullptr;
+		LD_PropertyModel*	m_ldPropModel = nullptr;
 		LN_TableModel*		m_lnModel = nullptr;
 		DO_TableModel*		m_doModel = nullptr;
 		SortProxyModel* 	m_sortDOModel = nullptr;

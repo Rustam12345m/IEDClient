@@ -27,7 +27,8 @@ namespace App
 {
 	LD_Backend::LD_Backend(ConnectionObject &t_con) : BackendBase(t_con)
 	{
-		m_ldModel = new LD_ListModel(this, m_con.m_ied);
+		m_ldModel = new LD_GridModel(this, m_con.m_ied);
+		m_ldPropModel = new LD_PropertyModel(this);
 		m_lnModel = new LN_TableModel(this, m_con.m_ied);
 		m_doModel = new DO_TableModel(this, m_con.m_ied);
 
