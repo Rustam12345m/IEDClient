@@ -22,18 +22,18 @@
  * */
 
 #include "update_lnode_cmd.hpp"
+#include <QDebug>
 
 namespace Core::Cmd
 {
 	void UpdateLNode::execute(LibInterface &t_con)
 	{
+		qDebug() << "UpdateLNode: ldInx = " << m_ldIndex << ", lnInx " << m_lnIndex;
+
 		if (t_con.isConnected()) {
-			auto ld = m_tree.getChild<LogicalDevice>(m_ldIndex);
-			if (ld) {
-				auto ln = ld->getChild<LogicalNode>(m_lnIndex);
-				if (ln) {
-					t_con.updateDO_List(ln);
-				}
+			auto ln = m_ied->tree().getLogicalNode(m_ldIndex, m_lnIndex);
+			if (ln) {
+				t_con.updateDO_List(ln);
 			}
 		}
 		emit sigFinished();

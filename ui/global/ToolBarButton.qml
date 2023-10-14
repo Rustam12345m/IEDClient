@@ -36,6 +36,8 @@ Item {
 	Button {
 		id: btn
 		anchors.fill: parent
+		focus: false
+		focusPolicy: Qt.NoFocus
 
 		onClicked: function() {
 			//console.log("Clicked: " + prompt)
@@ -44,7 +46,7 @@ Item {
 	}
 	ToolTip {
     	id: toolTip
-    	text: "[ ? ]"
+    	text: "Information isn't found"
 		delay: 200
     	visible: btn.hovered
     }

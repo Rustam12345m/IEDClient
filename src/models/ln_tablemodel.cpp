@@ -35,15 +35,10 @@ void LN_TableModel::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
 	endResetModel();
 }
 
-void LN_TableModel::setCurrentLD(int t_inx)
+void LN_TableModel::setSelectedLN(int t_ln)
 {
-	if (m_currentLD != t_inx) {
-		beginResetModel();
-		m_currentLD = t_inx;
-		endResetModel();
-
-		emit sigCurrentLD();
-	}
+	//qDebug() << "LN_TableModel: Selected LN = " << t_ln;
+	emit sigLNSelected(m_currentLD, t_ln);
 }
 
 QVariant LN_TableModel::headerData(int t_section, Qt::Orientation t_orientation, int t_role) const
@@ -52,23 +47,18 @@ QVariant LN_TableModel::headerData(int t_section, Qt::Orientation t_orientation,
 	case Qt::Horizontal: {
 		const char* labels[] = { "Name", "Mode", "Beh", "Health" };
 
-		return QVariant(labels[t_section % 4]);
+		return QVariant(labels[t_section % ColumnsCount]);
 	}
 	case Qt::Vertical: {
 		break;
 	}
 	}
-	return QString::number(t_section + 1);
+	return QVariant();
 }
 
 QHash<int, QByteArray> LN_TableModel::roleNames() const
 {
-	QHash<int, QByteArray> roles;
-	roles[NameRole] = "name";
-	roles[ModeRole] = "mode";
-	roles[BehRole] = "beh";
-	roles[HealthRole] = "health";
-	return roles;
+	return { { Qt::DisplayRole, "value" } };
 }
 
 int LN_TableModel::rowCount(const QModelIndex &t_parent) const
@@ -82,30 +72,41 @@ int LN_TableModel::rowCount(const QModelIndex &t_parent) const
 
 int LN_TableModel::columnCount(const QModelIndex &t_parent) const
 {
-	return 4;
+	return ColumnsCount;
 }
 
 QVariant LN_TableModel::data(const QModelIndex &t_index, int t_role) const
 {
-	auto ld = m_ied->tree().getChild<Core::LogicalDevice>(m_currentLD);
-	if (ld) {
-		auto ln = ld->getChild<Core::LogicalNode>(t_index.row());
-		if (ln) {
-			switch (t_role) {
-			case NameRole: {
-				return QVariant(ln->name());
-			}
-			case ModeRole: {
-				return QVariant("M");
-			}
-			case BehRole: {
-				return QVariant("B");
-			}
-			case HealthRole: {
-				return QVariant("H");
-			}
-			}
+	auto ln = m_ied->tree().getLogicalNode(m_currentLD, t_index.row());
+	if (ln) {
+		switch (t_index.column()) {
+		case NameColumn: {
+			return QVariant(ln->name());
+		}
+		case ModeColumn: {
+			return QVariant("M");
+		}
+		case BehColumn: {
+			return QVariant("B");
+		}
+		case HealthColumn: {
+			return QVariant("H");
+		}
 		}
 	}
 	return QVariant(" ? ");
+}
+
+void LN_TableModel::slotDataUpdated()
+{
+	emit dataChanged(index(0, ModeColumn), index(rowCount() - 1, HealthColumn));
+}
+
+void LN_TableModel::slotLDSelected(int t_ld)
+{
+	if (m_currentLD != t_ld) {
+		beginResetModel();
+		m_currentLD = t_ld;
+		endResetModel();
+	}
 }

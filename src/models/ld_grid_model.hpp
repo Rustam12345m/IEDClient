@@ -38,11 +38,14 @@ public:
 
 	void 		setNewIED(QSharedPointer<Core::IED_Object> t_ied);
 
+	QHash<int, QByteArray> roleNames() const override;
 	int			rowCount(const QModelIndex &t_index = QModelIndex()) const override;
 	QVariant	data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
-private:
-	QHash<int, QByteArray> roleNames() const override;
+	Q_INVOKABLE void 	setSelectedLD(int t_ld);
+
+signals:
+	void 		sigLDSelected(int t_ld);
 
 public slots:
 	void		slotDataUpdated();

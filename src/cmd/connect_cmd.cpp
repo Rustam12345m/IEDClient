@@ -65,6 +65,8 @@ namespace Core::Cmd
 				}
 			}
 			m_tree.update();
+
+			// Debug
 			//m_tree.printTree();
 
 			emit sigProgress(100, QString("Successfully connected to %1:%2").arg(m_ip).arg(m_port));

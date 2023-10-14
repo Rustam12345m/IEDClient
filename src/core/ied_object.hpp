@@ -40,6 +40,8 @@ namespace Core
 		Core::IED_Tree&		tree() { return m_objTree; }
 		Core::FS_Tree&		fs() { return m_fsTree; }
 
+	signals:
+
 	protected:
 		Core::IED_Tree		m_objTree;
 		Core::FS_Tree		m_fsTree;

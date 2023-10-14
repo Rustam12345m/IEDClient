@@ -29,13 +29,6 @@ import QtQuick.Layouts
 FocusScope {
 	id: root
 
-	signal sigLNodeSelected()
-
-	function updateLDeviceIndex(t_ld) {
-		tableLN.updateLDeviceIndex(t_ld)
-		tableDO.updateLNodeIndex(t_ld, tableLN.currentLNodeIndex)
-	}
-
 	SplitView {
 		id: splitView
 
@@ -68,10 +61,6 @@ FocusScope {
 
 				anchors.fill: parent
 
-				onSigLNodeSelected: function(t_ld, t_ln) {
-					tableDO.updateLNodeIndex(t_ld, t_ln)
-					root.sigLNodeSelected()
-				}
 				onSigLeftOrRightKey: function() {
 					console.log("LN_Page: Activate DO_Table")
 					tableLN.focus = false
@@ -109,7 +98,7 @@ FocusScope {
 			repeat: true
 
 			onTriggered: function() {
-				ldBackend.updateLNodeData(tableDO.currentLDevice, tableDO.currentLNode)
+				//ldBackend.updateDO_Table(tableDO.currentLDevice, tableDO.currentLNode)
 			}
 		}
 	}

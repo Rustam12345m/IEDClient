@@ -24,8 +24,12 @@
 #pragma once
 
 #include <QAbstractListModel>
-#include <QStringList>
+#include <QList>
+#include "core/ied_object.hpp"
 
+/*
+ * ListModel with properties of selected LD
+ * */
 class LD_PropertyModel : public QAbstractListModel
 {
 	Q_OBJECT
@@ -35,23 +39,26 @@ class LD_PropertyModel : public QAbstractListModel
 		NAME_ROLE,
 		VALUE_ROLE
 	};
-
-public:
-	explicit LD_PropertyModel(QObject *t_parent = nullptr);
-
-	int rowCount(const QModelIndex &t_index = QModelIndex()) const override;
-	QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-	QHash<int, QByteArray> roleNames() const override;
-
-	void addData(const QString &t_sect, const QString &t_name, const QString &t_value);
-
-private:
-	struct ListItem
+	struct LD_Property
 	{
-		QString		section;
-		QString 	name;
-		QString 	value;
+		QString		section; // LLN0 or LPHD
+		QString 	name; // DO name
+
+		LD_Property(const QString t_sect, const QString t_name) : section{t_sect}, name{t_name} {}
 	};
 
-	QList<ListItem> m_data;
+public:
+	explicit LD_PropertyModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
+
+	QHash<int, QByteArray> roleNames() const override;
+	int rowCount(const QModelIndex &t_index = QModelIndex()) const override;
+	QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
+
+public slots:
+	void 	slotLDSelected(int t_ld);
+
+private:
+	QSharedPointer<Core::IED_Object> m_ied;
+	QList<LD_Property> 	m_property;
+	int 				m_currentLD = -1;
 };

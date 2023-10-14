@@ -54,32 +54,15 @@ namespace App
 		DO_TableModel*		getDO_Model() const { return m_doModel; }
 		QAbstractItemModel* getSortDO_Model() const { return m_sortDOModel; }
 
-		// Active LD & LN in models
-		Q_PROPERTY(int 	currentLD 	READ getCurrentLD 	WRITE setCurrentLD 	NOTIFY sigCurrentLD)
-		int 	getCurrentLD() const { return m_currentLD; }
-		void 	setCurrentLD(int t_inx) {
-			m_currentLD = t_inx;
-			//m_lnModel.setCurrentLD(t_inx);
-			m_doModel->setCurrentLD(t_inx);
-		}
+		// Commands
+		Q_INVOKABLE void 	updateDO_Table();
 
-		Q_PROPERTY(int 	currentLN 	READ getCurrentLN 	WRITE setCurrentLN 	NOTIFY sigCurrentLN)
-		int 	getCurrentLN() const { return m_currentLN; }
-		void 	setCurrentLN(int t_inx) {
-			m_currentLN = t_inx;
-			m_doModel->setCurrentLN(t_inx);
-		}
+		// Status bar
+		Q_INVOKABLE QString 	getLD_TextStatus();
+		Q_INVOKABLE QString 	getLN_TextStatus();
 
-
-		// LD & LN
-		Q_INVOKABLE QString getLN_TextStatus();
-		Q_INVOKABLE void updateLNodeData(int t_ldIndex, int t_lnIndex);
-
+	public slots:
 		void 	slotNewIED() override;
-
-	signals:
-		void 	sigCurrentLD(int t_inx);
-		void 	sigCurrentLN(int t_inx);
 
 	protected:
 		// Models for Tables in GUI
@@ -88,9 +71,5 @@ namespace App
 		LN_TableModel*		m_lnModel = nullptr;
 		DO_TableModel*		m_doModel = nullptr;
 		SortProxyModel* 	m_sortDOModel = nullptr;
-
-		// Active selected by User
-		int 				m_currentLD = -1;
-		int 				m_currentLN = -1;
 	};
 }

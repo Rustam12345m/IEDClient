@@ -28,31 +28,41 @@ namespace App
 	LD_Backend::LD_Backend(ConnectionObject &t_con) : BackendBase(t_con)
 	{
 		m_ldModel = new LD_GridModel(this, m_con.m_ied);
-		m_ldPropModel = new LD_PropertyModel(this);
+		m_ldPropModel = new LD_PropertyModel(this, m_con.m_ied);
 		m_lnModel = new LN_TableModel(this, m_con.m_ied);
 		m_doModel = new DO_TableModel(this, m_con.m_ied);
 
 		m_sortDOModel = new SortProxyModel(this);
 		m_sortDOModel->setSourceModel(m_doModel);
+
+		// Selection process LD -> LN -> DO
+		connect(m_ldModel, &LD_GridModel::sigLDSelected, m_ldPropModel, &LD_PropertyModel::slotLDSelected);		
+		connect(m_ldModel, &LD_GridModel::sigLDSelected, m_lnModel, &LN_TableModel::slotLDSelected);
+		connect(m_lnModel, &LN_TableModel::sigLNSelected, m_doModel, &DO_TableModel::slotLNSelected);
+	}
+
+	void LD_Backend::updateDO_Table()
+	{
+		int ld = -1, ln = -1;
+		m_doModel->getSelectedLN(ld, ln);
+		if (ld < 0 || ln < 0) {
+			return;
+		}
+
+		auto cmd = Core::Cmd::UpdateLNode::create(m_con.m_ied, ld, ln);
+		connect(cmd.get(), &Core::Cmd::IED_BaseCommand::sigFinished,
+				m_doModel, &DO_TableModel::slotDataUpdated);
+		putCmdToQueue(cmd);
+	}
+
+	QString LD_Backend::getLD_TextStatus()
+	{
+		return "LD status text";
 	}
 
 	QString LD_Backend::getLN_TextStatus()
 	{
-		auto ln = m_con.m_ied->tree().getLogicalNode(m_currentLD, m_currentLN);
-		if (ln) {
-			return QString("%1 / %2").arg(ln->parentName()).arg(ln->name());
-		}
-		return "";
-	}
-
-	void LD_Backend::updateLNodeData(int t_ldIndex, int t_lnIndex)
-	{
-		if (t_ldIndex < 0 || t_lnIndex < 0) {
-			return;
-		}
-
-		auto cmd = Core::Cmd::UpdateLNode::create(m_con.m_ied->tree(), t_ldIndex, t_lnIndex);
-		putCmdToQueue(cmd);
+		return "LN status text";
 	}
 
 	void LD_Backend::slotNewIED()
