@@ -1,5 +1,5 @@
 /*
- *  main.qml
+ *  main.cpp
  *
  *  Copyright 2023 Rustam Mustafin
  *
@@ -21,31 +21,32 @@
  *  See COPYING file for the complete license text.
  * */
 
-import QtQuick
+#pragma once
 
-Item {
-	enum Page {
-		START = 0,
-		LD,
-		LN,
-		FS,
-		RCB,
-		DS
-	}
+#include <QAbstractListModel>
 
-	enum Panel {
-		HIDE = 0,
-		LAST_CONN,
-		LD_INFO
-	}
+#include "core/ied_object.hpp"
 
-	function printObjectToConsole(item) {
-		for (var p in item) {
-			if (typeof item[p] != "function") {
-				if (p != "objectName") {
-					console.log(p + ":" + item[p]);
-				}
-			}
-		}
-	}
-}
+class LD_GridModel : public QAbstractListModel
+{
+	Q_OBJECT
+	enum LD_ModelRole {
+		LD_ROLE_NAME = Qt::UserRole + 1
+	};
+public:
+	LD_GridModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
+
+	void 		setNewIED(QSharedPointer<Core::IED_Object> t_ied);
+
+	int			rowCount(const QModelIndex &t_index = QModelIndex()) const override;
+	QVariant	data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
+
+private:
+	QHash<int, QByteArray> roleNames() const override;
+
+public slots:
+	void		slotDataUpdated();
+
+private:
+	QSharedPointer<Core::IED_Object>	m_ied;
+};

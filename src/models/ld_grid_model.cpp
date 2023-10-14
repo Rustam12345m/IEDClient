@@ -21,15 +21,15 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "ld_listmodel.hpp"
+#include "ld_grid_model.hpp"
 
-LD_ListModel::LD_ListModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied)
+LD_GridModel::LD_GridModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied)
 	: QAbstractListModel(t_parent), m_ied(t_ied)
 {
 	connect(&m_ied->tree(), SIGNAL(sigUpdated()), this, SLOT(slotDataUpdated()));
 }
 
-void LD_ListModel::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
+void LD_GridModel::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
 {
 	beginResetModel();
 	m_ied = t_ied;
@@ -37,12 +37,12 @@ void LD_ListModel::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
 	endResetModel();
 }
 
-int LD_ListModel::rowCount(const QModelIndex &t_index) const
+int LD_GridModel::rowCount(const QModelIndex &t_index) const
 {
 	return m_ied->tree().getChildCount();
 }
 
-QVariant LD_ListModel::data(const QModelIndex &t_index, int t_role) const
+QVariant LD_GridModel::data(const QModelIndex &t_index, int t_role) const
 {
 	auto ld = m_ied->tree().getChild(t_index.row());
 	if (ld) {
@@ -51,12 +51,12 @@ QVariant LD_ListModel::data(const QModelIndex &t_index, int t_role) const
 	return QVariant(" - ");
 }
 
-QHash<int, QByteArray> LD_ListModel::roleNames() const
+QHash<int, QByteArray> LD_GridModel::roleNames() const
 {
 	return { {LD_ROLE_NAME, "name"} };
 }
 
-void LD_ListModel::slotDataUpdated()
+void LD_GridModel::slotDataUpdated()
 {
 	beginResetModel();
 	endResetModel();

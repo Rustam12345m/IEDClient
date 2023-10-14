@@ -74,6 +74,7 @@ Window {
 		Rectangle {
 			id: menuBarRect
 
+			y: 0
 			z: 100500
 			border.width: 1
 			border.color: "black"
@@ -81,7 +82,7 @@ Window {
 
 			height: myMenuBar.implicitHeight + 2
 			anchors {
-				top: mainBack.top
+				//top: mainBack.top
 				left: mainBack.left
 				right: mainBack.right
 			}
@@ -259,11 +260,13 @@ Window {
 								}
 								ComboBox {
 									id: comboBox
+
 									anchors.verticalCenter: parent.verticalCenter
 									height: toolBar.btnHeight
 
-									enabled: lnPage.visible
 									implicitContentWidthPolicy: ComboBox.WidestText
+									enabled: lnPage.visible
+									focus: false
 
 									model: ListModel {
 										ListElement { text: "State(ST, MX)" }
@@ -351,6 +354,7 @@ Window {
 				// Pages Area
 				Item {
 					id: tabsArea
+
 					SplitView.preferredWidth: 750
 					SplitView.minimumWidth: 600
 					SplitView.fillWidth: true
@@ -358,7 +362,8 @@ Window {
 					// Pages
 					StackLayout {
 						id: mainStack
-						clip: true
+
+						property var pageHistoryList: []
 
 						anchors {
 							top: tabsArea.top
@@ -367,6 +372,7 @@ Window {
 							bottom: mainTabBar.top
 						}
 
+						clip: true
 						currentIndex: tabBar.currentIndex
 
 						Start.Page {
@@ -378,6 +384,7 @@ Window {
 									focus = true
 
 									setStatusText(presenter.getAppVersion())
+									setActivePanel(Globals.Panel.LAST_CONN)
 								} else {
 									focus = false
 								}
@@ -395,7 +402,7 @@ Window {
 								if (visible) {
 									focus = true
 
-									hidePropertyPanel()
+									setActivePanel(Globals.Panel.LD_INFO)
 								} else {
 									focus = false
 								}
@@ -417,7 +424,7 @@ Window {
 								if (visible) {
 									focus = true
 
-									hidePropertyPanel()
+									setActivePanel(Globals.Panel.HIDE)
 								} else {
 									focus = false
 								}
@@ -433,7 +440,7 @@ Window {
 									focus = true
 
 									fsBackend.updateFilesDirectory("/")
-									hidePropertyPanel()
+									setActivePanel(Globals.Panel.HIDE)
 
 									setStatusText(fsBackend.getFS_TextStatus())
 								} else {
@@ -454,6 +461,16 @@ Window {
 								if (visible) {
 								}
 							}
+						}
+
+						onCurrentIndexChanged: {
+							console.log("MainStack: New index " + mainStack.currentIndex)
+							pageHistoryList.push(mainStack.currentIndex)
+							console.log("History list: " + pageHistoryList)
+						}
+						function switchToPreviousPage() {
+							var prev = pageHistoryList.pop()
+
 						}
 					}
 
@@ -513,10 +530,18 @@ Window {
 
 					// Stack for Panels
 					StackLayout {
+						id: panelStack
+
 						anchors.fill: parent
 
+						// Start panel with last connections
 						Start.LastConnTable {
 							id: lastConnPanel
+						}
+
+						// Selected LD's properties
+						LD.LD_InfoList {
+							id: ldInfoList	
 						}
 					}
 
@@ -574,11 +599,6 @@ Window {
 	}
 
 	// Common functions
-	function hidePropertyPanel() {
-		propertyPanel.visible = false
-		propertyPanel.SplitView.preferredWidth = 0
-	}
-
 	function openEventLog() {
 		var logsComponent = Qt.createComponent("global/EventsViewer.qml")
 		var logsWindow = logsComponent.createObject(rootWindow)
@@ -617,6 +637,26 @@ Window {
 			tabBar.currentIndex = 5;
 			break;
 		}
+		}
+	}
+
+	function setActivePanel(index) {
+		//console.log("ActivatePanel: new index = " + index)
+		if (index == Globals.Panel.HIDE) {
+			propertyPanel.visible = false
+		} else {
+			propertyPanel.visible = true
+
+			switch (index) {
+			case Globals.Panel.LAST_CONN: {
+				panelStack.currentIndex = 0
+				break;
+			}
+			case Globals.Panel.LD_INFO: {
+				panelStack.currentIndex = 1
+				break;
+			}
+			}
 		}
 	}
 
@@ -677,7 +717,7 @@ Window {
 		fsBackend.sigFinished.connect(slotOnFinished)
 
 		// GUI
-		lastConnPanel.sigDeviceSelected.connect(startPage.slotSetCurrentDevice)
+		//lastConnPanel.sigDeviceSelected.connect(startPage.slotSetCurrentDevice)
 
 		// Start status
 		setStatusText(presenter.getAppVersion())

@@ -1,5 +1,5 @@
 /*
- *  main.qml
+ *  main.cpp
  *
  *  Copyright 2023 Rustam Mustafin
  *
@@ -21,31 +21,29 @@
  *  See COPYING file for the complete license text.
  * */
 
-import QtQuick
+#include <gtest/gtest.h>
 
-Item {
-	enum Page {
-		START = 0,
-		LD,
-		LN,
-		FS,
-		RCB,
-		DS
-	}
-
-	enum Panel {
-		HIDE = 0,
-		LAST_CONN,
-		LD_INFO
-	}
-
-	function printObjectToConsole(item) {
-		for (var p in item) {
-			if (typeof item[p] != "function") {
-				if (p != "objectName") {
-					console.log(p + ":" + item[p]);
-				}
-			}
+namespace CoreTests
+{
+	class FooTest : public ::testing::Test
+	{
+	protected:
+		FooTest() {
 		}
+
+		~FooTest() override {
+		}
+
+		void SetUp() override {
+		}
+
+		void TearDown() override {
+		}
+	};
+
+	TEST_F(FooTest, SubTest1) {
+	}
+
+	TEST_F(FooTest, SubTest2) {
 	}
 }

@@ -73,7 +73,7 @@ Item {
 
 				anchors.fill: parent
 				horizontalAlignment: Text.AlignHCenter
-				verticalAlignment: Text.AlignVCenter
+				verticalAlignment: Text.AlignTop//VCenter
 				padding: 10
 
 				width: parent.width
@@ -83,7 +83,7 @@ Item {
 				elide: Text.ElideRight
 
 				font.bold: true
-				font.pointSize: 16
+				font.pointSize: 14
 				text: root.name
 			}
 		}
