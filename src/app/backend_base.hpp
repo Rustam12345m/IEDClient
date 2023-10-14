@@ -45,8 +45,8 @@ signals:
 	void	sigFinished();
 
 public slots:
-	void	slotCmdProcess(int t_proc, QString t_msg);
-	void	slotCmdFinished();
+	void			slotCmdProcess(int t_proc, QString t_msg);
+	void			slotCmdFinished();
 	virtual void 	slotNewIED();
 
 protected:

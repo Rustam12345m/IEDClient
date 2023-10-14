@@ -37,7 +37,6 @@ FocusScope {
 	readonly property int blkBorder: 4
 
 	signal sigActivatePage(int page)
-	signal sigLDeviceChanged(int current, string name)
 
 	// Grid of Logical devices
 	GridView {
@@ -65,20 +64,14 @@ FocusScope {
 			onSigLeftClicked: {
 				gridView.focus = true
 				gridView.currentIndex = index
-
-				sigLDeviceChanged(index, name);
 			}
 			onSigDLeftClicked: {
-				if (gridView.currentIndex === index) {
-					//gridView.currentIndex = -1
-				} else {
+				if (gridView.currentIndex != index) {
 					gridView.currentIndex = index
 				}
-				//console.log("Double click on: " + index)
-
-				sigLDeviceChanged(index, name)
 				sigActivatePage(Globals.Page.LN)
 			}
+
 			onSigLN_Page: {
 				sigActivatePage(Globals.Page.LN)
 			}
@@ -91,7 +84,8 @@ FocusScope {
 		}
 
 		onCurrentIndexChanged: function() {
-			sigLDeviceChanged(currentIndex, currentItem.name);
+			//console.log("LD_GridView: Selected = " + gridView.currentIndex)
+			gridView.model.setSelectedLD(gridView.currentIndex)
 		}
 	}
 

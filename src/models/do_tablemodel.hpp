@@ -42,14 +42,6 @@ public:
 
 	void 		setNewIED(QSharedPointer<Core::IED_Object> t_ied);
 
-	Q_PROPERTY(int currentLD READ getCurrentLD WRITE setCurrentLD NOTIFY sigChangedLD)
-	Q_PROPERTY(int currentLN READ getCurrentLN WRITE setCurrentLN NOTIFY sigChangedLN)
-
-	int			getCurrentLD() const { return m_currentLD; }
-	int			getCurrentLN() const { return m_currentLN; }
-	void		setCurrentLD(int t_inx);
-	void		setCurrentLN(int t_inx);
-
 	QVariant headerData(int t_section, Qt::Orientation t_orientation,
 						int t_role = Qt::DisplayRole) const override;
 	QHash<int, QByteArray> roleNames() const override;
@@ -58,9 +50,11 @@ public:
 	int 	columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
 	QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
-signals:
-	void	sigChangedLD(int t_new);
-	void	sigChangedLN(int t_new);
+	void 	getSelectedLN(int &t_ld, int &t_ln);
+
+public slots:
+	void 	slotLNSelected(int t_ld, int t_ln);
+	void 	slotDataUpdated();
 
 private:
 	QSharedPointer<Core::IED_Object> m_ied;

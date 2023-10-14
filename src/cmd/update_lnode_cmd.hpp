@@ -24,20 +24,20 @@
 #pragma once
 
 #include "base_command.hpp"
-#include "core/ied_tree.hpp"
+#include "core/ied_object.hpp"
 
 namespace Core::Cmd
 {
 	class UpdateLNode : public IED_BaseCommand
 	{
-		Core::IED_Tree&	m_tree;
+		QSharedPointer<Core::IED_Object> m_ied;
 		int				m_ldIndex = 0;
 		int				m_lnIndex = 0;
 
 	public:
-		UpdateLNode(Core::IED_Tree &t_tree, int t_ldIndex, int t_lnIndex)
+		UpdateLNode(QSharedPointer<Core::IED_Object> t_ied, int t_ldIndex, int t_lnIndex)
 			: IED_BaseCommand(IED_CMD::UPDATE_LN),
-			  m_tree{t_tree}, m_ldIndex{t_ldIndex}, m_lnIndex{t_lnIndex}
+			  m_ied{t_ied}, m_ldIndex{t_ldIndex}, m_lnIndex{t_lnIndex}
 		{
 		}
 

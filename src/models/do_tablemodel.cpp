@@ -23,6 +23,19 @@
 
 #include "do_tablemodel.hpp"
 
+namespace {
+	// remove: .stVal and .mag.f
+	QString 	filterDOName(const QString &t_name)
+	{
+		if (t_name.endsWith(".stVal")) {
+			return t_name.first(t_name.size() - 6);
+		} else if (t_name.endsWith(".mag.f")) {
+			return t_name.first(t_name.size() - 6);
+		}
+		return t_name;
+	}
+}
+
 DO_TableModel::DO_TableModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied)
 	: QAbstractTableModel(t_parent), m_ied(t_ied)
 {
@@ -33,26 +46,6 @@ void DO_TableModel::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
 	beginResetModel();
 	m_ied = t_ied;
 	endResetModel();
-}
-
-void DO_TableModel::setCurrentLD(int t_inx)
-{
-	//qDebug() << "DO_TableModel: setCurrentLD " << t_inx;
-	beginResetModel();
-	m_currentLD = t_inx;
-	endResetModel();
-
-	emit sigChangedLD(t_inx);
-}
-
-void DO_TableModel::setCurrentLN(int t_inx)
-{
-	//qDebug() << "DO_TableModel: setCurrentLN " << t_inx;
-	beginResetModel();
-	m_currentLN = t_inx;
-	endResetModel();
-
-	emit sigChangedLN(t_inx);
 }
 
 QVariant DO_TableModel::headerData(int t_column, Qt::Orientation t_orientation, int t_role) const
@@ -137,14 +130,7 @@ QVariant DO_TableModel::data(const QModelIndex &t_index, int t_role) const
 			// for user interface
 			switch (column) {
 			case DO_NAME_COLUMN: {
-				// remove: .stVal and .mag.f
-				QString name = doTable->name(row);
-				if (name.endsWith(".stVal")) {
-					name = name.first(name.size() - 6);
-				} else if (name.endsWith(".mag.f")) {
-					name = name.first(name.size() - 6);
-				}
-				return QVariant(name);
+				return QVariant(filterDOName(doTable->name(row)));
 			}
 			case DO_FC_COLUMN: {
 				return QVariant(doTable->fc(row));
@@ -165,4 +151,28 @@ QVariant DO_TableModel::data(const QModelIndex &t_index, int t_role) const
 		}
 	}
 	return QVariant(" ? ");
+}
+
+void DO_TableModel::getSelectedLN(int &t_ld, int &t_ln)
+{
+	t_ld = m_currentLD;
+	t_ln = m_currentLN;
+}
+
+void DO_TableModel::slotDataUpdated()
+{
+	qDebug() << "DO_TableModel: slotDataUpdated";
+
+	emit dataChanged(index(0, DO_VALUE_COLUMN), index(rowCount() - 1, DO_TS_COLUMN));
+}
+
+void DO_TableModel::slotLNSelected(int t_ld, int t_ln)
+{
+	//qDebug() << "DO_TableModel: ld = " << t_ld << " ln = " << t_ln;
+	if ((m_currentLD != t_ld) || (m_currentLN != t_ln)) {
+		beginResetModel();
+		m_currentLD = t_ld;
+		m_currentLN = t_ln;
+		endResetModel();
+	}
 }

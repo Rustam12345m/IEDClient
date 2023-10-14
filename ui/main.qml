@@ -221,6 +221,7 @@ Window {
 							height: toolBar.btnHeight
 
 							onSigClicked: function() {
+								switchToPreviousPage()
 							}
 						}
 						// Forward
@@ -232,6 +233,8 @@ Window {
 
 							onSigClicked: function() {
 							}
+
+							enabled: false
 						}
 						// Update
 						ToolBarButton {
@@ -313,8 +316,8 @@ Window {
 						verticalAlignment: Text.AlignVCenter
 
 						color: "black" //"white"
-						text: ""
 						font.bold: true
+						text: ""
 					}
 				}
 			}
@@ -363,8 +366,6 @@ Window {
 					StackLayout {
 						id: mainStack
 
-						property var pageHistoryList: []
-
 						anchors {
 							top: tabsArea.top
 							left: tabsArea.left
@@ -410,11 +411,6 @@ Window {
 							onSigActivatePage: function(page) {
 								rootWindow.setActivePage(page)
 							}
-							onSigLDeviceChanged: function(index, name) {
-								//console.log("LN: Current LD changed to " + current)
-								lnPage.updateLDeviceIndex(index)
-								setStatusText(name)
-							}
 						}
 
 						LN.Page {
@@ -428,9 +424,6 @@ Window {
 								} else {
 									focus = false
 								}
-							}
-							onSigLNodeSelected: {
-								setStatusText(ldBackend.getLN_TextStatus())
 							}
 						}
 
@@ -462,16 +455,6 @@ Window {
 								}
 							}
 						}
-
-						onCurrentIndexChanged: {
-							console.log("MainStack: New index " + mainStack.currentIndex)
-							pageHistoryList.push(mainStack.currentIndex)
-							console.log("History list: " + pageHistoryList)
-						}
-						function switchToPreviousPage() {
-							var prev = pageHistoryList.pop()
-
-						}
 					}
 
 					// TabBar in the bottom of Tabs
@@ -492,9 +475,6 @@ Window {
 							currentIndex: 0
 							focus: false
 							focusPolicy: Qt.NoFocus
-
-							Component.onCompleted: {
-							}
 
 							TabButton {
 								text: qsTr("Main")
@@ -558,6 +538,9 @@ Window {
 			console.log("Window: Key pressed " + event.key)
 			if (event.key == Qt.Key_F5) {
 				console.log("Update data by F5")
+				updateActivePage()
+				even.accepted = true
+				return
 			}
 
 			// Alt
@@ -566,32 +549,32 @@ Window {
 				case Qt.Key_1: {
 					rootWindow.setActivePage(Globals.Page.START)
 					event.accepted = true
-					break;
+					return
 				}
 				case Qt.Key_2: {
 					rootWindow.setActivePage(Globals.Page.LD)
 					event.accepted = true
-					break;
+					return
 				}
 				case Qt.Key_3: {
 					rootWindow.setActivePage(Globals.Page.LN)
 					event.accepted = true
-					break;
+					return
 				}
 				case Qt.Key_4: {
 					rootWindow.setActivePage(Globals.Page.FS)
 					event.accepted = true
-					break;
+					return
 				}
 				case Qt.Key_5: {
 					rootWindow.setActivePage(Globals.Page.DS)
 					event.accepted = true
-					break;
+					return
 				}
 				case Qt.Key_6: {
 					rootWindow.setActivePage(Globals.Page.RCB)
 					event.accepted = true
-					break;
+					return
 				}
 				}
 			}
@@ -605,12 +588,27 @@ Window {
 		logsWindow.show()
 	}
 
-	function setStatusText(msg) {
-		statusTextBox.text = msg
+	// History page list
+	property var pageHistoryList: [ 0 ]
+	function switchToPreviousPage() {
+		console.log("Switch to previous page: " + pageHistoryList)
+
+		//var cur = pageHistoryList.pop()
+		var prev = pageHistoryList.pop()
+		if (prev >= 0) {
+			//setActivePage(prev)
+			tabBar.currentIndex = prev
+			console.log("Switch to previous page: " + prev)
+		}
+	}
+	function pushPageToHistoryList(page) {
+		pageHistoryList.push(page)
 	}
 
+	// Active Page + Panel
 	function setActivePage(page) {
 		//console.log("ActivatePage: new index = " + page)
+		pushPageToHistoryList(mainStack.currentIndex)
 
 		switch (page) {
 		case Globals.Page.START: {
@@ -637,9 +635,11 @@ Window {
 			tabBar.currentIndex = 5;
 			break;
 		}
+		default: {
+			return;
+		}
 		}
 	}
-
 	function setActivePanel(index) {
 		//console.log("ActivatePanel: new index = " + index)
 		if (index == Globals.Panel.HIDE) {
@@ -659,7 +659,11 @@ Window {
 			}
 		}
 	}
+	function setStatusText(msg) {
+		statusTextBox.text = msg
+	}
 
+	// Process
 	function updateActivePage() {
 		console.log("F5: Update active page")
 
@@ -668,9 +672,13 @@ Window {
 			break;
 		}
 		case Globals.Page.LD: {
+			//ldPage.updatePage()
+			setStatusText(ldBackend.getLD_TextStatus())
 			break;
 		}
 		case Globals.Page.LN: {
+			ldBackend.updateDO_Table()
+			setStatusText(ldBackend.getLN_TextStatus())
 			break;
 		}
 		case Globals.Page.FS: {

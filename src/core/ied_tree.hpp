@@ -47,6 +47,9 @@ namespace Core
 			}
 			return nullptr;
 		}
+		ptrLD 	getLogicalDevice(int t_ld) {
+			return getChild<Core::LogicalDevice>(t_ld);
+		}
 
 		void	printTree();
 		void	update() {

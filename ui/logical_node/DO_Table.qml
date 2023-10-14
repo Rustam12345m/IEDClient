@@ -32,11 +32,6 @@ FocusScope {
 	readonly property int defDelegateHeight: 30
 	signal sigLeftOrRightKey()
 
-	function updateLNodeIndex(t_ld, t_ln) {
-		ldBackend.currentLD = t_ld;
-		ldBackend.currentLN = t_ln;
-	}
-
 	HorizontalHeaderView {
 		id: headerID
 
@@ -234,16 +229,5 @@ FocusScope {
 			}
 			event.accepted = false
 		}
-	}
-
-	onVisibleChanged: {
-		//console.log("DO_Table: Focus " + visible)
-		/*
-		if (visible) {
-			tableID.focus = true
-		} else {
-			tableID.focus = false
-		}
-		*/
 	}
 }

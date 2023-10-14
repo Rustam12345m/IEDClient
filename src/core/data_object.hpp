@@ -60,20 +60,20 @@ namespace Core
 			return " - ";
 		}
 
-		void		addChild(QSharedPointer< DataAttribute > t_node) {
+		void		addChild(QSharedPointer< Item > t_node) {
 			m_child.push_back(t_node);
 
 			if (t_node->name() == "stVal" || t_node->name() == "mag") {
-				m_value = t_node;
+				m_value =  t_node.staticCast<DataAttribute>();
 			}
 			else if (t_node->name() == "q") {
-				m_quality = t_node;
+				m_quality = t_node.staticCast<DataAttribute>();;
 			}
 			else if (t_node->name() == "t") {
-				m_timestamp = t_node;
+				m_timestamp = t_node.staticCast<DataAttribute>();;
 			}
 			else if (t_node->name() == "d") {
-				m_description = t_node;
+				m_description = t_node.staticCast<DataAttribute>();;
 			}
 		}
 
@@ -91,5 +91,5 @@ namespace Core
 		ptrDA		m_description;
 	};
 
-	typedef QSharedPointer< DataObject >		ptrDO;
+	typedef QSharedPointer< DataObject > 	ptrDO;
 }

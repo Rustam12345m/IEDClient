@@ -30,20 +30,19 @@
 class LN_TableModel : public QAbstractTableModel
 {
 	Q_OBJECT
-	enum Roles {
-		NameRole = Qt::UserRole + 1,
-		ModeRole,
-		BehRole,
-		HealthRole
+	enum Columns {
+		NameColumn = 0,
+		ModeColumn,
+		BehColumn,
+		HealthColumn,
+
+		ColumnsCount
 	};
 public:
 	LN_TableModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
 
+	Q_INVOKABLE void setSelectedLN(int t_inx);
 	void 	setNewIED(QSharedPointer<Core::IED_Object> t_ied);
-
-	Q_PROPERTY(int currentLD READ getCurrentLD WRITE setCurrentLD NOTIFY sigCurrentLD)
-	int		getCurrentLD() const { return m_currentLD; }
-	void	setCurrentLD(int t_inx);
 
 	QVariant headerData(int t_section, Qt::Orientation t_orientation,
 						int t_role = Qt::DisplayRole) const override;
@@ -56,9 +55,13 @@ public:
 	QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
 signals:
-	void	sigCurrentLD();
+	void	sigLNSelected(int t_ld, int t_ln);
+
+public slots:
+	void 	slotDataUpdated();
+	void 	slotLDSelected(int t_ld);
 
 private:
 	QSharedPointer<Core::IED_Object> 	m_ied;
-	int					m_currentLD = -1; // current index of Logical Device
+	int		m_currentLD = -1; // selected Logical Device by user
 };

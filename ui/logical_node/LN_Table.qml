@@ -30,15 +30,7 @@ FocusScope {
 	readonly property int delegateHeight: 30
 	readonly property int delegateWidth: 60
 
-	property int currentLDeviceIndex: tableID.model.currentLD
-	property alias currentLNodeIndex: tableID.currentRow
-
-	signal sigLNodeSelected(int t_ld, int t_ln);
 	signal sigLeftOrRightKey()
-
-	function updateLDeviceIndex(t_ld) {
-		tableID.model.currentLD = t_ld
-	}
 
 	HorizontalHeaderView {
 		id: headerID
@@ -106,17 +98,13 @@ FocusScope {
 		selectionBehavior: TableView.SelectRows
 		selectionModel: ItemSelectionModel {
 			model: tableID.model
-
-			onCurrentChanged: {
-				sigLNodeSelected(model.currentLD, currentIndex.row)
-			}
 		}
 
-		/*
-		onWidthChanged: function() {
-			tableID.forceLayout()
+		onCurrentRowChanged: {
+			//console.log("LN_TableView: ln = " + tableID.currentRow)
+			tableID.model.setSelectedLN(tableID.currentRow)
 		}
-		*/
+
 		columnWidthProvider: function(column) {
 			switch (column) {
 			case 0: {
@@ -130,6 +118,13 @@ FocusScope {
 				return Math.max(res, delegateWidth)
 			}
 			}
+		}
+
+		function setSelectedRow(row) {
+			let idx = tableID.model.index(row, 0);
+			tableID.selectionModel.setCurrentIndex(idx, ItemSelectionModel.Clear
+														| ItemSelectionModel.Select
+														| ItemSelectionModel.Rows);
 		}
 
 		delegate: DelegateChooser {
@@ -151,18 +146,13 @@ FocusScope {
 						Text {
 							id: textName
 							anchors.centerIn: parent
-							text: model.name
+							text: model.value
 						}
 						MouseArea {
 							anchors.fill: parent
 							acceptedButtons: Qt.LeftButton | Qt.RightButton
 
-							onClicked: function(mouse) {
-								let idx = tableID.model.index(row, 0);
-								tableID.selectionModel.setCurrentIndex(idx, ItemSelectionModel.Clear
-																			| ItemSelectionModel.Select
-																			| ItemSelectionModel.Rows);
-							}
+							onClicked: tableID.setSelectedRow(row)
 						}
 					}
 				}
@@ -185,18 +175,13 @@ FocusScope {
 						Text {
 							id: textMode
 							anchors.centerIn: parent
-							text: model.mode
+							text: model.value
 						}
 						MouseArea {
 							anchors.fill: parent
 							acceptedButtons: Qt.LeftButton | Qt.RightButton
 
-							onClicked: function(mouse) {
-								let idx = tableID.model.index(row, 0);
-								tableID.selectionModel.setCurrentIndex(idx, ItemSelectionModel.Clear
-																			| ItemSelectionModel.Select
-																			| ItemSelectionModel.Rows);
-							}
+							onClicked: tableID.setSelectedRow(row)
 						}
 					}
 				}
@@ -219,18 +204,13 @@ FocusScope {
 						Text {
 							id: textBeh
 							anchors.centerIn: parent
-							text: model.beh
+							text: model.value
 						}
 						MouseArea {
 							anchors.fill: parent
 							acceptedButtons: Qt.LeftButton | Qt.RightButton
 
-							onClicked: function(mouse) {
-								let idx = tableID.model.index(row, 0);
-								tableID.selectionModel.setCurrentIndex(idx, ItemSelectionModel.Clear
-																			| ItemSelectionModel.Select
-																			| ItemSelectionModel.Rows);
-							}
+							onClicked: tableID.setSelectedRow(row)
 						}
 					}
 				}
@@ -253,18 +233,13 @@ FocusScope {
 						Text {
 							id: textHealth
 							anchors.centerIn: parent
-							text: model.health
+							text: model.value
 						}
 						MouseArea {
 							anchors.fill: parent
 							acceptedButtons: Qt.LeftButton | Qt.RightButton
 
-							onClicked: function(mouse) {
-								let idx = tableID.model.index(row, 0);
-								tableID.selectionModel.setCurrentIndex(idx, ItemSelectionModel.Clear
-																			| ItemSelectionModel.Select
-																			| ItemSelectionModel.Rows);
-							}
+							onClicked: tableID.setSelectedRow(row)
 						}
 					}
 				}
@@ -281,10 +256,6 @@ FocusScope {
 			}
 		}
 
-		Component.onCompleted: function() {
-			//tableID.forceLayout()
-		}
-
 		Keys.onPressed: function(event) {
 			//console.log("LN_Table: Key pressed " + event.key)
 			if (event.key == Qt.Key_Left || event.key == Qt.Key_Right || event.key == Qt.Key_Tab) {
@@ -293,16 +264,5 @@ FocusScope {
 			}
 			event.accepted = false
 		}
-	}
-
-	onVisibleChanged: {
-		//console.log("LN_Table: Focus " + visible)
-		/*
-		if (visible) {
-			tableID.focus = true
-		} else {
-			tableID.focus = false
-		}
-		*/
 	}
 }

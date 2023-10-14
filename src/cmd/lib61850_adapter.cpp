@@ -238,10 +238,10 @@ namespace Core::Cmd
 					auto fcNum = (FunctionalConstraint)daNode->fcNum();
 
 					MmsValue *val = IedConnection_readObject(m_libConn, &retval, ref.data(), fcNum);
+
 					if (retval == IED_ERROR_OK && val != nullptr) {
 						char tmp[1024] = { 0 };
 						MmsValue_printToBuffer(val, tmp, 1024);
-
 						daNode->update(QString::fromLocal8Bit(tmp));
 					}
 				}

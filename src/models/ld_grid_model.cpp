@@ -37,6 +37,11 @@ void LD_GridModel::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
 	endResetModel();
 }
 
+QHash<int, QByteArray> LD_GridModel::roleNames() const
+{
+	return { { LD_ROLE_NAME, "name" } };
+}
+
 int LD_GridModel::rowCount(const QModelIndex &t_index) const
 {
 	return m_ied->tree().getChildCount();
@@ -44,16 +49,17 @@ int LD_GridModel::rowCount(const QModelIndex &t_index) const
 
 QVariant LD_GridModel::data(const QModelIndex &t_index, int t_role) const
 {
-	auto ld = m_ied->tree().getChild(t_index.row());
+	auto ld = m_ied->tree().getLogicalDevice(t_index.row());
 	if (ld) {
 		return ld->name();
 	}
 	return QVariant(" - ");
 }
 
-QHash<int, QByteArray> LD_GridModel::roleNames() const
+void LD_GridModel::setSelectedLD(int t_ld)
 {
-	return { {LD_ROLE_NAME, "name"} };
+	//qDebug() << "LD_GridModel: Selected LD = " << t_ld;
+	emit sigLDSelected(t_ld);
 }
 
 void LD_GridModel::slotDataUpdated()
