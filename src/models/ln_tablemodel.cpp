@@ -63,7 +63,7 @@ QHash<int, QByteArray> LN_TableModel::roleNames() const
 
 int LN_TableModel::rowCount(const QModelIndex &t_parent) const
 {
-	auto ld = m_ied->tree().getChild<Core::LogicalDevice>(m_currentLD);
+	auto ld = m_ied->model().getChild<Core::LogicalDevice>(m_currentLD);
 	if (ld) {
 		return ld->getChildCount();
 	}
@@ -77,7 +77,7 @@ int LN_TableModel::columnCount(const QModelIndex &t_parent) const
 
 QVariant LN_TableModel::data(const QModelIndex &t_index, int t_role) const
 {
-	auto ln = m_ied->tree().getLogicalNode(m_currentLD, t_index.row());
+	auto ln = m_ied->model().getLogicalNode(m_currentLD, t_index.row());
 	if (ln) {
 		switch (t_index.column()) {
 		case NameColumn: {

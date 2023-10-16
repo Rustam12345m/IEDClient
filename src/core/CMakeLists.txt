@@ -9,10 +9,11 @@ set(CORE_SOURCES
 	logical_device.hpp
 	dataset.hpp
 	report_block.hpp
-	fs_tree.hpp
 
-	ied_tree.hpp
-	ied_tree.cpp
+	fs_data.hpp
+
+	data_model.hpp
+	data_model.cpp
 
 	ln_flat_state.hpp
 	ln_flat_state.cpp

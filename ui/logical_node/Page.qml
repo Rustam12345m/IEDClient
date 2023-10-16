@@ -39,7 +39,8 @@ FocusScope {
 			id: handleDelegate
 			implicitWidth: 4
 			implicitHeight: 4
-			color: SplitHandle.pressed ? "gray" : "lightgray"
+			color: SplitHandle.pressed ? "black" : "gray"
+			//color: SplitHandle.pressed ? "gray" : "lightgray"
 				//: (SplitHandle.hovered ? "gray" : "gray")
 
 			containmentMask: Item {

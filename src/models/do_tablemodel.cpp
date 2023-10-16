@@ -84,7 +84,7 @@ QHash<int, QByteArray> DO_TableModel::roleNames() const
 
 int DO_TableModel::rowCount(const QModelIndex &t_parent) const
 {
-	auto ln = m_ied->tree().getLogicalNode(m_currentLD, m_currentLN);
+	auto ln = m_ied->model().getLogicalNode(m_currentLD, m_currentLN);
 	if (ln) {
 		return ln->getDO_Table()->size();
 	}
@@ -101,7 +101,7 @@ QVariant DO_TableModel::data(const QModelIndex &t_index, int t_role) const
 	//qDebug() << "DO_TableModel: " << QString("index = %1 %2, role = %3").arg(t_index.row()).arg(t_index.column()).arg(t_role);
 	int row = t_index.row(), column = t_index.column();
 
-	auto ln = m_ied->tree().getLogicalNode(m_currentLD, m_currentLN);
+	auto ln = m_ied->model().getLogicalNode(m_currentLD, m_currentLN);
 	if (ln) {
 		auto doTable = ln->getDO_Table();
 		if (t_role == ComRoles::ROLE_SORT_VALUE) {

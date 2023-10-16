@@ -95,6 +95,7 @@ namespace Core::Cmd
 		}
 	}
 
+
 	void Lib61850::printfVersion() const
 	{
 		char *pv = LibIEC61850_getVersionString();
@@ -136,7 +137,7 @@ namespace Core::Cmd
 		m_libConn = nullptr;
 	}
 
-	int Lib61850::getLD_List(Core::IED_Tree &t_objTree)
+	int Lib61850::getLD_List(Core::DataModel &t_model)
 	{
 		if (isConnected()) {
 			IedClientError retval = IED_ERROR_OK;
@@ -151,8 +152,8 @@ namespace Core::Cmd
 			while (device != nullptr) {
 				QString ldName = QString::fromLocal8Bit((char *)device->data);
 
-				auto ldev = ItemFactory::createLD(&t_objTree, ldName); // Found LD
-				t_objTree.addChild(ldev);
+				auto ldev = ItemFactory::createLD(&t_model, ldName); // Found LD
+				t_model.addChild(ldev);
 
 				LinkedList lnodes = IedConnection_getLogicalDeviceDirectory(m_libConn, &retval,
 																			(char *)device->data);
@@ -177,11 +178,11 @@ namespace Core::Cmd
 		return 0;
 	}
 
-	int Lib61850::getDO_List(Core::ptrLN t_lnNode)
+	int Lib61850::getLN_PinList(Core::ptrLN t_ln)
 	{
 		if (isConnected()) {
 			IedClientError retval = IED_ERROR_OK;
-			QString ref = t_lnNode->ref();
+			QString ref = t_ln->ref();
 
 			// Get list of DataObjects for this LogicalNode
 			LinkedList doList = IedConnection_getLogicalNodeDirectory(m_libConn, &retval, ref.toStdString().data(),
@@ -193,8 +194,8 @@ namespace Core::Cmd
 					QString name = QString::fromLocal8Bit((char *)dObj->data);
 					QString refDO = QString("%1.%2").arg(ref, name);
 
-					auto doNode = ItemFactory::createDO(t_lnNode.get(), name); // found DO
-					t_lnNode->addChild(doNode);
+					auto doNode = ItemFactory::createDO(t_ln.get(), name); // found DO
+					t_ln->addChild(doNode);
 
 					// Get list of DA
 					LinkedList daListFC = IedConnection_getDataDirectoryFC(m_libConn, &retval, refDO.toLocal8Bit().data());
@@ -223,13 +224,92 @@ namespace Core::Cmd
 		return 0;
 	}
 
-	int Lib61850::updateDO_List(Core::ptrLN t_lnNode)
+	int Lib61850::getDS_List(Core::DataModel &t_model)
+	{
+		/*
+			LinkedList dataSets = IedConnection_getLogicalNodeDirectory(con, &error, lnRef,
+					ACSI_CLASS_DATA_SET);
+
+			LinkedList dataSet = LinkedList_getNext(dataSets);
+
+			while (dataSet != NULL) {
+				char* dataSetName = (char*) dataSet->data;
+				bool isDeletable;
+				char dataSetRef[130];
+				sprintf(dataSetRef, "%s.%s", lnRef, dataSetName);
+
+				LinkedList dataSetMembers = IedConnection_getDataSetDirectory(con, &error, dataSetRef,
+						&isDeletable);
+
+				if (isDeletable)
+					printf("    Data set: %s (deletable)\n", dataSetName);
+				else
+					printf("    Data set: %s (not deletable)\n", dataSetName);
+
+				LinkedList dataSetMemberRef = LinkedList_getNext(dataSetMembers);
+
+				while (dataSetMemberRef != NULL) {
+
+					char* memberRef = (char*) dataSetMemberRef->data;
+
+					printf("      %s\n", memberRef);
+
+					dataSetMemberRef = LinkedList_getNext(dataSetMemberRef);
+				}
+
+				LinkedList_destroy(dataSetMembers);
+
+				dataSet = LinkedList_getNext(dataSet);
+			}
+
+			LinkedList_destroy(dataSets);
+		*/
+		return 0;
+	}
+
+	int Lib61850::getRCB_List(Core::DataModel &t_model)
+	{
+		/*
+			LinkedList reports = IedConnection_getLogicalNodeDirectory(con, &error, lnRef,
+					ACSI_CLASS_URCB);
+
+			LinkedList report = LinkedList_getNext(reports);
+
+			while (report != NULL) {
+				char* reportName = (char*) report->data;
+
+				printf("    RP: %s\n", reportName);
+
+				report = LinkedList_getNext(report);
+			}
+
+			LinkedList_destroy(reports);
+
+			reports = IedConnection_getLogicalNodeDirectory(con, &error, lnRef,
+					ACSI_CLASS_BRCB);
+
+			report = LinkedList_getNext(reports);
+
+			while (report != NULL) {
+				char* reportName = (char*) report->data;
+
+				printf("    BR: %s\n", reportName);
+
+				report = LinkedList_getNext(report);
+			}
+
+			LinkedList_destroy(reports);
+		*/
+		return 0;
+	}
+
+	int Lib61850::updateLN_PinValues(Core::ptrLN t_ln)
 	{
 		if (isConnected()) {
 			IedClientError retval = IED_ERROR_OK;
 
-			for (size_t i=0;i<t_lnNode->getChildCount();i++) {
-				auto doNode = t_lnNode->getChild< Core::DataObject >(i);
+			for (size_t i=0;i<t_ln->getChildCount();i++) {
+				auto doNode = t_ln->getChild< Core::DataObject >(i);
 
 				for (size_t j=0;j<doNode->getChildCount();j++) {
 					auto daNode = doNode->getChild< Core::DataAttribute >(j);
@@ -250,7 +330,12 @@ namespace Core::Cmd
 		return 0;
 	}
 
-	int Lib61850::getFS_List(Core::DirOn &t_dir)
+	int Lib61850::updateDS_PinValues(Core::ptrLN t_node)
+	{
+		return 0;
+	}
+
+	int Lib61850::getFS_FileList(Core::DirOn &t_dir)
 	{
 		if (isConnected()) {
 			std::string path = t_dir.name().toStdString();

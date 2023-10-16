@@ -24,7 +24,7 @@
 #pragma once
 
 #include "base_command.hpp"
-#include "core/fs_tree.hpp"
+#include "core/fs_data.hpp"
 
 namespace Core::Cmd
 {
@@ -32,17 +32,17 @@ namespace Core::Cmd
 	{
 		Q_OBJECT
 		QString			m_path;
-		Core::FS_Tree&	m_fsTree;
+		Core::FS_Data&	m_fsTree;
 
 	public:
-		GetFileList(Core::FS_Tree &t_tree, const QString &t_path)
+		GetFileList(Core::FS_Data &t_tree, const QString &t_path)
 			: IED_BaseCommand(IED_CMD::GET_FILELIST),
 			  m_fsTree(t_tree), m_path{t_path} {}
 		~GetFileList() {}
 
 		void		execute(LibInterface &t_con) override;
 
-		static QSharedPointer<GetFileList> create(Core::FS_Tree &t_tree, const QString &t_path) {
+		static QSharedPointer<GetFileList> create(Core::FS_Data &t_tree, const QString &t_path) {
 			return QSharedPointer<GetFileList>::create(t_tree, t_path);
 		}
 		/*

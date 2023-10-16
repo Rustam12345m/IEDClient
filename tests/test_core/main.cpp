@@ -21,42 +21,10 @@
  *  See COPYING file for the complete license text.
  * */
 
-#pragma once
+#include "test_core.hpp"
 
-#include <QObject>
-
-#include "logical_device.hpp"
-
-namespace Core
+int main(int argc, char **argv)
 {
-	/*
-	 * Representation of a tree available by MMS of an IED
-	 * */
-	class IED_Tree : public QObject, public Item
-	{
-		Q_OBJECT
-	public:
-		IED_Tree() : Item(nullptr, "") {
-			m_delimetr = ""; // There isn't a delimetr because it is a top node
-		}
-
-		ptrLN 	getLogicalNode(int t_ld, int t_ln) {
-			auto ld = getChild<Core::LogicalDevice>(t_ld);
-			if (ld) {
-				return ld->getChild<Core::LogicalNode>(t_ln);
-			}
-			return nullptr;
-		}
-		ptrLD 	getLogicalDevice(int t_ld) {
-			return getChild<Core::LogicalDevice>(t_ld);
-		}
-
-		void	printTree();
-		void	update() {
-			emit sigUpdated();
-		}
-
-	signals:
-		void	sigUpdated();
-	};
+	::testing::InitGoogleTest(&argc, argv);
+	return RUN_ALL_TESTS();
 }

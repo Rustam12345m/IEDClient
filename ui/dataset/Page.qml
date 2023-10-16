@@ -22,8 +22,13 @@
  * */
 
 import QtQuick
+import QtQuick.Layouts
+import QtQuick.Controls
 
-Item {
+import "qrc:/global/"
+
+// DS page
+FocusScope {
 
 	Text {
 		anchors.centerIn: parent

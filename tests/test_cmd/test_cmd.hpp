@@ -22,28 +22,27 @@
  * */
 
 #include <gtest/gtest.h>
+#include "core/data_model.hpp"
 
-namespace CoreTests
+namespace TestsCMD
 {
-	class FooTest : public ::testing::Test
+	class ModelTest : public ::testing::Test
 	{
 	protected:
-		FooTest() {
+		ModelTest() {
 		}
-
-		~FooTest() override {
+		~ModelTest() override {
 		}
 
 		void SetUp() override {
 		}
-
 		void TearDown() override {
 		}
 	};
 
-	TEST_F(FooTest, SubTest1) {
+	TEST_F(ModelTest, SubTest1) {
 	}
 
-	TEST_F(FooTest, SubTest2) {
+	TEST_F(ModelTest, SubTest2) {
 	}
 }

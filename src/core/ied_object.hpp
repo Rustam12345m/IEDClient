@@ -25,8 +25,8 @@
 
 #include <QObject>
 
-#include "ied_tree.hpp"
-#include "fs_tree.hpp"
+#include "data_model.hpp"
+#include "fs_data.hpp"
 
 namespace Core
 {
@@ -37,13 +37,13 @@ namespace Core
 		IED_Object(QObject *t_parent=nullptr);
 		~IED_Object() = default;
 
-		Core::IED_Tree&		tree() { return m_objTree; }
-		Core::FS_Tree&		fs() { return m_fsTree; }
+		Core::DataModel&	model() { return m_model; }
+		Core::FS_Data&		fs() { return m_fsTree; }
 
 	signals:
 
 	protected:
-		Core::IED_Tree		m_objTree;
-		Core::FS_Tree		m_fsTree;
+		Core::DataModel		m_model;
+		Core::FS_Data		m_fsTree;
 	};
 }

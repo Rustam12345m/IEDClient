@@ -21,34 +21,10 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "ied_tree.hpp"
+#include "test_cmd.hpp"
 
-#include <QDebug>
-
-namespace Core
+int main(int argc, char **argv)
 {
-	void IED_Tree::printTree()
-	{
-		qDebug() << "IED: " << m_name;
-
-		for (size_t i=0;i<m_child.size();i++) {
-			qDebug() << "  LD: " << m_child[i]->name();
-
-			auto &lnList = m_child[i]->getChildList();
-			for (size_t j=0;j<lnList.size();j++) {
-				qDebug() << "    LN: " << lnList[j]->name();
-
-				auto &doList = lnList[j]->getChildList();
-				for (size_t k=0;k<doList.size();k++) {
-					qDebug() << "      DO: " << doList[k]->name();
-
-					for (size_t z=0;z<doList[k]->getChildCount();z++) {
-						auto daAttr = doList[k]->getChild<DataAttribute>(z);
-
-						qDebug() << "        DA: " << daAttr->name() << ", FC = " << daAttr->fc();
-					}
-				}
-			}
-		}
-	}
+	::testing::InitGoogleTest(&argc, argv);
+	return RUN_ALL_TESTS();
 }

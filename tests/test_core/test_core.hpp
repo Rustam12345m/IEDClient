@@ -21,28 +21,28 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "get_filelist_cmd.hpp"
+#include <gtest/gtest.h>
+#include "core/data_model.hpp"
 
-namespace Core::Cmd
+namespace CoreTests
 {
-	void GetFileList::execute(LibInterface &t_con)
+	class ModelTest : public ::testing::Test
 	{
-		if (!t_con.isConnected()) {
-			emit sigFinished();
-			return;
+	protected:
+		ModelTest() {
+		}
+		~ModelTest() override {
 		}
 
-		emit sigProgress(0, "Send query to device: GetDirectory " + m_path);
-
-		Core::DirOn dir(m_path);
-		int retval = t_con.getFS_FileList(dir);
-		if (retval == 0) {
+		void SetUp() override {
 		}
+		void TearDown() override {
+		}
+	};
 
-		emit sigProgress(80, "Save received information");
+	TEST_F(ModelTest, SubTest1) {
+	}
 
-		m_fsTree.put(dir);
-
-		emit sigFinished();
+	TEST_F(ModelTest, SubTest2) {
 	}
 }
