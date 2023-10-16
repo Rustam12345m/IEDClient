@@ -26,14 +26,14 @@
 LD_GridModel::LD_GridModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied)
 	: QAbstractListModel(t_parent), m_ied(t_ied)
 {
-	connect(&m_ied->tree(), SIGNAL(sigUpdated()), this, SLOT(slotDataUpdated()));
+	connect(&m_ied->model(), SIGNAL(sigUpdated()), this, SLOT(slotDataUpdated()));
 }
 
 void LD_GridModel::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
 {
 	beginResetModel();
 	m_ied = t_ied;
-	connect(&m_ied->tree(), SIGNAL(sigUpdated()), this, SLOT(slotDataUpdated()));
+	connect(&m_ied->model(), SIGNAL(sigUpdated()), this, SLOT(slotDataUpdated()));
 	endResetModel();
 }
 
@@ -44,12 +44,12 @@ QHash<int, QByteArray> LD_GridModel::roleNames() const
 
 int LD_GridModel::rowCount(const QModelIndex &t_index) const
 {
-	return m_ied->tree().getChildCount();
+	return m_ied->model().getChildCount();
 }
 
 QVariant LD_GridModel::data(const QModelIndex &t_index, int t_role) const
 {
-	auto ld = m_ied->tree().getLogicalDevice(t_index.row());
+	auto ld = m_ied->model().getLogicalDevice(t_index.row());
 	if (ld) {
 		return ld->name();
 	}

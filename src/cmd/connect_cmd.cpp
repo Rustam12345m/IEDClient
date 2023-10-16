@@ -22,7 +22,7 @@
  * */
 
 #include "connect_cmd.hpp"
-#include "core/ied_tree.hpp"
+#include "core/data_model.hpp"
 
 #include <QThread>
 #include <QDebug>
@@ -52,7 +52,7 @@ namespace Core::Cmd
 						auto ln = ld->getChild<LogicalNode>(j);
 
 						// Get LN's DataObjects
-						retval = t_con.getDO_List(ln);
+						retval = t_con.getLN_PinList(ln);
 						if (retval == 0) {
 							// Tables
 							auto doTable = LN_FlatBuilder::create(ln);

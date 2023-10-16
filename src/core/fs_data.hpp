@@ -99,11 +99,11 @@ namespace Core
 		friend class ::FilesTableModel;
 	};
 
-	class FS_Tree : public QObject
+	class FS_Data : public QObject
 	{
 		Q_OBJECT
 	public:
-		FS_Tree(QObject *t_parent = nullptr) : QObject(t_parent) {}
+		FS_Data(QObject *t_parent = nullptr) : QObject(t_parent) {}
 
 		void put(const DirOn &t_dir)
 		{

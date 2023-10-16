@@ -54,11 +54,15 @@ namespace Core::Cmd
 						const QString &t_name, const QString &t_pass) override;
 		void	disconnect() override;
 
-		int		getLD_List(Core::IED_Tree &t_tree) override;
-		int		getDO_List(Core::ptrLN t_node) override;
-		int		updateDO_List(Core::ptrLN t_node) override;
+		int		getLD_List(Core::DataModel &t_model) override;
+		int		getLN_PinList(Core::ptrLN t_node) override;
+		int 	getDS_List(Core::DataModel &t_model) override;
+		int 	getRCB_List(Core::DataModel &t_model) override;
 
-		int		getFS_List(Core::DirOn &t_dir) override;
+		int		updateLN_PinValues(Core::ptrLN t_node) override;
+		int		updateDS_PinValues(Core::ptrLN t_node) override;
+
+		int		getFS_FileList(Core::DirOn &t_dir) override;
 		int 	removeFile(const QString &t_filename) override;
 
 		void 	downloadFile(const QString &t_filename) override;

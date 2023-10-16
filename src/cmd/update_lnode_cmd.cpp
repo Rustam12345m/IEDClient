@@ -31,9 +31,9 @@ namespace Core::Cmd
 		qDebug() << "UpdateLNode: ldInx = " << m_ldIndex << ", lnInx " << m_lnIndex;
 
 		if (t_con.isConnected()) {
-			auto ln = m_ied->tree().getLogicalNode(m_ldIndex, m_lnIndex);
+			auto ln = m_ied->model().getLogicalNode(m_ldIndex, m_lnIndex);
 			if (ln) {
-				t_con.updateDO_List(ln);
+				t_con.updateLN_PinValues(ln);
 			}
 		}
 		emit sigFinished();

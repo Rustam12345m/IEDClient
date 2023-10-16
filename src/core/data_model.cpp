@@ -21,28 +21,38 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "get_filelist_cmd.hpp"
+#include "data_model.hpp"
 
-namespace Core::Cmd
+#include <QDebug>
+
+namespace Core
 {
-	void GetFileList::execute(LibInterface &t_con)
+	DataModel::~DataModel()
 	{
-		if (!t_con.isConnected()) {
-			emit sigFinished();
-			return;
+	}
+
+	void DataModel::printTree()
+	{
+		qDebug() << "IED: " << m_name;
+
+		for (size_t i=0;i<m_child.size();i++) {
+			qDebug() << "  LD: " << m_child[i]->name();
+
+			auto &lnList = m_child[i]->getChildList();
+			for (size_t j=0;j<lnList.size();j++) {
+				qDebug() << "    LN: " << lnList[j]->name();
+
+				auto &doList = lnList[j]->getChildList();
+				for (size_t k=0;k<doList.size();k++) {
+					qDebug() << "      DO: " << doList[k]->name();
+
+					for (size_t z=0;z<doList[k]->getChildCount();z++) {
+						auto daAttr = doList[k]->getChild<DataAttribute>(z);
+
+						qDebug() << "        DA: " << daAttr->name() << ", FC = " << daAttr->fc();
+					}
+				}
+			}
 		}
-
-		emit sigProgress(0, "Send query to device: GetDirectory " + m_path);
-
-		Core::DirOn dir(m_path);
-		int retval = t_con.getFS_FileList(dir);
-		if (retval == 0) {
-		}
-
-		emit sigProgress(80, "Save received information");
-
-		m_fsTree.put(dir);
-
-		emit sigFinished();
 	}
 }

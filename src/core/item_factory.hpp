@@ -23,7 +23,7 @@
 
 #include <QSharedPointer>
 
-#include "ied_tree.hpp"
+#include "data_model.hpp"
 #include "logical_device.hpp"
 #include "logical_node.hpp"
 #include "data_object.hpp"
@@ -33,9 +33,9 @@ namespace Core
 	class ItemFactory
 	{
 	public:
-		// Object Tree <- base node for IED Data Object tree
+		// Object Tree <- base node for IED Data Object model
 		static QSharedPointer<Item>		createTree() {
-			return QSharedPointer<IED_Tree>::create();
+			return QSharedPointer<DataModel>::create();
 		}
 
 		// Logical Device

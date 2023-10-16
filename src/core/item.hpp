@@ -67,7 +67,7 @@ namespace Core
 		}
 
 		QString 	ref(Item *t_root=nullptr) {
-			// Make full reference to item in this tree
+			// Make full reference to item in this model
 			QString path;
 			if (m_parent && (m_parent != t_root)) {
 				path = m_parent->ref(t_root) + m_delimetr;

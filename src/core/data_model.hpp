@@ -21,10 +21,43 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "core_tests.hpp"
+#pragma once
 
-int main(int argc, char **argv)
+#include <QObject>
+
+#include "logical_device.hpp"
+
+namespace Core
 {
-	::testing::InitGoogleTest(&argc, argv);
-	return RUN_ALL_TESTS();
+	/*
+	 * Representation of a model available by MMS of an IED
+	 * */
+	class DataModel : public QObject, public Item
+	{
+		Q_OBJECT
+	public:
+		DataModel() : Item(nullptr, "") {
+			m_delimetr = ""; // There isn't a delimetr because it is a top node
+		}
+		~DataModel();
+
+		ptrLN 	getLogicalNode(int t_ld, int t_ln) {
+			auto ld = getChild<Core::LogicalDevice>(t_ld);
+			if (ld) {
+				return ld->getChild<Core::LogicalNode>(t_ln);
+			}
+			return nullptr;
+		}
+		ptrLD 	getLogicalDevice(int t_ld) {
+			return getChild<Core::LogicalDevice>(t_ld);
+		}
+
+		void	printTree();
+		void	update() {
+			emit sigUpdated();
+		}
+
+	signals:
+		void	sigUpdated();
+	};
 }

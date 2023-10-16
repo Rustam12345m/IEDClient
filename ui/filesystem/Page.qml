@@ -122,6 +122,22 @@ FocusScope {
 			return tableID.model.data(idx, "display")
 		}
 
+		function setSelectedRow(t_row) {
+			if (tableID.currentRow === t_row) {
+				return;
+			}
+			let idx = tableID.model.index(t_row, 0);
+			tableID.selectionModel.setCurrentIndex(idx, ItemSelectionModel.Clear
+														| ItemSelectionModel.Select
+														| ItemSelectionModel.Rows);
+		}
+		function callDownloadFile(t_row) {
+			console.log("FS_Table: Download file N" + t_row)
+
+			setSelectedRow(t_row)
+			fsBackend.downloadFile(tableID.getFilename(t_row))
+		}
+
 		function setGoodColumnsWidth() {
 			var iw = []
 			let sum = 0, i = 0
@@ -148,22 +164,6 @@ FocusScope {
 			}
 			return (width * iw[t_column] / sum)
 		}
-		function setSelectedRow(t_row) {
-			if (tableID.currentRow === t_row) {
-				return;
-			}
-			let idx = tableID.model.index(t_row, 0);
-			tableID.selectionModel.setCurrentIndex(idx, ItemSelectionModel.Clear
-														| ItemSelectionModel.Select
-														| ItemSelectionModel.Rows);
-		}
-		function callDownloadFile(t_row) {
-			console.log("FS_Table: Download file N" + t_row)
-
-			setSelectedRow(t_row)
-			fsBackend.downloadFile(tableID.getFilename(t_row))
-		}
-
 		columnWidthProvider: function(t_column) {
 			return calcColumnsWidth(t_column)
 		}
@@ -287,10 +287,6 @@ FocusScope {
 
 	onVisibleChanged: {
 		//console.log("FS_Table: Focus " + visible)
-		if (visible) {
-			tableID.focus = true
-		} else {
-			tableID.focus = false
-		}
+		tableID.focus = visible
 	}
 }

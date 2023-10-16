@@ -41,6 +41,7 @@ Item {
 
 		color: (selected ? "lightgray" : "white")
 		border.color: (selected ? "black" : "lightgray")
+		clip: true
 
 		Text {
 			id: textFild
@@ -48,6 +49,8 @@ Item {
 			anchors.fill: parent
 			horizontalAlignment: Text.AlignHCenter
 			verticalAlignment: Text.AlignVCenter
+
+			elide: Text.ElideRight
 			leftPadding: 5
 			text: " - "
 		}

@@ -121,24 +121,40 @@ FocusScope {
 		interactive: true
 		boundsBehavior: Flickable.StopAtBounds
 
-		columnWidthProvider: function(column) {
-			switch (column) {
-			case 5: {
-				return width - columnWidth(0) - columnWidth(1) - columnWidth(2) - columnWidth(3) - columnWidth(4)
+		function setGoodColumnsWidth() {
+			var iw = []
+			let sum = 0, i = 0
+			for (i=0;i<columns;i++) {
+				iw[i] = Math.max(headerID.implicitColumnWidth(i), implicitColumnWidth(i))
+				sum = sum + iw[i]
 			}
-			default: {
-				return Math.max(headerID.implicitColumnWidth(column), implicitColumnWidth(column))
+			if (sum === 0) {
+				sum = 1
 			}
+			for (i=0;i<columns;i++) {
+				setColumnWidth(i, width * iw[i] / sum)
 			}
+			tableID.forceLayout()
+		}
+		function calcColumnsWidth(t_column) {
+			var iw = []
+			let sum = 0, i = 0
+			for (i=0;i<columns;i++) {
+				iw[i] = Math.max(headerID.implicitColumnWidth(i), implicitColumnWidth(i))
+				sum = sum + iw[i]
+			}
+			if (sum === 0) {
+				sum = 1
+			}
+			return (width * iw[t_column] / sum)
+		}
+		columnWidthProvider: function(t_column) {
+			return calcColumnsWidth(t_column)
 		}
 
 		selectionBehavior: TableView.SelectRows
 		selectionModel: ItemSelectionModel {
 			model: tableID.model
-
-			onCurrentChanged: {
-				//console.log("Select current changed: " + currentIndex)
-			}
 		}
 
 		delegate: DelegateChooser {
@@ -228,6 +244,14 @@ FocusScope {
 				event.accepted = true
 			}
 			event.accepted = false
+		}
+
+		Connections {
+			target: ldBackend.doModel
+
+			function onDataChanged() {
+				Qt.callLater(tableID.setGoodColumnsWidth)
+			}
 		}
 	}
 }

@@ -74,5 +74,11 @@
         <file>icons/text_rotation_down.svg</file>
         <file>icons/upload_file.svg</file>
         <file>icons/upload.svg</file>
+
+        <file>icons/close_fullscreen.svg</file>
+        <file>icons/favorite_border.svg</file>
+        <file>icons/favorite.svg</file>
+        <file>icons/fullscreen_exit.svg</file>
+        <file>icons/fullscreen.svg</file>
     </qresource>
 </RCC>

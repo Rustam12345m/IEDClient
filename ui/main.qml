@@ -202,6 +202,18 @@ Window {
 								rootWindow.setActivePage(Globals.Page.START)
 							}
 						}
+						// Full-screen
+						ToolBarButton {
+							id: fullScreenBtn
+							icon: "qrc:/img/icons/fullscreen.svg"
+							prompt: "Full screen mode"
+							width: toolBar.btnHeight
+							height: toolBar.btnHeight
+
+							onSigClicked: function() {
+								toFullscreenMode()
+							}
+						}
 						// Disconnect
 						ToolBarButton {
 							icon: "qrc:/img/icons/call_end.svg"
@@ -442,16 +454,24 @@ Window {
 							}
 						}
 
-						RCB.Page {
+						DS.Page {
 							onVisibleChanged: {
 								if (visible) {
+									focus = true
+
+									setActivePanel(Globals.Panel.HIDE)
+								} else {
+									focus = false
 								}
 							}
 						}
 
-						DS.Page {
+						RCB.Page {
 							onVisibleChanged: {
 								if (visible) {
+									focus = true
+								} else {
+									focus = false
 								}
 							}
 						}
@@ -490,11 +510,9 @@ Window {
 							}
 							TabButton {
 								text: qsTr("DataSets")
-								enabled: false
 							}
 							TabButton {
 								text: qsTr("RCB")
-								enabled: false
 							}
 						}
 					}
@@ -536,10 +554,18 @@ Window {
 
 		Keys.onPressed: function(event) {
 			console.log("Window: Key pressed " + event.key)
+
+			// Update
 			if (event.key == Qt.Key_F5) {
 				console.log("Update data by F5")
 				updateActivePage()
-				even.accepted = true
+				event.accepted = true
+				return
+			}
+			// Fullscreen
+			if (event.key == Qt.Key_F11) {
+				toFullscreenMode()
+				event.accepted = true
 				return
 			}
 
@@ -586,6 +612,15 @@ Window {
 		var logsComponent = Qt.createComponent("global/EventsViewer.qml")
 		var logsWindow = logsComponent.createObject(rootWindow)
 		logsWindow.show()
+	}
+	function toFullscreenMode() {
+		if (rootWindow.visibility === Window.Windowed) {
+			rootWindow.visibility = Window.FullScreen;
+			fullScreenBtn.icon = "qrc:/img/icons/close_fullscreen.svg"
+		} else {
+			rootWindow.visibility = Window.Windowed;
+			fullScreenBtn.icon = "qrc:/img/icons/fullscreen.svg"
+		}
 	}
 
 	// History page list
@@ -695,17 +730,16 @@ Window {
 		}
 	}
 
+	// Slots from backend
 	function slotOnProgress(t_perc, t_msg) {
 		if (!globalProgressBar.isActive()) {
 			globalProgressBar.startLoad()
 		}
 		globalProgressBar.updateLoad(t_perc, t_msg)
 	}
-
 	function slotOnFinished() {
 		globalProgressBar.finishLoad()
 	}
-
 	function slotOnConnected() {
 		globalProgressBar.finishLoad()
 

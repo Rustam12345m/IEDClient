@@ -29,20 +29,38 @@
 
 namespace Core
 {
+	class DataSetElement
+	{
+	public:
+		DataSetElement(const QString &t_ref)
+			: m_ref{t_ref}
+		{}
+
+		const QString 	ref() const { return m_ref; }
+
+	private:
+		QString 		m_ref; // from device
+	};
+
 	/*
 	 * Representation a DataSet of LD
 	 * */
-	class Dataset : public QObject, public Item
+	class DataSet : public QObject, public Item
 	{
 		Q_OBJECT
 	public:
-		Dataset() : Item(nullptr, "")
+		DataSet(const QString &t_ref, const QString &t_name) : Item(nullptr, "")
 		{
+			m_ref = t_ref;
 		}
 
-		void	print() {}
+		const QString ref() const { return m_ref; }
 
 	signals:
 		void	sigUpdated();
+
+	private:
+		bool 	m_isDeletable;
+		QString	m_ref;
 	};
 }
