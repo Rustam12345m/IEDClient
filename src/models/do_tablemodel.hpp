@@ -54,7 +54,7 @@ public:
 
 public slots:
 	void 	slotLNSelected(int t_ld, int t_ln);
-	void 	slotDataUpdated();
+	void 	slotDataUpdated(bool t_done);
 
 private:
 	QSharedPointer<Core::IED_Object> m_ied;

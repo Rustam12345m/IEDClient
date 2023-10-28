@@ -47,7 +47,7 @@ namespace App
 		AppEventsModel*			getEventsModel() const { return m_eventsModel; }
 		LastConn_TableModel* 	getLastConn_Model() const { return m_lastConnModel; }
 
-		void 		slotNewIED() override;
+		void 		slotNewIED(bool t_done) override;
 
 	protected:
 		AppSettings				m_ini;

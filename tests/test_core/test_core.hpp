@@ -22,16 +22,18 @@
  * */
 
 #include <gtest/gtest.h>
-#include "core/data_model.hpp"
+#include "core/item_factory.hpp"
+#include "core/data_model_builder.hpp"
 
 namespace CoreTests
 {
-	class ModelTest : public ::testing::Test
+	/*
+	class ModelDataTest : public ::testing::Test
 	{
 	protected:
-		ModelTest() {
+		ModelDataTest() {
 		}
-		~ModelTest() override {
+		~ModelDataTest() override {
 		}
 
 		void SetUp() override {
@@ -39,10 +41,79 @@ namespace CoreTests
 		void TearDown() override {
 		}
 	};
+	TEST_F(ModelDataTest, SubTest1) {
+	}
+	TEST_F(ModelDataTest, SubTest2) {
+	}
+	*/
 
-	TEST_F(ModelTest, SubTest1) {
+	TEST(DataModelBuilder, Simple) {
+		Core::DataModelBuilder builder;
+
+		builder.createLD("IEDNameA_LD_1")
+					.createLN("LLN0")
+						.createDO("Mod")
+						.createDO("Beh")
+						.createDO("Health");
+
+		auto model = builder.build();
+
+		ASSERT_EQ(model->name(), "IEDName");
 	}
 
-	TEST_F(ModelTest, SubTest2) {
+	TEST(DataModelBuilder, Simple2) {
+		Core::DataModelBuilder builder;
+
+		builder.createLD("IEDNameA_LD_1")
+					.createLN("LLN0")
+						.createDO("Mod")
+						.createDO("Beh")
+						.createDO("Health")
+					.createLN("LPHD1")
+						.createDO("Mod")
+						.createDO("Beh")
+						.createDO("Health")
+				.createLD("IEDNameB_LD_2")
+					.createLN("LLN0")
+						.createDO("Mod")
+						.createDO("Beh")
+						.createDO("Health")
+					.createLN("GGIO1")
+						.createDO("AnIn1")
+							.createSDA(builder.lastDO(), "mag")
+								.createSDA(builder.lastDA(), "f")
+						.createDO("Ind1")
+							.createSDA(builder.lastDO(), "stVal");
+
+		auto model = builder.build();
+
+		ASSERT_EQ(model->name(), "IEDName");
+	}
+
+	TEST(DataModel, DataModel) {
+		auto model = Core::ItemFactory::createModel("NoName").staticCast<Core::DataModel>();
+
+		auto ld1 = Core::ItemFactory::createLD(model.get(), "IEDNameLD1");
+		auto ld2 = Core::ItemFactory::createLD(model.get(), "IEDNameLD2");
+
+		model->findModelName();
+
+		ASSERT_EQ(model->name(), "IEDName");
+	}
+
+	TEST(DataModel, LogicalDevices) {
+
+	}
+
+	TEST(DataModel, LogicalNodes) {
+		
+	}
+
+	TEST(DataModel, DataObjects) {
+		
+	}
+
+	TEST(DataModel, DataSets) {
+		
 	}
 }

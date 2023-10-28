@@ -40,10 +40,10 @@ namespace App
 		~FS_Backend() = default;
 
 		// Properties for QML
-		Q_PROPERTY(FilesTableModel* 	filesModel 	READ getModel 		CONSTANT)
+		Q_PROPERTY(FS_TableModel* 	filesModel 	READ getModel 		CONSTANT)
 		Q_PROPERTY(QAbstractItemModel* 	sortModel 	READ getSortedModel CONSTANT)
 
-		FilesTableModel*	getModel() const { return m_fsModel; }
+		FS_TableModel*	getModel() const { return m_fsModel; }
 		QAbstractItemModel* getSortedModel() const { return m_sortedModel; }
 
 		// API for QML
@@ -52,10 +52,10 @@ namespace App
 		Q_INVOKABLE void 	downloadFile(const QString &t_filename);
 		Q_INVOKABLE void 	removeFile(const QString &t_filename, int t_row);
 
-		void 				slotNewIED() override;
+		void 				slotNewIED(bool t_done) override;
 
 	protected:
-		FilesTableModel*	m_fsModel = nullptr;
+		FS_TableModel*	m_fsModel = nullptr;
 		SortProxyModel* 	m_sortedModel = nullptr;
 	};
 }

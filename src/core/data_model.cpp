@@ -27,32 +27,67 @@
 
 namespace Core
 {
-	DataModel::~DataModel()
+	namespace
 	{
+		void 	printTree(QString t_prefix, QSharedPointer<Item> t_item)
+		{
+			auto &nodeList = t_item->getChildList();
+			for (auto node : nodeList) {
+				qDebug().noquote() << t_prefix << *node;
+
+				printTree(t_prefix + "  ", node);
+			}
+		}
 	}
 
-	void DataModel::printTree()
+
+	void DataModel::findModelName()
+	{
+		if (m_child.isEmpty()) {
+			return;
+		}
+
+		QList<QString> ldNames;
+		int minSize = 0;
+		for (size_t i=0;i<m_child.size();i++) {
+			QString name = m_child[i]->name();
+			if (name.size() > minSize) {
+				minSize = 0;
+			}
+			ldNames.push_back(name);
+		}
+
+		int inx = 0;
+		for (size_t i=0;i<minSize;i++) {
+			bool eq = true;
+			for (size_t j=0;j<ldNames.size();j++) {
+				
+			}
+		}
+	}
+
+	ptrLN DataModel::getLogicalNode(int t_ld, int t_ln)
+	{
+		auto ld = getChild<Core::LogicalDevice>(t_ld);
+		if (ld) {
+			return ld->getChild<Core::LogicalNode>(t_ln);
+		}
+		return nullptr;
+	}
+
+	ptrLD DataModel::getLogicalDevice(int t_ld)
+	{
+		return getChild<Core::LogicalDevice>(t_ld);
+	}
+
+	void DataModel::print()
 	{
 		qDebug() << "IED: " << m_name;
 
-		for (size_t i=0;i<m_child.size();i++) {
-			qDebug() << "  LD: " << m_child[i]->name();
-
-			auto &lnList = m_child[i]->getChildList();
-			for (size_t j=0;j<lnList.size();j++) {
-				qDebug() << "    LN: " << lnList[j]->name();
-
-				auto &doList = lnList[j]->getChildList();
-				for (size_t k=0;k<doList.size();k++) {
-					qDebug() << "      DO: " << doList[k]->name();
-
-					for (size_t z=0;z<doList[k]->getChildCount();z++) {
-						auto daAttr = doList[k]->getChild<DataAttribute>(z);
-
-						qDebug() << "        DA: " << daAttr->name() << ", FC = " << daAttr->fc();
-					}
-				}
-			}
+		auto &ldList = m_child;
+		for (auto ld : ldList) {
+			qDebug() << "  LD: " << *ld;
+			printTree("    ", ld);
 		}
 	}
 }

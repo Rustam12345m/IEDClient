@@ -27,5 +27,7 @@ namespace Core
 {
 	IED_Object::IED_Object(QObject *t_parent) : QObject(t_parent)
 	{
+		setModel(QSharedPointer<Core::DataModel>::create(""));
+		setFSModel(QSharedPointer<Core::FS_Model>::create());
 	}
 }

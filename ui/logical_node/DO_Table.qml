@@ -31,6 +31,7 @@ import "qrc:/global/"
 FocusScope {
 	readonly property int defDelegateHeight: 30
 	signal sigLeftOrRightKey()
+	signal sigForceFocus()
 
 	HorizontalHeaderView {
 		id: headerID
@@ -152,78 +153,31 @@ FocusScope {
 			return calcColumnsWidth(t_column)
 		}
 
+		function setSelectedRow(row) {
+			let idx = tableID.model.index(row, 0);
+			tableID.selectionModel.setCurrentIndex(idx, ItemSelectionModel.Clear
+														| ItemSelectionModel.Select
+														| ItemSelectionModel.Rows);
+		}
+
 		selectionBehavior: TableView.SelectRows
 		selectionModel: ItemSelectionModel {
 			model: tableID.model
+
+			onCurrentChanged: {
+			}
 		}
 
-		delegate: DelegateChooser {
-			// Name
-			DelegateChoice {
-				column: 0
+		delegate: TextDelegate {
+			delegateHeight: defDelegateHeight
+			selected: (tableID.currentRow == row)
 
-				delegate: TextDelegate {
-					delegateHeight: defDelegateHeight
-					selected: (tableID.currentRow == row)
+			textAlign: (column == 0) ? Text.AlignLeft : Text.AlignHCenter
+			text: model.display
 
-					textAlign: Text.AlignLeft
-					text: model.display
-				}
-			}
-			// FC
-			DelegateChoice {
-				column: 1
-
-				delegate: TextDelegate {
-					delegateHeight: defDelegateHeight
-					selected: (tableID.currentRow == row)
-
-					text: model.display
-				}
-			}
-			// Value
-			DelegateChoice {
-				column: 2
-
-				delegate: TextDelegate {
-					delegateHeight: defDelegateHeight
-					selected: (tableID.currentRow == row)
-
-					text: model.display
-				}
-			}
-			// Quality
-			DelegateChoice {
-				column: 3
-
-				delegate: TextDelegate {
-					delegateHeight: defDelegateHeight
-					selected: (tableID.currentRow == row)
-
-					text: model.display
-				}
-			}
-			// Timestamp
-			DelegateChoice {
-				column: 4
-
-				delegate: TextDelegate {
-					delegateHeight: defDelegateHeight
-					selected: (tableID.currentRow == row)
-
-					text: model.display
-				}
-			}
-			// Description
-			DelegateChoice {
-				column: 5
-
-				delegate: TextDelegate {
-					delegateHeight: defDelegateHeight
-					selected: (tableID.currentRow == row)
-
-					text: model.display
-				}
+			onSigClick: function(row, col) {
+				tableID.setSelectedRow(row)
+				sigForceFocus()
 			}
 		}
 

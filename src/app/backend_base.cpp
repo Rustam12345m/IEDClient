@@ -25,8 +25,8 @@
 
 void BackendBase::putCmdToQueue(Core::Cmd::ptrCMD t_cmd)
 {
-	connect(t_cmd.get(), SIGNAL(sigProgress(int,QString)), this, SLOT(slotCmdProcess(int,QString)));
-	connect(t_cmd.get(), SIGNAL(sigFinished()), this, SLOT(slotCmdFinished()));
+	connect(t_cmd.get(), &Core::Cmd::IED_BaseCommand::sigProgress, this, &BackendBase::slotCmdProcess);
+	connect(t_cmd.get(), &Core::Cmd::IED_BaseCommand::sigFinished, this, &BackendBase::slotCmdFinished);
 
 	m_con.m_cmdQueue->putCommand(t_cmd);
 }
@@ -36,11 +36,11 @@ void BackendBase::slotCmdProcess(int t_proc, QString t_msg)
 	emit sigProgress(t_proc, t_msg);
 }
 
-void BackendBase::slotCmdFinished()
+void BackendBase::slotCmdFinished(bool t_done)
 {
-	emit sigFinished();
+	emit sigFinished(t_done);
 }
 
-void BackendBase::slotNewIED()
+void BackendBase::slotNewIED(bool t_done)
 {
 }

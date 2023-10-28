@@ -24,25 +24,22 @@
 #pragma once
 
 #include "base_command.hpp"
-#include "core/fs_data.hpp"
+#include "core/fs_model.hpp"
 
 namespace Core::Cmd
 {
 	class GetFileList : public IED_BaseCommand
 	{
 		Q_OBJECT
-		QString			m_path;
-		Core::FS_Data&	m_fsTree;
-
 	public:
-		GetFileList(Core::FS_Data &t_tree, const QString &t_path)
+		GetFileList(Core::FS_Model &t_tree, const QString &t_path)
 			: IED_BaseCommand(IED_CMD::GET_FILELIST),
-			  m_fsTree(t_tree), m_path{t_path} {}
+			  m_fsModel(t_tree), m_path{t_path} {}
 		~GetFileList() {}
 
 		void		execute(LibInterface &t_con) override;
 
-		static QSharedPointer<GetFileList> create(Core::FS_Data &t_tree, const QString &t_path) {
+		static QSharedPointer<GetFileList> create(Core::FS_Model &t_tree, const QString &t_path) {
 			return QSharedPointer<GetFileList>::create(t_tree, t_path);
 		}
 		/*
@@ -51,5 +48,9 @@ namespace Core::Cmd
 			return QSharedPointer<GetFileList>::create(std::forward<Args>(args)...);
 		}
 		*/
+
+	private:
+		QString			m_path;
+		Core::FS_Model&	m_fsModel;
 	};
 }

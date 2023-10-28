@@ -23,35 +23,43 @@
 
 #pragma once
 
-#include <QObject>
-
-#include "data_model.hpp"
-#include "fs_model.hpp"
+#include "item.hpp"
 
 namespace Core
 {
-	class IED_Object : public QObject
+	/*
+	 * Representation of Sub-Attribute of Data Attribute
+	 * simpleIOGenericIO/GGIO1.SPCSO1.stVal
+	 * simpleIOGenericIO/GGIO1.AnIn1.mag.f
+	 *
+	 * SubAttr: f
+	 * DA: stVal, mag
+	 * DO: SPCSO1, AnIn1
+	 * LN: GGIO1
+	 * */
+	class SubAttribute: public Item
 	{
-		Q_OBJECT
 	public:
-		IED_Object(QObject *t_parent=nullptr);
-		~IED_Object() = default;
-
-		Core::DataModel&	model() { return *m_model; }
-		Core::FS_Model&		fs() { return *m_fsModel; }
-
-		void setModel(QSharedPointer<DataModel> t_model) {
-			m_model = t_model;
-		}
-		void setFSModel(QSharedPointer<FS_Model> t_model) {
-			m_fsModel = t_model;
+		SubAttribute(Item *t_parent, const QString &t_name)
+			: Item(t_parent, t_name)
+		{
+			m_delimetr = "."; // Between DAName and SAName
 		}
 
-	signals:
+		QString		value() const {
+			return m_value;
+		}
+		void 		setValue(const QString &t_value) {
+			m_value = t_value;
+		}
+	
+	protected:
+		void 	debugOutput(QDebug &t_debug) const {
+			t_debug << m_name << " = " << m_value;
+		}
 
 	private:
-		QSharedPointer<Core::DataModel>		m_model;
-		QSharedPointer<Core::FS_Model>		m_fsModel;
+		QString		m_value;
 	};
-	typedef QSharedPointer<Core::IED_Object>	ptrIED_Object;
+	typedef QSharedPointer<SubAttribute>	ptrSDA;
 }

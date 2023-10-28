@@ -25,22 +25,19 @@
 
 #include <memory>
 
-#include "lib_interface.hpp"
+#include "cmd/lib_interface.hpp"
 
 // Forward declaration
 struct sIedConnection;
 
-namespace Core::Cmd
+namespace Core::Lib
 {
 	/*
 	 * This class is Adapter for libiec61850 API
 	 * */
-	class Lib61850 : public LibInterface
+	class Lib61850 : public QObject, public Cmd::LibInterface
 	{
-	private:
-		// libiec61850 stuff
-		sIedConnection* m_libConn = nullptr;
-
+		Q_OBJECT
 	public:
 		Lib61850() {}
 		~Lib61850() override {}
@@ -54,18 +51,25 @@ namespace Core::Cmd
 						const QString &t_name, const QString &t_pass) override;
 		void	disconnect() override;
 
-		int		getLD_List(Core::DataModel &t_model) override;
-		int		getLN_PinList(Core::ptrLN t_node) override;
-		int 	getDS_List(Core::DataModel &t_model) override;
-		int 	getRCB_List(Core::DataModel &t_model) override;
+		int 	fetchDataModel(Core::DataModelBuilder &t_builder) override;
+	private:
+		int 	fetchLN_DO(Core::DataModelBuilder &t_builder);
+		int 	fetchLN_DS(Core::DataModelBuilder &t_builder);
+		int 	fetchLN_RCB(Core::DataModelBuilder &t_builder);
 
+	public:
 		int		updateLN_PinValues(Core::ptrLN t_node) override;
 		int		updateDS_PinValues(Core::ptrLN t_node) override;
 
 		int		getFS_FileList(Core::DirOn &t_dir) override;
+		void 	downloadFile(const QString &t_filename) override;
 		int 	removeFile(const QString &t_filename) override;
 
-		void 	downloadFile(const QString &t_filename) override;
+	signals:
+		void 	sigFoundNode(const QString t_path);
+
+	private:
+		// libiec61850 stuff
+		sIedConnection* m_libConn = nullptr;
 	};
-	typedef QSharedPointer< Lib61850 >	ptrIED_Adapter;
 }

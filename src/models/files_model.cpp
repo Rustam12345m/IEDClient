@@ -36,13 +36,13 @@ namespace {
 	}
 }
 
-FilesTableModel::FilesTableModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied)
+FS_TableModel::FS_TableModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied)
 	: QAbstractTableModel(t_parent), m_ied(t_ied)
 {
 	connect(&m_ied->fs(), SIGNAL(sigFS_Updated()), this, SLOT(slotDataUpdated()));
 }
 
-void FilesTableModel::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
+void FS_TableModel::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
 {
 	beginResetModel();
 	m_ied = t_ied;
@@ -50,27 +50,27 @@ void FilesTableModel::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
 	endResetModel();
 }
 
-int FilesTableModel::rowCount(const QModelIndex &t_parent) const
+int FS_TableModel::rowCount(const QModelIndex &t_parent) const
 {
 	return m_ied->fs().m_dir.m_file.size();
 }
 
-int FilesTableModel::columnCount(const QModelIndex &t_parent) const
+int FS_TableModel::columnCount(const QModelIndex &t_parent) const
 {
 	return FS_COLUMN_COUNT;
 }
 
-QHash<int, QByteArray> FilesTableModel::roleNames() const
+QHash<int, QByteArray> FS_TableModel::roleNames() const
 {
 	return { { Qt::DisplayRole, "display"}, { ROLE_SORT_VALUE, "sort_value" } };
 }
 
-Qt::ItemFlags FilesTableModel::flags(const QModelIndex &t_index) const
+Qt::ItemFlags FS_TableModel::flags(const QModelIndex &t_index) const
 {
 	return QAbstractTableModel::flags(t_index) | Qt::ItemIsSelectable;
 }
 
-QVariant FilesTableModel::headerData(int t_column, Qt::Orientation t_orientation, int t_role) const
+QVariant FS_TableModel::headerData(int t_column, Qt::Orientation t_orientation, int t_role) const
 {
 	if (t_orientation != Qt::Horizontal) {
 		return QVariant();
@@ -96,7 +96,7 @@ QVariant FilesTableModel::headerData(int t_column, Qt::Orientation t_orientation
 	return QVariant("");
 }
 
-QVariant FilesTableModel::data(const QModelIndex &t_index, int t_role) const
+QVariant FS_TableModel::data(const QModelIndex &t_index, int t_role) const
 {
 	//qDebug() << "FS: Data " << t_index.column() << " role = " << t_role;
 
@@ -145,7 +145,7 @@ QVariant FilesTableModel::data(const QModelIndex &t_index, int t_role) const
 	return QVariant(" - ");
 }
 
-void FilesTableModel::slotRemoveFile(int t_row)
+void FS_TableModel::slotRemoveFile(int t_row)
 {
 	if (t_row < 0 || t_row >= m_ied->fs().getCount()) {
 		return;
@@ -159,7 +159,7 @@ void FilesTableModel::slotRemoveFile(int t_row)
 	endRemoveRows();
 }
 
-void FilesTableModel::slotDataUpdated()
+void FS_TableModel::slotDataUpdated()
 {
 	beginResetModel();
 	endResetModel();

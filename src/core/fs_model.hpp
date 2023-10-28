@@ -29,7 +29,7 @@
 
 #include <stdint.h>
 
-class FilesTableModel;
+class FS_TableModel;
 
 namespace Core
 {
@@ -57,7 +57,7 @@ namespace Core
 		uint32_t 	m_size = 0;
 		uint64_t 	m_mts = 0; // last modified ts
 
-		friend class ::FilesTableModel;
+		friend class ::FS_TableModel;
 	};
 
 	class DirOn
@@ -96,14 +96,14 @@ namespace Core
 		QString 		m_name;
 		QList<FileOn> 	m_file;
 
-		friend class ::FilesTableModel;
+		friend class ::FS_TableModel;
 	};
 
-	class FS_Data : public QObject
+	class FS_Model : public QObject
 	{
 		Q_OBJECT
 	public:
-		FS_Data(QObject *t_parent = nullptr) : QObject(t_parent) {}
+		FS_Model(QObject *t_parent = nullptr) : QObject(t_parent) {}
 
 		void put(const DirOn &t_dir)
 		{
@@ -125,8 +125,8 @@ namespace Core
 		void sigFS_Updated();
 
 	private:
-		DirOn 			m_dir;
+		DirOn 		m_dir;
 
-		friend class ::FilesTableModel;
+		friend class ::FS_TableModel;
 	};
 }

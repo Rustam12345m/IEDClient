@@ -41,14 +41,18 @@ class LD_PropertyModel : public QAbstractListModel
 	};
 	struct LD_Property
 	{
-		QString		section; // LLN0 or LPHD
-		QString 	name; // DO name
+		QString		node; // LLN0 or LPHD
+		QString 	obj; // DO name
+		QString 	attr; // DA name
 
-		LD_Property(const QString t_sect, const QString t_name) : section{t_sect}, name{t_name} {}
+		LD_Property(const QString &t_node, const QString &t_obj, const QString &t_attr)
+			: node{t_node}, obj{t_obj}, attr{t_attr} {}
 	};
 
 public:
-	explicit LD_PropertyModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
+	LD_PropertyModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
+
+	void 	setNewIED(QSharedPointer<Core::IED_Object> t_ied);
 
 	QHash<int, QByteArray> roleNames() const override;
 	int rowCount(const QModelIndex &t_index = QModelIndex()) const override;

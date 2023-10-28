@@ -24,6 +24,8 @@
 #pragma once
 
 #include "data_object.hpp"
+#include "dataset.hpp"
+#include "report_block.hpp"
 #include "ln_flat_state.hpp"
 
 namespace Core

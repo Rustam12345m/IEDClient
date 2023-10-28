@@ -24,8 +24,6 @@
 #pragma once
 
 #include "logical_node.hpp"
-#include "dataset.hpp"
-#include "report_block.hpp"
 
 namespace Core
 {
@@ -50,6 +48,10 @@ namespace Core
 			else if (name.contains("LPHD")) {
 				m_lphd = t_node;
 			}
+		}
+
+		QString 	getAttrValue(const QString &t_ln, const QString &t_do, const QString &t_da) {
+			return "A-B-C";
 		}
 
 	protected:

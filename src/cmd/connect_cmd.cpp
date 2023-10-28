@@ -22,7 +22,7 @@
  * */
 
 #include "connect_cmd.hpp"
-#include "core/data_model.hpp"
+#include "core/data_model_builder.hpp"
 
 #include <QThread>
 #include <QDebug>
@@ -31,50 +31,37 @@ namespace Core::Cmd
 {
 	void ConnectCmd::execute(LibInterface &t_con)
 	{
-		emit sigProgress(0, QString("Send connection request to %1:%2").arg(m_ip).arg(m_port));
+		for (int i=0;i<3;i++) {
+			emit sigProgress(0, QString("Connecting to %1:%2. Attempt (%3 / 3)").arg(m_ip).arg(m_port).arg(i + 1));
 
-		if (t_con.connect(m_ip, m_port, m_tls, m_user, m_password)) {
-			qDebug() << QString("Connected to %1:%2").arg(m_ip).arg(m_port);
+			if (t_con.connect(m_ip, m_port, m_tls, m_user, m_password)) {
+				emit sigProgress(10, QString("Successfully connected to %1:%2").arg(m_ip).arg(m_port));
+				// QThread::sleep(1);
 
-			emit sigProgress(25, QString("Successfully connected to %1:%2").arg(m_ip).arg(m_port));
-			//QThread::sleep(1); // Debug
+				emit sigProgress(20, QString("Fetch data model from %1:%2").arg(m_ip).arg(m_port));
+				// QThread::sleep(1);
 
-			// Get LD & LN list
-			int retval = t_con.getLD_List(m_tree);
-			if (retval == 0) {
+				// New Data Model
+				Core::DataModelBuilder builder;
+				t_con.fetchDataModel(builder);
+				m_ied->setModel(builder.build());
 
-				for (size_t i=0;i<m_tree.getChildCount();i++) {
-					auto ld = m_tree.getChild<LogicalDevice>(i);
+				// Debug
+				m_ied->model().print();
 
-					emit sigProgress(50, QString("Received %1 for LD: %2").arg(ld->getChildCount()).arg(ld->name()));
-
-					for (size_t j=0;j<ld->getChildCount();j++) {
-						auto ln = ld->getChild<LogicalNode>(j);
-
-						// Get LN's DataObjects
-						retval = t_con.getLN_PinList(ln);
-						if (retval == 0) {
-							// Tables
-							auto doTable = LN_FlatBuilder::create(ln);
-							ln->setDO_Table(doTable);
-						}
-
-						emit sigProgress(50, QString("Found %1 data objects for %2/%3")
-												.arg(ln->getChildCount()).arg(ld->name(), ln->name()));
-					}
-				}
+				emit sigProgress(100, QString("Data model and other stuff were received from %1:%2").arg(m_ip).arg(m_port));
+				emit sigFinished(true);
+				return;
+			} else {
+				qDebug() << QString("Cannot connect to %1:%2").arg(m_ip).arg(m_port);
+				QThread::sleep(3);
 			}
-			m_tree.update();
-
-			// Debug
-			//m_tree.printTree();
-
-			emit sigProgress(100, QString("Successfully connected to %1:%2").arg(m_ip).arg(m_port));
-		} else {
-			qDebug() << QString("Cannot connect to %1:%2").arg(m_ip).arg(m_port);
-
-			emit sigProgress(100, QString("Cannot connect to %1:%2").arg(m_ip).arg(m_port));
 		}
-		emit sigFinished();
+		emit sigFinished(false);
+	}
+
+	void ConnectCmd::slotMsgProgress(const QString &t_msg)
+	{
+		emit sigProgress(77, t_msg);
 	}
 }

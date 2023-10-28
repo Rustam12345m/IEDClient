@@ -70,13 +70,15 @@ Window {
 		TableView {
 			id: tableID
 
-			interactive: true
-			boundsBehavior: Flickable.StopAtBounds
 
 			anchors.left: parent.left
 			anchors.top: header.bottom
 			anchors.right: parent.right
 			anchors.bottom: parent.bottom
+
+			clip: true
+			interactive: true
+			boundsBehavior: Flickable.StopAtBounds
 
 			model: comBackend.eventsModel
 

@@ -11,6 +11,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR 	ON)
 configure_file(builder_information.hpp.in ${CMAKE_BINARY_DIR}/include/builder_information.hpp)
 
 include_directories(
+#	${CMAKE_SOURCE_DIR}/3rdparty/googletest/googletest/include/
 	${CMAKE_SOURCE_DIR}/src/
 	${CMAKE_BINARY_DIR}/include/
 )

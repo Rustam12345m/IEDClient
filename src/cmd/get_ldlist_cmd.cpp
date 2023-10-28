@@ -27,6 +27,6 @@ namespace Core::Cmd
 {
 	void UpdateLDList_Cmd::execute(LibInterface &t_con)
 	{
-		emit sigFinished();
+		emit sigFinished(false);
 	}
 }

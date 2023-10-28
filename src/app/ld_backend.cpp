@@ -65,9 +65,11 @@ namespace App
 		return "LN status text";
 	}
 
-	void LD_Backend::slotNewIED()
+	void LD_Backend::slotNewIED(bool t_done)
 	{
 		m_ldModel->setNewIED(m_con.m_ied);
+		m_ldPropModel->setNewIED(m_con.m_ied);
+
 		m_lnModel->setNewIED(m_con.m_ied);
 		m_doModel->setNewIED(m_con.m_ied);
 	}

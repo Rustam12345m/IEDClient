@@ -29,17 +29,11 @@
 
 namespace Core
 {
-	class DataSetElement
+	class DataSetElement : public Item
 	{
 	public:
-		DataSetElement(const QString &t_ref)
-			: m_ref{t_ref}
+		DataSetElement(Item *t_parent, const QString &t_name) : Item(t_parent, t_name)
 		{}
-
-		const QString 	ref() const { return m_ref; }
-
-	private:
-		QString 		m_ref; // from device
 	};
 
 	/*
@@ -49,7 +43,7 @@ namespace Core
 	{
 		Q_OBJECT
 	public:
-		DataSet(const QString &t_ref, const QString &t_name) : Item(nullptr, "")
+		DataSet(Item *t_parent, const QString &t_name, const QString &t_ref) : Item(t_parent, t_name)
 		{
 			m_ref = t_ref;
 		}

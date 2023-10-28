@@ -25,7 +25,7 @@
 
 #include "core/ied_object.hpp"
 #include "cmd/cmd_thread.hpp"
-#include "cmd/lib61850_adapter.hpp"
+#include "libiec61850/lib61850.hpp"
 
 class ConnectionObject
 {
@@ -40,7 +40,7 @@ public:
 		m_ied.clear();
 
 		m_ied = QSharedPointer<Core::IED_Object>::create();
-		m_lib = QSharedPointer<Core::Cmd::Lib61850>::create();
+		m_lib = QSharedPointer<Core::Lib::Lib61850>::create();
 		m_cmdQueue = QSharedPointer<Core::Cmd::CmdThread>::create(m_lib);
 	}
 
