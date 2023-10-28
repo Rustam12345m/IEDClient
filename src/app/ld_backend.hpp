@@ -62,7 +62,7 @@ namespace App
 		Q_INVOKABLE QString 	getLN_TextStatus();
 
 	public slots:
-		void 	slotNewIED() override;
+		void 	slotNewIED(bool t_done) override;
 
 	protected:
 		// Models for Tables in GUI

@@ -25,8 +25,7 @@
 
 #include <QString>
 
-#include "core/data_model.hpp"
-#include "core/fs_data.hpp"
+#include "core/data_model_builder.hpp"
 
 namespace Core::Cmd
 {
@@ -42,10 +41,7 @@ namespace Core::Cmd
 								const QString &t_name, const QString &t_pass) = 0;
 		virtual void	disconnect() = 0;
 
-		virtual int		getLD_List(Core::DataModel &t_model) = 0;
-		virtual int		getLN_PinList(Core::ptrLN t_lnNode) = 0;
-		virtual int 	getDS_List(Core::DataModel &t_model) = 0;
-		virtual int 	getRCB_List(Core::DataModel &t_model) = 0;
+		virtual int 	fetchDataModel(Core::DataModelBuilder &t_builder) = 0;
 
 		virtual int		updateLN_PinValues(Core::ptrLN t_node) = 0;
 		virtual int		updateDS_PinValues(Core::ptrLN t_node) = 0;

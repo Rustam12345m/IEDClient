@@ -50,7 +50,7 @@ namespace App
 		m_con.reset();
 
 		auto cmd = Core::Cmd::ConnectCmd::create(t_ip, t_port, t_tls, t_name,
-												t_pass, m_con.m_ied->model());
+												t_pass, m_con.m_ied);
 
 		connect(cmd.get(), &Core::Cmd::ConnectCmd::sigFinished, &m_fsBackend, &BackendBase::slotNewIED);
 		connect(cmd.get(), &Core::Cmd::ConnectCmd::sigFinished, &m_ldBackend, &BackendBase::slotNewIED);

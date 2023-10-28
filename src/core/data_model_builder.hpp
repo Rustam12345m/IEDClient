@@ -23,35 +23,37 @@
 
 #pragma once
 
-#include <QObject>
-
-#include "data_model.hpp"
-#include "fs_model.hpp"
+#include "core/data_model.hpp"
+#include "core/fs_model.hpp"
 
 namespace Core
 {
-	class IED_Object : public QObject
+	class DataModelBuilder
 	{
-		Q_OBJECT
 	public:
-		IED_Object(QObject *t_parent=nullptr);
-		~IED_Object() = default;
+		DataModelBuilder();
+		~DataModelBuilder();
 
-		Core::DataModel&	model() { return *m_model; }
-		Core::FS_Model&		fs() { return *m_fsModel; }
+		DataModelBuilder& 	createLD(const QString &t_name);
+		DataModelBuilder& 	createLN(const QString &t_name);
+		DataModelBuilder& 	createDO(const QString &t_name);
+		DataModelBuilder& 	createDA(const QString &t_name, const QString &t_fc, int t_fcNum);
+		DataModelBuilder& 	createSDA(QSharedPointer<Item> t_parent, const QString &t_name);
 
-		void setModel(QSharedPointer<DataModel> t_model) {
-			m_model = t_model;
-		}
-		void setFSModel(QSharedPointer<FS_Model> t_model) {
-			m_fsModel = t_model;
-		}
+		auto 	lastLD() const { return m_lastLD; }
+		auto 	lastLN() const { return m_lastLN; }
+		auto 	lastDO() const { return m_lastDO; }
+		auto 	lastDA() const { return m_lastDA; }
+		auto 	lastSDA() const { return m_lastSDA; }
 
-	signals:
+		ptrDataModel	build();
 
 	private:
-		QSharedPointer<Core::DataModel>		m_model;
-		QSharedPointer<Core::FS_Model>		m_fsModel;
+		ptrDataModel	m_model;
+		ptrLD 			m_lastLD;
+		ptrLN 			m_lastLN;
+		ptrDO 			m_lastDO;
+		ptrDA 			m_lastDA;
+		ptrSDA 			m_lastSDA;
 	};
-	typedef QSharedPointer<Core::IED_Object>	ptrIED_Object;
 }

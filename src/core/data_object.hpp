@@ -23,7 +23,6 @@
 
 #pragma once
 
-#include "item.hpp"
 #include "data_attribute.hpp"
 
 namespace Core

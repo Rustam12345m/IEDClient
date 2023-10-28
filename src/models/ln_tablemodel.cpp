@@ -84,13 +84,16 @@ QVariant LN_TableModel::data(const QModelIndex &t_index, int t_role) const
 			return QVariant(ln->name());
 		}
 		case ModeColumn: {
-			return QVariant("M");
+			// return QVariant("M");
+			return 1;
 		}
 		case BehColumn: {
-			return QVariant("B");
+			// return QVariant("B");
+			return 2;
 		}
 		case HealthColumn: {
-			return QVariant("H");
+			// return QVariant("H");
+			return 3;
 		}
 		}
 	}

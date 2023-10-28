@@ -1,0 +1,14 @@
+
+0.1
+	- Download / Remove files
+	- View Datasets
+	- View RCB
+	- View DO table and DO Tree for the LN
+
+0.2
+	- Write DataAttributes
+	- Control DO: Direct / SelectBeforeOperate / ?
+	- Control RCB
+
+0.3
+	- 

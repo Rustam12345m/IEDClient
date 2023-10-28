@@ -25,12 +25,16 @@ import QtQuick
 import QtQuick.Controls
 import Qt.labs.qmlmodels
 
+import "qrc:/global/"
+
 // Table of all Logical Nodes for one Logical Device
 FocusScope {
-	readonly property int delegateHeight: 30
-	readonly property int delegateWidth: 60
+	readonly property int defDelegateHeight: 30
+	readonly property int defDelegateWidth: 60
 
 	signal sigLeftOrRightKey()
+	signal sigForceFocus()
+	signal sigSelectedNewLN()
 
 	HorizontalHeaderView {
 		id: headerID
@@ -48,8 +52,8 @@ FocusScope {
 		delegate: Rectangle {
 			property var paramModel: model
 
-			implicitWidth: Math.max(textArea.implicitWidth + 10, delegateWidth)
-			implicitHeight: delegateHeight
+			implicitWidth: Math.max(textArea.implicitWidth + 10, defDelegateWidth)
+			implicitHeight: defDelegateHeight
 
 			color: "#f6f6f6"
 			border.color: "#e4e4e4"
@@ -103,19 +107,20 @@ FocusScope {
 		onCurrentRowChanged: {
 			//console.log("LN_TableView: ln = " + tableID.currentRow)
 			tableID.model.setSelectedLN(tableID.currentRow)
+			sigSelectedNewLN()
 		}
 
 		columnWidthProvider: function(column) {
 			switch (column) {
 			case 0: {
-				let res = width - 3 * delegateWidth
+				let res = width - 3 * defDelegateWidth
 				return res
 			}
 			default: {
 				let v1 = header.implicitColumnWidth(column)
 				let v2 = implicitColumnWidth(column)
 				let res = (v1 > v2) ? v1 : v2
-				return Math.max(res, delegateWidth)
+				return Math.max(res, defDelegateWidth)
 			}
 			}
 		}
@@ -128,119 +133,71 @@ FocusScope {
 		}
 
 		delegate: DelegateChooser {
-			// Name column
+			// Name
 			DelegateChoice {
 				column: 0
 
-				delegate: Item {
-					property bool selected: (tableID.currentRow == row)
+				delegate: TextDelegate {
+					delegateHeight: defDelegateHeight
+					selected: (tableID.currentRow == row)
 
-					implicitWidth: textName.implicitWidth + 10
-					implicitHeight: delegateHeight
+					textAlign: Text.AlignHCenter
+					text: model.value
 
-					Rectangle {
-						color: (selected ? "lightgray" : "white")
-						anchors.fill: parent
-						border.color: (selected ? "black" : "lightgray")
-
-						Text {
-							id: textName
-							anchors.centerIn: parent
-							text: model.value
-						}
-						MouseArea {
-							anchors.fill: parent
-							acceptedButtons: Qt.LeftButton | Qt.RightButton
-
-							onClicked: tableID.setSelectedRow(row)
-						}
+					onSigClick: function(row, col) {
+						tableID.setSelectedRow(row)
+						sigForceFocus()
 					}
 				}
 			}
-
-			// Mode column
+			// Mode
 			DelegateChoice {
 				column: 1
 
-				delegate: Item {
-					property bool selected: (tableID.currentRow == row)
-					implicitWidth: delegateWidth
-					implicitHeight: delegateHeight
+				delegate: MBH_Delegate {
+					delegateHeight: defDelegateHeight
+					delegateWidth: defDelegateWidth
+					selected: (tableID.currentRow == row)
 
-					Rectangle {
-						color: "white"
-						anchors.fill: parent
-						border.color: (selected ? "black" : "lightgray")
+					value: model.value
 
-						Text {
-							id: textMode
-							anchors.centerIn: parent
-							text: model.value
-						}
-						MouseArea {
-							anchors.fill: parent
-							acceptedButtons: Qt.LeftButton | Qt.RightButton
-
-							onClicked: tableID.setSelectedRow(row)
-						}
+					onSigClick: function(row, col) {
+						tableID.setSelectedRow(row)
+						sigForceFocus()
 					}
 				}
 			}
-
-			// Beh column
+			// Beh
 			DelegateChoice {
 				column: 2
 
-				delegate: Item {
-					property bool selected: (tableID.currentRow == row)
-					implicitWidth: delegateWidth
-					implicitHeight: delegateHeight
+				delegate: MBH_Delegate {
+					delegateHeight: defDelegateHeight
+					delegateWidth: defDelegateWidth
+					selected: (tableID.currentRow == row)
 
-					Rectangle {
-						color: "white"
-						anchors.fill: parent
-						border.color: (selected ? "black" : "lightgray")
+					value: model.value
 
-						Text {
-							id: textBeh
-							anchors.centerIn: parent
-							text: model.value
-						}
-						MouseArea {
-							anchors.fill: parent
-							acceptedButtons: Qt.LeftButton | Qt.RightButton
-
-							onClicked: tableID.setSelectedRow(row)
-						}
+					onSigClick: function(row, col) {
+						tableID.setSelectedRow(row)
+						sigForceFocus()
 					}
 				}
 			}
-
-			// Health column
+			// Health
 			DelegateChoice {
 				column: 3
 
-				delegate: Item {
-					property bool selected: (tableID.currentRow == row)
-					implicitWidth: delegateWidth
-					implicitHeight: delegateHeight
+				delegate: MBH_Delegate {
+					delegateHeight: defDelegateHeight
+					delegateWidth: defDelegateWidth
+					selected: (tableID.currentRow == row)
 
-					Rectangle {
-						color: "white"
-						anchors.fill: parent
-						border.color: (selected ? "black" : "lightgray")
+					value: model.value
 
-						Text {
-							id: textHealth
-							anchors.centerIn: parent
-							text: model.value
-						}
-						MouseArea {
-							anchors.fill: parent
-							acceptedButtons: Qt.LeftButton | Qt.RightButton
-
-							onClicked: tableID.setSelectedRow(row)
-						}
+					onSigClick: function(row, col) {
+						tableID.setSelectedRow(row)
+						sigForceFocus()
 					}
 				}
 			}

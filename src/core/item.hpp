@@ -23,8 +23,9 @@
 
 #pragma once
 
-#include <QString>
+#include <QDebug>
 #include <QList>
+#include <QString>
 #include <QSharedPointer>
 
 namespace Core
@@ -44,6 +45,14 @@ namespace Core
 		Item*		parenItem() const {
 			return m_parent;
 		}
+		QString 	ref(Item *t_root=nullptr) {
+			// Make full reference to item in this model
+			QString path;
+			if (m_parent && (m_parent != t_root)) {
+				path = m_parent->ref(t_root) + m_delimetr;
+			}
+			return path + m_name;
+		}
 
 		auto&		getChildList() const {
 			return m_child;
@@ -60,22 +69,10 @@ namespace Core
 			return nullptr;
 		}
 		QSharedPointer< Item >	getChild(int t_inx) {
-			if ((t_inx >= 0) && (t_inx < m_child.size())) {
-				return m_child[t_inx];
-			}
-			return nullptr;
+			return Item::getChild<Item>(t_inx);
 		}
 
-		QString 	ref(Item *t_root=nullptr) {
-			// Make full reference to item in this model
-			QString path;
-			if (m_parent && (m_parent != t_root)) {
-				path = m_parent->ref(t_root) + m_delimetr;
-			}
-			return path + m_name;
-		}
-
-		virtual void		addChild(QSharedPointer< Item > t_child) {
+		virtual void			addChild(QSharedPointer< Item > t_child) {
 			m_child.push_back(t_child);
 		}
 
@@ -89,9 +86,20 @@ namespace Core
 		}
 
 	protected:
+		virtual void 	debugOutput(QDebug &t_debug) const {
+			t_debug.noquote() << m_name;
+		}
+
+	protected:
 		Item*						m_parent = nullptr;
 		QString						m_name;
 		QString 					m_delimetr = "/";
 		QList<QSharedPointer<Item>>	m_child; // list of children
+
+	public:
+		friend QDebug operator<<(QDebug t_debug, const Item &t_item) {
+			t_item.debugOutput(t_debug);
+			return t_debug;
+		}
 	};
 }

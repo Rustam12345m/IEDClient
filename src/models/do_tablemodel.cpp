@@ -159,7 +159,7 @@ void DO_TableModel::getSelectedLN(int &t_ld, int &t_ln)
 	t_ln = m_currentLN;
 }
 
-void DO_TableModel::slotDataUpdated()
+void DO_TableModel::slotDataUpdated(bool t_done)
 {
 	qDebug() << "DO_TableModel: slotDataUpdated";
 

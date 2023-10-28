@@ -30,7 +30,7 @@
  * This class represents the model for TableView which contains information
  * about files on the IED
  * */
-class FilesTableModel : public QAbstractTableModel
+class FS_TableModel : public QAbstractTableModel
 {
 	Q_OBJECT
 	enum Columns
@@ -48,8 +48,8 @@ private:
 	QSharedPointer<Core::IED_Object> m_ied;
 
 public:
-	FilesTableModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
-	~FilesTableModel() = default;
+	FS_TableModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
+	~FS_TableModel() = default;
 
 	void 		setNewIED(QSharedPointer<Core::IED_Object> t_ied);
 

@@ -106,10 +106,27 @@ Item {
 				setColumnWidth(i, width * iw[i] / sum)
 			}
 		}
+		function calcColumnsWidth(t_column) {
+			var iw = []
+			let sum = 0, i = 0
+			for (i=0;i<columns;i++) {
+				iw[i] = Math.max(headerID.implicitColumnWidth(i), implicitColumnWidth(i))
+				sum = sum + iw[i]
+			}
+			if (sum === 0) {
+				sum = 1
+			}
+			return (width * iw[t_column] / sum)
+		}
+		columnWidthProvider: function(t_column) {
+			return calcColumnsWidth(t_column)
+		}
 
-		onWidthChanged: function() {
-			tableID.forceLayout()
-			setGoodColumnsWidth()
+		function setSelectedRow(row) {
+			let idx = tableID.model.index(row, 0);
+			tableID.selectionModel.setCurrentIndex(idx, ItemSelectionModel.Clear
+														| ItemSelectionModel.Select
+														| ItemSelectionModel.Rows);
 		}
 
 		function getValue(row, col) {
@@ -122,6 +139,8 @@ Item {
 			text: model.display
 
 			onSigClick: function(row, col) {
+				tableID.setSelectedRow(row)
+
 				let ip = tableID.getValue(row, 1)
 				let port = tableID.getValue(row, 2)
 

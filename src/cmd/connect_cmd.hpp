@@ -24,6 +24,7 @@
 #pragma once
 
 #include "base_command.hpp"
+#include "core/ied_object.hpp"
 
 namespace Core::Cmd
 {
@@ -33,33 +34,34 @@ namespace Core::Cmd
 	class ConnectCmd : public IED_BaseCommand
 	{
 		Q_OBJECT
-
-		QString			m_ip;
-		unsigned		m_port;
-		bool			m_tls;
-		QString			m_user;
-		QString			m_password;
-		Core::DataModel&	m_tree;
-
 	public:
 		ConnectCmd(const QString &t_ip, unsigned t_port, bool t_tls,
 					const QString &t_user, const QString &t_pass,
-					DataModel &t_tree)
+					QSharedPointer<Core::IED_Object> t_ied)
 				: IED_BaseCommand(IED_CMD::CONNECT),
 				  m_ip(t_ip), m_port(t_port), m_tls(t_tls),
 				  m_user(t_user), m_password(t_pass),
-				  m_tree(t_tree)
+				  m_ied(t_ied)
 		{
 		}
 		~ConnectCmd() {}
 
 		void	execute(LibInterface &t_con) override;
 
-		// Create new command like Builder pattern
 		static QSharedPointer<ConnectCmd> create(const QString &t_ip, unsigned t_port, bool t_tls,
 												const QString &t_user, const QString &t_pass,
-												DataModel &t_tree) {
-			return QSharedPointer<ConnectCmd>::create(t_ip, t_port, t_tls, t_user, t_pass, t_tree);
+												ptrIED_Object t_ied) {
+			return QSharedPointer<ConnectCmd>::create(t_ip, t_port, t_tls, t_user, t_pass, t_ied);
 		}
+
+	private slots:
+		void 	slotMsgProgress(const QString &t_msg);
+
+	private:
+		QString			m_ip;
+		unsigned		m_port;
+		bool			m_tls;
+		QString			m_user, m_password;
+		QSharedPointer<Core::IED_Object>	m_ied;
 	};
 }

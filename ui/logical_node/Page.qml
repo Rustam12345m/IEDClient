@@ -67,6 +67,13 @@ FocusScope {
 					tableLN.focus = false
 					tableDO.focus = true
 				}
+				onSigForceFocus: function() {
+					tableLN.focus = true
+					tableDO.focus = false
+				}
+				onSigSelectedNewLN: function() {
+					ldBackend.updateDO_Table(tableDO.currentLDevice, tableDO.currentLNode)
+				}
 			}
 		}
 
@@ -86,6 +93,10 @@ FocusScope {
 					console.log("LN_Page: Activate LN_Table")
 					tableLN.focus = true
 					tableDO.focus = false
+				}
+				onSigForceFocus: function() {
+					tableLN.focus = false
+					tableDO.focus = true
 				}
 			}
 		}

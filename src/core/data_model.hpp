@@ -36,23 +36,18 @@ namespace Core
 	{
 		Q_OBJECT
 	public:
-		DataModel() : Item(nullptr, "") {
+		DataModel(const QString &t_name) : Item(nullptr, t_name)
+		{
 			m_delimetr = ""; // There isn't a delimetr because it is a top node
 		}
-		~DataModel();
+		~DataModel() {};
 
-		ptrLN 	getLogicalNode(int t_ld, int t_ln) {
-			auto ld = getChild<Core::LogicalDevice>(t_ld);
-			if (ld) {
-				return ld->getChild<Core::LogicalNode>(t_ln);
-			}
-			return nullptr;
-		}
-		ptrLD 	getLogicalDevice(int t_ld) {
-			return getChild<Core::LogicalDevice>(t_ld);
-		}
+		void 	findModelName();
 
-		void	printTree();
+		ptrLN 	getLogicalNode(int t_ld, int t_ln);
+		ptrLD 	getLogicalDevice(int t_ld);
+
+		void	print();
 		void	update() {
 			emit sigUpdated();
 		}
@@ -60,4 +55,5 @@ namespace Core
 	signals:
 		void	sigUpdated();
 	};
+	typedef QSharedPointer<DataModel>	ptrDataModel;
 }

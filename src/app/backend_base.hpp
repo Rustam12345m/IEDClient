@@ -42,12 +42,12 @@ protected:
 
 signals:
 	void	sigProgress(int t_perc, QString t_msg);
-	void	sigFinished();
+	void	sigFinished(bool t_done);
 
 public slots:
 	void			slotCmdProcess(int t_proc, QString t_msg);
-	void			slotCmdFinished();
-	virtual void 	slotNewIED();
+	void			slotCmdFinished(bool t_done);
+	virtual void 	slotNewIED(bool t_done);
 
 protected:
 	ConnectionObject& 	m_con;

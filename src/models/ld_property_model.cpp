@@ -26,17 +26,25 @@
 LD_PropertyModel::LD_PropertyModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied)
 	: QAbstractListModel(t_parent), m_ied{t_ied}
 {
-	m_property.append(LD_Property("LLN0", "vendor"));
-	m_property.append(LD_Property("LLN0", "swRev"));
-	m_property.append(LD_Property("LLN0", "d"));
-	m_property.append(LD_Property("LLN0", "configRev"));
-	m_property.append(LD_Property("LLN0", "ldNs"));
+	m_property.append(LD_Property("LLN0", "", "vendor"));
+	m_property.append(LD_Property("LLN0", "", "swRev"));
+	m_property.append(LD_Property("LLN0", "", "d"));
+	m_property.append(LD_Property("LLN0", "", "configRev"));
+	m_property.append(LD_Property("LLN0", "", "ldNs"));
 
-	m_property.append(LD_Property("LPHD1", "vendor"));
-	m_property.append(LD_Property("LPHD1", "hwRev"));
-	m_property.append(LD_Property("LPHD1", "swRev"));
-	m_property.append(LD_Property("LPHD1", "serNum"));
-	m_property.append(LD_Property("LPHD1", "model"));
+	m_property.append(LD_Property("LPHD1", "", "vendor"));
+	m_property.append(LD_Property("LPHD1", "", "hwRev"));
+	m_property.append(LD_Property("LPHD1", "", "swRev"));
+	m_property.append(LD_Property("LPHD1", "", "serNum"));
+	m_property.append(LD_Property("LPHD1", "", "model"));
+}
+
+void LD_PropertyModel::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
+{
+	beginResetModel();
+	m_ied = t_ied;
+	//connect(&m_ied->model(), SIGNAL(sigUpdated()), this, SLOT(slotDataUpdated()));
+	endResetModel();
 }
 
 QHash<int, QByteArray> LD_PropertyModel::roleNames() const
@@ -53,21 +61,24 @@ QVariant LD_PropertyModel::data(const QModelIndex &t_index, int t_role) const
 {
 	int row = t_index.row();
 	if (row < 0 || row >= m_property.size()) {
-		return QVariant();
+		return QVariant("");
 	}
 
 	switch (t_role) {
 	case SECTION_ROLE: {
-		return QVariant(m_property[row].section);
+		return QVariant(m_property[row].node);
 	}
 	case NAME_ROLE: {
-		return QVariant(m_property[row].name);
+		return QVariant(m_property[row].attr);
 	}
 	case VALUE_ROLE: {
-		return QVariant(QString("LD = %1; Row = %2").arg(m_currentLD).arg(row));
+		Core::ptrLD ld = m_ied->model().getLogicalDevice(m_currentLD);
+		if (ld) {
+			return ld->getAttrValue(m_property[row].node, m_property[row].obj, m_property[row].attr);
+		}
 	}
 	}
-	return QVariant();
+	return QVariant(" - ");
 }
 
 void LD_PropertyModel::slotLDSelected(int t_ld)

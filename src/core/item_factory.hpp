@@ -20,48 +20,37 @@
  *
  *  See COPYING file for the complete license text.
  * */
+#pragma once
 
 #include <QSharedPointer>
 
-#include "data_model.hpp"
-#include "logical_device.hpp"
-#include "logical_node.hpp"
-#include "data_object.hpp"
-
 namespace Core
 {
+	class Item; // forward
+
+	/*
+	 * Factory for all classes inherit from Item
+	 * */
 	class ItemFactory
 	{
 	public:
 		// Object Tree <- base node for IED Data Object model
-		static QSharedPointer<Item>		createTree() {
-			return QSharedPointer<DataModel>::create();
-		}
+		static QSharedPointer<Item>	createModel(const QString &t_name);
 
 		// Logical Device
-		static QSharedPointer<Item>		createLD(Item *t_parent, const QString &t_name) {
-			return QSharedPointer<LogicalDevice>::create(t_parent, t_name);
-		}
+		static QSharedPointer<Item>	createLD(Item *t_parent, const QString &t_name);
 
 		// Logical Node
-		static QSharedPointer<Item>		createLN(Item *t_parent, const QString &t_name) {
-			return QSharedPointer<LogicalNode>::create(t_parent, t_name);
-		}
+		static QSharedPointer<Item>	createLN(Item *t_parent, const QString &t_name);
 
 		// Data Object
-		static QSharedPointer<Item>		createDO(Item *t_parent, const QString &t_name) {
-			return QSharedPointer<DataObject>::create(t_parent, t_name);
-		}
+		static QSharedPointer<Item>	createDO(Item *t_parent, const QString &t_name);
 
 		// Data Attribute
-		static QSharedPointer<Item>		createDA(Item *t_parent, const QString &t_name,
-					  							const QString &t_fc, int t_fcNum) {
-			return QSharedPointer<DataAttribute>::create(t_parent, t_name, t_fc, t_fcNum);
-		}
+		static QSharedPointer<Item>	createDA(Item *t_parent, const QString &t_name,
+					  						const QString &t_fc, int t_fcNum);
 
 		// Sub Attribute
-		static QSharedPointer<Item>		createSA(Item *t_parent, const QString &t_name) {
-			return QSharedPointer<SubAttribute>::create(t_parent, t_name);
-		}
+		static QSharedPointer<Item>	createSA(Item *t_parent, const QString &t_name);
 	};
 }

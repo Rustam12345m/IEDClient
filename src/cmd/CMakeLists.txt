@@ -8,9 +8,6 @@ set(SOURCES
 	cmd_thread.hpp
 	cmd_thread.cpp
 
-	lib61850_adapter.hpp
-	lib61850_adapter.cpp
-
 	update_lnode_cmd.hpp
 	update_lnode_cmd.cpp
 

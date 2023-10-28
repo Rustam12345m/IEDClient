@@ -21,18 +21,19 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "lib61850_adapter.hpp"
-#include "core/item_factory.hpp"
+#include "lib61850.hpp"
 
 #include <string>
+
 #include <QDebug>
+#include <QDateTime>
 
 extern "C"
 {
 #include "iec61850_client.h"
 }
 
-namespace Core::Cmd
+namespace Core::Lib
 {
 	// static functions for this file
 	namespace
@@ -56,6 +57,7 @@ namespace Core::Cmd
 			return std::make_tuple(daName, fc, fcNum);
 		}
 
+		/*
 		void recursiveReadAttributes(IedConnection t_con, const QString &t_ref,
 									QSharedPointer<Item> t_parent)
 		{
@@ -78,6 +80,28 @@ namespace Core::Cmd
 				LinkedList_destroy(daList);
 			}
 		}
+		*/
+		void recursiveReadAttributes(IedConnection t_con, QSharedPointer<Item> t_parent, DataModelBuilder &t_builder)
+		{
+			IedClientError retval = IED_ERROR_OK;
+			LinkedList daList = IedConnection_getDataDirectory(t_con, &retval, t_parent->ref().toLocal8Bit().data());
+			if ((retval == IED_ERROR_OK) && (daList != nullptr)) {
+				LinkedList attr = LinkedList_getNext(daList);
+
+				while (attr != nullptr) {
+					QString name = QString::fromLocal8Bit((char *)attr->data);
+
+					t_builder.createSDA(t_parent, name);
+					auto sda = t_builder.lastSDA();
+
+					QString ref = t_parent->ref() + "." + name;
+					recursiveReadAttributes(t_con, sda, t_builder);
+
+					attr = LinkedList_getNext(attr);
+				}
+				LinkedList_destroy(daList);
+			}
+		}
 
 		bool getFileAsyncHandler(uint32_t invokeId, void* parameter, IedClientError err, uint32_t originalInvokeId,
 								uint8_t* buffer, uint32_t bytesRead, bool moreFollows)
@@ -92,6 +116,13 @@ namespace Core::Cmd
 				printf("Received %d bytes\n", bytesRead);
 			}
 			return true;
+		}
+
+		QString 	convertTimestampMsToUserString(uint64_t t_ms)
+		{
+			uint64_t sec = t_ms / 1000;
+			QDateTime dt = QDateTime::fromSecsSinceEpoch(sec);
+			return dt.toString("HH:mm:ss dd.MM.yyyy"); // ms isn't important
 		}
 	}
 
@@ -137,171 +168,163 @@ namespace Core::Cmd
 		m_libConn = nullptr;
 	}
 
-	int Lib61850::getLD_List(Core::DataModel &t_model)
+
+	int Lib61850::fetchDataModel(Core::DataModelBuilder &t_builder)
 	{
-		if (isConnected()) {
-			IedClientError retval = IED_ERROR_OK;
-
-			LinkedList ldList = IedConnection_getLogicalDeviceList(m_libConn, &retval);
-			if (retval != IED_ERROR_OK) {
-				//printf("Failed to read device list (error code: %i)\n", retval);
-				return -1;
-			}
-
-			LinkedList device = LinkedList_getNext(ldList);
-			while (device != nullptr) {
-				QString ldName = QString::fromLocal8Bit((char *)device->data);
-
-				auto ldev = ItemFactory::createLD(&t_model, ldName); // Found LD
-				t_model.addChild(ldev);
-
-				LinkedList lnodes = IedConnection_getLogicalDeviceDirectory(m_libConn, &retval,
-																			(char *)device->data);
-				if (retval == IED_ERROR_OK) {
-					LinkedList node = LinkedList_getNext(lnodes);
-
-					while (node != nullptr) {
-						QString name = QString::fromLocal8Bit((char *)node->data);
-
-						auto ln = ItemFactory::createLN(ldev.get(), name); // Found LN
-						ldev->addChild(ln);
-
-						node = LinkedList_getNext(node); // next Logical Node
-					}
-					LinkedList_destroy(lnodes);
-				}
-
-				device = LinkedList_getNext(device); // next Logical Device
-			}
-			LinkedList_destroy(ldList);
+		if (!isConnected()) {
+			return -1;
 		}
+
+		IedClientError retval = IED_ERROR_OK;
+
+		LinkedList ldList = IedConnection_getLogicalDeviceList(m_libConn, &retval);
+		if (retval != IED_ERROR_OK) {
+			//printf("Failed to read device list (error code: %i)\n", retval);
+			return -2;
+		}
+
+		// Fetch all Logical Devices
+		LinkedList ld = LinkedList_getNext(ldList);
+		while (ld != nullptr) {
+			t_builder.createLD(QString::fromLocal8Bit((char *)ld->data)); // New LD
+
+			// Fetch all Logical Nodes
+			LinkedList lnList = IedConnection_getLogicalDeviceDirectory(m_libConn, &retval, (char *)ld->data);
+			if (retval == IED_ERROR_OK) {
+
+				LinkedList node = LinkedList_getNext(lnList);
+				while (node != nullptr) {
+					t_builder.createLN(QString::fromLocal8Bit((char *)node->data)); // New LN
+
+					emit sigFoundNode(t_builder.lastLN()->ref());
+
+					fetchLN_DO(t_builder);
+
+					fetchLN_DS(t_builder);
+
+					fetchLN_RCB(t_builder);
+
+					node = LinkedList_getNext(node); // next LN
+				}
+				LinkedList_destroy(lnList);
+			}
+
+			ld = LinkedList_getNext(ld); // next LD
+		}
+		LinkedList_destroy(ldList);
 		return 0;
 	}
 
-	int Lib61850::getLN_PinList(Core::ptrLN t_ln)
+	int Lib61850::fetchLN_DO(Core::DataModelBuilder &t_builder)
 	{
-		if (isConnected()) {
-			IedClientError retval = IED_ERROR_OK;
-			QString ref = t_ln->ref();
+		IedClientError retval = IED_ERROR_OK;
+		QString ref = t_builder.lastLN()->ref();
 
-			// Get list of DataObjects for this LogicalNode
-			LinkedList doList = IedConnection_getLogicalNodeDirectory(m_libConn, &retval, ref.toStdString().data(),
-																	  ACSI_CLASS_DATA_OBJECT);
-			if ((retval == IED_ERROR_OK) && (doList != nullptr)) {
+		LinkedList doList = IedConnection_getLogicalNodeDirectory(m_libConn, &retval, ref.toStdString().data(),
+																ACSI_CLASS_DATA_OBJECT);
+		if ((retval == IED_ERROR_OK) && (doList != nullptr)) {
 
-				LinkedList dObj = LinkedList_getNext(doList);
-				while (dObj != nullptr) {
-					QString name = QString::fromLocal8Bit((char *)dObj->data);
-					QString refDO = QString("%1.%2").arg(ref, name);
+			LinkedList dObj = LinkedList_getNext(doList);
+			while (dObj != nullptr) {
+				QString doName = QString::fromLocal8Bit((char *)dObj->data);
+				QString refDO = QString("%1.%2").arg(ref, doName);
 
-					auto doNode = ItemFactory::createDO(t_ln.get(), name); // found DO
-					t_ln->addChild(doNode);
+				t_builder.createDO(doName);
 
-					// Get list of DA
-					LinkedList daListFC = IedConnection_getDataDirectoryFC(m_libConn, &retval, refDO.toLocal8Bit().data());
-					if ((retval == IED_ERROR_OK) && (daListFC != nullptr)) {
-						LinkedList attrFC = LinkedList_getNext(daListFC);
+				LinkedList daListFC = IedConnection_getDataDirectoryFC(m_libConn, &retval, refDO.toLocal8Bit().data());
+				if ((retval == IED_ERROR_OK) && (daListFC != nullptr)) {
+					
+					LinkedList attrFC = LinkedList_getNext(daListFC);
+					while (attrFC != nullptr) {
+						auto [name, fc, fcNum] = getFX_fromName((char *)attrFC->data);
 
-						while (attrFC != nullptr) {
-							auto [name, fc, fcNum] = getFX_fromName((char *)attrFC->data);
+						t_builder.createDA(name, fc, fcNum);
 
-							auto daNode = ItemFactory::createDA(doNode.get(), name, fc, fcNum); // found DA
-							doNode->addChild(daNode);
+						// Recursive search SubAttr for DA
+						recursiveReadAttributes(m_libConn, t_builder.lastDA(), t_builder);
 
-							// Recursive search SubAttr for DA
-							recursiveReadAttributes(m_libConn, daNode->ref(), daNode);
-
-							attrFC = LinkedList_getNext(attrFC);
-						}
-						LinkedList_destroy(daListFC);
+						attrFC = LinkedList_getNext(attrFC);
 					}
-
-					dObj = LinkedList_getNext(dObj); // next DO
+					LinkedList_destroy(daListFC);
 				}
+
+				dObj = LinkedList_getNext(dObj); // next DO
+			}
+		}
+		LinkedList_destroy(doList);
+		return 0;
+	}
+
+	int Lib61850::fetchLN_DS(Core::DataModelBuilder &t_builder)
+	{
+		IedClientError retval = IED_ERROR_OK;
+		QString ref = t_builder.lastLN()->ref();
+
+		LinkedList dsList = IedConnection_getLogicalNodeDirectory(m_libConn, &retval, ref.toStdString().data(),
+																ACSI_CLASS_DATA_SET);
+
+		LinkedList dataSet = LinkedList_getNext(dsList);
+		while (dataSet != nullptr) {
+			char* dsName = (char*) dataSet->data;
+			bool isDeletable;
+
+			char dataSetRef[130];
+			sprintf(dataSetRef, "%s.%s", ref.toStdString().data(), dsName);
+
+			LinkedList doList = IedConnection_getDataSetDirectory(m_libConn, &retval, dataSetRef,
+																&isDeletable);
+
+			LinkedList doRef = LinkedList_getNext(doList);
+			while (doRef != nullptr) {
+				char* memberRef = (char*) doRef->data;
+
+				printf("      %s\n", memberRef);
+
+				doRef = LinkedList_getNext(doRef);
 			}
 			LinkedList_destroy(doList);
+
+			dataSet = LinkedList_getNext(dataSet);
 		}
+		LinkedList_destroy(dsList);
 		return 0;
 	}
 
-	int Lib61850::getDS_List(Core::DataModel &t_model)
+	int Lib61850::fetchLN_RCB(Core::DataModelBuilder &t_builder)
 	{
-		/*
-			LinkedList dataSets = IedConnection_getLogicalNodeDirectory(con, &error, lnRef,
-					ACSI_CLASS_DATA_SET);
+		IedClientError retval = IED_ERROR_OK;
+		QString ref = t_builder.lastLN()->ref();
 
-			LinkedList dataSet = LinkedList_getNext(dataSets);
+		// Unbuffered RCB
+		LinkedList rcbList = IedConnection_getLogicalNodeDirectory(m_libConn, &retval, ref.toStdString().data(),
+																ACSI_CLASS_URCB);
 
-			while (dataSet != NULL) {
-				char* dataSetName = (char*) dataSet->data;
-				bool isDeletable;
-				char dataSetRef[130];
-				sprintf(dataSetRef, "%s.%s", lnRef, dataSetName);
+		LinkedList rcb = LinkedList_getNext(rcbList);
+		while (rcb != nullptr) {
+			char* reportName = (char *) rcb->data;
 
-				LinkedList dataSetMembers = IedConnection_getDataSetDirectory(con, &error, dataSetRef,
-						&isDeletable);
+			printf("    RP: %s\n", reportName);
 
-				if (isDeletable)
-					printf("    Data set: %s (deletable)\n", dataSetName);
-				else
-					printf("    Data set: %s (not deletable)\n", dataSetName);
+			rcb = LinkedList_getNext(rcb);
+		}
+		LinkedList_destroy(rcbList);
 
-				LinkedList dataSetMemberRef = LinkedList_getNext(dataSetMembers);
+		// Buffered RCB
+		rcbList = IedConnection_getLogicalNodeDirectory(m_libConn, &retval, ref.toStdString().data(),
+														ACSI_CLASS_BRCB);
 
-				while (dataSetMemberRef != NULL) {
+		rcb = LinkedList_getNext(rcbList);
+		while (rcb != nullptr) {
+			char* reportName = (char *) rcb->data;
 
-					char* memberRef = (char*) dataSetMemberRef->data;
+			printf("    BR: %s\n", reportName);
 
-					printf("      %s\n", memberRef);
-
-					dataSetMemberRef = LinkedList_getNext(dataSetMemberRef);
-				}
-
-				LinkedList_destroy(dataSetMembers);
-
-				dataSet = LinkedList_getNext(dataSet);
-			}
-
-			LinkedList_destroy(dataSets);
-		*/
+			rcb = LinkedList_getNext(rcb);
+		}
+		LinkedList_destroy(rcbList);
 		return 0;
 	}
 
-	int Lib61850::getRCB_List(Core::DataModel &t_model)
-	{
-		/*
-			LinkedList reports = IedConnection_getLogicalNodeDirectory(con, &error, lnRef,
-					ACSI_CLASS_URCB);
-
-			LinkedList report = LinkedList_getNext(reports);
-
-			while (report != NULL) {
-				char* reportName = (char*) report->data;
-
-				printf("    RP: %s\n", reportName);
-
-				report = LinkedList_getNext(report);
-			}
-
-			LinkedList_destroy(reports);
-
-			reports = IedConnection_getLogicalNodeDirectory(con, &error, lnRef,
-					ACSI_CLASS_BRCB);
-
-			report = LinkedList_getNext(reports);
-
-			while (report != NULL) {
-				char* reportName = (char*) report->data;
-
-				printf("    BR: %s\n", reportName);
-
-				report = LinkedList_getNext(report);
-			}
-
-			LinkedList_destroy(reports);
-		*/
-		return 0;
-	}
 
 	int Lib61850::updateLN_PinValues(Core::ptrLN t_ln)
 	{
@@ -318,11 +341,22 @@ namespace Core::Cmd
 					auto fcNum = (FunctionalConstraint)daNode->fcNum();
 
 					MmsValue *val = IedConnection_readObject(m_libConn, &retval, ref.data(), fcNum);
-
 					if (retval == IED_ERROR_OK && val != nullptr) {
-						char tmp[1024] = { 0 };
-						MmsValue_printToBuffer(val, tmp, 1024);
-						daNode->update(QString::fromLocal8Bit(tmp));
+						switch (MmsValue_getType(val)) {
+						case MMS_BOOLEAN: {
+							daNode->update(MmsValue_getBoolean(val) ? "True" : "False");
+							break;
+						}
+						case MMS_UTC_TIME: {
+							daNode->update(convertTimestampMsToUserString(MmsValue_getUtcTimeInMs(val)));
+							break;
+						}
+						default: {
+							char tmp[1024] = { 0 };
+							MmsValue_printToBuffer(val, tmp, 1024);
+							daNode->update(QString::fromLocal8Bit(tmp));
+						}
+						}
 					}
 				}
 			}
@@ -334,6 +368,7 @@ namespace Core::Cmd
 	{
 		return 0;
 	}
+
 
 	int Lib61850::getFS_FileList(Core::DirOn &t_dir)
 	{

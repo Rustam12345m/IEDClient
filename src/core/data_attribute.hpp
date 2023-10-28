@@ -23,41 +23,10 @@
 
 #pragma once
 
-#include "item.hpp"
+#include "sub_attribute.hpp"
 
 namespace Core
 {
-	/*
-	 * Representation of Sub-Attribute of Data Attribute
-	 * simpleIOGenericIO/GGIO1.SPCSO1.stVal
-	 * simpleIOGenericIO/GGIO1.AnIn1.mag.f
-	 *
-	 * SubAttr: f
-	 * DA: stVal, mag
-	 * DO: SPCSO1, AnIn1
-	 * LN: GGIO1
-	 * */
-	class SubAttribute: public Item
-	{
-		QString		m_value;
-
-	public:
-		QString		value() const {
-			return m_value;
-		}
-		void 		setValue(const QString &t_value) {
-			m_value = t_value;
-		}
-
-	public:
-		SubAttribute(Item *t_parent, const QString &t_name)
-			: Item(t_parent, t_name)
-		{
-			m_delimetr = "."; // Between DAName and SAName
-		}
-	};
-
-
 	/*
 	 * Representation a Data Attribute of Data Object
 	 * Has important FunctionConstrain = FC
@@ -90,6 +59,11 @@ namespace Core
 
 		void		update(const QString &t_value) {
 			m_value = t_value;
+		}
+
+	protected:
+		void 	debugOutput(QDebug &t_debug) const {
+			t_debug.noquote() << m_name << " [" << m_fc << "]";
 		}
 	};
 	typedef QSharedPointer< DataAttribute >		ptrDA;

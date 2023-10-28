@@ -60,7 +60,7 @@ namespace Core::Cmd
 
 	signals:
 		void	sigProgress(int t_perc, QString t_msg);
-		void	sigFinished();
+		void	sigFinished(bool t_done);
 
 		/*
 		template<typename... Args>

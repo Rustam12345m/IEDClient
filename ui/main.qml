@@ -42,6 +42,7 @@ Window {
 	visible: true
 	color: "white"
 
+	// Status timer
 	Timer {
 		property int tick: 0
 		interval: 1000 // every 1 second
@@ -50,6 +51,19 @@ Window {
 		onTriggered: {
 			tick++
 			//statusTextBox.text = Qt.formatDateTime(new Date(), "hh:mm:ss") + " Uptime: " + tick
+		}
+	}
+	// Close modal window timer
+	Timer {
+		id: timerModalWindow
+
+		interval: 3000
+		running: false
+		repeat: false
+
+		onTriggered: {
+			console.log("Hide modal window by timeout")
+			globalProgressBar.finishLoad()
 		}
 	}
 
@@ -284,9 +298,11 @@ Window {
 									focus: false
 
 									model: ListModel {
-										ListElement { text: "State(ST, MX)" }
-										ListElement { text: "Control(CO)" }
-										ListElement { text: "Description(DO)" }
+										ListElement { text: "ST + MX + SV" }
+										ListElement { text: "SP + CF + SG" }
+										ListElement { text: "CO" }
+										ListElement { text: "DC + EX" }
+										ListElement { text: "Tree" }
 									}
 
 									onActivated: function(index) {
@@ -740,10 +756,13 @@ Window {
 	function slotOnFinished() {
 		globalProgressBar.finishLoad()
 	}
-	function slotOnConnected() {
-		globalProgressBar.finishLoad()
-
-		rootWindow.setActivePage(Globals.Page.LD)
+	function slotOnConnected(t_done) {
+		if (t_done) {
+			globalProgressBar.finishLoad()
+			rootWindow.setActivePage(Globals.Page.LD)
+		} else {
+			timerModalWindow.running = true
+		}
 	}
 
 	Component.onCompleted: function() {
@@ -759,7 +778,7 @@ Window {
 		fsBackend.sigFinished.connect(slotOnFinished)
 
 		// GUI
-		//lastConnPanel.sigDeviceSelected.connect(startPage.slotSetCurrentDevice)
+		lastConnPanel.sigDeviceSelected.connect(startPage.slotSetCurrentDevice)
 
 		// Start status
 		setStatusText(presenter.getAppVersion())

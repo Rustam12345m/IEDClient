@@ -28,7 +28,7 @@ namespace Core::Cmd
 	void GetFileList::execute(LibInterface &t_con)
 	{
 		if (!t_con.isConnected()) {
-			emit sigFinished();
+			emit sigFinished(false);
 			return;
 		}
 
@@ -41,8 +41,8 @@ namespace Core::Cmd
 
 		emit sigProgress(80, "Save received information");
 
-		m_fsTree.put(dir);
+		m_fsModel.put(dir);
 
-		emit sigFinished();
+		emit sigFinished(true);
 	}
 }

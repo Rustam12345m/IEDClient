@@ -55,13 +55,13 @@ namespace App
 		void		slotConProcess(int t_proc, QString t_msg) {
 			emit sigConProgress(t_proc, t_msg);
 		}
-		void 		slotConnected() {
-			emit sigConnected();
+		void 		slotConnected(bool t_done) {
+			emit sigConnected(t_done);
 		}
 
 	signals:
 		void		sigConProgress(int t_perc, QString t_msg);
-		void 		sigConnected();
+		void 		sigConnected(bool t_done);
 
 	protected:
 		ConnectionObject	m_con; // Complex component of IED's stub

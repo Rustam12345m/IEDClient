@@ -36,6 +36,6 @@ namespace Core::Cmd
 				t_con.updateLN_PinValues(ln);
 			}
 		}
-		emit sigFinished();
+		emit sigFinished(true);
 	}
 }

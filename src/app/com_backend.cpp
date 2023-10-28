@@ -31,7 +31,7 @@ namespace App
 		m_lastConnModel = new LastConn_TableModel(this, m_ini);
 	}
 
-	void ComBackend::slotNewIED()
+	void ComBackend::slotNewIED(bool t_done)
 	{
 	}
 }

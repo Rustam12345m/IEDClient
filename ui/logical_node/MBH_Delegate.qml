@@ -23,15 +23,19 @@
 
 import QtQuick
 
+// Special delegate for Mod-Beh-Health cells in LN_Table
 Item {
+	id: root
+
 	required property int delegateHeight
+	required property int delegateWidth
 	required property bool selected
+	required property int value
 
-	property alias text: textFild.text
-	property alias textAlign: textFild.horizontalAlignment
+	// property alias text: textFild.text
 
-	implicitWidth: textFild.implicitWidth + 10
 	implicitHeight: delegateHeight
+	implicitWidth: delegateWidth
 
 	signal sigClick(int row, int col)
 	signal sigDoubleClick(int row, int col)
@@ -39,20 +43,27 @@ Item {
 	Rectangle {
 		anchors.fill: parent
 
-		color: (selected ? "lightgray" : "white")
+		color: {
+			switch (root.value) {
+			case 0: return "red";
+			case 1: return "green";
+			case 2: return "yellow";
+			case 3: return "blue";
+			case 4: return "darkred";
+			}
+			return "lightgray";
+		}
 		border.color: (selected ? "black" : "lightgray")
-		clip: true
+		//clip: true
 
 		Text {
 			id: textFild
 
-			anchors.fill: parent
+			anchors.centerIn: parent
 			horizontalAlignment: Text.AlignHCenter
 			verticalAlignment: Text.AlignVCenter
 
-			elide: Text.ElideRight
-			leftPadding: 5
-			text: " - "
+			text: root.value
 		}
 	}
 
