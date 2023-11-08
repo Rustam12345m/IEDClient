@@ -28,6 +28,9 @@
 #include <QString>
 #include <QSharedPointer>
 
+/*
+ * Basic class for all nodes in DataModel that we make by MMS/SCL
+ * */
 namespace Core
 {
 	class Item
@@ -36,13 +39,13 @@ namespace Core
 		QString		name() const {
 			return m_name;
 		}
-		QString		parentName() {
+		QString		parentName() const {
 			if (m_parent) {
 				return m_parent->name();
 			}
 			return "";
 		}
-		Item*		parenItem() const {
+		Item*		parent() const {
 			return m_parent;
 		}
 		QString 	ref(Item *t_root=nullptr) {
@@ -54,26 +57,57 @@ namespace Core
 			return path + m_name;
 		}
 
-		auto&		getChildList() const {
-			return m_child;
+		auto&		getItemList() const {
+			return m_items;
 		}
-		size_t		getChildCount() const {
-			return m_child.size();
+		size_t		getItemCount() const {
+			return m_items.size();
 		}
 
 		template<typename T>
-		QSharedPointer< T >		getChild(int t_inx) {
-			if ((t_inx >= 0) && (t_inx < m_child.size())) {
-				return m_child[t_inx].staticCast<T>();
+		QSharedPointer< T >		getItem(int t_inx) {
+			if ((t_inx >= 0) && (t_inx < m_items.size())) {
+				return m_items[t_inx].staticCast<T>();
 			}
 			return nullptr;
 		}
-		QSharedPointer< Item >	getChild(int t_inx) {
-			return Item::getChild<Item>(t_inx);
+		QSharedPointer< Item >	getItem(int t_inx) {
+			return Item::getItem<Item>(t_inx);
+		}
+		QSharedPointer< Item >	getItem(const QString &t_name) {
+			for (auto it : m_items) {
+				if (it->name() == t_name) {
+					return it;
+				}
+			}
+			return nullptr;
 		}
 
-		virtual void			addChild(QSharedPointer< Item > t_child) {
-			m_child.push_back(t_child);
+		QSharedPointer<Item> 	find(const QString &t_name) {
+			for (auto it : m_items) {
+				if (it->name() == t_name) {
+					return it;
+				}
+			}
+			return nullptr;
+		}
+		template <typename... Names>
+		QSharedPointer<Item> 	find(const QString &t_first, Names... rest) {
+			for (auto it : m_items) {
+				if (it->name() == t_first) {
+					return it->find(rest...);
+				}
+			}
+			return nullptr;
+		}
+
+		virtual void			push(QSharedPointer< Item > t_child) {
+			m_items.push_back(t_child);
+		}
+		virtual QString 		value() {
+			return "";
+		}
+		virtual void			update(const QString &t_value) {
 		}
 
 	public:
@@ -86,20 +120,19 @@ namespace Core
 		}
 
 	protected:
-		virtual void 	debugOutput(QDebug &t_debug) const {
-			t_debug.noquote() << m_name;
+		virtual void 	debug(QDebug &t_debug) const {
+			t_debug.noquote() << m_delimetr << m_name << "items:" << m_items.size();
+		}
+	public:
+		friend QDebug operator<<(QDebug t_debug, const Item &t_item) {
+			t_item.debug(t_debug);
+			return t_debug;
 		}
 
 	protected:
-		Item*						m_parent = nullptr;
 		QString						m_name;
-		QString 					m_delimetr = "/";
-		QList<QSharedPointer<Item>>	m_child; // list of children
-
-	public:
-		friend QDebug operator<<(QDebug t_debug, const Item &t_item) {
-			t_item.debugOutput(t_debug);
-			return t_debug;
-		}
+		QString 					m_delimetr = "/"; // Current node and its children
+		Item*						m_parent = nullptr;
+		QList<QSharedPointer<Item>>	m_items; // List of children
 	};
 }

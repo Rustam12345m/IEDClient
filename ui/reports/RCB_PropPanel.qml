@@ -1,4 +1,3 @@
-
 /*
  *  main.qml
  *
@@ -28,10 +27,11 @@ import QtQuick.Layouts
 
 import "qrc:/global/"
 
-// LLN0 & LPHD info for LD
+// RCB Settings
 Item {
 	property int defRowHeight: 30
 	property int defTextPadding: 5
+	property int defNameWidth: 100
 
 	ListView {
 		id: ldPropertyList
@@ -39,7 +39,7 @@ Item {
 
 		property int selectedIndex: -1
 
-		model: ldBackend.ldPropModel
+		model: ldBackend.rcbPropModel
 
 		section.property: "section"
 		section.delegate: Rectangle {
@@ -74,8 +74,8 @@ Item {
 						color: (index === ldPropertyList.selectedIndex) ? "lightgray" : "white"
 						clip: true
 
-						Layout.preferredWidth: 100//textName.paintedWidth + 10
-						width: 100//textName.paintedWidth + 10
+						Layout.preferredWidth: defNameWidth
+						width: defNameWidth
 						height: defRowHeight
 
 						Text {

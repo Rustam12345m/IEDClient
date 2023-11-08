@@ -23,20 +23,22 @@
 
 import QtQuick
 
-Item {
+QtObject {
 	enum Page {
 		START = 0,
 		LD,
 		LN,
 		FS,
+		DS,
 		RCB,
-		DS
+		RCB_Reports
 	}
 
 	enum Panel {
 		HIDE = 0,
 		LAST_CONN,
-		LD_INFO
+		LD_INFO,
+		RCB_PROPERTIES
 	}
 
 	function printObjectToConsole(item) {
@@ -47,5 +49,59 @@ Item {
 				}
 			}
 		}
+	}
+
+	function setSelectedRow(t_tableID, t_row) {
+		if (t_tableID.currentRow === t_row) {
+			return;
+		}
+
+		let idx = t_tableID.model.index(t_row, 0);
+		t_tableID.selectionModel.setCurrentIndex(idx, ItemSelectionModel.Clear
+													| ItemSelectionModel.Select
+													| ItemSelectionModel.Rows);
+	}
+
+	function resizeColumnsToContent(t_headerID, t_tableID) {
+		var iw = []
+		let sum = 0, i = 0
+		for (i=0;i<t_tableID.columns;i++) {
+			iw[i] = Math.max(t_headerID.implicitColumnWidth(i), t_tableID.implicitColumnWidth(i))
+			if (iw[i] < 0 || isNaN(iw[i])) {
+				iw[i] = 1
+			}
+			sum = sum + iw[i]
+		}
+		if (sum === 0) {
+			sum = 1
+		}
+		for (i=0;i<t_tableID.columns;i++) {
+			let w = t_tableID.width * iw[i] / sum
+			if (w < 0 || isNaN(w)) {
+				w = 1
+			}
+			t_tableID.setColumnWidth(i, w)
+		}
+		//t_tableID.forceLayout()
+	}
+
+	function calcColumnsWidth(t_headerID, t_tableID, t_column) {
+		var iw = []
+		let sum = 0, i = 0
+		for (i=0;i<t_tableID.columns;i++) {
+			iw[i] = Math.max(t_headerID.implicitColumnWidth(i), t_tableID.implicitColumnWidth(i))
+			if (iw[i] < 0 || isNaN(iw[i])) {
+				iw[i] = 1
+			}
+			sum = sum + iw[i]
+		}
+		if (sum === 0) {
+			sum = 1
+		}
+		let w = (t_tableID.width * iw[t_column] / sum)
+		if (w < 0 || isNaN(w)) {
+			return 1
+		}
+		return w;
 	}
 }

@@ -25,6 +25,12 @@ set(SOURCES
 
 	last_conn_list.hpp
 	last_conn_list.cpp
+
+	ds_info_table_model.hpp
+	ds_info_table_model.cpp
+
+	ds_table_model.hpp
+	ds_table_model.cpp
 )
 
 qt_add_library(models_lib STATIC ${SOURCES})

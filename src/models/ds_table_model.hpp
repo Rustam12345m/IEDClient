@@ -23,46 +23,37 @@
 
 #pragma once
 
-#include <QAbstractTableModel>
-
+#include "models_stub.hpp"
 #include "core/ied_object.hpp"
 
-class LN_TableModel : public QAbstractTableModel
+class DS_TableModel : public QAbstractTableModel
 {
 	Q_OBJECT
 	enum Columns {
-		NameColumn = 0,
-		ModeColumn,
-		BehColumn,
-		HealthColumn,
+		DS_REF_COLUMN = 0,
+		DS_FC_COLUMN,
+		DS_VALUE_COLUMN,
 
 		ColumnsCount
 	};
 public:
-	LN_TableModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
+	DS_TableModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
 
-	Q_INVOKABLE void setSelectedLN(int t_inx);
-	void 	setNewIED(QSharedPointer<Core::IED_Object> t_ied);
-	int 	getCurrentLD() const { return m_currentLD; }
+	void 		setNewIED(QSharedPointer<Core::IED_Object> t_ied);
 
 	QVariant headerData(int t_section, Qt::Orientation t_orientation,
 						int t_role = Qt::DisplayRole) const override;
-
 	QHash<int, QByteArray> roleNames() const override;
 
-	int rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
-	int columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
-
+	int 	rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
+	int 	columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
 	QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
-signals:
-	void	sigLNSelected(int t_ld, int t_ln);
-
 public slots:
-	void 	slotDataUpdated();
-	void 	slotLDSelected(int t_ld);
+	void 	slotDSSelected(int t_ds);
+	void 	slotDataUpdated(bool t_done);
 
 private:
-	QSharedPointer<Core::IED_Object> 	m_ied;
-	int		m_currentLD = -1; // selected Logical Device by user
+	QSharedPointer<Core::IED_Object> m_ied;
+	int		m_currentDS = -1; // current index of Logical Node
 };

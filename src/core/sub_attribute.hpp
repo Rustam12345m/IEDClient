@@ -46,15 +46,15 @@ namespace Core
 			m_delimetr = "."; // Between DAName and SAName
 		}
 
-		QString		value() const {
+		QString		value() override {
 			return m_value;
 		}
-		void 		setValue(const QString &t_value) {
+		void 		update(const QString &t_value) override {
 			m_value = t_value;
 		}
 	
 	protected:
-		void 	debugOutput(QDebug &t_debug) const {
+		void 	debug(QDebug &t_debug) const {
 			t_debug << m_name << " = " << m_value;
 		}
 

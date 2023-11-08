@@ -29,7 +29,7 @@ import "qrc:/global/"
 
 // LD page
 FocusScope {
-	id: root
+	id: rootID
 
 	readonly property int blkSpace: 30
 	readonly property int blkWidth: 200
@@ -55,9 +55,9 @@ FocusScope {
 		model: ldBackend.ldModel
 
 		delegate: LD_GridDelegate {
-			blkWidth: root.blkWidth
-			blkHeight: root.blkHeight
-			blkBorder: root.blkBorder
+			blkWidth: rootID.blkWidth
+			blkHeight: rootID.blkHeight
+			blkBorder: rootID.blkBorder
 
 			selected: (gridView.currentIndex == index)
 
@@ -90,7 +90,7 @@ FocusScope {
 	}
 
 	Keys.onPressed: function(event) {
-		console.log("LD_Page: Key pressed " + event.key)
+		//console.log("LD_Page: Key pressed " + event.key)
 		if (event.key == Qt.Key_Return || event.key == Qt.Key_Enter) {
 			sigActivatePage(Globals.Page.LN)
 		}

@@ -63,9 +63,9 @@ QHash<int, QByteArray> LN_TableModel::roleNames() const
 
 int LN_TableModel::rowCount(const QModelIndex &t_parent) const
 {
-	auto ld = m_ied->model().getChild<Core::LogicalDevice>(m_currentLD);
+	auto ld = m_ied->model().getItem<Core::LogicalDevice>(m_currentLD);
 	if (ld) {
-		return ld->getChildCount();
+		return ld->getItemCount();
 	}
 	return 0;
 }

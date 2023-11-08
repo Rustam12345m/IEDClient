@@ -1,2 +1,2 @@
-add_subdirectory(test_core/)
-add_subdirectory(test_cmd/)
+add_subdirectory(core/)
+add_subdirectory(commands/)

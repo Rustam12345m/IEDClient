@@ -44,7 +44,7 @@ QHash<int, QByteArray> LD_GridModel::roleNames() const
 
 int LD_GridModel::rowCount(const QModelIndex &t_index) const
 {
-	return m_ied->model().getChildCount();
+	return m_ied->model().getItemCount();
 }
 
 QVariant LD_GridModel::data(const QModelIndex &t_index, int t_role) const

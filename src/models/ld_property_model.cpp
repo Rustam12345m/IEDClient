@@ -26,17 +26,25 @@
 LD_PropertyModel::LD_PropertyModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied)
 	: QAbstractListModel(t_parent), m_ied{t_ied}
 {
-	m_property.append(LD_Property("LLN0", "", "vendor"));
-	m_property.append(LD_Property("LLN0", "", "swRev"));
-	m_property.append(LD_Property("LLN0", "", "d"));
-	m_property.append(LD_Property("LLN0", "", "configRev"));
-	m_property.append(LD_Property("LLN0", "", "ldNs"));
+	m_property.append(LD_Property("General information", "", "Name"));
+	m_property.append(LD_Property("General information", "", "LN"));
+	m_property.append(LD_Property("General information", "", "DS"));
+	m_property.append(LD_Property("General information", "", "BRCB"));
+	m_property.append(LD_Property("General information", "", "URCB"));
+	m_property.append(LD_Property("General information", "", "GOOSE"));
+	m_property.append(LD_Property("General information", "", "SV"));
 
-	m_property.append(LD_Property("LPHD1", "", "vendor"));
-	m_property.append(LD_Property("LPHD1", "", "hwRev"));
-	m_property.append(LD_Property("LPHD1", "", "swRev"));
-	m_property.append(LD_Property("LPHD1", "", "serNum"));
-	m_property.append(LD_Property("LPHD1", "", "model"));
+	m_property.append(LD_Property("LLN0", "NamPlt", "vendor"));
+	m_property.append(LD_Property("LLN0", "NamPlt", "swRev"));
+	m_property.append(LD_Property("LLN0", "NamPlt", "d"));
+	m_property.append(LD_Property("LLN0", "NamPlt", "configRev"));
+	m_property.append(LD_Property("LLN0", "NamPlt", "ldNs"));
+
+	m_property.append(LD_Property("LPHD1", "PhyNam", "vendor"));
+	m_property.append(LD_Property("LPHD1", "PhyNam", "hwRev"));
+	m_property.append(LD_Property("LPHD1", "PhyNam", "swRev"));
+	m_property.append(LD_Property("LPHD1", "PhyNam", "serNum"));
+	m_property.append(LD_Property("LPHD1", "PhyNam", "model"));
 }
 
 void LD_PropertyModel::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
@@ -74,10 +82,24 @@ QVariant LD_PropertyModel::data(const QModelIndex &t_index, int t_role) const
 	case VALUE_ROLE: {
 		Core::ptrLD ld = m_ied->model().getLogicalDevice(m_currentLD);
 		if (ld) {
-			return ld->getAttrValue(m_property[row].node, m_property[row].obj, m_property[row].attr);
+			if (m_property[row].obj.isEmpty()) {
+				if (m_property[row].attr == "Name") {
+					return ld->name();
+				} else if (m_property[row].attr == "LN") {
+					return QVariant(QString::number(ld->getItemCount()));
+				}
+			} else {
+				auto item = ld->find(m_property[row].node, m_property[row].obj, m_property[row].attr);
+				if (item) {
+					return item->value();
+				}
+			}
+			return " ? ";
 		}
+		break;
 	}
 	}
+
 	return QVariant(" - ");
 }
 

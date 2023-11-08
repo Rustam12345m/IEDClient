@@ -31,6 +31,8 @@ namespace App
 		m_ldPropModel = new LD_PropertyModel(this, m_con.m_ied);
 		m_lnModel = new LN_TableModel(this, m_con.m_ied);
 		m_doModel = new DO_TableModel(this, m_con.m_ied);
+		m_dsInfoModel = new DSInfo_TableModel(this, m_con.m_ied);
+		m_dsModel = new DS_TableModel(this, m_con.m_ied);
 
 		m_sortDOModel = new SortProxyModel(this);
 		m_sortDOModel->setSourceModel(m_doModel);
@@ -57,12 +59,16 @@ namespace App
 
 	QString LD_Backend::getLD_TextStatus()
 	{
-		return "LD status text";
+		return m_con.m_ied->model().name();
 	}
 
 	QString LD_Backend::getLN_TextStatus()
 	{
-		return "LN status text";
+		auto ld = m_con.m_ied->model().getLogicalDevice(m_lnModel->getCurrentLD());
+		if (ld) {
+			return ld->name();
+		}
+		return "";
 	}
 
 	void LD_Backend::slotNewIED(bool t_done)

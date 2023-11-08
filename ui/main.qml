@@ -432,6 +432,7 @@ Window {
 									focus = true
 
 									setActivePanel(Globals.Panel.LD_INFO)
+									setStatusText(ldBackend.getLD_TextStatus())
 								} else {
 									focus = false
 								}
@@ -449,6 +450,7 @@ Window {
 									focus = true
 
 									setActivePanel(Globals.Panel.HIDE)
+									setStatusText(ldBackend.getLN_TextStatus())
 								} else {
 									focus = false
 								}
@@ -486,6 +488,7 @@ Window {
 							onVisibleChanged: {
 								if (visible) {
 									focus = true
+									setActivePanel(Globals.Panel.RCB_PROPERTIES)
 								} else {
 									focus = false
 								}
@@ -522,10 +525,10 @@ Window {
 								text: qsTr("LN")
 							}
 							TabButton {
-								text: qsTr("File Browser")
+								text: qsTr("FS")
 							}
 							TabButton {
-								text: qsTr("DataSets")
+								text: qsTr("DS")
 							}
 							TabButton {
 								text: qsTr("RCB")
@@ -549,13 +552,18 @@ Window {
 						anchors.fill: parent
 
 						// Start panel with last connections
-						Start.LastConnTable {
+						Start.LastConn_Panel {
 							id: lastConnPanel
 						}
 
 						// Selected LD's properties
-						LD.LD_InfoList {
-							id: ldInfoList	
+						LD.LD_PropPanel {
+							id: ldPropPanel
+						}
+
+						// Selected RCB's settings & controls
+						RCB.RCB_PropPanel {
+							id: rcbPropPanel
 						}
 					}
 
@@ -701,11 +709,15 @@ Window {
 			switch (index) {
 			case Globals.Panel.LAST_CONN: {
 				panelStack.currentIndex = 0
-				break;
+				break
 			}
 			case Globals.Panel.LD_INFO: {
 				panelStack.currentIndex = 1
-				break;
+				break
+			}
+			case Globals.Panel.RCB_PROPERTIES: {
+				panelStack.currentIndex = 2
+				break
 			}
 			}
 		}

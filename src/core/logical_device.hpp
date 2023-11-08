@@ -38,8 +38,8 @@ namespace Core
 			m_delimetr = ""; // There isn't a delimetr between IEDName and LDName
 		}
 
-		void		addChild(QSharedPointer< LogicalNode > t_node) {
-			m_child.push_back(t_node);
+		void		push(QSharedPointer< LogicalNode > t_node) {
+			m_items.push_back(t_node);
 
 			QString name = t_node->name();
 			if (name.contains("LLN0")) {
@@ -50,8 +50,8 @@ namespace Core
 			}
 		}
 
-		QString 	getAttrValue(const QString &t_ln, const QString &t_do, const QString &t_da) {
-			return "A-B-C";
+		void 		setName(const QString &t_name) {
+			m_name = t_name;
 		}
 
 	protected:

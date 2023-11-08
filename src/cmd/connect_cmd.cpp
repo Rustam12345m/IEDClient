@@ -47,7 +47,7 @@ namespace Core::Cmd
 				m_ied->setModel(builder.build());
 
 				// Debug
-				m_ied->model().print();
+				//m_ied->model().print();
 
 				emit sigProgress(100, QString("Data model and other stuff were received from %1:%2").arg(m_ip).arg(m_port));
 				emit sigFinished(true);

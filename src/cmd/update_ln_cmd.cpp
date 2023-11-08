@@ -21,24 +21,21 @@
  *  See COPYING file for the complete license text.
  * */
 
-#pragma once
-
-#include "base_command.hpp"
+#include "update_ln_cmd.hpp"
+#include <QDebug>
 
 namespace Core::Cmd
 {
-	/*
-	 * This request gets information about Logical Devices from IED:
-	 * 1. All LD with their working status: Mod, Beh, Health
-	 * 2. All LN within each LD with their working status: Mod, Beh, Health
-	 *
-	 * */
-	class UpdateLDList_Cmd : public IED_BaseCommand
+	void UpdateLNode::execute(LibInterface &t_con)
 	{
-	public:
-		UpdateLDList_Cmd() : IED_BaseCommand(IED_CMD::UPDATE_LD) {}
-		~UpdateLDList_Cmd() = default;
+		//qDebug() << "UpdateLNode: ldInx = " << m_ldIndex << ", lnInx " << m_lnIndex;
 
-		void		execute(LibInterface &t_con) override;
-	};
+		if (t_con.isConnected()) {
+			auto ln = m_ied->model().getLogicalNode(m_ldIndex, m_lnIndex);
+			if (ln) {
+				t_con.updateLN_PinValues(ln);
+			}
+		}
+		emit sigFinished(true);
+	}
 }
