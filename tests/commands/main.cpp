@@ -21,12 +21,10 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "get_ldlist_cmd.hpp"
+#include "Cmd_Tests.hpp"
 
-namespace Core::Cmd
+int main(int argc, char **argv)
 {
-	void UpdateLDList_Cmd::execute(LibInterface &t_con)
-	{
-		emit sigFinished(false);
-	}
+	::testing::InitGoogleTest(&argc, argv);
+	return RUN_ALL_TESTS();
 }

@@ -161,7 +161,7 @@ void DO_TableModel::getSelectedLN(int &t_ld, int &t_ln)
 
 void DO_TableModel::slotDataUpdated(bool t_done)
 {
-	qDebug() << "DO_TableModel: slotDataUpdated";
+	//qDebug() << "DO_TableModel: slotDataUpdated";
 
 	emit dataChanged(index(0, DO_VALUE_COLUMN), index(rowCount() - 1, DO_TS_COLUMN));
 }

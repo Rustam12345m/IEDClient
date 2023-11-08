@@ -21,10 +21,37 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "test_core.hpp"
+#pragma once
 
-int main(int argc, char **argv)
+#include "base_command.hpp"
+#include "core/ied_object.hpp"
+
+namespace Core::Cmd
 {
-	::testing::InitGoogleTest(&argc, argv);
-	return RUN_ALL_TESTS();
+	/*
+	 * This class ...
+	 * */
+	class UpdateLD_StatusCmd : public IED_BaseCommand
+	{
+		Q_OBJECT
+	public:
+		UpdateLD_StatusCmd(int t_inx, QSharedPointer<Core::IED_Object> t_ied)
+				: IED_BaseCommand(IED_CMD::UNDEFINED), m_inx(t_inx), m_ied(t_ied)
+		{
+		}
+		~UpdateLD_StatusCmd() override {}
+
+		void	execute(LibInterface &t_con) override;
+
+		static QSharedPointer<UpdateLD_StatusCmd> create(int t_inx, ptrIED_Object t_ied) {
+			return QSharedPointer<UpdateLD_StatusCmd>::create(t_inx, t_ied);
+		}
+
+	private slots:
+		void 	slotMsgProgress(const QString &t_msg);
+
+	private:
+		int 								m_inx = -1;
+		QSharedPointer<Core::IED_Object>	m_ied;
+	};
 }

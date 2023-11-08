@@ -21,21 +21,19 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "update_lnode_cmd.hpp"
+#include "connect_cmd.hpp"
+#include "core/data_model_builder.hpp"
+
 #include <QDebug>
+#include "update_ld_status_cmd.hpp"
 
 namespace Core::Cmd
 {
-	void UpdateLNode::execute(LibInterface &t_con)
+	void UpdateLD_StatusCmd::execute(LibInterface &t_con)
 	{
-		qDebug() << "UpdateLNode: ldInx = " << m_ldIndex << ", lnInx " << m_lnIndex;
+	}
 
-		if (t_con.isConnected()) {
-			auto ln = m_ied->model().getLogicalNode(m_ldIndex, m_lnIndex);
-			if (ln) {
-				t_con.updateLN_PinValues(ln);
-			}
-		}
-		emit sigFinished(true);
+	void UpdateLD_StatusCmd::slotMsgProgress(const QString &t_msg)
+	{
 	}
 }

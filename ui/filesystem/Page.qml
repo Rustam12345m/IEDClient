@@ -25,8 +25,33 @@ import QtQuick
 import QtQuick.Controls
 import Qt.labs.qmlmodels
 
+import "qrc:/global/"
+
 // Filesystem page
 FocusScope {
+	id: rootID
+	
+	property var globals: Globals {}
+
+	function getFilename(t_row) {
+		let idx = tableID.model.index(t_row, 2)
+		return tableID.model.data(idx, "display")
+	}
+
+	function cmdDownloadFile(t_row) {
+		console.log("FS_Table: Download file N" + t_row)
+
+		globals.setSelectedRow(t_row)
+		fsBackend.downloadFile(getFilename(t_row))
+	}
+
+	function cmdRemoveFile(t_row) {
+		console.log("Control: Remove file N" + t_row)
+
+		fsBackend.removeFile(getFilename(t_row), t_row)
+	}
+
+	// Header for Table below with columns for Files
 	HorizontalHeaderView {
 		id: headerID
 
@@ -99,7 +124,7 @@ FocusScope {
 	// Table of files on the IED
 	TableView {
 		id: tableID
-		model: fsBackend.sortModel//filesModel
+		model: fsBackend.sortModel //fsBackend.filesModel
 
 		anchors {
 			left: parent.left
@@ -117,55 +142,8 @@ FocusScope {
 		clip: true
 		boundsBehavior: Flickable.StopAtBounds
 
-		function getFilename(row) {
-			let idx = tableID.model.index(row, 2)
-			return tableID.model.data(idx, "display")
-		}
-
-		function setSelectedRow(t_row) {
-			if (tableID.currentRow === t_row) {
-				return;
-			}
-			let idx = tableID.model.index(t_row, 0);
-			tableID.selectionModel.setCurrentIndex(idx, ItemSelectionModel.Clear
-														| ItemSelectionModel.Select
-														| ItemSelectionModel.Rows);
-		}
-		function callDownloadFile(t_row) {
-			console.log("FS_Table: Download file N" + t_row)
-
-			setSelectedRow(t_row)
-			fsBackend.downloadFile(tableID.getFilename(t_row))
-		}
-
-		function setGoodColumnsWidth() {
-			var iw = []
-			let sum = 0, i = 0
-			for (i=0;i<columns;i++) {
-				iw[i] = Math.max(headerID.implicitColumnWidth(i), implicitColumnWidth(i))
-				sum = sum + iw[i]
-			}
-			if (sum === 0) {
-				sum = 1
-			}
-			for (i=0;i<columns;i++) {
-				setColumnWidth(i, width * iw[i] / sum)
-			}
-		}
-		function calcColumnsWidth(t_column) {
-			var iw = []
-			let sum = 0, i = 0
-			for (i=0;i<columns;i++) {
-				iw[i] = Math.max(headerID.implicitColumnWidth(i), implicitColumnWidth(i))
-				sum = sum + iw[i]
-			}
-			if (sum === 0) {
-				sum = 1
-			}
-			return (width * iw[t_column] / sum)
-		}
 		columnWidthProvider: function(t_column) {
-			return calcColumnsWidth(t_column)
+			return globals.calcColumnsWidth(headerID, tableID, t_column)
 		}
 
 		selectionBehavior: TableView.SelectRows
@@ -188,10 +166,10 @@ FocusScope {
 					text: model.display
 
 					onSigSelectRow: function(t_row) {
-						tableID.setSelectedRow(t_row)
+						globals.setSelectedRow(tableID, t_row)
 					}
 					onSigDownloadFile: function(t_row) {
-						tableID.callDownloadFile(t_row)
+						rootID.cmdDownloadFile(t_row)
 					}
 				}
 			}
@@ -205,10 +183,10 @@ FocusScope {
 					text: model.display
 
 					onSigSelectRow: function(t_row) {
-						tableID.setSelectedRow(t_row)
+						globals.setSelectedRow(tableID, t_row)
 					}
 					onSigDownloadFile: function(t_row) {
-						tableID.callDownloadFile(t_row)
+						rootID.cmdDownloadFile(t_row)
 					}
 				}
 			}
@@ -222,10 +200,10 @@ FocusScope {
 					text: model.display
 
 					onSigSelectRow: function(t_row) {
-						tableID.setSelectedRow(t_row)
+						globals.setSelectedRow(tableID, t_row)
 					}
 					onSigDownloadFile: function(t_row) {
-						tableID.callDownloadFile(t_row)
+						rootID.cmdDownloadFile(t_row)
 					}
 				}
 			}
@@ -239,10 +217,10 @@ FocusScope {
 					text: model.display
 
 					onSigSelectRow: function(t_row) {
-						tableID.setSelectedRow(t_row)
+						globals.setSelectedRow(tableID, t_row)
 					}
 					onSigDownloadFile: function(t_row) {
-						tableID.callDownloadFile(t_row)
+						rootID.cmdDownloadFile(t_row)
 					}
 				}
 			}
@@ -255,12 +233,11 @@ FocusScope {
 					selected: (tableID.currentRow == row)
 
 					onSigDownloadFile: function(t_row) {
-						tableID.callDownloadFile(t_row)
+						rootID.cmdDownloadFile(t_row)
 					}
 
-					onSigRemoveFile: function(row) {
-						console.log("Control: Remove file N" + row)
-						fsBackend.removeFile(tableID.getFilename(row), row)
+					onSigRemoveFile: function(t_row) {
+						rootID.cmdRemoveFile(t_row)
 					}
 				}
 			}
@@ -280,7 +257,7 @@ FocusScope {
 			//console.log("FS_Table: Key pressed " + event.key + ", currentIndex = " + tableID.currentRow)
 
 			if (event.key == Qt.Key_Return || event.key == Qt.Key_Enter) {
-				fsBackend.downloadFile(tableID.getFilename(tableID.currentRow))
+				rootID.downloadFile(tableID.currentRow)
 			}
 		}
 	}

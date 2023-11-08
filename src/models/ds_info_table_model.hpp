@@ -27,23 +27,22 @@
 
 #include "core/ied_object.hpp"
 
-class LN_TableModel : public QAbstractTableModel
+class DSInfo_TableModel : public QAbstractTableModel
 {
 	Q_OBJECT
 	enum Columns {
-		NameColumn = 0,
-		ModeColumn,
-		BehColumn,
-		HealthColumn,
+		DS_LD_Column = 0,
+		DS_LN_Column,
+		DS_NameColumn,
 
 		ColumnsCount
 	};
 public:
-	LN_TableModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
+	DSInfo_TableModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
 
-	Q_INVOKABLE void setSelectedLN(int t_inx);
+	Q_INVOKABLE void setSelectedDS(int t_inx);
 	void 	setNewIED(QSharedPointer<Core::IED_Object> t_ied);
-	int 	getCurrentLD() const { return m_currentLD; }
+	int 	getCurrentDS() const { return m_currentDS; }
 
 	QVariant headerData(int t_section, Qt::Orientation t_orientation,
 						int t_role = Qt::DisplayRole) const override;
@@ -56,13 +55,12 @@ public:
 	QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
 signals:
-	void	sigLNSelected(int t_ld, int t_ln);
+	void	sigDSSelected(int t_ld, int t_ln);
 
 public slots:
 	void 	slotDataUpdated();
-	void 	slotLDSelected(int t_ld);
 
 private:
 	QSharedPointer<Core::IED_Object> 	m_ied;
-	int		m_currentLD = -1; // selected Logical Device by user
+	int		m_currentDS = -1; // selected DataSet
 };

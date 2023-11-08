@@ -7,18 +7,18 @@ set(SOURCES
 
 	cmd_thread.hpp
 	cmd_thread.cpp
+	
+	connect_cmd.hpp
+	connect_cmd.cpp
 
-	update_lnode_cmd.hpp
-	update_lnode_cmd.cpp
+	update_ld_status_cmd.hpp
+	update_ld_status_cmd.cpp
+
+	update_ln_cmd.hpp
+	update_ln_cmd.cpp
 
 	get_filelist_cmd.hpp
 	get_filelist_cmd.cpp
-
-	connect_cmd.hpp
-	connect_cmd.cpp
-	
-	get_ldlist_cmd.hpp
-	get_ldlist_cmd.cpp
 
 	download_file_cmd.hpp
 	download_file_cmd.cpp

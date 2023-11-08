@@ -22,16 +22,101 @@
  * */
 
 import QtQuick
-import QtQuick.Layouts
 import QtQuick.Controls
-
-import "qrc:/global/"
+import QtQuick.Layouts
 
 // DS page
 FocusScope {
+	id: root
 
-	Text {
-		anchors.centerIn: parent
-		text: "DataSets page"
+	SplitView {
+		id: splitView
+
+		anchors.fill: parent
+
+		// Delimiter
+		handle: Rectangle {
+			id: handleDelegate
+			implicitWidth: 4
+			implicitHeight: 4
+			color: SplitHandle.pressed ? "black" : "gray"
+
+			containmentMask: Item {
+				x: (handleDelegate.width - width) / 2
+				width: 20
+				height: splitView.height
+			}
+		}
+
+		// Area for TableView of all DS
+		Rectangle {
+			SplitView.minimumWidth: 300
+			SplitView.fillWidth: false
+			color: "white"
+
+			// Table
+			DS_InfoTable {
+				id: tableDS_Info
+
+				anchors.fill: parent
+
+				onSigLeftOrRightKey: function() {
+					//console.log("DS_Page: Activate DO_Table")
+					tableDS_Info.focus = false
+					tableDS_Val.focus = true
+				}
+				onSigForceFocus: function() {
+					tableDS_Info.focus = true
+					tableDS_Val.focus = false
+				}
+				onSigSelectedNewDS: function() {
+					//ldBackend.updateDO_Table(tableDS_Val.currentLDevice, tableDS_Val.currentLNode)
+				}
+			}
+		}
+
+		// Area for DataSet values
+		Rectangle {
+			SplitView.minimumWidth: 100
+			SplitView.fillWidth: true
+			color: "white"
+
+			// Table
+			DS_ValTable {
+				id: tableDS_Val
+
+				anchors.fill: parent
+
+				onSigLeftOrRightKey: function() {
+					//console.log("DS_Page: Activate LN_Table")
+					tableDS_Info.focus = true
+					tableDS_Val.focus = false
+				}
+				onSigForceFocus: function() {
+					tableDS_Info.focus = false
+					tableDS_Val.focus = true
+				}
+			}
+		}
+	}
+
+	onVisibleChanged: {
+	}
+
+	Keys.onPressed: function(event) {
+		console.log("DS_Page: Key pressed " + event.key)
+
+		if (event.key == Qt.Key_Left) {
+			console.log("DS_Page: Activate LN_Table")
+			tableDS_Info.focus = true
+			tableDS_Val.focus = false
+			event.accepted = true
+		}
+		if (event.key == Qt.Key_Right) {
+			console.log("DS_Page: Activate DO_Table")
+			tableDS_Info.focus = false
+			tableDS_Val.focus = true
+			event.accepted = true
+		}
 	}
 }

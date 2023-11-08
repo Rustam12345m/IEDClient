@@ -31,7 +31,7 @@ namespace Core
 	{
 		void 	printTree(QString t_prefix, QSharedPointer<Item> t_item)
 		{
-			auto &nodeList = t_item->getChildList();
+			auto &nodeList = t_item->getItemList();
 			for (auto node : nodeList) {
 				qDebug().noquote() << t_prefix << *node;
 
@@ -41,50 +41,65 @@ namespace Core
 	}
 
 
-	void DataModel::findModelName()
+	void DataModel::calcIEDNameFromLD()
 	{
-		if (m_child.isEmpty()) {
-			return;
+		if (m_items.isEmpty()) {
+			m_name = "Undefined";
+		} else if (m_items.size() == 1) {
+			// We have only one LD
+			m_name = m_items[0]->name().first(m_items[0]->name().size() / 2);
+		} else {
+			// We have more than one LD
+			QList<QString> ldNames;
+			size_t minSize = 0;
+			for (auto ld : m_items) {
+				QString name = ld->name();
+				if (name.size() > minSize) {
+					minSize = name.size();
+				}
+				ldNames.push_back(name);
+			}
+
+			for (size_t i=0;i<minSize;i++) {
+				QChar letter = ldNames[0].at(i);
+
+				for (size_t j=1;j<ldNames.size();j++) {
+					if (ldNames[j].at(i) != letter) {
+						m_name = ldNames[0].first(i);
+						i = minSize;
+						break;
+					}
+				}
+			}
 		}
 
-		QList<QString> ldNames;
-		int minSize = 0;
-		for (size_t i=0;i<m_child.size();i++) {
-			QString name = m_child[i]->name();
-			if (name.size() > minSize) {
-				minSize = 0;
-			}
-			ldNames.push_back(name);
-		}
-
-		int inx = 0;
-		for (size_t i=0;i<minSize;i++) {
-			bool eq = true;
-			for (size_t j=0;j<ldNames.size();j++) {
-				
-			}
+		// Change LDs' names
+		for (size_t i=0;i<m_items.size();i++) {
+			ptrLD ld = getLogicalDevice(i);
+			QString name = ld->name();
+			ld->setName(name.right(name.size() - m_name.size()));
 		}
 	}
 
 	ptrLN DataModel::getLogicalNode(int t_ld, int t_ln)
 	{
-		auto ld = getChild<Core::LogicalDevice>(t_ld);
+		auto ld = getItem<Core::LogicalDevice>(t_ld);
 		if (ld) {
-			return ld->getChild<Core::LogicalNode>(t_ln);
+			return ld->getItem<Core::LogicalNode>(t_ln);
 		}
 		return nullptr;
 	}
 
 	ptrLD DataModel::getLogicalDevice(int t_ld)
 	{
-		return getChild<Core::LogicalDevice>(t_ld);
+		return getItem<Core::LogicalDevice>(t_ld);
 	}
 
 	void DataModel::print()
 	{
 		qDebug() << "IED: " << m_name;
 
-		auto &ldList = m_child;
+		auto &ldList = m_items;
 		for (auto ld : ldList) {
 			qDebug() << "  LD: " << *ld;
 			printTree("    ", ld);

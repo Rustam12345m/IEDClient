@@ -78,7 +78,7 @@ namespace Core
 						const QString &t_fc)
 		{
 			for (auto node : t_nodes) {
-				auto &subNode = node->getChildList();
+				auto &subNode = node->getItemList();
 				if (subNode.empty()) {
 					t_table->table().emplace_back(LN_FlatState::Row(node->ref(t_root.get()), t_fc, t_do));
 				} else {
@@ -92,11 +92,11 @@ namespace Core
 	{
 		auto flatTableDO = QSharedPointer<LN_FlatState>::create(t_ln);
 
-		for (size_t i=0;i<t_ln->getChildCount();i++) {
-			auto dObj = t_ln->getChild<DataObject>(i);
+		for (size_t i=0;i<t_ln->getItemCount();i++) {
+			auto dObj = t_ln->getItem<DataObject>(i);
 
-			for (size_t j=0;j<dObj->getChildCount();j++) {
-				auto dAttr = dObj->getChild<DataAttribute>(j);
+			for (size_t j=0;j<dObj->getItemCount();j++) {
+				auto dAttr = dObj->getItem<DataAttribute>(j);
 
 				const QList<QString> FC = { "ST", "MX" };
 				const QList<QString> ATTR = { "q", "t", "d" };
@@ -108,10 +108,10 @@ namespace Core
 					continue;
 				}
 
-				if (dAttr->getChildCount() == 0) {
+				if (dAttr->getItemCount() == 0) {
 					flatTableDO->table().emplace_back(LN_FlatState::Row(dAttr->ref(t_ln.get()), dAttr->fc(), dObj));
 				} else {
-					DFS(dAttr->getChildList(), flatTableDO, t_ln, dObj, dAttr->fc());
+					DFS(dAttr->getItemList(), flatTableDO, t_ln, dObj, dAttr->fc());
 				}
 			}
 		}

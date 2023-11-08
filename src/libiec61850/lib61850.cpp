@@ -70,7 +70,7 @@ namespace Core::Lib
 					QString name = QString::fromLocal8Bit((char *)attr->data);
 
 					auto subAttrNode = ItemFactory::createSA(t_parent.get(), name);
-					t_parent->addChild(subAttrNode);
+					t_parent->push(subAttrNode);
 
 					QString ref = t_ref + "." + name;
 					recursiveReadAttributes(t_con, ref, subAttrNode);
@@ -204,6 +204,8 @@ namespace Core::Lib
 
 					fetchLN_RCB(t_builder);
 
+					updateLN_PinValues(t_builder.lastLN());
+
 					node = LinkedList_getNext(node); // next LN
 				}
 				LinkedList_destroy(lnList);
@@ -278,7 +280,7 @@ namespace Core::Lib
 			while (doRef != nullptr) {
 				char* memberRef = (char*) doRef->data;
 
-				printf("      %s\n", memberRef);
+				//printf("      %s\n", memberRef);
 
 				doRef = LinkedList_getNext(doRef);
 			}
@@ -303,7 +305,7 @@ namespace Core::Lib
 		while (rcb != nullptr) {
 			char* reportName = (char *) rcb->data;
 
-			printf("    RP: %s\n", reportName);
+			//printf("    RP: %s\n", reportName);
 
 			rcb = LinkedList_getNext(rcb);
 		}
@@ -331,11 +333,11 @@ namespace Core::Lib
 		if (isConnected()) {
 			IedClientError retval = IED_ERROR_OK;
 
-			for (size_t i=0;i<t_ln->getChildCount();i++) {
-				auto doNode = t_ln->getChild< Core::DataObject >(i);
+			for (size_t i=0;i<t_ln->getItemCount();i++) {
+				auto doNode = t_ln->getItem< Core::DataObject >(i);
 
-				for (size_t j=0;j<doNode->getChildCount();j++) {
-					auto daNode = doNode->getChild< Core::DataAttribute >(j);
+				for (size_t j=0;j<doNode->getItemCount();j++) {
+					auto daNode = doNode->getItem< Core::DataAttribute >(j);
 
 					auto ref = daNode->ref().toStdString();
 					auto fcNum = (FunctionalConstraint)daNode->fcNum();
@@ -352,6 +354,8 @@ namespace Core::Lib
 							break;
 						}
 						default: {
+							//daNode->update(QString("Type: %1").arg(MmsValue_getType(val)));
+							//break;
 							char tmp[1024] = { 0 };
 							MmsValue_printToBuffer(val, tmp, 1024);
 							daNode->update(QString::fromLocal8Bit(tmp));

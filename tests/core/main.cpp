@@ -21,37 +21,11 @@
  *  See COPYING file for the complete license text.
  * */
 
-#pragma once
+#include "Items_Tests.hpp"
+#include "DataModel_Tests.hpp"
 
-#include <QThread>
-
-#include "command_queue.hpp"
-#include "lib_interface.hpp"
-
-// All known commands
-#include "connect_cmd.hpp"
-#include "update_ld_status_cmd.hpp"
-#include "update_ln_cmd.hpp"
-#include "get_filelist_cmd.hpp"
-#include "download_file_cmd.hpp"
-#include "remove_file_cmd.hpp"
-
-namespace Core::Cmd
+int main(int argc, char **argv)
 {
-	class CmdThread : public QThread
-	{
-		Q_OBJECT
-	private:
-		CommandQueue<ptrCMD>			m_queue;
-		QSharedPointer<LibInterface>	m_con;
-
-	public:
-		CmdThread(QSharedPointer<LibInterface> &t_lib);
-		~CmdThread();
-
-		void	putCommand(ptrCMD t_cmd);
-
-	private:
-		void	run();
-	};
+	::testing::InitGoogleTest(&argc, argv);
+	return RUN_ALL_TESTS();
 }

@@ -59,8 +59,8 @@ namespace Core
 			return " - ";
 		}
 
-		void		addChild(QSharedPointer< Item > t_node) {
-			m_child.push_back(t_node);
+		void		push(QSharedPointer< Item > t_node) {
+			m_items.push_back(t_node);
 
 			if (t_node->name() == "stVal" || t_node->name() == "mag") {
 				m_value =  t_node.staticCast<DataAttribute>();

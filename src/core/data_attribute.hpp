@@ -33,10 +33,6 @@ namespace Core
 	 * */
 	class DataAttribute : public Item
 	{
-		QString		m_fc;
-		int			m_fcNum = -1;
-		QString		m_value;
-
 	public:
 		QString		fc() const {
 			return m_fc;
@@ -44,8 +40,12 @@ namespace Core
 		int			fcNum() const {
 			return m_fcNum;
 		}
-		QString		value() const {
+
+		QString		value() override {
 			return m_value;
+		}
+		void		update(const QString &t_value) override {
+			m_value = t_value;
 		}
 
 	public:
@@ -57,14 +57,15 @@ namespace Core
 			m_delimetr = "."; // Between DOName and DAName
 		}
 
-		void		update(const QString &t_value) {
-			m_value = t_value;
-		}
-
 	protected:
-		void 	debugOutput(QDebug &t_debug) const {
-			t_debug.noquote() << m_name << " [" << m_fc << "]";
+		void 	debug(QDebug &t_debug) const {
+			t_debug.noquote() << m_name << "[" << m_fc << "] =" << m_value;
 		}
+	
+	protected:
+		QString		m_fc;
+		int			m_fcNum = -1;
+		QString		m_value;
 	};
 	typedef QSharedPointer< DataAttribute >		ptrDA;
 }

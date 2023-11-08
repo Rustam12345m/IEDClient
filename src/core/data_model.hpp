@@ -42,7 +42,7 @@ namespace Core
 		}
 		~DataModel() {};
 
-		void 	findModelName();
+		void 	calcIEDNameFromLD();
 
 		ptrLN 	getLogicalNode(int t_ld, int t_ln);
 		ptrLD 	getLogicalDevice(int t_ld);

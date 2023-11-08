@@ -1,6 +1,6 @@
-<mxfile host="Electron" modified="2023-10-26T12:32:48.650Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/22.0.3 Chrome/114.0.5735.289 Electron/25.8.4 Safari/537.36" etag="Bx0TtytJ_hxdJDQFZ6_4" version="22.0.3" type="device" pages="13">
+<mxfile host="Electron" modified="2023-11-06T16:23:13.588Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/22.0.3 Chrome/114.0.5735.289 Electron/25.8.4 Safari/537.36" etag="8qXNiTMqcAWdsrEqvKLc" version="22.0.3" type="device" pages="13">
   <diagram name="GUI" id="uyvv2UR52rGuvuCrab3i">
-    <mxGraphModel dx="1596" dy="904" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="850" math="0" shadow="0">
+    <mxGraphModel dx="1356" dy="870" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="850" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -1333,7 +1333,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="kqACAlqZ9fkS9z23ByUm" name="OOD">
-    <mxGraphModel dx="2995" dy="1914" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="850" math="0" shadow="0">
+    <mxGraphModel dx="3278" dy="1914" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="850" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -1547,14 +1547,14 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="Rk45YVASocQXGKdwN-22-15" value="DataSet" style="rounded=0;whiteSpace=wrap;html=1;fontSize=20;fontStyle=1;strokeWidth=2;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
-          <mxGeometry x="370" y="490" width="160" height="40" as="geometry" />
+        <mxCell id="Rk45YVASocQXGKdwN-22-15" value="DataSet_Element" style="rounded=0;whiteSpace=wrap;html=1;fontSize=20;fontStyle=1;strokeWidth=2;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
+          <mxGeometry x="340" y="490" width="200" height="40" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
   <diagram id="h1fRZjYcfYIG8TzdQeXR" name="DO &amp; FC">
-    <mxGraphModel dx="2902" dy="1644" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="850" math="0" shadow="0">
+    <mxGraphModel dx="1356" dy="870" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="850" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -1911,35 +1911,35 @@
     </mxGraphModel>
   </diagram>
   <diagram id="sONM9zHIOV3eQsoH3CCA" name="Model by MMS">
-    <mxGraphModel dx="1356" dy="941" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="850" math="0" shadow="0">
+    <mxGraphModel dx="1356" dy="870" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="850" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="axnigtccqvs24U2e7mrJ-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;startArrow=diamondThin;startFill=0;startSize=18;" edge="1" parent="1" source="Ta1Fv2hI4dec2E0h4Wg8-1" target="Ta1Fv2hI4dec2E0h4Wg8-2">
+        <mxCell id="axnigtccqvs24U2e7mrJ-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;startArrow=diamondThin;startFill=0;startSize=18;" parent="1" source="Ta1Fv2hI4dec2E0h4Wg8-1" target="Ta1Fv2hI4dec2E0h4Wg8-2" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="Ta1Fv2hI4dec2E0h4Wg8-1" value="&lt;b style=&quot;font-size: 20px;&quot;&gt;Logical Device&lt;br&gt;&lt;/b&gt;&lt;br&gt;Available properties and information by MMS&lt;br&gt;&lt;div style=&quot;text-align: left;&quot;&gt;1. IEDName + LDName&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;2. List of LN&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;3. Specific LN: LLN0, LPHD1&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;1. List of DS and RCB&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;spacingTop=8;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;" vertex="1" parent="1">
+        <mxCell id="Ta1Fv2hI4dec2E0h4Wg8-1" value="&lt;b style=&quot;font-size: 20px;&quot;&gt;Logical Device&lt;br&gt;&lt;/b&gt;&lt;br&gt;Available properties and information by MMS&lt;br&gt;&lt;div style=&quot;text-align: left;&quot;&gt;1. IEDName + LDName&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;2. List of LN&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;3. Specific LN: LLN0, LPHD1&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;1. List of DS and RCB&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;spacingTop=8;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;" parent="1" vertex="1">
           <mxGeometry x="40" y="280" width="400" height="200" as="geometry" />
         </mxCell>
-        <mxCell id="axnigtccqvs24U2e7mrJ-3" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;startSize=18;startArrow=diamondThin;startFill=0;endArrow=none;endFill=0;" edge="1" parent="1" source="Ta1Fv2hI4dec2E0h4Wg8-2" target="Ta1Fv2hI4dec2E0h4Wg8-4">
+        <mxCell id="axnigtccqvs24U2e7mrJ-3" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;startSize=18;startArrow=diamondThin;startFill=0;endArrow=none;endFill=0;" parent="1" source="Ta1Fv2hI4dec2E0h4Wg8-2" target="Ta1Fv2hI4dec2E0h4Wg8-4" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="Ta1Fv2hI4dec2E0h4Wg8-2" value="&lt;b style=&quot;font-size: 20px;&quot;&gt;Logical Node&lt;br&gt;&lt;/b&gt;&lt;br&gt;Available properties and information by MMS&lt;br&gt;&lt;div style=&quot;text-align: left;&quot;&gt;1. Name&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;2. Listt of Data Objects&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;3. List of Datasets&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;4. List of RCBs: Buffered, Unbuffered, Goose, SV&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;5. Specific DO: Mod, Beh, Health&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;spacingTop=8;fontSize=16;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;" vertex="1" parent="1">
+        <mxCell id="Ta1Fv2hI4dec2E0h4Wg8-2" value="&lt;b style=&quot;font-size: 20px;&quot;&gt;Logical Node&lt;br&gt;&lt;/b&gt;&lt;br&gt;Available properties and information by MMS&lt;br&gt;&lt;div style=&quot;text-align: left;&quot;&gt;1. Name&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;2. Listt of Data Objects&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;3. List of Datasets&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;4. List of RCBs: Buffered, Unbuffered, Goose, SV&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;5. Specific DO: Mod, Beh, Health&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;spacingTop=8;fontSize=16;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;" parent="1" vertex="1">
           <mxGeometry x="560" y="280" width="400" height="200" as="geometry" />
         </mxCell>
-        <mxCell id="axnigtccqvs24U2e7mrJ-1" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;endArrow=none;endFill=0;startArrow=diamondThin;startFill=0;strokeWidth=1;endSize=6;startSize=18;" edge="1" parent="1" source="Ta1Fv2hI4dec2E0h4Wg8-3" target="Ta1Fv2hI4dec2E0h4Wg8-1">
+        <mxCell id="axnigtccqvs24U2e7mrJ-1" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;endArrow=none;endFill=0;startArrow=diamondThin;startFill=0;strokeWidth=1;endSize=6;startSize=18;" parent="1" source="Ta1Fv2hI4dec2E0h4Wg8-3" target="Ta1Fv2hI4dec2E0h4Wg8-1" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="Ta1Fv2hI4dec2E0h4Wg8-3" value="&lt;b style=&quot;font-size: 20px;&quot;&gt;IED model&lt;br&gt;&lt;/b&gt;&lt;br&gt;Available properties and information by MMS&lt;br&gt;&lt;div style=&quot;text-align: left;&quot;&gt;1. Set of LD&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;2. Association properties&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;spacingTop=8;fontSize=16;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;" vertex="1" parent="1">
+        <mxCell id="Ta1Fv2hI4dec2E0h4Wg8-3" value="&lt;b style=&quot;font-size: 20px;&quot;&gt;IED model&lt;br&gt;&lt;/b&gt;&lt;br&gt;Available properties and information by MMS&lt;br&gt;&lt;div style=&quot;text-align: left;&quot;&gt;1. Set of LD&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;2. Association properties&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;spacingTop=8;fontSize=16;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;" parent="1" vertex="1">
           <mxGeometry x="280" y="40" width="440" height="160" as="geometry" />
         </mxCell>
-        <mxCell id="axnigtccqvs24U2e7mrJ-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;startSize=18;startArrow=diamondThin;startFill=0;" edge="1" parent="1" source="Ta1Fv2hI4dec2E0h4Wg8-4" target="Ta1Fv2hI4dec2E0h4Wg8-5">
+        <mxCell id="axnigtccqvs24U2e7mrJ-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;startSize=18;startArrow=diamondThin;startFill=0;" parent="1" source="Ta1Fv2hI4dec2E0h4Wg8-4" target="Ta1Fv2hI4dec2E0h4Wg8-5" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="Ta1Fv2hI4dec2E0h4Wg8-4" value="&lt;b style=&quot;font-size: 20px;&quot;&gt;Data Object&lt;br&gt;&lt;/b&gt;&lt;br&gt;Available properties and information by MMS&lt;br&gt;&lt;div style=&quot;text-align: left;&quot;&gt;1. Name&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;2. FC&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;3. List of DataAttributes&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;spacingTop=8;fontSize=16;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=2;" vertex="1" parent="1">
+        <mxCell id="Ta1Fv2hI4dec2E0h4Wg8-4" value="&lt;b style=&quot;font-size: 20px;&quot;&gt;Data Object&lt;br&gt;&lt;/b&gt;&lt;br&gt;Available properties and information by MMS&lt;br&gt;&lt;div style=&quot;text-align: left;&quot;&gt;1. Name&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;2. FC&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;3. List of DataAttributes&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;spacingTop=8;fontSize=16;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=2;" parent="1" vertex="1">
           <mxGeometry x="320" y="560" width="400" height="160" as="geometry" />
         </mxCell>
-        <mxCell id="Ta1Fv2hI4dec2E0h4Wg8-5" value="&lt;b style=&quot;font-size: 20px;&quot;&gt;Data Attributes&lt;br&gt;&lt;/b&gt;&lt;br&gt;Available properties and information by MMS&lt;br&gt;&lt;div style=&quot;text-align: left;&quot;&gt;1. Name&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;2. MMS type (Boolean, INT32, etc)&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;3. List of SubAttributes&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;spacingTop=8;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;" vertex="1" parent="1">
+        <mxCell id="Ta1Fv2hI4dec2E0h4Wg8-5" value="&lt;b style=&quot;font-size: 20px;&quot;&gt;Data Attributes&lt;br&gt;&lt;/b&gt;&lt;br&gt;Available properties and information by MMS&lt;br&gt;&lt;div style=&quot;text-align: left;&quot;&gt;1. Name&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;2. MMS type (Boolean, INT32, etc)&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;3. List of SubAttributes&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;spacingTop=8;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;" parent="1" vertex="1">
           <mxGeometry x="840" y="560" width="400" height="160" as="geometry" />
         </mxCell>
       </root>

@@ -21,10 +21,32 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "test_cmd.hpp"
+#include <gtest/gtest.h>
+#include "core/data_model_builder.hpp"
+#include "core/item_factory.hpp"
 
-int main(int argc, char **argv)
+namespace CoreTests
 {
-	::testing::InitGoogleTest(&argc, argv);
-	return RUN_ALL_TESTS();
+	TEST(DataModel, DataModel) {
+		auto model = Core::ItemFactory::createModel("NoName").staticCast<Core::DataModel>();
+
+		auto ld1 = Core::ItemFactory::createLD(model.get(), "IEDNameLD1");
+		auto ld2 = Core::ItemFactory::createLD(model.get(), "IEDNameLD2");
+	}
+
+	TEST(DataModel, LogicalDevices) {
+
+	}
+
+	TEST(DataModel, LogicalNodes) {
+		
+	}
+
+	TEST(DataModel, DataObjects) {
+		
+	}
+
+	TEST(DataModel, DataSets) {
+		
+	}
 }

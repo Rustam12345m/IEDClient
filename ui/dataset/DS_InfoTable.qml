@@ -38,9 +38,9 @@ FocusScope {
 
 	signal sigLeftOrRightKey()
 	signal sigForceFocus()
-	signal sigSelectedNewLN()
+	signal sigSelectedNewDS()
 
-	// Header of LN table below
+	// Header of table below
 	HorizontalHeaderView {
 		id: headerID
 
@@ -65,18 +65,19 @@ FocusScope {
 
 			Label {
 				id: textArea
-				anchors.centerIn: parent
+				anchors.fill: parent
+
 				horizontalAlignment: Text.AlignHCenter
 				verticalAlignment: Text.AlignVCenter
 
 				//font.bold: true
-				text: model[headerID.textRole]
+				text: model.display
 				color: "#ff26282a"
 			}
 		}
 	}
 
-	// Table of all LN for selected LD with status columns
+	// Table of all DataSets for this IED
 	TableView {
 		id: tableID
 
@@ -88,7 +89,8 @@ FocusScope {
 			top: headerID.bottom
 			bottom: parent.bottom
 		}
-		model: ldBackend.lnModel
+
+		model: ldBackend.dsInfoModel
 
 		focus: true
 		clip: true
@@ -101,93 +103,24 @@ FocusScope {
 		}
 
 		onCurrentRowChanged: {
-			tableID.model.setSelectedLN(tableID.currentRow)
-			sigSelectedNewLN()
+			tableID.model.setSelectedDS(tableID.currentRow)
+			sigSelectedNewDS()
 		}
 
-		columnWidthProvider: function(column) {
-			switch (column) {
-			case 0: {
-				let res = width - 3 * defDelegateWidth
-				return res
-			}
-			default: {
-				let v1 = header.implicitColumnWidth(column)
-				let v2 = implicitColumnWidth(column)
-				let res = (v1 > v2) ? v1 : v2
-				return Math.max(res, defDelegateWidth)
-			}
-			}
+		columnWidthProvider: function(t_column) {
+			return globals.calcColumnsWidth(headerID, tableID, t_column)
 		}
 
-		delegate: DelegateChooser {
-			// Name
-			DelegateChoice {
-				column: 0
+		delegate: TextDelegate {
+			delegateHeight: defDelegateHeight
+			selected: (tableID.currentRow == row)
 
-				delegate: TextDelegate {
-					delegateHeight: defDelegateHeight
-					selected: (tableID.currentRow == row)
+			textAlign: Text.AlignHCenter
+			text: model.value
 
-					textAlign: Text.AlignHCenter
-					text: model.value
-
-					onSigClick: function(row, col) {
-						globals.setSelectedRow(tableID, row)
-						sigForceFocus()
-					}
-				}
-			}
-			// Mode
-			DelegateChoice {
-				column: 1
-
-				delegate: MBH_Delegate {
-					delegateHeight: defDelegateHeight
-					delegateWidth: defDelegateWidth
-					selected: (tableID.currentRow == row)
-
-					value: model.value
-
-					onSigClick: function(row, col) {
-						globals.setSelectedRow(tableID, row)
-						sigForceFocus()
-					}
-				}
-			}
-			// Beh
-			DelegateChoice {
-				column: 2
-
-				delegate: MBH_Delegate {
-					delegateHeight: defDelegateHeight
-					delegateWidth: defDelegateWidth
-					selected: (tableID.currentRow == row)
-
-					value: model.value
-
-					onSigClick: function(row, col) {
-						globals.setSelectedRow(tableID, row)
-						sigForceFocus()
-					}
-				}
-			}
-			// Health
-			DelegateChoice {
-				column: 3
-
-				delegate: MBH_Delegate {
-					delegateHeight: defDelegateHeight
-					delegateWidth: defDelegateWidth
-					selected: (tableID.currentRow == row)
-
-					value: model.value
-
-					onSigClick: function(row, col) {
-						globals.setSelectedRow(tableID, row)
-						sigForceFocus()
-					}
-				}
+			onSigClick: function(row, col) {
+				globals.setSelectedRow(tableID, row)
+				sigForceFocus()
 			}
 		}
 
@@ -202,7 +135,6 @@ FocusScope {
 		}
 
 		Keys.onPressed: function(event) {
-			//console.log("LN_Table: Key pressed " + event.key)
 			if (event.key == Qt.Key_Left || event.key == Qt.Key_Right || event.key == Qt.Key_Tab) {
 				sigLeftOrRightKey()
 				event.accepted = true

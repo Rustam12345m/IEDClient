@@ -27,27 +27,15 @@ import Qt.labs.qmlmodels
 
 import "qrc:/global/"
 
-// Table with DataObjects for concrete Logical Node
+// Received reports for the particular RCB
 FocusScope {
 	id: rootID
-
-	readonly property int defDelegateHeight: 30
-
-	signal sigLeftOrRightKey()
-	signal sigForceFocus()
-
+	
 	property var globals: Globals {}
 
-	function resizeColumns() {
-		globals.resizeColumnsToContent(headerID, tableID)
-	}
-
-	// Header for TableView below with DO
+	// Header for Table below
 	HorizontalHeaderView {
 		id: headerID
-
-		property int sortOrder: 0
-		property int sortedColumn: 0
 
 		anchors {
 			left: tableID.left
@@ -60,77 +48,45 @@ FocusScope {
 		syncView: tableID
 
 		delegate: Rectangle {
-			property int column: model.column
-			property bool sortable: model.display.sortable
-
-			implicitWidth: labelID.implicitWidth + 24 + 10
+			implicitWidth: labelID.implicitWidth + 10
 			implicitHeight: 30
 
 			color: "#f6f6f6"
 			border.color: "#e4e4e4"
 
 			Row {
-				id: rowID
-
 				anchors.centerIn: parent
 				spacing: 5
 
 				Label {
 					id: labelID
 
-					text: model.display.text
+					text: model.display
 					color: "#ff26282a"
-				}
-				Image {
-					visible: (headerID.sortedColumn == column)
-					source: (headerID.sortOrder == 0) ? "qrc:/img/icons/keyboard_arrow_down.svg"
-													  : "qrc:/img/icons/keyboard_arrow_up.svg"
-
-					width: 24
-					height: 24
-				}
-			}
-			MouseArea {
-				anchors.fill: parent
-
-				onClicked: function(msx) {
-					if (sortable == false) {
-						return
-					}
-
-					if (headerID.sortedColumn != column) {
-						headerID.sortedColumn = column
-						headerID.sortOrder = 0
-					}
-
-					if (headerID.sortOrder == 0) {
-						headerID.sortOrder = 1
-					} else {
-						headerID.sortOrder = 0
-					}
-					tableID.model.sort(parent.column, headerID.sortOrder)
 				}
 			}
 		}
 	}
 
-	// Table of DO for a selected LN
+	// Table of files on the IED
 	TableView {
 		id: tableID
+		model: ldBackend.rcbReportsModel
 
 		anchors {
-			leftMargin: 5
 			left: parent.left
-			right: parent.right
 			top: headerID.bottom
+			right: parent.right
 			bottom: parent.bottom
+			//rightMargin: 5
 		}
 
-		model: ldBackend.doModel
-
 		focus: true
-		clip: true
+		keyNavigationEnabled: true
+		reuseItems: true
+
 		interactive: true
+		clip: true
 		boundsBehavior: Flickable.StopAtBounds
 
 		columnWidthProvider: function(t_column) {
@@ -140,13 +96,18 @@ FocusScope {
 		selectionBehavior: TableView.SelectRows
 		selectionModel: ItemSelectionModel {
 			model: tableID.model
+			/*
+			onCurrentChanged: {
+				console.log(currentIndex)
+			}
+			*/
 		}
 
 		delegate: TextDelegate {
-			delegateHeight: defDelegateHeight
+			delegateHeight: 30
 			selected: (tableID.currentRow == row)
 
-			textAlign: (column == 0) ? Text.AlignLeft : Text.AlignHCenter
+			textAlign: Text.AlignHCenter
 			text: model.display
 
 			onSigClick: function(row, col) {
@@ -166,20 +127,10 @@ FocusScope {
 		}
 
 		Keys.onPressed: function(event) {
-			//console.log("DO_Table: Key pressed " + event.key)
-			if (event.key == Qt.Key_Left || event.key == Qt.Key_Right || event.key == Qt.Key_Tab) {
-				sigLeftOrRightKey()
-				event.accepted = true
-			}
-			event.accepted = false
 		}
+	}
 
-		Connections {
-			target: ldBackend.doModel
-
-			function onDataChanged() {
-				Qt.callLater(rootID.resizeColumns)
-			}
-		}
+	onVisibleChanged: {
+		tableID.focus = visible
 	}
 }

@@ -27,127 +27,125 @@ import Qt.labs.qmlmodels
 
 import "qrc:/global/"
 
-Item {
+// Table with DataObjects for concrete DataSet
+FocusScope {
+	id: rootID
+
 	readonly property int defDelegateHeight: 30
+	readonly property int defDelegateWidth: 60
 
-	signal sigDeviceSelected(string t_ip, int t_port)
+	signal sigLeftOrRightKey()
+	signal sigForceFocus()
 
+	property var globals: Globals {}
+
+	function resizeColumns() {
+		globals.resizeColumnsToContent(headerID, tableID)
+	}
+
+	// Header for TableView below
 	HorizontalHeaderView {
 		id: headerID
 
 		anchors {
-			//leftMargin: 5
-			left: parent.left
+			left: tableID.left
 			top: parent.top
 			right: parent.right
 		}
 		boundsBehavior: Flickable.StopAtBounds
-		clip: true
+		resizableColumns: false
 
 		syncView: tableID
 
 		delegate: Rectangle {
-			implicitWidth: textID.implicitWidth + 10
+			implicitWidth: Math.max(textArea.implicitWidth + 10, defDelegateWidth)
 			implicitHeight: defDelegateHeight
 
 			color: "#f6f6f6"
 			border.color: "#e4e4e4"
 
 			Label {
-				id: textID
-
+				id: textArea
 				anchors.fill: parent
+
 				horizontalAlignment: Text.AlignHCenter
 				verticalAlignment: Text.AlignVCenter
 
-				text: model[headerID.textRole]
+				//font.bold: true
+				text: model.display
 				color: "#ff26282a"
 			}
 		}
 	}
 
-	// Table of last used IED
+	// Table of DO for a selected DS
 	TableView {
 		id: tableID
 
 		anchors {
-			//leftMargin: 5
+			leftMargin: 5
 			left: parent.left
 			right: parent.right
 			top: headerID.bottom
 			bottom: parent.bottom
 		}
-		boundsBehavior: Flickable.StopAtBounds
-		clip: true
 
-		model: comBackend.lastConnList
+		model: ldBackend.dataSetModel
+
+		focus: true
+		clip: true
 		interactive: true
+		boundsBehavior: Flickable.StopAtBounds
+
+		columnWidthProvider: function(t_column) {
+			return globals.calcColumnsWidth(headerID, tableID, t_column)
+		}
 
 		selectionBehavior: TableView.SelectRows
 		selectionModel: ItemSelectionModel {
 			model: tableID.model
 
 			onCurrentChanged: {
-				//console.log("Select current changed: " + currentIndex)
+				Qt.callLater(rootID.resizeColumns)
 			}
-		}
-
-		function setGoodColumnsWidth() {
-			const iw = []
-			let sum = 0, i = 0
-			for (i=0;i<columns;i++) {
-				iw[i] = Math.max(headerID.implicitColumnWidth(i), implicitColumnWidth(i))
-				sum = sum + iw[i]
-			}
-			if (sum === 0) {
-				sum = 1
-			}
-			for (i=0;i<columns;i++) {
-				setColumnWidth(i, width * iw[i] / sum)
-			}
-		}
-		function calcColumnsWidth(t_column) {
-			var iw = []
-			let sum = 0, i = 0
-			for (i=0;i<columns;i++) {
-				iw[i] = Math.max(headerID.implicitColumnWidth(i), implicitColumnWidth(i))
-				sum = sum + iw[i]
-			}
-			if (sum === 0) {
-				sum = 1
-			}
-			return (width * iw[t_column] / sum)
-		}
-		columnWidthProvider: function(t_column) {
-			return calcColumnsWidth(t_column)
-		}
-
-		function setSelectedRow(row) {
-			let idx = tableID.model.index(row, 0);
-			tableID.selectionModel.setCurrentIndex(idx, ItemSelectionModel.Clear
-														| ItemSelectionModel.Select
-														| ItemSelectionModel.Rows);
-		}
-
-		function getValue(row, col) {
-			let idx = tableID.model.index(row, col)
-			return tableID.model.data(idx, "display")
 		}
 
 		delegate: TextDelegate {
 			delegateHeight: defDelegateHeight
+			selected: (tableID.currentRow == row)
+
+			textAlign: Text.AlignHCenter
 			text: model.display
 
 			onSigClick: function(row, col) {
-				tableID.setSelectedRow(row)
-
-				let ip = tableID.getValue(row, 1)
-				let port = tableID.getValue(row, 2)
-
-				sigDeviceSelected(ip, port)
+				globals.setSelectedRow(tableID, row)
+				sigForceFocus()
 			}
-			onSigDoubleClick: function(row, col) {
-				console.log("On double click: row = " + row + ", col = " + col)
+		}
+
+		ScrollBar.vertical: ScrollBar {
+			policy: ScrollBar.AsNeeded
+			active: true
+			onActiveChanged: {
+				if (!active) {
+					active = true;
+				}
+			}
+		}
+
+		Keys.onPressed: function(event) {
+			if (event.key == Qt.Key_Left || event.key == Qt.Key_Right || event.key == Qt.Key_Tab) {
+				sigLeftOrRightKey()
+				event.accepted = true
+			}
+			event.accepted = false
+		}
+
+		Connections {
+			target: ldBackend.doModel
+
+			function onDataChanged() {
+				Qt.callLater(rootID.resizeColumns)
 			}
 		}
 	}
