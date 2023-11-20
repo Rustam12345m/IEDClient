@@ -22,11 +22,114 @@
  * */
 
 import QtQuick
+import QtQuick.Controls
+import Qt.labs.qmlmodels
 
-Item {
+import "qrc:/global/"
 
-	Text {
-		anchors.centerIn: parent
-		text: "Report control blocks page"
+// Received reports for the particular RCB
+FocusScope {
+	id: rootID
+	
+	property var globals: Globals {}
+
+	// Header for Table below
+	HorizontalHeaderView {
+		id: headerID
+
+		anchors {
+			left: tableID.left
+			top: parent.top
+			right: parent.right
+		}
+		boundsBehavior: Flickable.StopAtBounds
+		resizableColumns: false
+
+		syncView: tableID
+
+		delegate: Rectangle {
+			implicitWidth: labelID.implicitWidth + 10
+			implicitHeight: 30
+
+			color: "#f6f6f6"
+			border.color: "#e4e4e4"
+
+			Row {
+				anchors.centerIn: parent
+				spacing: 5
+
+				Label {
+					id: labelID
+
+					text: model.display
+					color: "#ff26282a"
+				}
+			}
+		}
+	}
+
+	// Table of files on the IED
+	TableView {
+		id: tableID
+		model: ldBackend.rcbMainModel
+
+		anchors {
+			left: parent.left
+			top: headerID.bottom
+			right: parent.right
+			bottom: parent.bottom
+			//rightMargin: 5
+		}
+
+		focus: true
+		keyNavigationEnabled: true
+		reuseItems: true
+
+		interactive: true
+		clip: true
+		boundsBehavior: Flickable.StopAtBounds
+
+		columnWidthProvider: function(t_column) {
+			return globals.calcColumnsWidth(headerID, tableID, t_column)
+		}
+
+		selectionBehavior: TableView.SelectRows
+		selectionModel: ItemSelectionModel {
+			model: tableID.model
+			/*
+			onCurrentChanged: {
+				console.log(currentIndex)
+			}
+			*/
+		}
+
+		delegate: TextDelegate {
+			delegateHeight: 30
+			selected: (tableID.currentRow == row)
+
+			textAlign: Text.AlignHCenter
+			text: model.display
+
+			onSigClick: function(row, col) {
+				globals.setSelectedRow(tableID, row)
+			}
+		}
+
+		ScrollBar.vertical: ScrollBar {
+			policy: ScrollBar.AsNeeded
+			active: true
+			onActiveChanged: {
+				if (!active) {
+					active = true;
+				}
+			}
+		}
+
+		Keys.onPressed: function(event) {
+		}
+	}
+
+	onVisibleChanged: {
+		tableID.focus = visible
 	}
 }

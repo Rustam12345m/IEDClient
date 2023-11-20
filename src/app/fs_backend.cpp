@@ -1,6 +1,4 @@
 /*
- *  main.cpp
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -25,9 +23,9 @@
 
 namespace App
 {
-	FS_Backend::FS_Backend(ConnectionObject &t_con) : BackendBase(t_con)
+	FS_Backend::FS_Backend(IED_Connection &t_con) : BackendBase(t_con)
 	{
-		m_fsModel = new FS_TableModel(this, m_con.m_ied);
+		m_fsModel = new FS_TableModel(this, m_con.m_iedObj);
 
 		m_sortedModel = new SortProxyModel(this);
 		m_sortedModel->setSourceModel(m_fsModel);
@@ -35,7 +33,7 @@ namespace App
 
 	Q_INVOKABLE QString FS_Backend::getFS_TextStatus()
 	{
-		auto [count, size] = m_con.m_ied->fs().getFS_StatInfo();
+		auto [count, size] = m_con.m_iedObj->fs().getFS_StatInfo();
 		if (size < 1024 * 1024) {
 			return QString("Total %1 files. %2 KB").arg(count).arg(size / 1024);
 		}
@@ -44,7 +42,7 @@ namespace App
 
 	void FS_Backend::updateFilesDirectory(const QString &t_path)
 	{
-		auto cmd = Core::Cmd::GetFileList::create(m_con.m_ied->fs(), t_path);
+		auto cmd = Core::Cmd::GetFileList::create(m_con.m_iedObj->fs(), t_path);
 		putCmdToQueue(cmd);
 	}
 
@@ -64,8 +62,8 @@ namespace App
 		putCmdToQueue(cmd);
 	}
 
-	void FS_Backend::slotNewIED(bool t_done)
+	void FS_Backend::slotConnected(bool t_done)
 	{
-		m_fsModel->setNewIED(m_con.m_ied);
+		m_fsModel->setNewIED(m_con.m_iedObj);
 	}
 }

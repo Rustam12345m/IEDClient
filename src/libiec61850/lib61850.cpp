@@ -1,6 +1,4 @@
 /*
- *  main.cpp
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -118,6 +116,16 @@ namespace Core::Lib
 			return true;
 		}
 
+		// Call-back for monitor close event
+		void callback_ConnectionHandler(void* parameter, IedConnection connection)
+		{
+			printf("Callback CloseEvent: \r\n");
+			Lib61850 *l = static_cast<Lib61850*>(parameter);
+			if (l != nullptr) {
+				l->callbackOnCloseEvent();
+			}
+		}
+
 		QString 	convertTimestampMsToUserString(uint64_t t_ms)
 		{
 			uint64_t sec = t_ms / 1000;
@@ -126,6 +134,17 @@ namespace Core::Lib
 		}
 	}
 
+	bool Lib61850::isConnected() const
+	{
+		if (m_libConn == nullptr) {
+			return false;
+		}
+		IedConnectionState retval = IedConnection_getState(m_libConn);
+		if (retval == IED_STATE_CLOSED) {
+			return false;
+		}
+		return true;
+	}
 
 	void Lib61850::printfVersion() const
 	{
@@ -141,6 +160,9 @@ namespace Core::Lib
 		m_libConn = IedConnection_create();
 		IedConnection_connect(m_libConn, &retval, t_ip.toStdString().c_str(), t_port);
 		if (retval == IED_ERROR_OK) {
+			// Callback for close-events
+			IedConnection_installConnectionClosedHandler(m_libConn, &callback_ConnectionHandler, this);
+
 			// Get complete model from IED
 			IedConnection_getDeviceModelFromServer(m_libConn, &retval);
 			if (retval != IED_ERROR_OK) {
@@ -203,6 +225,8 @@ namespace Core::Lib
 					fetchLN_DS(t_builder);
 
 					fetchLN_RCB(t_builder);
+
+					fetchLN_GOCB(t_builder);
 
 					updateLN_PinValues(t_builder.lastLN());
 
@@ -272,6 +296,7 @@ namespace Core::Lib
 
 			char dataSetRef[130];
 			sprintf(dataSetRef, "%s.%s", ref.toStdString().data(), dsName);
+			printf("DS: %s\r\n", dataSetRef);
 
 			LinkedList doList = IedConnection_getDataSetDirectory(m_libConn, &retval, dataSetRef,
 																&isDeletable);
@@ -305,7 +330,7 @@ namespace Core::Lib
 		while (rcb != nullptr) {
 			char* reportName = (char *) rcb->data;
 
-			//printf("    RP: %s\n", reportName);
+			printf("    URCB: %s\n", reportName);
 
 			rcb = LinkedList_getNext(rcb);
 		}
@@ -319,7 +344,7 @@ namespace Core::Lib
 		while (rcb != nullptr) {
 			char* reportName = (char *) rcb->data;
 
-			printf("    BR: %s\n", reportName);
+			printf("    BRCB: %s\n", reportName);
 
 			rcb = LinkedList_getNext(rcb);
 		}
@@ -327,6 +352,25 @@ namespace Core::Lib
 		return 0;
 	}
 
+	int Lib61850::fetchLN_GOCB(Core::DataModelBuilder &t_builder)
+	{
+		// Goose CB
+		IedClientError retval = IED_ERROR_OK;
+		QString ref = t_builder.lastLN()->ref();
+		LinkedList rcbList = IedConnection_getLogicalNodeDirectory(m_libConn, &retval, ref.toStdString().data(),
+																	ACSI_CLASS_GoCB);
+
+		LinkedList rcb = LinkedList_getNext(rcbList);
+		while (rcb != nullptr) {
+			char* reportName = (char *) rcb->data;
+
+			printf("    GOCB: %s\n", reportName);
+
+			rcb = LinkedList_getNext(rcb);
+		}
+		LinkedList_destroy(rcbList);
+		return 0;
+	}
 
 	int Lib61850::updateLN_PinValues(Core::ptrLN t_ln)
 	{
@@ -412,7 +456,12 @@ namespace Core::Lib
 		IedConnection_deleteFile(m_libConn, &retval, t_filename.toStdString().c_str());
 		return (retval != IED_ERROR_OK);
 	}
-	
+
+	void Lib61850::callbackOnCloseEvent()
+	{
+		emit sigConClosed();
+	}
+
 	void Lib61850::downloadFile(const QString &t_filename)
 	{
 		IedClientError error = IED_ERROR_OK;

@@ -1,6 +1,4 @@
 /*
- *  main.cpp
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -23,28 +21,50 @@
 
 #pragma once
 
+#include <QObject>
+
 #include "core/ied_object.hpp"
 #include "cmd/cmd_thread.hpp"
 #include "libiec61850/lib61850.hpp"
 
-class ConnectionObject
+/*
+ * 
+ * */
+class IED_Connection : public QObject
 {
+	Q_OBJECT
 public:
-	ConnectionObject() {
-		reset();
+	IED_Connection() {
+		newConnection();
 	}
 
-	void 	reset() {
+	void 	newConnection() {
 		m_cmdQueue.clear();
 		m_lib.clear();
-		m_ied.clear();
+		m_iedObj.clear();
 
-		m_ied = QSharedPointer<Core::IED_Object>::create();
-		m_lib = QSharedPointer<Core::Lib::Lib61850>::create();
+		auto lib = QSharedPointer<Core::Lib::Lib61850>::create();
+		connect(lib.get(), &Core::Lib::Lib61850::sigConClosed, this, &IED_Connection::slotConClosed);
+		m_lib = lib;
+
+		m_iedObj = QSharedPointer<Core::IED_Object>::create();
 		m_cmdQueue = QSharedPointer<Core::Cmd::CmdThread>::create(m_lib);
 	}
 
-	QSharedPointer<Core::IED_Object>		m_ied;
+	bool 	isConnected() const {
+		return m_lib->isConnected();
+	}
+
+public slots:
+	void 	slotConClosed() {
+		emit sigConnected(false);
+	}
+
+signals:
+	void 	sigConnected(bool t_status);
+
+public:
+	QSharedPointer<Core::IED_Object>		m_iedObj;
 	QSharedPointer<Core::Cmd::LibInterface>	m_lib;
 	QSharedPointer<Core::Cmd::CmdThread>	m_cmdQueue;
 };

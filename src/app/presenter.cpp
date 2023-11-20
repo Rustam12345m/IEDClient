@@ -1,6 +1,4 @@
 /*
- *  main.cpp
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -24,14 +22,16 @@
 #include "presenter.hpp"
 #include "builder_information.hpp"
 
+#include "tools/dump_model.hpp"
+
 namespace App
 {
-	Presenter::Presenter()
-		: m_fsBackend(m_con), m_ldBackend(m_con), m_comBackend(m_con)
+	Presenter::Presenter() : m_fsBackend(m_con), m_ldBackend(m_con), m_comBackend(m_con)
 	{
+		connect(&m_con, &IED_Connection::sigConnected, this, &Presenter::slotConnected);
 	}
 
-	void Presenter::setContext(QQmlContext *t_context)
+	void Presenter::setContextMembers(QQmlContext *t_context)
 	{
 		t_context->setContextProperty("presenter", this);
 		t_context->setContextProperty("comBackend", &m_comBackend);
@@ -47,21 +47,34 @@ namespace App
 	void Presenter::connectTo(const QString &t_ip, unsigned int t_port, bool t_tls,
 							const QString &t_name, const QString &t_pass)
 	{
-		m_con.reset();
+		m_con.newConnection();
 
-		auto cmd = Core::Cmd::ConnectCmd::create(t_ip, t_port, t_tls, t_name,
-												t_pass, m_con.m_ied);
-
-		connect(cmd.get(), &Core::Cmd::ConnectCmd::sigFinished, &m_fsBackend, &BackendBase::slotNewIED);
-		connect(cmd.get(), &Core::Cmd::ConnectCmd::sigFinished, &m_ldBackend, &BackendBase::slotNewIED);
+		auto cmd = Core::Cmd::ConnectCmd::create(t_ip, t_port, t_tls, t_name, t_pass, m_con.m_iedObj);
 
 		connect(cmd.get(), &Core::Cmd::ConnectCmd::sigFinished, this, &Presenter::slotConnected);
-		connect(cmd.get(), &Core::Cmd::ConnectCmd::sigProgress, this, &Presenter::slotConProcess);
+		connect(cmd.get(), &Core::Cmd::ConnectCmd::sigFinished, &m_ldBackend, &BackendBase::slotConnected);
+		connect(cmd.get(), &Core::Cmd::ConnectCmd::sigFinished, &m_fsBackend, &BackendBase::slotConnected);
+
+		connect(cmd.get(), &Core::Cmd::ConnectCmd::sigProgress, this, &Presenter::slotCmdProgress);
 
 		m_con.m_cmdQueue->putCommand(cmd);
 	}
 
 	void Presenter::disconnectFrom()
 	{
+	}
+
+	void Presenter::toolDumpModel(const QString &t_dir, const QString &t_ip, unsigned int t_port,
+								bool t_tls, const QString &t_name, const QString &t_pass)
+	{
+		qDebug() << "DumpTool:" << t_dir << t_ip << t_port << t_tls << t_name << t_pass;
+
+		Tools::DumpModel *dump = new Tools::DumpModel(this);
+
+		connect(dump, &Tools::DumpModel::sigFinished, this, &Presenter::slotCmdFinished);
+		connect(dump, &Tools::DumpModel::sigProgress, this, &Presenter::slotCmdProgress);
+
+		dump->init(t_dir, t_ip, t_port, t_tls, t_name, t_pass);
+		dump->start();
 	}
 }

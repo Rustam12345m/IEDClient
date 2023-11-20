@@ -45,9 +45,9 @@ Item {
 		}
 	}
 	ToolTip {
-    	id: toolTip
-    	text: "Information isn't found"
+		id: toolTip
+		text: "Information isn't found"
 		delay: 200
-    	visible: btn.hovered
-    }
+		visible: btn.hovered
+	}
 }

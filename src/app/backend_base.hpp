@@ -1,6 +1,4 @@
 /*
- *  main.cpp
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -23,7 +21,7 @@
 
 #pragma once
 
-#include "connection_object.hpp"
+#include "ied_connection.hpp"
 
 /*
  * Interface for all Backends
@@ -34,21 +32,21 @@ class BackendBase : public QObject
 
 	BackendBase() = delete;
 public:
-	BackendBase(ConnectionObject &t_con) : m_con(t_con) {};
+	BackendBase(IED_Connection &t_con) : m_con(t_con) {};
 	virtual ~BackendBase() {}
 
 protected:
 	void	putCmdToQueue(Core::Cmd::ptrCMD t_cmd);
 
 signals:
-	void	sigProgress(int t_perc, QString t_msg);
-	void	sigFinished(bool t_done);
+	void	sigCmdProgress(int t_perc, QString t_msg);
+	void	sigCmdFinished(bool t_done);
 
 public slots:
 	void			slotCmdProcess(int t_proc, QString t_msg);
 	void			slotCmdFinished(bool t_done);
-	virtual void 	slotNewIED(bool t_done);
+	virtual void 	slotConnected(bool t_done);
 
 protected:
-	ConnectionObject& 	m_con;
+	IED_Connection& 	m_con;
 };

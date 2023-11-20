@@ -1,6 +1,4 @@
 /*
- *  main.cpp
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -43,32 +41,44 @@ namespace App
 		Presenter();
 		~Presenter() = default;
 
-		void 				setContext(QQmlContext *t_context);
+		void 		setContextMembers(QQmlContext *t_context);
 
-		Q_INVOKABLE QString getAppVersion();
+		Q_PROPERTY(bool isConnected READ isConnected NOTIFY sigConnected)
+		bool 		isConnected() {
+			return m_con.isConnected();
+		}
 
+		// API for QML
 		Q_INVOKABLE void 	connectTo(const QString &t_ip, unsigned int t_port, bool t_checked,
 										const QString &t_name, const QString &t_pass);
 		Q_INVOKABLE void 	disconnectFrom();
+		Q_INVOKABLE QString getAppVersion();
+
+		Q_INVOKABLE void 	toolDumpModel(const QString &t_dir, const QString &t_ip, unsigned int t_port,
+										bool t_checked, const QString &t_name, const QString &t_pass);
 
 	public slots:
-		void		slotConProcess(int t_proc, QString t_msg) {
-			emit sigConProgress(t_proc, t_msg);
+		void		slotCmdProgress(int t_proc, QString t_msg) {
+			emit sigCmdProgress(t_proc, t_msg);
+		}
+		void		slotCmdFinished(bool t_done) {
+			emit sigCmdFinished(t_done);
 		}
 		void 		slotConnected(bool t_done) {
 			emit sigConnected(t_done);
 		}
 
 	signals:
-		void		sigConProgress(int t_perc, QString t_msg);
+		void		sigCmdProgress(int t_perc, QString t_msg);
+		void		sigCmdFinished(bool t_done);
 		void 		sigConnected(bool t_done);
 
 	protected:
-		ConnectionObject	m_con; // Complex component of IED's stub
+		IED_Connection	m_con; // Complex component of IED's stub
 
-		// many presenters - backends
-		ComBackend			m_comBackend;
-		FS_Backend			m_fsBackend;
-		LD_Backend			m_ldBackend;
+		// Backends for QML
+		ComBackend		m_comBackend;
+		LD_Backend		m_ldBackend;
+		FS_Backend		m_fsBackend;
 	};
 }

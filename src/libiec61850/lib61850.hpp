@@ -1,6 +1,4 @@
 /*
- *  main.cpp
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -42,9 +40,7 @@ namespace Core::Lib
 		Lib61850() {}
 		~Lib61850() override {}
 
-		bool	isConnected() const override {
-			return (m_libConn != nullptr);
-		}
+		bool	isConnected() const override;
 		void	printfVersion() const override;
 
 		bool	connect(const QString &t_ip, unsigned int t_port, bool t_checked,
@@ -56,6 +52,7 @@ namespace Core::Lib
 		int 	fetchLN_DO(Core::DataModelBuilder &t_builder);
 		int 	fetchLN_DS(Core::DataModelBuilder &t_builder);
 		int 	fetchLN_RCB(Core::DataModelBuilder &t_builder);
+		int 	fetchLN_GOCB(Core::DataModelBuilder &t_builder);
 
 	public:
 		int		updateLN_PinValues(Core::ptrLN t_node) override;
@@ -65,8 +62,11 @@ namespace Core::Lib
 		void 	downloadFile(const QString &t_filename) override;
 		int 	removeFile(const QString &t_filename) override;
 
+		void 	callbackOnCloseEvent();
+
 	signals:
 		void 	sigFoundNode(const QString t_path);
+		void 	sigConClosed();
 
 	private:
 		// libiec61850 stuff

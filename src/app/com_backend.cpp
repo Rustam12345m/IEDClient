@@ -1,6 +1,4 @@
 /*
- *  main.cpp
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -25,13 +23,9 @@
 
 namespace App
 {
-	ComBackend::ComBackend(ConnectionObject &t_con) : BackendBase(t_con)
+	ComBackend::ComBackend(IED_Connection &t_con) : BackendBase(t_con)
 	{
 		m_eventsModel = new AppEventsModel(this);
 		m_lastConnModel = new LastConn_TableModel(this, m_ini);
-	}
-
-	void ComBackend::slotNewIED(bool t_done)
-	{
 	}
 }

@@ -2,6 +2,9 @@
     <qresource prefix="/">
         <file>main.qml</file>
 
+        <file>main/Page.qml</file>
+        <file>main/LastConn_Panel.qml</file>
+
         <file>global/Globals.qml</file>
         <file>global/ToolBarButton.qml</file>
         <file>global/TextDelegate.qml</file>
@@ -9,9 +12,7 @@
         <file>global/EventsViewer.qml</file>
         <file>global/QuestionForUser.qml</file>
         <file>global/ModalProgressBar.qml</file>
-
-        <file>start/Page.qml</file>
-        <file>start/LastConn_Panel.qml</file>
+        <file>global/Led.qml</file>
 
         <file>dataset/DS_InfoTable.qml</file>
         <file>dataset/DS_ValTable.qml</file>
@@ -19,7 +20,7 @@
 
         <file>reports/Page.qml</file>
         <file>reports/RCB_PropPanel.qml</file>
-        <file>reports/RCB_ReportTable.qml</file>
+        <file>reports/RCB_ReportsTable.qml</file>
 
         <file>logical_device/Page.qml</file>
         <file>logical_device/LD_GridDelegate.qml</file>

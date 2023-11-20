@@ -1,6 +1,4 @@
 /*
- *  main.cpp
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -30,8 +28,10 @@
 #include "models/ld_property_model.hpp"
 #include "models/ln_tablemodel.hpp"
 #include "models/do_tablemodel.hpp"
-#include "models/ds_info_table_model.hpp"
-#include "models/ds_table_model.hpp"
+#include "models/all_ds_tablemodel.hpp"
+#include "models/ds_tablemodel.hpp"
+#include "models/rcb_main_tablemodel.hpp"
+#include "models/reports_tablemodel.hpp"
 
 namespace App
 {
@@ -42,7 +42,7 @@ namespace App
 	{
 		Q_OBJECT
 	public:
-		LD_Backend(ConnectionObject &t_con);
+		LD_Backend(IED_Connection &t_con);
 		~LD_Backend() = default;
 
 		Q_PROPERTY(LD_GridModel* 		ldModel 		READ getLD_Model		CONSTANT)
@@ -50,16 +50,20 @@ namespace App
 		Q_PROPERTY(LN_TableModel* 		lnModel 		READ getLN_Model 		CONSTANT)
 		Q_PROPERTY(QAbstractItemModel* 	doModel 		READ getSortDO_Model 	CONSTANT)
 		//Q_PROPERTY(DO_TableModel* 	doModel 		READ getDO_Model 		CONSTANT)
-		Q_PROPERTY(DSInfo_TableModel* 	dsInfoModel 	READ getDSInfo_Model 	CONSTANT)
+		Q_PROPERTY(AllDS_TableModel* 	dsInfoModel 	READ getDSInfo_Model 	CONSTANT)
 		Q_PROPERTY(DS_TableModel* 		dataSetModel	READ getDS_Model 		CONSTANT)
+		Q_PROPERTY(RCB_MainTableModel* 	rcbMainModel	READ getRCB_Model 		CONSTANT)
+		Q_PROPERTY(Reports_TableModel* 	rcbReportsModel	READ getReports_Model 	CONSTANT)
 	
 		LD_GridModel*		getLD_Model() const { return m_ldModel; }
 		LD_PropertyModel*	getLD_PropModel() const { return m_ldPropModel; }
 		LN_TableModel*		getLN_Model() const { return m_lnModel; }
 		DO_TableModel*		getDO_Model() const { return m_doModel; }
 		QAbstractItemModel* getSortDO_Model() const { return m_sortDOModel; }
-		DSInfo_TableModel*	getDSInfo_Model() const { return m_dsInfoModel; }
+		AllDS_TableModel*	getDSInfo_Model() const { return m_dsInfoModel; }
 		DS_TableModel*		getDS_Model() const { return m_dsModel; }
+		RCB_MainTableModel*	getRCB_Model() const { return m_rcbMainModel; }
+		Reports_TableModel*	getReports_Model() const { return m_reportsModel; }
 
 		// Commands
 		Q_INVOKABLE void 	updateDO_Table();
@@ -69,7 +73,7 @@ namespace App
 		Q_INVOKABLE QString 	getLN_TextStatus();
 
 	public slots:
-		void 	slotNewIED(bool t_done) override;
+		void 	slotConnected(bool t_done) override;
 
 	protected:
 		// Models for Tables in GUI
@@ -78,7 +82,9 @@ namespace App
 		LN_TableModel*		m_lnModel = nullptr;
 		DO_TableModel*		m_doModel = nullptr;
 		SortProxyModel* 	m_sortDOModel = nullptr;
-		DSInfo_TableModel* 	m_dsInfoModel = nullptr;
+		AllDS_TableModel* 	m_dsInfoModel = nullptr;
 		DS_TableModel* 		m_dsModel = nullptr;
+		RCB_MainTableModel* m_rcbMainModel = nullptr;
+		Reports_TableModel* m_reportsModel = nullptr;
 	};
 }

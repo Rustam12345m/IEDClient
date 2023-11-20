@@ -4,7 +4,8 @@ set(APP_SOURCES
 	app_settings.hpp
 	app_settings.cpp
 	
-	connection_object.hpp
+	ied_connection.hpp
+
 	backend_base.hpp
 	backend_base.cpp
 	

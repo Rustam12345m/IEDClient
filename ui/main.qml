@@ -26,7 +26,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 import "qrc:/global/"
-import "qrc:/start/" as Start
+import "qrc:/main/" as Main
 import "qrc:/logical_device/" as LD
 import "qrc:/logical_node/" as LN
 import "qrc:/filesystem/" as FS
@@ -41,6 +41,8 @@ Window {
 	height: 650
 	visible: true
 	color: "white"
+
+	property var globals: Globals {}
 
 	// Status timer
 	Timer {
@@ -106,7 +108,7 @@ Window {
 				anchors {
 					fill: parent
 					leftMargin: 0
-					rightMargin: 5
+					rightMargin: 2
 				}
 				spacing: 10
 
@@ -273,44 +275,6 @@ Window {
 								rootWindow.updateActivePage()
 							}
 						}
-
-						// FC selector
-						Item {
-							width: 150
-							height: toolBar.height
-
-							Row {
-								anchors.fill: parent
-
-								Label {
-									anchors.verticalCenter: parent.verticalCenter
-
-									text: "FC: "
-								}
-								ComboBox {
-									id: comboBox
-
-									anchors.verticalCenter: parent.verticalCenter
-									height: toolBar.btnHeight
-
-									implicitContentWidthPolicy: ComboBox.WidestText
-									enabled: lnPage.visible
-									focus: false
-
-									model: ListModel {
-										ListElement { text: "ST + MX + SV" }
-										ListElement { text: "SP + CF + SG" }
-										ListElement { text: "CO" }
-										ListElement { text: "DC + EX" }
-										ListElement { text: "Tree" }
-									}
-
-									onActivated: function(index) {
-										console.log("ComboBox: Activate inx = " + index);
-									}
-								}
-							}
-						}
 					}
 				}
 
@@ -320,32 +284,57 @@ Window {
 
 					width: 20
 					height: toolBar.height
-				}
 
-				// Status
-				Rectangle {
-					//Layout.fillWidth: true
-					Layout.preferredWidth: Math.max(250, statusTextBox.implicitWidth + 20)
-
-					height: toolBar.btnHeight
-					//width: Math.max(250, statusTextBox.implicitWidth + 20)
-
-					border.width: 1
-					border.color: "gray"
-
-					color: "white"// "lightgray" //"black"
-					clip: true
-
+					/*
 					Text {
-						id: statusTextBox
-						anchors.fill: parent
+						id: conMessage
+						anchors.centerIn: parent
 
 						horizontalAlignment: Text.AlignHCenter
 						verticalAlignment: Text.AlignVCenter
 
-						color: "black" //"white"
+						clip: true
 						font.bold: true
-						text: ""
+						color: "black"
+
+						text: "Disconnected"
+					}
+					*/
+				}
+
+				// Status message
+				Rectangle {
+					Layout.preferredWidth: Math.max(250, statusTextBox.implicitWidth + toolBar.btnHeight)
+
+					height: toolBar.btnHeight
+
+					border.width: 1
+					border.color: "gray"
+					clip: true
+					color: "white"
+
+					RowLayout {
+						anchors.fill: parent
+
+						Led {
+							height: toolBar.btnHeight
+							width: toolBar.btnHeight
+							color: presenter.isConnected ? "green" : "red"
+						}
+						Text {
+							Layout.fillWidth: true
+
+							id: statusTextBox
+
+							height: toolBar.btnHeight
+
+							horizontalAlignment: Text.AlignHCenter
+							verticalAlignment: Text.AlignVCenter
+
+							font.bold: true
+							color: "black"
+							text: ""
+						}
 					}
 				}
 			}
@@ -404,7 +393,7 @@ Window {
 						clip: true
 						currentIndex: tabBar.currentIndex
 
-						Start.Page {
+						Main.Page {
 							id: startPage
 							focus: true
 
@@ -421,6 +410,10 @@ Window {
 							onSigConnectTo: function(ip, port, tls, user, pass) {
 								globalProgressBar.startLoad()
 								presenter.connectTo(ip, port, tls, user, pass)
+							}
+							onSigDumpModel: function(dir, ip, port, tls, user, pass) {
+								globalProgressBar.startLoad()
+								presenter.toolDumpModel(dir, ip, port, tls, user, pass)
 							}
 						}
 
@@ -552,7 +545,7 @@ Window {
 						anchors.fill: parent
 
 						// Start panel with last connections
-						Start.LastConn_Panel {
+						Main.LastConn_Panel {
 							id: lastConnPanel
 						}
 
@@ -780,14 +773,15 @@ Window {
 	Component.onCompleted: function() {
 		// App
 		presenter.sigConnected.connect(slotOnConnected)
-		presenter.sigConProgress.connect(slotOnProgress)
+		presenter.sigCmdProgress.connect(slotOnProgress)
+		presenter.sigCmdFinished.connect(slotOnFinished)
 
 		// Backends to GUI
-		ldBackend.sigProgress.connect(slotOnProgress)
-		ldBackend.sigFinished.connect(slotOnFinished)
+		ldBackend.sigCmdProgress.connect(slotOnProgress)
+		ldBackend.sigCmdFinished.connect(slotOnFinished)
 
-		fsBackend.sigProgress.connect(slotOnProgress)
-		fsBackend.sigFinished.connect(slotOnFinished)
+		fsBackend.sigCmdProgress.connect(slotOnProgress)
+		fsBackend.sigCmdFinished.connect(slotOnFinished)
 
 		// GUI
 		lastConnPanel.sigDeviceSelected.connect(startPage.slotSetCurrentDevice)
