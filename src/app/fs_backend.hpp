@@ -1,6 +1,4 @@
 /*
- *  main.cpp
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -36,11 +34,11 @@ namespace App
 	{
 		Q_OBJECT
 	public:
-		FS_Backend(ConnectionObject &t_con);
+		FS_Backend(IED_Connection &t_con);
 		~FS_Backend() = default;
 
 		// Properties for QML
-		Q_PROPERTY(FS_TableModel* 	filesModel 	READ getModel 		CONSTANT)
+		Q_PROPERTY(FS_TableModel* 		filesModel 	READ getModel 		CONSTANT)
 		Q_PROPERTY(QAbstractItemModel* 	sortModel 	READ getSortedModel CONSTANT)
 
 		FS_TableModel*	getModel() const { return m_fsModel; }
@@ -52,10 +50,10 @@ namespace App
 		Q_INVOKABLE void 	downloadFile(const QString &t_filename);
 		Q_INVOKABLE void 	removeFile(const QString &t_filename, int t_row);
 
-		void 				slotNewIED(bool t_done) override;
+		void 		slotConnected(bool t_done) override;
 
 	protected:
-		FS_TableModel*	m_fsModel = nullptr;
+		FS_TableModel*		m_fsModel = nullptr;
 		SortProxyModel* 	m_sortedModel = nullptr;
 	};
 }

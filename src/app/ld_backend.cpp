@@ -1,6 +1,4 @@
 /*
- *  main.cpp
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -25,14 +23,16 @@
 
 namespace App
 {
-	LD_Backend::LD_Backend(ConnectionObject &t_con) : BackendBase(t_con)
+	LD_Backend::LD_Backend(IED_Connection &t_con) : BackendBase(t_con)
 	{
-		m_ldModel = new LD_GridModel(this, m_con.m_ied);
-		m_ldPropModel = new LD_PropertyModel(this, m_con.m_ied);
-		m_lnModel = new LN_TableModel(this, m_con.m_ied);
-		m_doModel = new DO_TableModel(this, m_con.m_ied);
-		m_dsInfoModel = new DSInfo_TableModel(this, m_con.m_ied);
-		m_dsModel = new DS_TableModel(this, m_con.m_ied);
+		m_ldModel = new LD_GridModel(this, m_con.m_iedObj);
+		m_ldPropModel = new LD_PropertyModel(this, m_con.m_iedObj);
+		m_lnModel = new LN_TableModel(this, m_con.m_iedObj);
+		m_doModel = new DO_TableModel(this, m_con.m_iedObj);
+		m_dsInfoModel = new AllDS_TableModel(this, m_con.m_iedObj);
+		m_dsModel = new DS_TableModel(this, m_con.m_iedObj);
+		m_rcbMainModel = new RCB_MainTableModel(this, m_con.m_iedObj);
+		m_reportsModel = new Reports_TableModel(this, m_con.m_iedObj);
 
 		m_sortDOModel = new SortProxyModel(this);
 		m_sortDOModel->setSourceModel(m_doModel);
@@ -51,7 +51,7 @@ namespace App
 			return;
 		}
 
-		auto cmd = Core::Cmd::UpdateLNode::create(m_con.m_ied, ld, ln);
+		auto cmd = Core::Cmd::UpdateLNode::create(m_con.m_iedObj, ld, ln);
 		connect(cmd.get(), &Core::Cmd::IED_BaseCommand::sigFinished,
 				m_doModel, &DO_TableModel::slotDataUpdated);
 		putCmdToQueue(cmd);
@@ -59,24 +59,24 @@ namespace App
 
 	QString LD_Backend::getLD_TextStatus()
 	{
-		return m_con.m_ied->model().name();
+		return m_con.m_iedObj->model().name();
 	}
 
 	QString LD_Backend::getLN_TextStatus()
 	{
-		auto ld = m_con.m_ied->model().getLogicalDevice(m_lnModel->getCurrentLD());
+		auto ld = m_con.m_iedObj->model().getLogicalDevice(m_lnModel->getCurrentLD());
 		if (ld) {
 			return ld->name();
 		}
 		return "";
 	}
 
-	void LD_Backend::slotNewIED(bool t_done)
+	void LD_Backend::slotConnected(bool t_done)
 	{
-		m_ldModel->setNewIED(m_con.m_ied);
-		m_ldPropModel->setNewIED(m_con.m_ied);
+		m_ldModel->setNewIED(m_con.m_iedObj);
+		m_ldPropModel->setNewIED(m_con.m_iedObj);
 
-		m_lnModel->setNewIED(m_con.m_ied);
-		m_doModel->setNewIED(m_con.m_ied);
+		m_lnModel->setNewIED(m_con.m_iedObj);
+		m_doModel->setNewIED(m_con.m_iedObj);
 	}
 }

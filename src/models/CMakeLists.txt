@@ -26,11 +26,16 @@ set(SOURCES
 	last_conn_list.hpp
 	last_conn_list.cpp
 
-	ds_info_table_model.hpp
-	ds_info_table_model.cpp
+	all_ds_tablemodel.hpp
+	all_ds_tablemodel.cpp
 
-	ds_table_model.hpp
-	ds_table_model.cpp
+	ds_tablemodel.hpp
+	ds_tablemodel.cpp
+
+	rcb_main_tablemodel.hpp
+	rcb_main_tablemodel.cpp
+	reports_tablemodel.hpp
+	reports_tablemodel.cpp
 )
 
 qt_add_library(models_lib STATIC ${SOURCES})

@@ -1,6 +1,4 @@
 /*
- *  main.cpp
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -21,26 +19,26 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "ds_info_table_model.hpp"
+#include "all_ds_tablemodel.hpp"
 
-DSInfo_TableModel::DSInfo_TableModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied)
+AllDS_TableModel::AllDS_TableModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied)
 	: QAbstractTableModel(t_parent), m_ied(t_ied)
 {
 }
 
-void DSInfo_TableModel::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
+void AllDS_TableModel::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
 {
 	beginResetModel();
 	m_ied = t_ied;
 	endResetModel();
 }
 
-void DSInfo_TableModel::setSelectedDS(int t_ln)
+void AllDS_TableModel::setSelectedDS(int t_ln)
 {
 	emit sigDSSelected(m_currentDS, t_ln);
 }
 
-QVariant DSInfo_TableModel::headerData(int t_section, Qt::Orientation t_orientation, int t_role) const
+QVariant AllDS_TableModel::headerData(int t_section, Qt::Orientation t_orientation, int t_role) const
 {
 	switch (t_orientation) {
 	case Qt::Horizontal: {
@@ -54,12 +52,12 @@ QVariant DSInfo_TableModel::headerData(int t_section, Qt::Orientation t_orientat
 	return QVariant();
 }
 
-QHash<int, QByteArray> DSInfo_TableModel::roleNames() const
+QHash<int, QByteArray> AllDS_TableModel::roleNames() const
 {
 	return { { Qt::DisplayRole, "value" } };
 }
 
-int DSInfo_TableModel::rowCount(const QModelIndex &t_parent) const
+int AllDS_TableModel::rowCount(const QModelIndex &t_parent) const
 {
 	/*
 	auto ld = m_ied->model().getItem<Core::LogicalDevice>(m_currentDS);
@@ -70,12 +68,12 @@ int DSInfo_TableModel::rowCount(const QModelIndex &t_parent) const
 	return 30;
 }
 
-int DSInfo_TableModel::columnCount(const QModelIndex &t_parent) const
+int AllDS_TableModel::columnCount(const QModelIndex &t_parent) const
 {
 	return ColumnsCount;
 }
 
-QVariant DSInfo_TableModel::data(const QModelIndex &t_index, int t_role) const
+QVariant AllDS_TableModel::data(const QModelIndex &t_index, int t_role) const
 {
 	switch (t_index.column()) {
 	case DS_LD_Column: {
@@ -91,6 +89,6 @@ QVariant DSInfo_TableModel::data(const QModelIndex &t_index, int t_role) const
 	return QVariant(" ? ");
 }
 
-void DSInfo_TableModel::slotDataUpdated()
+void AllDS_TableModel::slotDataUpdated()
 {
 }

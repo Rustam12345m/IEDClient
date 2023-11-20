@@ -1,6 +1,4 @@
 /*
- *  main.cpp
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -33,14 +31,14 @@ void BackendBase::putCmdToQueue(Core::Cmd::ptrCMD t_cmd)
 
 void BackendBase::slotCmdProcess(int t_proc, QString t_msg)
 {
-	emit sigProgress(t_proc, t_msg);
+	emit sigCmdProgress(t_proc, t_msg);
 }
 
 void BackendBase::slotCmdFinished(bool t_done)
 {
-	emit sigFinished(t_done);
+	emit sigCmdFinished(t_done);
 }
 
-void BackendBase::slotNewIED(bool t_done)
+void BackendBase::slotConnected(bool t_done)
 {
 }

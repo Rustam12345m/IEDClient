@@ -1,6 +1,4 @@
 /*
- *  main.cpp
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -38,7 +36,7 @@ namespace App
 	{
 		Q_OBJECT
 	public:
-		ComBackend(ConnectionObject &t_con);
+		ComBackend(IED_Connection &t_con);
 		~ComBackend() = default;
 
 		Q_PROPERTY(AppEventsModel* 		eventsModel 	READ getEventsModel 	CONSTANT)
@@ -46,8 +44,6 @@ namespace App
 
 		AppEventsModel*			getEventsModel() const { return m_eventsModel; }
 		LastConn_TableModel* 	getLastConn_Model() const { return m_lastConnModel; }
-
-		void 		slotNewIED(bool t_done) override;
 
 	protected:
 		AppSettings				m_ini;

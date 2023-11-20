@@ -1,6 +1,4 @@
 /*
- *  main.cpp
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -21,7 +19,7 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "ds_table_model.hpp"
+#include "ds_tablemodel.hpp"
 
 namespace {
 	// remove: .stVal and .mag.f

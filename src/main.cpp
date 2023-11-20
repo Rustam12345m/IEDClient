@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 
 	QQmlApplicationEngine engine;
 
-	presenter.setContext(engine.rootContext());
+	presenter.setContextMembers(engine.rootContext());
 
 	engine.load(QStringLiteral("qrc:/main.qml"));
 	return app.exec();

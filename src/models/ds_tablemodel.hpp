@@ -1,6 +1,4 @@
 /*
- *  main.cpp
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -23,44 +21,37 @@
 
 #pragma once
 
-#include <QAbstractTableModel>
-
+#include "models_stub.hpp"
 #include "core/ied_object.hpp"
 
-class DSInfo_TableModel : public QAbstractTableModel
+class DS_TableModel : public QAbstractTableModel
 {
 	Q_OBJECT
 	enum Columns {
-		DS_LD_Column = 0,
-		DS_LN_Column,
-		DS_NameColumn,
+		DS_REF_COLUMN = 0,
+		DS_FC_COLUMN,
+		DS_VALUE_COLUMN,
 
 		ColumnsCount
 	};
 public:
-	DSInfo_TableModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
+	DS_TableModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
 
-	Q_INVOKABLE void setSelectedDS(int t_inx);
-	void 	setNewIED(QSharedPointer<Core::IED_Object> t_ied);
-	int 	getCurrentDS() const { return m_currentDS; }
+	void 		setNewIED(QSharedPointer<Core::IED_Object> t_ied);
 
 	QVariant headerData(int t_section, Qt::Orientation t_orientation,
 						int t_role = Qt::DisplayRole) const override;
-
 	QHash<int, QByteArray> roleNames() const override;
 
-	int rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
-	int columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
-
+	int 	rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
+	int 	columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
 	QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
-signals:
-	void	sigDSSelected(int t_ld, int t_ln);
-
 public slots:
-	void 	slotDataUpdated();
+	void 	slotDSSelected(int t_ds);
+	void 	slotDataUpdated(bool t_done);
 
 private:
-	QSharedPointer<Core::IED_Object> 	m_ied;
-	int		m_currentDS = -1; // selected DataSet
+	QSharedPointer<Core::IED_Object> m_ied;
+	int		m_currentDS = -1; // current index of Logical Node
 };

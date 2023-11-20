@@ -23,6 +23,7 @@
 
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Dialogs
 
 import "qrc:/global/"
 
@@ -30,6 +31,7 @@ FocusScope {
 	id: root
 
 	signal sigConnectTo(string ip, int port, bool tls, string user, string pass)
+	signal sigDumpModel(string dir, string ip, int port, bool tls, string user, string pass)
 
 	function slotSetCurrentDevice(ip, port) {
 		ipAddrInput.text = ip
@@ -42,12 +44,29 @@ FocusScope {
 
 		color: "white" //"lightgray"
 
+		// Folder for the model dump
+		FolderDialog {
+			id: dumpFolderDialog
+
+			title: "Please, select folder for the model dump file"
+			currentFolder: "~/"
+			options: FolderDialog.ShowDirsOnly
+
+			acceptLabel: "Select"
+			rejectLabel: "Cansel"
+
+			onAccepted: {
+				sigDumpModel(dumpFolderDialog.selectedFolder, ipAddrInput.text, portInput.text,
+							tlsSwitcher.checked, userNameInput.text, userPassInput.text)
+			}
+		}
+
 		// mini-window
 		Rectangle {
 			id: window
 			//anchors.centerIn: parent
 
-			width: 450
+			width: 460
 			height: 250
 			color: "lightgray" //"white"
 
@@ -133,12 +152,33 @@ FocusScope {
 				KeyNavigation.tab: tlsSwitcher
 			}
 
+			// Dump model
+			Button {
+				id: dumpButton
+				x: 336
+				y: 162
+				height: 25
+				width: 100
+
+				text: qsTr("Dump")
+
+				icon.source: "qrc:/img/icons/download.svg"
+
+				onClicked: {
+					dumpFolderDialog.open()
+				}
+
+				KeyNavigation.backtab: connButton
+				KeyNavigation.tab: ipAddrInput
+			}
+
 			// Connect
 			Button {
 				id: connButton
 				x: 336
 				y: 82
 				height: 25
+				width: 100
 
 				text: qsTr("Connect")
 
@@ -150,7 +190,7 @@ FocusScope {
 				}
 
 				KeyNavigation.backtab: userPassInput
-				KeyNavigation.tab: ipAddrInput
+				KeyNavigation.tab: dumpButton
 			}
 
 			// Input box user name

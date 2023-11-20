@@ -1,6 +1,4 @@
 /*
- *  main.cpp
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -26,18 +24,25 @@
 #include "models_stub.hpp"
 #include "core/ied_object.hpp"
 
-class DS_TableModel : public QAbstractTableModel
+class RCB_MainTableModel : public QAbstractTableModel
 {
 	Q_OBJECT
 	enum Columns {
-		DS_REF_COLUMN = 0,
-		DS_FC_COLUMN,
-		DS_VALUE_COLUMN,
+		RCB_ENA_COLUMN = 0,
+		RCB_RESV_COLUMN,
+		RCB_ID_COLUMN,
+		RCB_OWNER_COLUMN,
+		RCB_DS_COLUMN,
+		RCB_TRIG_COLUMN,
+		RCB_CREV_COLUMN,
+		RCB_BUFF_COLUMN,
+		RCB_INTEGRITY_COLUMN,
 
 		ColumnsCount
 	};
+
 public:
-	DS_TableModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
+	RCB_MainTableModel(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
 
 	void 		setNewIED(QSharedPointer<Core::IED_Object> t_ied);
 
@@ -50,10 +55,8 @@ public:
 	QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
 public slots:
-	void 	slotDSSelected(int t_ds);
 	void 	slotDataUpdated(bool t_done);
 
 private:
 	QSharedPointer<Core::IED_Object> m_ied;
-	int		m_currentDS = -1; // current index of Logical Node
 };

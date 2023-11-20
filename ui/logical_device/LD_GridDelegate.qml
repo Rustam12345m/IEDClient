@@ -41,7 +41,7 @@ Item {
 	required property int blkBorder
 
 	readonly property int blkBottomH: 40
-	readonly property int ledRadius: 25
+	readonly property int ledWH: 25
 
 	width: blkWidth + 2 * blkBorder
 	height: blkHeight + 2 * blkBorder
@@ -116,13 +116,10 @@ Item {
 					Layout.leftMargin: 10
 					Layout.preferredWidth: parent.width / 3
 
-					Rectangle {
+					Led {
 						id: ledMode
-
-						width: ledRadius
-						height: ledRadius
-						radius: ledRadius
-
+						width: ledWH
+						height: ledWH
 						color: "green"
 					}
 					Text {
@@ -136,13 +133,10 @@ Item {
 					Layout.leftMargin: 10
 					Layout.preferredWidth: parent.width / 3
 
-					Rectangle {
+					Led {
 						id: ledBeh
-
-						width: ledRadius
-						height: ledRadius
-						radius: ledRadius
-
+						width: ledWH
+						height: ledWH
 						color: "green"
 					}
 					Text {
@@ -156,13 +150,10 @@ Item {
 					Layout.leftMargin: 10
 					Layout.preferredWidth: parent.width / 3
 
-					Rectangle {
+					Led {
 						id: ledHealth
-						
-						width: ledRadius
-						height: ledRadius
-						radius: ledRadius
-
+						width: ledWH
+						height: ledWH
 						color: "green"
 					}
 					Text {
