@@ -25,9 +25,7 @@
 #include <QString>
 #include <QList>
 
-#include <stdint.h>
-
-class FS_TableModel;
+#include <cstdint>
 
 namespace Core
 {
@@ -50,12 +48,10 @@ namespace Core
 			return m_mts;
 		}
 
-	private:
+	public:
 		QString 	m_fileName;
 		uint32_t 	m_size = 0;
 		uint64_t 	m_mts = 0; // last modified ts
-
-		friend class ::FS_TableModel;
 	};
 
 	class DirOn
@@ -90,11 +86,9 @@ namespace Core
 			m_file.removeAt(t_index);
 		}
 
-	private:
+	public:
 		QString 		m_name;
 		QList<FileOn> 	m_file;
-
-		friend class ::FS_TableModel;
 	};
 
 	class FS_Model : public QObject
@@ -122,9 +116,7 @@ namespace Core
 	signals:
 		void sigFS_Updated();
 
-	private:
+	public:
 		DirOn 		m_dir;
-
-		friend class ::FS_TableModel;
 	};
 }

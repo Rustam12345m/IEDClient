@@ -88,7 +88,7 @@ FocusScope {
 			top: headerID.bottom
 			bottom: parent.bottom
 		}
-		model: ldBackend.lnModel
+		model: devBackend.lnModel
 
 		focus: true
 		clip: true

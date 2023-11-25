@@ -25,9 +25,9 @@ namespace App
 {
 	FS_Backend::FS_Backend(IED_Connection &t_con) : BackendBase(t_con)
 	{
-		m_fsModel = new FS_TableModel(this, m_con.m_iedObj);
+		m_fsModel = new Models::DevFS_Table(this, m_con.m_iedObj);
 
-		m_sortedModel = new SortProxyModel(this);
+		m_sortedModel = new Models::SortProxyModel(this);
 		m_sortedModel->setSourceModel(m_fsModel);
 	}
 
@@ -58,7 +58,7 @@ namespace App
 		qDebug() << "FS_Backend: Remove file " << t_filename;
 		auto cmd = Core::Cmd::RemoveFile::create(t_filename, t_row);
 
-		connect(cmd.get(), &Core::Cmd::RemoveFile::sigFileRemoved, m_fsModel, &FS_TableModel::slotRemoveFile);
+		connect(cmd.get(), &Core::Cmd::RemoveFile::sigFileRemoved, m_fsModel, &Models::DevFS_Table::slotRemoveFile);
 		putCmdToQueue(cmd);
 	}
 

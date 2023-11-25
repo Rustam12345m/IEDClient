@@ -21,24 +21,27 @@
 
 #include "backend_base.hpp"
 
-void BackendBase::putCmdToQueue(Core::Cmd::ptrCMD t_cmd)
+namespace App
 {
-	connect(t_cmd.get(), &Core::Cmd::IED_BaseCommand::sigProgress, this, &BackendBase::slotCmdProcess);
-	connect(t_cmd.get(), &Core::Cmd::IED_BaseCommand::sigFinished, this, &BackendBase::slotCmdFinished);
+	void BackendBase::putCmdToQueue(Core::Cmd::ptrCMD t_cmd)
+	{
+		connect(t_cmd.get(), &Core::Cmd::IED_BaseCommand::sigProgress, this, &BackendBase::slotCmdProcess);
+		connect(t_cmd.get(), &Core::Cmd::IED_BaseCommand::sigFinished, this, &BackendBase::slotCmdFinished);
 
-	m_con.m_cmdQueue->putCommand(t_cmd);
-}
+		m_con.m_cmdQueue->putCommand(t_cmd);
+	}
 
-void BackendBase::slotCmdProcess(int t_proc, QString t_msg)
-{
-	emit sigCmdProgress(t_proc, t_msg);
-}
+	void BackendBase::slotCmdProcess(int t_proc, QString t_msg)
+	{
+		emit sigCmdProgress(t_proc, t_msg);
+	}
 
-void BackendBase::slotCmdFinished(bool t_done)
-{
-	emit sigCmdFinished(t_done);
-}
+	void BackendBase::slotCmdFinished(bool t_done)
+	{
+		emit sigCmdFinished(t_done);
+	}
 
-void BackendBase::slotConnected(bool t_done)
-{
+	void BackendBase::slotConnected(bool t_done)
+	{
+	}
 }

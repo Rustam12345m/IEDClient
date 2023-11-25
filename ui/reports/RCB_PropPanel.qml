@@ -39,7 +39,7 @@ Item {
 
 		property int selectedIndex: -1
 
-		model: ldBackend.rcbPropModel
+		model: devBackend.rcbPropModel
 
 		section.property: "section"
 		section.delegate: Rectangle {

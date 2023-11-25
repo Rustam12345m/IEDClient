@@ -39,7 +39,7 @@ Item {
 
 		property int selectedIndex: -1
 
-		model: ldBackend.ldPropModel
+		model: devBackend.ldPropModel
 
 		section.property: "section"
 		section.delegate: Rectangle {

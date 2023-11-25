@@ -25,9 +25,9 @@
 #include <QQmlContext>
 
 // bk
-#include "app/com_backend.hpp"
+#include "app/app_backend.hpp"
 #include "app/fs_backend.hpp"
-#include "app/ld_backend.hpp"
+#include "app/dev_backend.hpp"
 
 namespace App
 {
@@ -78,7 +78,7 @@ namespace App
 
 		// Backends for QML
 		ComBackend		m_comBackend;
-		LD_Backend		m_ldBackend;
+		DevBackend		m_ldBackend;
 		FS_Backend		m_fsBackend;
 	};
 }

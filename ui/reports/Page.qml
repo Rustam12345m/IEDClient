@@ -71,7 +71,7 @@ FocusScope {
 	// Table of files on the IED
 	TableView {
 		id: tableID
-		model: ldBackend.rcbMainModel
+		model: devBackend.rcbMainModel
 
 		anchors {
 			left: parent.left

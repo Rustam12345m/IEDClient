@@ -23,27 +23,35 @@
 
 #include <QAbstractTableModel>
 
+#include "app/app_settings.hpp"
+
 namespace App::Models
 {
-	class SortHeaderValue
+	class HistConTable : public QAbstractTableModel
 	{
-		// hack
-		Q_GADGET
+		Q_OBJECT
+		enum Columns {
+			IED_NAME = 0,
+			IP_ADDR,
+			PORT_COLUMN,
+			COLUMNS_COUNT
+		};
+
 	public:
-		SortHeaderValue() {}
-		SortHeaderValue(const QString &t_text, bool t_sort)
-			: m_text(t_text), m_sortable(t_sort) {}
+		HistConTable(QObject *t_parent, App::AppSettings &t_ini);
 
-		QString		m_text;
-		bool 		m_sortable = false;
+		QVariant headerData(int t_section, Qt::Orientation t_orientation,
+							int t_role = Qt::DisplayRole) const override;
 
-		Q_PROPERTY(int 		sortable 	MEMBER 	m_sortable)
-		Q_PROPERTY(QString 	text 		MEMBER 	m_text)
-	};
+		QHash<int, QByteArray> roleNames() const override;
 
-	enum ComRoles
-	{
-		ROLE_SORT_VALUE = Qt::UserRole + 1
+		int rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
+		int columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
+
+		QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
+
+	protected:
+		App::AppSettings& 		m_ini;
+		QList<App::DevConInfo> 	m_con;
 	};
 }
-Q_DECLARE_METATYPE(App::Models::SortHeaderValue)

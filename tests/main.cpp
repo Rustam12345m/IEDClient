@@ -1,4 +1,6 @@
 /*
+ *  main.cpp
+ *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -19,31 +21,13 @@
  *  See COPYING file for the complete license text.
  * */
 
-#pragma once
+#include "Cmd_Tests.hpp"
+#include "DataModel_Tests.hpp"
+#include "DumpModel_Tests.hpp"
+#include "Items_Tests.hpp"
 
-#include <QAbstractTableModel>
-
-namespace App::Models
+int main(int argc, char **argv)
 {
-	class SortHeaderValue
-	{
-		// hack
-		Q_GADGET
-	public:
-		SortHeaderValue() {}
-		SortHeaderValue(const QString &t_text, bool t_sort)
-			: m_text(t_text), m_sortable(t_sort) {}
-
-		QString		m_text;
-		bool 		m_sortable = false;
-
-		Q_PROPERTY(int 		sortable 	MEMBER 	m_sortable)
-		Q_PROPERTY(QString 	text 		MEMBER 	m_text)
-	};
-
-	enum ComRoles
-	{
-		ROLE_SORT_VALUE = Qt::UserRole + 1
-	};
+	::testing::InitGoogleTest(&argc, argv);
+	return RUN_ALL_TESTS();
 }
-Q_DECLARE_METATYPE(App::Models::SortHeaderValue)

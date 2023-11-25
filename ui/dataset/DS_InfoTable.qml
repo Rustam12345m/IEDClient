@@ -90,7 +90,7 @@ FocusScope {
 			bottom: parent.bottom
 		}
 
-		model: ldBackend.dsInfoModel
+		model: devBackend.dsInfoModel
 
 		focus: true
 		clip: true

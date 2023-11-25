@@ -90,7 +90,7 @@ FocusScope {
 			bottom: parent.bottom
 		}
 
-		model: ldBackend.dataSetModel
+		model: devBackend.dataSetModel
 
 		focus: true
 		clip: true
@@ -142,7 +142,7 @@ FocusScope {
 		}
 
 		Connections {
-			target: ldBackend.doModel
+			target: devBackend.doModel
 
 			function onDataChanged() {
 				Qt.callLater(rootID.resizeColumns)

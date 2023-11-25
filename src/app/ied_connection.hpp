@@ -25,7 +25,7 @@
 
 #include "core/ied_object.hpp"
 #include "cmd/cmd_thread.hpp"
-#include "libiec61850/lib61850.hpp"
+#include "lib61850_adapter/lib61850.hpp"
 
 /*
  * 
@@ -43,8 +43,8 @@ public:
 		m_lib.clear();
 		m_iedObj.clear();
 
-		auto lib = QSharedPointer<Core::Lib::Lib61850>::create();
-		connect(lib.get(), &Core::Lib::Lib61850::sigConClosed, this, &IED_Connection::slotConClosed);
+		auto lib = QSharedPointer<Core::Lib::Lib61850_Adapter>::create();
+		connect(lib.get(), &Core::Lib::Lib61850_Adapter::sigConClosed, this, &IED_Connection::slotConClosed);
 		m_lib = lib;
 
 		m_iedObj = QSharedPointer<Core::IED_Object>::create();

@@ -2,40 +2,42 @@
 
 set(SOURCES
 	models_stub.hpp
+
+	app_events_table.hpp
+	app_events_table.cpp
 	
-	do_tablemodel.hpp
-	do_tablemodel.cpp
-	
-	app_events_model.hpp
-	app_events_model.cpp
+	dev_fs_table.hpp
+	dev_fs_table.cpp
 
-	files_model.hpp
-	files_model.cpp
+	ln_state_table.cpp
+	ln_state_table.hpp
 
-	ld_grid_model.hpp
-	ld_grid_model.cpp
-	ld_property_model.hpp
-	ld_property_model.cpp
+	lds_grid.hpp
+	lds_grid.cpp
 
-	ln_tablemodel.hpp
-	ln_tablemodel.cpp
+	ld_prop_table.hpp
+	ld_prop_table.cpp
+
+	lns_table.hpp
+	lns_table.cpp
 
 	sort_proxy_model.hpp
 	sort_proxy_model.cpp
 
-	last_conn_list.hpp
-	last_conn_list.cpp
+	history_connections.hpp
+	history_connections.cpp
 
-	all_ds_tablemodel.hpp
-	all_ds_tablemodel.cpp
+	datasets_table.hpp
+	datasets_table.cpp
 
-	ds_tablemodel.hpp
-	ds_tablemodel.cpp
+	ds_signals_table.hpp
+	ds_signals_table.cpp
 
-	rcb_main_tablemodel.hpp
-	rcb_main_tablemodel.cpp
-	reports_tablemodel.hpp
-	reports_tablemodel.cpp
+	rcb_general_table.hpp
+	rcb_general_table.cpp
+
+	reports_table.hpp
+	reports_table.cpp
 )
 
 qt_add_library(models_lib STATIC ${SOURCES})
