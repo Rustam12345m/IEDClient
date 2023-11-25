@@ -70,7 +70,7 @@ FocusScope {
 					tableDS_Val.focus = false
 				}
 				onSigSelectedNewDS: function() {
-					//ldBackend.updateDO_Table(tableDS_Val.currentLDevice, tableDS_Val.currentLNode)
+					//devBackend.updateDO_Table(tableDS_Val.currentLDevice, tableDS_Val.currentLNode)
 				}
 			}
 		}

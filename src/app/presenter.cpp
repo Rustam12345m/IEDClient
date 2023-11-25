@@ -34,9 +34,9 @@ namespace App
 	void Presenter::setContextMembers(QQmlContext *t_context)
 	{
 		t_context->setContextProperty("presenter", this);
-		t_context->setContextProperty("comBackend", &m_comBackend);
+		t_context->setContextProperty("appBackend", &m_comBackend);
 		t_context->setContextProperty("fsBackend", &m_fsBackend);
-		t_context->setContextProperty("ldBackend", &m_ldBackend);
+		t_context->setContextProperty("devBackend", &m_ldBackend);
 	}
 
 	QString Presenter::getAppVersion()

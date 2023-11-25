@@ -72,7 +72,7 @@ FocusScope {
 					tableDO.focus = false
 				}
 				onSigSelectedNewLN: function() {
-					ldBackend.updateDO_Table(tableDO.currentLDevice, tableDO.currentLNode)
+					devBackend.updateDO_Table(tableDO.currentLDevice, tableDO.currentLNode)
 				}
 			}
 		}
@@ -110,7 +110,7 @@ FocusScope {
 			repeat: true
 
 			onTriggered: function() {
-				//ldBackend.updateDO_Table(tableDO.currentLDevice, tableDO.currentLNode)
+				//devBackend.updateDO_Table(tableDO.currentLDevice, tableDO.currentLNode)
 			}
 		}
 	}

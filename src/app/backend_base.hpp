@@ -23,30 +23,33 @@
 
 #include "ied_connection.hpp"
 
-/*
- * Interface for all Backends
- * */
-class BackendBase : public QObject
+namespace App
 {
-	Q_OBJECT
+	/*
+	* Interface for all Backends
+	* */
+	class BackendBase : public QObject
+	{
+		Q_OBJECT
 
-	BackendBase() = delete;
-public:
-	BackendBase(IED_Connection &t_con) : m_con(t_con) {};
-	virtual ~BackendBase() {}
+		BackendBase() = delete;
+	public:
+		BackendBase(IED_Connection &t_con) : m_con(t_con) {};
+		virtual ~BackendBase() {}
 
-protected:
-	void	putCmdToQueue(Core::Cmd::ptrCMD t_cmd);
+	protected:
+		void	putCmdToQueue(Core::Cmd::ptrCMD t_cmd);
 
-signals:
-	void	sigCmdProgress(int t_perc, QString t_msg);
-	void	sigCmdFinished(bool t_done);
+	signals:
+		void	sigCmdProgress(int t_perc, QString t_msg);
+		void	sigCmdFinished(bool t_done);
 
-public slots:
-	void			slotCmdProcess(int t_proc, QString t_msg);
-	void			slotCmdFinished(bool t_done);
-	virtual void 	slotConnected(bool t_done);
+	public slots:
+		void			slotCmdProcess(int t_proc, QString t_msg);
+		void			slotCmdFinished(bool t_done);
+		virtual void 	slotConnected(bool t_done);
 
-protected:
-	IED_Connection& 	m_con;
-};
+	protected:
+		IED_Connection& 	m_con;
+	};
+}

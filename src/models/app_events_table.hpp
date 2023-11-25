@@ -25,25 +25,28 @@
 
 namespace App::Models
 {
-	class SortHeaderValue
+	class AppEventsTable : public QAbstractTableModel
 	{
-		// hack
-		Q_GADGET
+		Q_OBJECT
+		enum Columns {
+			DATE_COLUMN = 0,
+			SOURCE_COLUMN,
+			DESC_COLUMN
+		};
+
 	public:
-		SortHeaderValue() {}
-		SortHeaderValue(const QString &t_text, bool t_sort)
-			: m_text(t_text), m_sortable(t_sort) {}
+		explicit AppEventsTable(QObject *parent = nullptr);
+		~AppEventsTable() = default;
 
-		QString		m_text;
-		bool 		m_sortable = false;
+		int rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
+		int columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
 
-		Q_PROPERTY(int 		sortable 	MEMBER 	m_sortable)
-		Q_PROPERTY(QString 	text 		MEMBER 	m_text)
-	};
+		QHash<int, QByteArray> roleNames() const override;
+		Qt::ItemFlags flags(const QModelIndex &t_index) const override;
 
-	enum ComRoles
-	{
-		ROLE_SORT_VALUE = Qt::UserRole + 1
+		Q_INVOKABLE QVariant headerData(int t_section, Qt::Orientation t_orientation,
+										int t_role = Qt::DisplayRole) const;
+
+		QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 	};
 }
-Q_DECLARE_METATYPE(App::Models::SortHeaderValue)

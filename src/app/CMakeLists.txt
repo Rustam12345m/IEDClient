@@ -9,14 +9,14 @@ set(APP_SOURCES
 	backend_base.hpp
 	backend_base.cpp
 	
-	com_backend.hpp
-	com_backend.cpp
+	app_backend.hpp
+	app_backend.cpp
 	
 	fs_backend.hpp
 	fs_backend.cpp
 	
-	ld_backend.hpp
-	ld_backend.cpp
+	dev_backend.hpp
+	dev_backend.cpp
 	
 	presenter.hpp
 	presenter.cpp

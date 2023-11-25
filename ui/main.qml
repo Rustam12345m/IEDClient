@@ -319,7 +319,7 @@ Window {
 						Led {
 							height: toolBar.btnHeight
 							width: toolBar.btnHeight
-							color: presenter.isConnected ? "green" : "red"
+							color: presenter.isConnected ? "green" : "gray"
 						}
 						Text {
 							Layout.fillWidth: true
@@ -425,7 +425,7 @@ Window {
 									focus = true
 
 									setActivePanel(Globals.Panel.LD_INFO)
-									setStatusText(ldBackend.getLD_TextStatus())
+									setStatusText(devBackend.getLD_TextStatus())
 								} else {
 									focus = false
 								}
@@ -443,7 +443,7 @@ Window {
 									focus = true
 
 									setActivePanel(Globals.Panel.HIDE)
-									setStatusText(ldBackend.getLN_TextStatus())
+									setStatusText(devBackend.getLN_TextStatus())
 								} else {
 									focus = false
 								}
@@ -729,12 +729,12 @@ Window {
 		}
 		case Globals.Page.LD: {
 			//ldPage.updatePage()
-			setStatusText(ldBackend.getLD_TextStatus())
+			setStatusText(devBackend.getLD_TextStatus())
 			break;
 		}
 		case Globals.Page.LN: {
-			ldBackend.updateDO_Table()
-			setStatusText(ldBackend.getLN_TextStatus())
+			devBackend.updateDO_Table()
+			setStatusText(devBackend.getLN_TextStatus())
 			break;
 		}
 		case Globals.Page.FS: {
@@ -777,8 +777,8 @@ Window {
 		presenter.sigCmdFinished.connect(slotOnFinished)
 
 		// Backends to GUI
-		ldBackend.sigCmdProgress.connect(slotOnProgress)
-		ldBackend.sigCmdFinished.connect(slotOnFinished)
+		devBackend.sigCmdProgress.connect(slotOnProgress)
+		devBackend.sigCmdFinished.connect(slotOnFinished)
 
 		fsBackend.sigCmdProgress.connect(slotOnProgress)
 		fsBackend.sigCmdFinished.connect(slotOnFinished)

@@ -21,29 +21,36 @@
 
 #pragma once
 
-#include <QAbstractTableModel>
+#include <QAbstractListModel>
+
+#include "core/ied_object.hpp"
 
 namespace App::Models
 {
-	class SortHeaderValue
+	class LDs_Grid : public QAbstractListModel
 	{
-		// hack
-		Q_GADGET
+		Q_OBJECT
+		enum LD_ModelRole {
+			LD_ROLE_NAME = Qt::UserRole + 1
+		};
 	public:
-		SortHeaderValue() {}
-		SortHeaderValue(const QString &t_text, bool t_sort)
-			: m_text(t_text), m_sortable(t_sort) {}
+		LDs_Grid(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
 
-		QString		m_text;
-		bool 		m_sortable = false;
+		void 		setNewIED(QSharedPointer<Core::IED_Object> t_ied);
 
-		Q_PROPERTY(int 		sortable 	MEMBER 	m_sortable)
-		Q_PROPERTY(QString 	text 		MEMBER 	m_text)
-	};
+		QHash<int, QByteArray> roleNames() const override;
+		int			rowCount(const QModelIndex &t_index = QModelIndex()) const override;
+		QVariant	data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
-	enum ComRoles
-	{
-		ROLE_SORT_VALUE = Qt::UserRole + 1
+		Q_INVOKABLE void 	setSelectedLD(int t_ld);
+
+	signals:
+		void 		sigLDSelected(int t_ld);
+
+	public slots:
+		void		slotDataUpdated();
+
+	private:
+		QSharedPointer<Core::IED_Object>	m_ied;
 	};
 }
-Q_DECLARE_METATYPE(App::Models::SortHeaderValue)

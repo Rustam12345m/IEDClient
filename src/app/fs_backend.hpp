@@ -23,7 +23,7 @@
 
 #include "backend_base.hpp"
 #include "models/sort_proxy_model.hpp"
-#include "models/files_model.hpp"
+#include "models/dev_fs_table.hpp"
 
 namespace App
 {
@@ -38,11 +38,11 @@ namespace App
 		~FS_Backend() = default;
 
 		// Properties for QML
-		Q_PROPERTY(FS_TableModel* 		filesModel 	READ getModel 		CONSTANT)
-		Q_PROPERTY(QAbstractItemModel* 	sortModel 	READ getSortedModel CONSTANT)
+		Q_PROPERTY(QAbstractTableModel* 	filesModel 	READ getModel 		CONSTANT)
+		Q_PROPERTY(QAbstractItemModel* 		sortModel 	READ getSortedModel CONSTANT)
 
-		FS_TableModel*	getModel() const { return m_fsModel; }
-		QAbstractItemModel* getSortedModel() const { return m_sortedModel; }
+		QAbstractTableModel*	getModel() const { return m_fsModel; }
+		QAbstractItemModel* 	getSortedModel() const { return m_sortedModel; }
 
 		// API for QML
 		Q_INVOKABLE QString getFS_TextStatus();
@@ -50,10 +50,10 @@ namespace App
 		Q_INVOKABLE void 	downloadFile(const QString &t_filename);
 		Q_INVOKABLE void 	removeFile(const QString &t_filename, int t_row);
 
-		void 		slotConnected(bool t_done) override;
+		void 				slotConnected(bool t_done) override;
 
 	protected:
-		FS_TableModel*		m_fsModel = nullptr;
-		SortProxyModel* 	m_sortedModel = nullptr;
+		Models::DevFS_Table* 	m_fsModel = nullptr;
+		Models::SortProxyModel* m_sortedModel = nullptr;
 	};
 }

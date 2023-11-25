@@ -52,7 +52,7 @@ FocusScope {
 		keyNavigationEnabled: true
 		boundsBehavior: Flickable.StopAtBounds
 
-		model: ldBackend.ldModel
+		model: devBackend.ldModel
 
 		delegate: LD_GridDelegate {
 			blkWidth: rootID.blkWidth

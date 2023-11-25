@@ -21,29 +21,34 @@
 
 #pragma once
 
-#include <QAbstractTableModel>
+#include "backend_base.hpp"
+#include "app/app_settings.hpp"
 
-namespace App::Models
+#include "models/app_events_table.hpp"
+#include "models/history_connections.hpp"
+
+namespace App
 {
-	class SortHeaderValue
+	/*
+	* Presenter of other small tables
+	* */
+	class ComBackend : public BackendBase
 	{
-		// hack
-		Q_GADGET
+		Q_OBJECT
 	public:
-		SortHeaderValue() {}
-		SortHeaderValue(const QString &t_text, bool t_sort)
-			: m_text(t_text), m_sortable(t_sort) {}
+		ComBackend(IED_Connection &t_con);
+		~ComBackend() = default;
 
-		QString		m_text;
-		bool 		m_sortable = false;
+		Q_PROPERTY(QAbstractTableModel* eventsModel 	READ getEventsModel 	CONSTANT)
+		Q_PROPERTY(QAbstractItemModel* 	lastConnList 	READ getLastConn_Model 	CONSTANT)
 
-		Q_PROPERTY(int 		sortable 	MEMBER 	m_sortable)
-		Q_PROPERTY(QString 	text 		MEMBER 	m_text)
-	};
+		Models::AppEventsTable*	getEventsModel() const { return m_eventsModel; }
+		Models::HistConTable* 	getLastConn_Model() const { return m_lastConnModel; }
 
-	enum ComRoles
-	{
-		ROLE_SORT_VALUE = Qt::UserRole + 1
+	protected:
+		AppSettings				m_ini;
+
+		Models::AppEventsTable*	m_eventsModel = nullptr;
+		Models::HistConTable*	m_lastConnModel = nullptr;
 	};
 }
-Q_DECLARE_METATYPE(App::Models::SortHeaderValue)
