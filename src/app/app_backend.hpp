@@ -25,7 +25,7 @@
 #include "app/app_settings.hpp"
 
 #include "models/app_events_table.hpp"
-#include "models/history_connections.hpp"
+#include "models/history_con_table.hpp"
 
 namespace App
 {

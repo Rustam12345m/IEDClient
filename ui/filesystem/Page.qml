@@ -37,14 +37,12 @@ FocusScope {
 		let idx = tableID.model.index(t_row, 2)
 		return tableID.model.data(idx, "display")
 	}
-
 	function cmdDownloadFile(t_row) {
 		console.log("FS_Table: Download file N" + t_row)
 
 		globals.setSelectedRow(t_row)
 		fsBackend.downloadFile(getFilename(t_row))
 	}
-
 	function cmdRemoveFile(t_row) {
 		console.log("Control: Remove file N" + t_row)
 
@@ -131,7 +129,6 @@ FocusScope {
 			top: headerID.bottom
 			right: parent.right
 			bottom: parent.bottom
-			//rightMargin: 5
 		}
 
 		focus: true
@@ -254,8 +251,6 @@ FocusScope {
 		}
 
 		Keys.onPressed: function(event) {
-			//console.log("FS_Table: Key pressed " + event.key + ", currentIndex = " + tableID.currentRow)
-
 			if (event.key == Qt.Key_Return || event.key == Qt.Key_Enter) {
 				rootID.downloadFile(tableID.currentRow)
 			}
@@ -263,7 +258,6 @@ FocusScope {
 	}
 
 	onVisibleChanged: {
-		//console.log("FS_Table: Focus " + visible)
 		tableID.focus = visible
 	}
 }

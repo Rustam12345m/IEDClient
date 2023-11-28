@@ -38,7 +38,6 @@ namespace Core
 		}
 	}
 
-
 	void DataModel::calcIEDNameFromLD()
 	{
 		if (m_items.isEmpty()) {
@@ -102,5 +101,25 @@ namespace Core
 			qDebug() << "  LD: " << *ld;
 			printTree("    ", ld);
 		}
+	}
+	
+	void DataModel::pushDataSet(ptrDataSet t_ds)
+	{
+		m_ds.push_back(t_ds);
+	}
+
+	void DataModel::pushReportCB(ptrRCB t_cb)
+	{
+		m_rcb.push_back(t_cb);
+	}
+
+	void DataModel::pushGooseCB(ptrGOCB t_cb)
+	{
+		m_gocb.push_back(t_cb);
+	}
+
+	void DataModel::pushSV_CB(ptrSVCB t_cb)
+	{
+		m_svcb.push_back(t_cb);
 	}
 }

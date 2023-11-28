@@ -28,8 +28,9 @@
 
         <file>logical_node/Page.qml</file>
         <file>logical_node/LN_Table.qml</file>
-        <file>logical_node/MBH_Delegate.qml</file>
-        <file>logical_node/DO_Table.qml</file>
+        <file>logical_node/LN_StateDelegate.qml</file>
+        <file>logical_node/LN_SignalsTable.qml</file>
+        <file>logical_node/LN_SignalsTree.qml</file>
 
         <file>filesystem/Page.qml</file>
         <file>filesystem/FileTableDelegate.qml</file>
@@ -87,5 +88,9 @@
         <file>icons/favorite.svg</file>
         <file>icons/fullscreen_exit.svg</file>
         <file>icons/fullscreen.svg</file>
+
+        <file>icons/tune.svg</file>
+        <file>icons/vertical_split.svg</file>
+        <file>icons/view_sidebar.svg</file>
     </qresource>
 </RCC>

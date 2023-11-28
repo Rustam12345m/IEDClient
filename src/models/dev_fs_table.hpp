@@ -63,6 +63,9 @@ namespace App::Models
 								int t_role = Qt::DisplayRole) const;
 		QVariant	data(const QModelIndex &t_index, int role = Qt::DisplayRole) const override;
 
+	signals:
+		void 		sigFS_Updated();
+
 	public slots:
 		void		slotDataUpdated();
 		void 		slotRemoveFile(int t_row);

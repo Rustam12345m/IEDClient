@@ -275,6 +275,20 @@ Window {
 								rootWindow.updateActivePage()
 							}
 						}
+						// Tree or Table
+						ToolBarButton {
+							icon: "qrc:/img/icons/tune.svg"
+							prompt: "Switch between Tree and Table view"
+							width: toolBar.btnHeight
+							height: toolBar.btnHeight
+
+							onSigClicked: function() {
+								//rootWindow.updateActivePage()
+								console.log("Clicked: " + prompt)
+
+								lnPage.switchSignalsView()
+							}
+						}
 					}
 				}
 
@@ -642,19 +656,32 @@ Window {
 
 	// History page list
 	property var pageHistoryList: [ 0 ]
+	function pushPageToHistoryList(page) {
+		pageHistoryList.push(page)
+	}
 	function switchToPreviousPage() {
 		console.log("Switch to previous page: " + pageHistoryList)
 
-		//var cur = pageHistoryList.pop()
-		var prev = pageHistoryList.pop()
-		if (prev >= 0) {
-			//setActivePage(prev)
-			tabBar.currentIndex = prev
-			console.log("Switch to previous page: " + prev)
+		switch (tabBar.currentIndex) {
+		case Globals.Page.LD: {
+			setActivePage(Globals.Page.Main)
+			break;
 		}
-	}
-	function pushPageToHistoryList(page) {
-		pageHistoryList.push(page)
+		case Globals.Page.LN:
+		case Globals.Page.FS:
+		case Globals.Page.DS:
+		case Globals.Page.RCB: {
+			setActivePage(Globals.Page.LD)
+			break;
+		}
+		}
+
+		// var prev = pageHistoryList.pop()
+		// if (prev >= 0) {
+		// 	//setActivePage(prev)
+		// 	tabBar.currentIndex = prev
+		// 	console.log("Switch to previous page: " + prev)
+		// }
 	}
 
 	// Active Page + Panel
@@ -728,7 +755,7 @@ Window {
 			break;
 		}
 		case Globals.Page.LD: {
-			//ldPage.updatePage()
+			devBackend.updateLDs_Status()
 			setStatusText(devBackend.getLD_TextStatus())
 			break;
 		}

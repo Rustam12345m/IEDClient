@@ -21,54 +21,44 @@
 
 #pragma once
 
-#include <QAbstractListModel>
-#include <QList>
-
+#include "models_stub.hpp"
 #include "core/ied_object.hpp"
 
 namespace App::Models
 {
-	/*
-	* ListModel with properties of selected LD
-	* */
-	class LD_PropTable : public QAbstractListModel
+	class LN_SignalsTree : public QAbstractItemModel
 	{
 		Q_OBJECT
-		enum Roles
-		{
-			SECTION_ROLE = Qt::UserRole + 1,
-			NAME_ROLE,
-			VALUE_ROLE
-		};
-		struct PropertyItem
-		{
-			QString		section;
-			QString 	name;
-			QString 	obj;
+		enum Columns {
+			NAME_COLUMN = 0,
+			VALUE_COLUMN,
+			FC_COLUMN,
 
-			PropertyItem(const QString &t_node, const QString &t_name, const QString &t_obj)
-				: section{t_node}, name{t_name}, obj{t_obj} {}
+			COLUMN_COUNT
 		};
 
 	public:
-		LD_PropTable(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
+		LN_SignalsTree(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
 
 		void 	setNewIED(QSharedPointer<Core::IED_Object> t_ied);
 
-		QHash<int, QByteArray> roleNames() const override;
-		int rowCount(const QModelIndex &t_index = QModelIndex()) const override;
-		QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
-	private:
-		QVariant dataLD(const QModelIndex &t_index, int t_role) const;
-		QVariant dataIED(const QModelIndex &t_index, int t_role) const;
+		QVariant 	headerData(int t_sect, Qt::Orientation t_orient, int t_role = Qt::DisplayRole) const;
+
+		int 		rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
+		int 		columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
+		QModelIndex index(int t_row, int t_column, const QModelIndex &t_parent = QModelIndex()) const override;
+		QModelIndex parent(const QModelIndex &t_index) const override;
+		QVariant 	data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
+
+		void 	getSelectedLN(int &t_ld, int &t_ln);
 
 	public slots:
-		void 	slotLDSelected(int t_ld);
+		void 	slotLNSelected(int t_ld, int t_ln);
+		void 	slotDataUpdated(bool t_done);
 
 	private:
 		QSharedPointer<Core::IED_Object> m_ied;
-		QList<PropertyItem> 	m_ldProp;
-		QList<PropertyItem> 	m_devProp;
-		int 					m_currentLD = -1;
+		int		m_currentLD = -1; // current index of Logical Device
+		int		m_currentLN = -1; // current index of Logical Node
 	};
 }

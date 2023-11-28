@@ -23,6 +23,7 @@
 
 #include <QObject>
 
+#include "server_identify.hpp"
 #include "data_model.hpp"
 #include "fs_model.hpp"
 
@@ -35,8 +36,13 @@ namespace Core
 		IED_Object(QObject *t_parent=nullptr);
 		~IED_Object() = default;
 
-		Core::DataModel&	model() { return *m_model; }
-		Core::FS_Model&		fs() { return *m_fsModel; }
+		DataModel&	model() { return *m_model; }
+		FS_Model&	fs() { return *m_fsModel; }
+
+		const DevServIdentity& identify() { return m_servIdent; }
+		void setIdentify(const DevServIdentity &t_ident) {
+			m_servIdent = t_ident;
+		}
 
 		void setModel(QSharedPointer<DataModel> t_model) {
 			m_model = t_model;
@@ -48,8 +54,9 @@ namespace Core
 	signals:
 
 	private:
-		QSharedPointer<Core::DataModel>		m_model;
-		QSharedPointer<Core::FS_Model>		m_fsModel;
+		QSharedPointer<DataModel>	m_model;
+		QSharedPointer<FS_Model>	m_fsModel;
+		DevServIdentity				m_servIdent;
 	};
-	typedef QSharedPointer<Core::IED_Object>	ptrIED_Object;
+	typedef QSharedPointer<IED_Object>	ptrIED_Object;
 }

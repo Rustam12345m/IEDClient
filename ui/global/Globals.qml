@@ -82,7 +82,6 @@ QtObject {
 			}
 			t_tableID.setColumnWidth(i, w)
 		}
-		//t_tableID.forceLayout()
 	}
 
 	function calcColumnsWidth(t_headerID, t_tableID, t_column) {

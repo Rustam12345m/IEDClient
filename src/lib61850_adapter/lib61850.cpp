@@ -55,6 +55,14 @@ namespace Core::Lib
 			return std::make_tuple(daName, fc, fcNum);
 		}
 
+		std::tuple<QString, QString> parseDataSetElement(const QString &t_ref)
+		{
+			// 
+			QString ref = t_ref.left(t_ref.size() - 4);
+			QString fc = t_ref.mid(ref.size() + 1, 2);
+			return { ref, fc };
+		}
+
 		/*
 		void recursiveReadAttributes(IedConnection t_con, const QString &t_ref,
 									QSharedPointer<Item> t_parent)
@@ -126,7 +134,7 @@ namespace Core::Lib
 			}
 		}
 
-		QString 	convertTimestampMsToUserString(uint64_t t_ms)
+		QString convertTimestampMsToUserString(uint64_t t_ms)
 		{
 			uint64_t sec = t_ms / 1000;
 			QDateTime dt = QDateTime::fromSecsSinceEpoch(sec);
@@ -153,7 +161,7 @@ namespace Core::Lib
 	}
 
 	bool Lib61850_Adapter::connect(const QString &t_ip, unsigned int t_port, bool t_checked,
-							const QString &t_name, const QString &t_pass)
+									const QString &t_name, const QString &t_pass)
 	{
 		IedClientError retval = IED_ERROR_OK;
 
@@ -167,8 +175,7 @@ namespace Core::Lib
 			IedConnection_getDeviceModelFromServer(m_libConn, &retval);
 			if (retval != IED_ERROR_OK) {
 				qDebug() << "!!! ERROR !!!: Connect, get model with error = " << retval;
-			}
-
+			}			
 		} else {
 			IedConnection_destroy(m_libConn);
 			m_libConn = nullptr;
@@ -190,6 +197,26 @@ namespace Core::Lib
 		m_libConn = nullptr;
 	}
 
+	Core::DevServIdentity Lib61850_Adapter::getServIdentity()
+	{
+		Core::DevServIdentity ident;
+		MmsConnection mmsCon = IedConnection_getMmsConnection(m_libConn);
+
+		MmsError error = MMS_ERROR_NONE;
+		MmsServerIdentity *identity = MmsConnection_identify(mmsCon, &error);
+		if ((error == MMS_ERROR_NONE) && (identity != nullptr)) {
+			ident.m_vendor = QString::fromLocal8Bit(identity->vendorName);
+			ident.m_model = QString::fromLocal8Bit(identity->modelName);
+			ident.m_revision = QString::fromLocal8Bit(identity->revision);
+		}
+
+		MmsConnectionParameters param = MmsConnection_getMmsConnectionParameters(mmsCon);
+		ident.m_maxPduSize = param.maxPduSize;
+		ident.m_dataStructureNestingLevel = param.dataStructureNestingLevel;
+		ident.m_maxServOutstandingCalled = param.maxServOutstandingCalled;
+		ident.m_maxServOutstandingCalling = param.maxServOutstandingCalling;
+		return ident;
+	}
 
 	int Lib61850_Adapter::fetchDataModel(Core::DataModelBuilder &t_builder)
 	{
@@ -288,28 +315,28 @@ namespace Core::Lib
 
 		LinkedList dsList = IedConnection_getLogicalNodeDirectory(m_libConn, &retval, ref.toStdString().data(),
 																ACSI_CLASS_DATA_SET);
-
 		LinkedList dataSet = LinkedList_getNext(dsList);
 		while (dataSet != nullptr) {
-			char* dsName = (char*) dataSet->data;
-			bool isDeletable;
+			char *dsName = (char *) dataSet->data;
+			bool isDeletable = false;
 
 			char dataSetRef[130];
 			sprintf(dataSetRef, "%s.%s", ref.toStdString().data(), dsName);
-			printf("DS: %s\r\n", dataSetRef);
 
-			LinkedList doList = IedConnection_getDataSetDirectory(m_libConn, &retval, dataSetRef,
-																&isDeletable);
+			t_builder.createDataSet(QString::fromLocal8Bit(dsName), QString::fromLocal8Bit(dataSetRef), isDeletable);
+			
+			LinkedList dsEntityList = IedConnection_getDataSetDirectory(m_libConn, &retval, dataSetRef,
+																		&isDeletable);
+			LinkedList dsEntity = LinkedList_getNext(dsEntityList);
+			while (dsEntity != nullptr) {
+				QString dsElemRef = QString::fromLocal8Bit((char *)dsEntity->data);
 
-			LinkedList doRef = LinkedList_getNext(doList);
-			while (doRef != nullptr) {
-				char* memberRef = (char*) doRef->data;
+				auto [ref, fc] = parseDataSetElement(dsElemRef);
+				t_builder.createDataSet_Elem(ref, fc);
 
-				//printf("      %s\n", memberRef);
-
-				doRef = LinkedList_getNext(doRef);
+				dsEntity = LinkedList_getNext(dsEntity);
 			}
-			LinkedList_destroy(doList);
+			LinkedList_destroy(dsEntityList);
 
 			dataSet = LinkedList_getNext(dataSet);
 		}
@@ -369,6 +396,11 @@ namespace Core::Lib
 			rcb = LinkedList_getNext(rcb);
 		}
 		LinkedList_destroy(rcbList);
+		return 0;
+	}
+
+	int Lib61850_Adapter::fetchLN_SVCB(Core::DataModelBuilder &t_builder)
+	{
 		return 0;
 	}
 

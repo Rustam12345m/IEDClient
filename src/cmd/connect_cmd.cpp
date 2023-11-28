@@ -27,12 +27,12 @@
 
 namespace Core::Cmd
 {
-	void ConnectCmd::execute(LibInterface &t_con)
+	void ConnectCmd::execute(LibInterface &t_lib)
 	{
 		for (int i=0;i<3;i++) {
 			emit sigProgress(0, QString("Connecting to %1:%2. Attempt (%3 / 3)").arg(m_ip).arg(m_port).arg(i + 1));
 
-			if (t_con.connect(m_ip, m_port, m_tls, m_user, m_password)) {
+			if (t_lib.connect(m_ip, m_port, m_tls, m_user, m_password)) {
 				emit sigProgress(10, QString("Successfully connected to %1:%2").arg(m_ip).arg(m_port));
 				// QThread::sleep(1);
 
@@ -41,11 +41,15 @@ namespace Core::Cmd
 
 				// New Data Model
 				Core::DataModelBuilder builder;
-				t_con.fetchDataModel(builder);
+				t_lib.fetchDataModel(builder);
 				m_ied->setModel(builder.build());
+
+				auto ident = t_lib.getServIdentity();
+				m_ied->setIdentify(ident);
 
 				// Debug
 				//m_ied->model().print();
+				qDebug() << "Found DS:" << m_ied->model().dsList().count();
 
 				emit sigProgress(100, QString("Data model and other stuff were received from %1:%2").arg(m_ip).arg(m_port));
 				emit sigFinished(true);

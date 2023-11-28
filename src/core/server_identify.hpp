@@ -21,48 +21,33 @@
 
 #pragma once
 
-#include <QObject>
-
-#include "data_object.hpp"
+#include <QString>
 
 namespace Core
 {
-	class DataSetEntity : public Item
-	{
-	public:
-		DataSetEntity(Item *t_parent, const QString &t_ref, const QString &t_fc)
-			: Item(t_parent, t_ref), m_fc{t_fc}
-		{}
-
-		const QString 	ref() const { return m_name; }
-		const QString 	fc() const { return m_fc; }
-		ptrItem 		item() { return m_item; }
-
-	private:
-		QString 	m_fc;
-		ptrItem		m_item;
-	};
-
 	/*
-	 * Representation a DataSet of IED
-	 * */
-	class DataSet : public QObject, public Item
+		Server identity:
+			vendor: 	MZ
+			model:  	basic io
+			revision: 	1.4.2
+
+		Connection parameters:
+			maxServOutstandingCalling = 5 
+			maxServOutstandingCalled = 5 
+			dataStructureNestingLevel = 10 
+			maxPduSize = 65000 
+			servicesSupported = [3, EE, 1C, 0, 0, 0, 2, 0, 0, 0, ED]
+	*/
+	class DevServIdentity
 	{
-		Q_OBJECT
 	public:
-		DataSet(Item *t_parent, const QString &t_name, const QString &t_ref, bool t_del)
-			: Item(t_parent, t_name), m_ref{t_ref}, m_isDeletable{t_del}
-		{}
+		QString 	m_vendor;
+		QString 	m_model;
+		QString 	m_revision;
 
-		const QString ref() const { return m_ref; }
-
-	signals:
-		void	sigUpdated();
-
-	private:
-		QString	m_ref;
-		bool 	m_isDeletable = false;
+		int 		m_maxServOutstandingCalling = 0;
+		int 		m_maxServOutstandingCalled = 0;
+		int 		m_dataStructureNestingLevel = 0;
+		int 		m_maxPduSize = 0;
 	};
-
-	typedef QSharedPointer< DataSet > 	ptrDataSet;
 }

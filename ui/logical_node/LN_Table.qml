@@ -142,7 +142,7 @@ FocusScope {
 			DelegateChoice {
 				column: 1
 
-				delegate: MBH_Delegate {
+				delegate: LN_StateDelegate {
 					delegateHeight: defDelegateHeight
 					delegateWidth: defDelegateWidth
 					selected: (tableID.currentRow == row)
@@ -159,7 +159,7 @@ FocusScope {
 			DelegateChoice {
 				column: 2
 
-				delegate: MBH_Delegate {
+				delegate: LN_StateDelegate {
 					delegateHeight: defDelegateHeight
 					delegateWidth: defDelegateWidth
 					selected: (tableID.currentRow == row)
@@ -176,7 +176,7 @@ FocusScope {
 			DelegateChoice {
 				column: 3
 
-				delegate: MBH_Delegate {
+				delegate: LN_StateDelegate {
 					delegateHeight: defDelegateHeight
 					delegateWidth: defDelegateWidth
 					selected: (tableID.currentRow == row)
@@ -208,6 +208,12 @@ FocusScope {
 				event.accepted = true
 			}
 			event.accepted = false
+		}
+
+		onVisibleChanged: {
+			if (tableID.rows > 0) {
+				globals.setSelectedRow(tableID, 0)
+			}
 		}
 	}
 }

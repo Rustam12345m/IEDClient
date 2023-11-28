@@ -73,7 +73,7 @@ Item {
 
 				anchors.fill: parent
 				horizontalAlignment: Text.AlignHCenter
-				verticalAlignment: Text.AlignTop//VCenter
+				verticalAlignment: Text.AlignTop
 				padding: 10
 
 				width: parent.width
@@ -168,6 +168,7 @@ Item {
 		MouseArea {
 			anchors.fill: parent
 			acceptedButtons: Qt.LeftButton | Qt.RightButton
+			preventStealing: true
 
 			onClicked: function(msx) {
 				if (msx.button === Qt.RightButton) {

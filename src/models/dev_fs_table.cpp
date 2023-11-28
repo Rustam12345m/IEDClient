@@ -163,5 +163,6 @@ namespace App::Models
 	{
 		beginResetModel();
 		endResetModel();
+		emit sigFS_Updated();
 	}
 }
