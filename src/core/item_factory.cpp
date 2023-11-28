@@ -26,7 +26,9 @@
 #include "logical_node.hpp"
 #include "data_object.hpp"
 #include "dataset.hpp"
-#include "report_block.hpp"
+#include "report_control_block.hpp"
+#include "goose_control_block.hpp"
+#include "sv_control_block.hpp"
 
 namespace Core
 {

@@ -23,46 +23,26 @@
 
 #include <QObject>
 
-#include "data_object.hpp"
+#include "dataset.hpp"
 
 namespace Core
 {
-	class DataSetEntity : public Item
-	{
-	public:
-		DataSetEntity(Item *t_parent, const QString &t_ref, const QString &t_fc)
-			: Item(t_parent, t_ref), m_fc{t_fc}
-		{}
-
-		const QString 	ref() const { return m_name; }
-		const QString 	fc() const { return m_fc; }
-		ptrItem 		item() { return m_item; }
-
-	private:
-		QString 	m_fc;
-		ptrItem		m_item;
-	};
-
 	/*
-	 * Representation a DataSet of IED
+	 * Representation a ReportControlBlock of LD
 	 * */
-	class DataSet : public QObject, public Item
+	class SV_ControlBlock : public QObject, public Item
 	{
 		Q_OBJECT
 	public:
-		DataSet(Item *t_parent, const QString &t_name, const QString &t_ref, bool t_del)
-			: Item(t_parent, t_name), m_ref{t_ref}, m_isDeletable{t_del}
-		{}
+		SV_ControlBlock() : Item(nullptr, "")
+		{
+		}
 
-		const QString ref() const { return m_ref; }
+		void	print() {}
 
 	signals:
 		void	sigUpdated();
-
-	private:
-		QString	m_ref;
-		bool 	m_isDeletable = false;
 	};
 
-	typedef QSharedPointer< DataSet > 	ptrDataSet;
+	typedef QSharedPointer< SV_ControlBlock > 	ptrSVCB;
 }

@@ -12,7 +12,9 @@ set(CORE_SOURCES
 	logical_device.hpp
 
 	dataset.hpp
-	report_block.hpp
+	report_control_block.hpp
+	goose_control_block.hpp
+	sv_control_block.hpp
 
 	fs_model.hpp
 
@@ -26,6 +28,8 @@ set(CORE_SOURCES
 
 	ied_object.hpp
 	ied_object.cpp
+
+	server_identify.hpp
 )
 
 qt_add_library(core_lib STATIC ${CORE_SOURCES})

@@ -68,6 +68,20 @@ namespace Core
 		return *this;
 	}
 
+	DataModelBuilder& DataModelBuilder::createDataSet(const QString &t_name, const QString &t_ref, bool t_del)
+	{
+		m_lastDataSet = QSharedPointer<DataSet>::create(m_model.get(), t_name, t_ref, t_del);
+		m_model->pushDataSet(m_lastDataSet);
+		return *this;
+	}
+
+	DataModelBuilder& DataModelBuilder::createDataSet_Elem(const QString &t_ref, const QString &t_fc)
+	{
+		auto dsEnt = QSharedPointer<DataSetEntity>::create(lastDataSet().get(), t_ref, t_fc);
+		lastDataSet()->push(dsEnt);
+		return *this;
+	}
+
 	QSharedPointer<DataModel> DataModelBuilder::build()
 	{
 		m_model->calcIEDNameFromLD();

@@ -50,8 +50,32 @@ namespace Core
 			emit sigUpdated();
 		}
 
+		void 	pushDataSet(ptrDataSet t_ds);
+		void 	pushReportCB(ptrRCB t_cb);
+		void 	pushGooseCB(ptrGOCB t_cb);
+		void 	pushSV_CB(ptrSVCB t_cb);
+
+		const QList<ptrDataSet>	dsList() {
+			return m_ds;
+		}
+		const QList<ptrRCB>		rcbList() {
+			return m_rcb;
+		}
+		const QList<ptrGOCB>	gocbList() {
+			return m_gocb;
+		}
+		const QList<ptrSVCB>	svcbList() {
+			return m_svcb;
+		}
+
 	signals:
 		void	sigUpdated();
+
+	private:
+		QList<ptrDataSet>	m_ds;
+		QList<ptrRCB>		m_rcb;
+		QList<ptrGOCB>		m_gocb;
+		QList<ptrSVCB>	 	m_svcb;
 	};
 	typedef QSharedPointer<DataModel>	ptrDataModel;
 }

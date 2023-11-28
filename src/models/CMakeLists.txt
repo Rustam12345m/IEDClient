@@ -21,11 +21,14 @@ set(SOURCES
 	lns_table.hpp
 	lns_table.cpp
 
+	ln_signals_tree.hpp
+	ln_signals_tree.cpp
+	
 	sort_proxy_model.hpp
 	sort_proxy_model.cpp
 
-	history_connections.hpp
-	history_connections.cpp
+	history_con_table.hpp
+	history_con_table.cpp
 
 	datasets_table.hpp
 	datasets_table.cpp

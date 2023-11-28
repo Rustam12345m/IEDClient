@@ -133,4 +133,6 @@ namespace Core
 		Item*						m_parent = nullptr;
 		QList<QSharedPointer<Item>>	m_items; // List of children
 	};
+
+	typedef QSharedPointer< Item > 	ptrItem;
 }

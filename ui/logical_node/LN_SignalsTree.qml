@@ -23,104 +23,99 @@
 
 import QtQuick
 import QtQuick.Controls
-import Qt.labs.qmlmodels
 
 import "qrc:/global/"
 
-// Table of all Logical Nodes for one Logical Device
+// TreeView with DO/DA/SA for the selected Logical Node
 FocusScope {
 	id: rootID
 
-	readonly property int defDelegateHeight: 30
-	readonly property int defDelegateWidth: 60
-
 	property var globals: Globals {}
 
-	signal sigLeftOrRightKey()
-	signal sigForceFocus()
-	signal sigSelectedNewDS()
-
-	// Header of table below
+	// Header
 	HorizontalHeaderView {
 		id: headerID
 
+		property int sortOrder: 0
+		property int sortedColumn: 0
+
 		anchors {
-			rightMargin: 5
-			left: parent.left
+			left: treeView.left
 			top: parent.top
 			right: parent.right
 		}
 		boundsBehavior: Flickable.StopAtBounds
+		resizableColumns: false
 
-		syncView: tableID
+		syncView: treeView
 
 		delegate: Rectangle {
-			property var paramModel: model
+			property int column: model.column
 
-			implicitWidth: Math.max(textArea.implicitWidth + 10, defDelegateWidth)
-			implicitHeight: defDelegateHeight
+			implicitWidth: labelID.implicitWidth + 24 + 10
+			implicitHeight: 30
 
 			color: "#f6f6f6"
 			border.color: "#e4e4e4"
 
-			Label {
-				id: textArea
-				anchors.fill: parent
+			Row {
+				id: rowID
 
-				horizontalAlignment: Text.AlignHCenter
-				verticalAlignment: Text.AlignVCenter
+				anchors.centerIn: parent
+				spacing: 5
 
-				//font.bold: true
-				text: model.display
-				color: "#ff26282a"
+				Label {
+					id: labelID
+
+					text: model.display
+					color: "#ff26282a"
+				}
 			}
 		}
 	}
 
-	// Table of all DataSets for this IED
-	TableView {
-		id: tableID
+	TreeView {
+		id: treeView
 
 		anchors {
-			rightMargin: 5
-
+			leftMargin: 5
 			left: parent.left
 			right: parent.right
+			// top: parent.top
 			top: headerID.bottom
 			bottom: parent.bottom
 		}
 
-		model: devBackend.dataSetsModel
+		model: devBackend.lnTreeModel
 
 		focus: true
 		clip: true
 		interactive: true
 		boundsBehavior: Flickable.StopAtBounds
 
+		columnWidthProvider: function(t_column) {
+			return globals.calcColumnsWidth(treeView, treeView, t_column)
+		}
+
 		selectionBehavior: TableView.SelectRows
 		selectionModel: ItemSelectionModel {
-			model: tableID.model
+			model: treeView.model
 		}
 
-		onCurrentRowChanged: {
-			tableID.model.setSelectedDS(tableID.currentRow)
-			sigSelectedNewDS()
-		}
+		delegate: TreeViewDelegate {
+			TapHandler {
+				acceptedButtons: Qt.RightButton
+				onTapped: someContextMenu.open()
+			}
 
-		columnWidthProvider: function(t_column) {
-			return globals.calcColumnsWidth(headerID, tableID, t_column)
-		}
-
-		delegate: TextDelegate {
-			delegateHeight: defDelegateHeight
-			selected: (tableID.currentRow == row)
-
-			textAlign: Text.AlignHCenter
-			text: model.value
-
-			onSigClick: function(row, col) {
-				globals.setSelectedRow(tableID, row)
-				sigForceFocus()
+			TapHandler {
+				acceptedModifiers: Qt.ControlModifier
+				onTapped: {
+					if (treeView.isExpanded(row))
+						treeView.collapseRecursively(row)
+					else
+						treeView.expandRecursively(row)
+				}
 			}
 		}
 
@@ -132,14 +127,6 @@ FocusScope {
 					active = true;
 				}
 			}
-		}
-
-		Keys.onPressed: function(event) {
-			if (event.key == Qt.Key_Left || event.key == Qt.Key_Right || event.key == Qt.Key_Tab) {
-				sigLeftOrRightKey()
-				event.accepted = true
-			}
-			event.accepted = false
 		}
 	}
 }

@@ -28,6 +28,7 @@
 #include "models/ld_prop_table.hpp"
 #include "models/lns_table.hpp"
 #include "models/ln_state_table.hpp"
+#include "models/ln_signals_tree.hpp"
 #include "models/datasets_table.hpp"
 #include "models/ds_signals_table.hpp"
 #include "models/rcb_general_table.hpp"
@@ -48,9 +49,10 @@ namespace App
 		Q_PROPERTY(QAbstractListModel* 	ldModel 		READ getLD_Model		CONSTANT)
 		Q_PROPERTY(QAbstractTableModel* lnModel 		READ getLN_Model 		CONSTANT)
 		Q_PROPERTY(QAbstractItemModel* 	doModel 		READ getSortDO_Model 	CONSTANT)
+		Q_PROPERTY(QAbstractItemModel* 	lnTreeModel 	READ getLN_TreeModel 	CONSTANT)
 		Q_PROPERTY(QAbstractListModel* 	ldPropModel 	READ getLD_PropModel	CONSTANT)
 		//Q_PROPERTY(QAbstractTableModel* 	doModel 		READ getDO_Model 		CONSTANT)
-		Q_PROPERTY(QAbstractTableModel* dsInfoModel 	READ getDSInfo_Model 	CONSTANT)
+		Q_PROPERTY(QAbstractTableModel* dataSetsModel 	READ getDSInfo_Model 	CONSTANT)
 		Q_PROPERTY(QAbstractTableModel* dataSetModel	READ getDS_Model 		CONSTANT)
 		Q_PROPERTY(QAbstractTableModel* rcbMainModel	READ getRCB_Model 		CONSTANT)
 		Q_PROPERTY(QAbstractTableModel* rcbReportsModel	READ getReports_Model 	CONSTANT)
@@ -60,12 +62,14 @@ namespace App
 		QAbstractTableModel*	getDO_Model() const { return m_doModel; }
 		QAbstractListModel*		getLD_PropModel() const { return m_ldPropModel; }
 		QAbstractItemModel* 	getSortDO_Model() const { return m_sortDOModel; }
+		QAbstractItemModel* 	getLN_TreeModel() const { return m_lnTreeModel; }
 		QAbstractTableModel*	getDSInfo_Model() const { return m_dsInfoModel; }
 		QAbstractTableModel*	getDS_Model() const { return m_dsModel; }
 		QAbstractTableModel*	getRCB_Model() const { return m_rcbMainModel; }
 		QAbstractTableModel*	getReports_Model() const { return m_reportsModel; }
 
 		// Commands
+		Q_INVOKABLE void 		updateLDs_Status();
 		Q_INVOKABLE void 		updateDO_Table();
 
 		// Status bar
@@ -77,14 +81,15 @@ namespace App
 
 	protected:
 		// Models for Tables in GUI
-		Models::LDs_Grid*		m_ldModel = nullptr;
-		Models::LD_PropTable*	m_ldPropModel = nullptr;
-		Models::LNs_Table*		m_lnsModel = nullptr;
-		Models::LN_StateTable*	m_doModel = nullptr;
-		Models::SortProxyModel* m_sortDOModel = nullptr;
-		Models::DataSetsTable* m_dsInfoModel = nullptr;
+		Models::LDs_Grid*			m_ldModel = nullptr;
+		Models::LD_PropTable*		m_ldPropModel = nullptr;
+		Models::LNs_Table*			m_lnsModel = nullptr;
+		Models::LN_StateTable*		m_doModel = nullptr;
+		Models::LN_SignalsTree* 	m_lnTreeModel = nullptr;
+		Models::SortProxyModel* 	m_sortDOModel = nullptr;
+		Models::DataSetsTable*  	m_dsInfoModel = nullptr;
 		Models::DS_SignalsTable* 	m_dsModel = nullptr;
-		Models::RCB_GeneralTable* m_rcbMainModel = nullptr;
-		Models::ReportsTable* 	m_reportsModel = nullptr;
+		Models::RCB_GeneralTable* 	m_rcbMainModel = nullptr;
+		Models::ReportsTable* 		m_reportsModel = nullptr;
 	};
 }

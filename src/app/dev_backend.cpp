@@ -29,6 +29,7 @@ namespace App
 		m_ldPropModel = new Models::LD_PropTable(this, m_con.m_iedObj);
 		m_lnsModel = new Models::LNs_Table(this, m_con.m_iedObj);
 		m_doModel = new Models::LN_StateTable(this, m_con.m_iedObj);
+		m_lnTreeModel = new Models::LN_SignalsTree(this, m_con.m_iedObj);
 		m_dsInfoModel = new Models::DataSetsTable(this, m_con.m_iedObj);
 		m_dsModel = new Models::DS_SignalsTable(this, m_con.m_iedObj);
 		m_rcbMainModel = new Models::RCB_GeneralTable(this, m_con.m_iedObj);
@@ -41,6 +42,12 @@ namespace App
 		connect(m_ldModel, &Models::LDs_Grid::sigLDSelected, m_ldPropModel, &Models::LD_PropTable::slotLDSelected);		
 		connect(m_ldModel, &Models::LDs_Grid::sigLDSelected, m_lnsModel, &Models::LNs_Table::slotLDSelected);
 		connect(m_lnsModel, &Models::LNs_Table::sigLNSelected, m_doModel, &Models::LN_StateTable::slotLNSelected);
+		connect(m_lnsModel, &Models::LNs_Table::sigLNSelected, m_lnTreeModel, &Models::LN_SignalsTree::slotLNSelected);
+	}
+
+	void DevBackend::updateLDs_Status()
+	{
+		qDebug() << "DevBackend: Update LDs";
 	}
 
 	void DevBackend::updateDO_Table()
@@ -75,8 +82,12 @@ namespace App
 	{
 		m_ldModel->setNewIED(m_con.m_iedObj);
 		m_ldPropModel->setNewIED(m_con.m_iedObj);
-
 		m_lnsModel->setNewIED(m_con.m_iedObj);
 		m_doModel->setNewIED(m_con.m_iedObj);
+		m_lnTreeModel->setNewIED(m_con.m_iedObj);
+		m_dsInfoModel->setNewIED(m_con.m_iedObj);
+		m_dsModel->setNewIED(m_con.m_iedObj);
+		m_rcbMainModel->setNewIED(m_con.m_iedObj);
+		m_reportsModel->setNewIED(m_con.m_iedObj);
 	}
 }

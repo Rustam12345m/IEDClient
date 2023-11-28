@@ -248,4 +248,23 @@ namespace CoreTests
 			ASSERT_EQ(vendor->value(), "Test_Company_Name");
 		}
 	}
+
+
+	TEST(DataModelBuilder, DataModel_DataSet_Creation_1) {
+		Core::DataModelBuilder builder;
+
+		builder.createLD("IEDNameA_LD_10")
+					.createLN("LLN0")
+						.createDO("Mod")
+						.createDO("Beh")
+						.createDO("Health")
+					.createDataSet("DataSet1", "IEDNameA_LD_10/LLN0", false)
+						.createDataSet_Elem("IEDNameA_LD_10/LLN0.Mod", "ST")
+						.createDataSet_Elem("IEDNameA_LD_10/LLN0.Beh", "ST")
+						.createDataSet_Elem("IEDNameA_LD_10/LLN0.Health", "ST");
+
+		auto model = builder.build();
+
+		ASSERT_EQ(model->name(), "IEDName");
+	}
 }

@@ -61,13 +61,7 @@ namespace App::Models
 
 	int DataSetsTable::rowCount(const QModelIndex &t_parent) const
 	{
-		/*
-		auto ld = m_ied->model().getItem<Core::LogicalDevice>(m_currentDS);
-		if (ld) {
-			return ld->getItemCount();
-		}
-		*/
-		return 30;
+		return m_ied->model().dsList().count();
 	}
 
 	int DataSetsTable::columnCount(const QModelIndex &t_parent) const
@@ -77,9 +71,15 @@ namespace App::Models
 
 	QVariant DataSetsTable::data(const QModelIndex &t_index, int t_role) const
 	{
+		auto dsList = m_ied->model().dsList();
+		if (t_index.row() >= dsList.count()) {
+			return QVariant(" ? ");
+		}
+
 		switch (t_index.column()) {
 		case DS_LD_Column: {
-			return QVariant(QString("LD %1").arg(t_index.row()));
+			return QVariant(dsList[t_index.row()]->name());
+			//return QVariant(QString("LD %1").arg(t_index.row()));
 		}
 		case DS_LN_Column: {
 			return QVariant(QString("LN %1").arg(t_index.row()));
@@ -93,5 +93,6 @@ namespace App::Models
 
 	void DataSetsTable::slotDataUpdated()
 	{
+		emit dataChanged(index(0, DS_LD_Column), index(rowCount() - 1, ColumnsCount));
 	}
 }

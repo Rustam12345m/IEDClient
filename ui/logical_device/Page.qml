@@ -22,7 +22,6 @@
  * */
 
 import QtQuick
-import QtQuick.Layouts
 import QtQuick.Controls
 
 import "qrc:/global/"
@@ -84,8 +83,23 @@ FocusScope {
 		}
 
 		onCurrentIndexChanged: function() {
-			//console.log("LD_GridView: Selected = " + gridView.currentIndex)
 			gridView.model.setSelectedLD(gridView.currentIndex)
+		}
+
+		// Reset selection
+		MouseArea {
+			anchors.fill: parent
+			acceptedButtons: Qt.LeftButton
+
+			onClicked: function(msx) {
+				if (gridView.indexAt(mouseX, mouseY) === -1) {
+					gridView.currentIndex = -1
+					msx.accepted = true
+				} else {
+					msx.accepted = false
+				}
+			}
+			propagateComposedEvents: true
 		}
 	}
 

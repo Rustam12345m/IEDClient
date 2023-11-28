@@ -23,6 +23,7 @@
 
 #include <QString>
 
+#include "core/server_identify.hpp"
 #include "core/data_model_builder.hpp"
 
 namespace Core::Cmd
@@ -39,6 +40,7 @@ namespace Core::Cmd
 								const QString &t_name, const QString &t_pass) = 0;
 		virtual void	disconnect() = 0;
 
+		virtual Core::DevServIdentity 	getServIdentity() = 0;
 		virtual int 	fetchDataModel(Core::DataModelBuilder &t_builder) = 0;
 
 		virtual int		updateLN_PinValues(Core::ptrLN t_node) = 0;

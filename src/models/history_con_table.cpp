@@ -19,7 +19,7 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "history_connections.hpp"
+#include "history_con_table.hpp"
 
 namespace App::Models
 {

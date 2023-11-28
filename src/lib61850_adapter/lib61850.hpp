@@ -47,12 +47,15 @@ namespace Core::Lib
 						const QString &t_name, const QString &t_pass) override;
 		void	disconnect() override;
 
+		Core::DevServIdentity 	getServIdentity() override;
 		int 	fetchDataModel(Core::DataModelBuilder &t_builder) override;
+
 	private:
 		int 	fetchLN_DO(Core::DataModelBuilder &t_builder);
 		int 	fetchLN_DS(Core::DataModelBuilder &t_builder);
 		int 	fetchLN_RCB(Core::DataModelBuilder &t_builder);
 		int 	fetchLN_GOCB(Core::DataModelBuilder &t_builder);
+		int 	fetchLN_SVCB(Core::DataModelBuilder &t_builder);
 
 	public:
 		int		updateLN_PinValues(Core::ptrLN t_node) override;

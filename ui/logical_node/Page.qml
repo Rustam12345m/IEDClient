@@ -29,6 +29,16 @@ import QtQuick.Layouts
 FocusScope {
 	id: root
 
+	function actSignalsTable() {
+		lnSignalsStack.currentIndex = 0
+	}
+	function actSignalsTree() {
+		lnSignalsStack.currentIndex = 1
+	}
+	function switchSignalsView() {
+		lnSignalsStack.currentIndex = (lnSignalsStack.currentIndex == 0) ? 1 : 0
+	}
+
 	SplitView {
 		id: splitView
 
@@ -83,20 +93,33 @@ FocusScope {
 			SplitView.fillWidth: true
 			color: "white"
 
-			// Table
-			DO_Table {
-				id: tableDO
+			StackLayout {
+				id: lnSignalsStack
 
 				anchors.fill: parent
 
-				onSigLeftOrRightKey: function() {
-					console.log("LN_Page: Activate LN_Table")
-					tableLN.focus = true
-					tableDO.focus = false
+				// Table DO signals
+				LN_SignalsTable {
+					id: tableDO
+
+					//anchors.fill: parent
+
+					onSigLeftOrRightKey: function() {
+						console.log("LN_Page: Activate LN_Table")
+						tableLN.focus = true
+						tableDO.focus = false
+					}
+					onSigForceFocus: function() {
+						tableLN.focus = false
+						tableDO.focus = true
+					}
 				}
-				onSigForceFocus: function() {
-					tableLN.focus = false
-					tableDO.focus = true
+
+				// Tree DO signals
+				LN_SignalsTree {
+					id: treeDO
+
+					//anchors.fill: parent
 				}
 			}
 		}

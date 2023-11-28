@@ -43,4 +43,6 @@ namespace Core
 	signals:
 		void	sigUpdated();
 	};
+
+	typedef QSharedPointer< ReportBlock > 	ptrRCB;
 }
