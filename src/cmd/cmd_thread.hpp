@@ -23,16 +23,9 @@
 
 #include <QThread>
 
+#include "basic_command.hpp"
 #include "command_queue.hpp"
 #include "lib_interface.hpp"
-
-// All known commands
-#include "connect_cmd.hpp"
-#include "update_ld_status_cmd.hpp"
-#include "update_ln_cmd.hpp"
-#include "get_filelist_cmd.hpp"
-#include "download_file_cmd.hpp"
-#include "remove_file_cmd.hpp"
 
 namespace Core::Cmd
 {

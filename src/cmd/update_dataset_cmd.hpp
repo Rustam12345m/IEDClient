@@ -27,38 +27,26 @@
 namespace Core::Cmd
 {
 	/*
-	 * This class realizes connecting to IED through pure TCP or TLS
+	 * This class realizes downloading file from the IED
 	 * */
-	class ConnectCmd : public BasicCommand
+	class UpdateDataSet_Cmd : public BasicCommand
 	{
 		Q_OBJECT
 	public:
-		ConnectCmd(const QString &t_ip, unsigned t_port, bool t_tls,
-					const QString &t_user, const QString &t_pass,
-					ptrIED_Object t_ied)
-				: m_ip(t_ip), m_port(t_port), m_tls(t_tls),
-				  m_user(t_user), m_password(t_pass),
-				  m_ied(t_ied)
+		UpdateDataSet_Cmd(ptrIED_Object t_ied, int t_dsInx)
+			: m_ied{t_ied}, m_dsIndex{t_dsInx}
 		{
 		}
-		~ConnectCmd() {}
+		~UpdateDataSet_Cmd() = default;
 
 		void	execute(LibInterface &t_con) override;
 
-		static auto create(const QString &t_ip, unsigned t_port, bool t_tls,
-							const QString &t_user, const QString &t_pass,
-							ptrIED_Object t_ied) {
-			return QSharedPointer<ConnectCmd>::create(t_ip, t_port, t_tls, t_user, t_pass, t_ied);
+		static auto create(ptrIED_Object t_ied, int t_dsInx) {
+			return QSharedPointer<UpdateDataSet_Cmd>::create(t_ied, t_dsInx);
 		}
 
-	private slots:
-		void 	slotMsgProgress(const QString &t_msg);
-
 	private:
-		QString			m_ip;
-		unsigned		m_port;
-		bool			m_tls;
-		QString			m_user, m_password;
 		ptrIED_Object	m_ied;
+		int 			m_dsIndex = -1;
 	};
 }

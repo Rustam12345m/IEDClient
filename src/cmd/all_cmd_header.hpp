@@ -21,38 +21,15 @@
 
 #pragma once
 
-#include "ied_connection.hpp"
+#include "basic_command.hpp"
 
 // All known commands
-#include "cmd/all_cmd_header.hpp"
-
-namespace App
-{
-	/*
-	* Interface for all Backends
-	* */
-	class BackendBase : public QObject
-	{
-		Q_OBJECT
-
-		BackendBase() = delete;
-	public:
-		BackendBase(IED_Connection &t_con) : m_con(t_con) {};
-		virtual ~BackendBase() {}
-
-	protected:
-		void	putCmdToQueue(Core::Cmd::ptrCMD t_cmd);
-
-	signals:
-		void	sigCmdProgress(int t_perc, QString t_msg);
-		void	sigCmdFinished(bool t_done);
-
-	public slots:
-		void			slotCmdProcess(int t_proc, QString t_msg);
-		void			slotCmdFinished(bool t_done);
-		virtual void 	slotConnected(bool t_done);
-
-	protected:
-		IED_Connection& 	m_con;
-	};
-}
+#include "connect_cmd.hpp"
+#include "update_lds_status_cmd.hpp"
+#include "update_lns_status_cmd.hpp"
+#include "update_ln_cmd.hpp"
+#include "update_rcbs_cmd.hpp"
+#include "update_dataset_cmd.hpp"
+#include "get_filelist_cmd.hpp"
+#include "download_file_cmd.hpp"
+#include "remove_file_cmd.hpp"

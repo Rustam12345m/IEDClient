@@ -55,7 +55,7 @@ FocusScope {
 			color: "white"
 
 			// Table
-			DS_InfoTable {
+			DS_ComTable {
 				id: tableDS_Info
 
 				anchors.fill: parent
@@ -70,7 +70,6 @@ FocusScope {
 					tableDS_Val.focus = false
 				}
 				onSigSelectedNewDS: function() {
-					//devBackend.updateDO_Table(tableDS_Val.currentLDevice, tableDS_Val.currentLNode)
 				}
 			}
 		}
@@ -82,7 +81,7 @@ FocusScope {
 			color: "white"
 
 			// Table
-			DS_ValTable {
+			DS_StateTable {
 				id: tableDS_Val
 
 				anchors.fill: parent

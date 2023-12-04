@@ -136,6 +136,7 @@ FocusScope {
 		reuseItems: true
 
 		interactive: true
+
 		clip: true
 		boundsBehavior: Flickable.StopAtBounds
 
@@ -241,8 +242,10 @@ FocusScope {
 		}
 
 		ScrollBar.vertical: ScrollBar {
-			policy: ScrollBar.AsNeeded
+			policy: ScrollBar.AlwaysOn
 			active: true
+			stepSize: 0.25
+
 			onActiveChanged: {
 				if (!active) {
 					active = true;

@@ -211,7 +211,7 @@ FocusScope {
 		}
 
 		onVisibleChanged: {
-			if (tableID.rows > 0) {
+			if (tableID.rows > 0 && tableID.currentRow < 0) {
 				globals.setSelectedRow(tableID, 0)
 			}
 		}

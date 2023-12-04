@@ -21,19 +21,19 @@
 
 #pragma once
 
-#include "base_command.hpp"
+#include "basic_command.hpp"
 
 namespace Core::Cmd
 {
 	/*
 	 * This class realizes downloading file from the IED
 	 * */
-	class RemoveFile : public IED_BaseCommand
+	class RemoveFile : public BasicCommand
 	{
 		Q_OBJECT
 	public:
 		RemoveFile(const QString &t_name, int t_fileIndex)
-			: IED_BaseCommand(IED_CMD::UNDEFINED), m_filename(t_name), m_fileIndex(t_fileIndex)
+			: m_filename(t_name), m_fileIndex(t_fileIndex)
 		{
 		}
 		~RemoveFile() {}
@@ -41,7 +41,7 @@ namespace Core::Cmd
 		void	execute(LibInterface &t_con) override;
 
 		// Create new command like Builder pattern
-		static QSharedPointer<RemoveFile> create(const QString &t_name, int t_row) {
+		static auto create(const QString &t_name, int t_row) {
 			return QSharedPointer<RemoveFile>::create(t_name, t_row);
 		}
 
@@ -50,6 +50,6 @@ namespace Core::Cmd
 
 	protected:
 		QString 	m_filename;
-		id_t		m_fileIndex = -1; // row in the table
+		int			m_fileIndex = -1; // row in the table
 	};
 }

@@ -23,8 +23,8 @@ set(CORE_SOURCES
 	data_model_builder.hpp
 	data_model_builder.cpp
 
-	ln_flat_state.hpp
-	ln_flat_state.cpp
+	ln_state_table.hpp
+	ln_state_table.cpp
 
 	ied_object.hpp
 	ied_object.cpp

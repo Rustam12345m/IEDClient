@@ -1,9 +1,10 @@
 # Building cmd's classes to a static library
 
 set(SOURCES
-	base_command.hpp
+	basic_command.hpp
 	command_queue.hpp
 	lib_interface.hpp
+	all_cmd_header.hpp
 
 	cmd_thread.hpp
 	cmd_thread.cpp
@@ -11,11 +12,20 @@ set(SOURCES
 	connect_cmd.hpp
 	connect_cmd.cpp
 
-	update_ld_status_cmd.hpp
-	update_ld_status_cmd.cpp
+	update_lds_status_cmd.hpp
+	update_lds_status_cmd.cpp
+
+	update_lns_status_cmd.cpp
+	update_lns_status_cmd.cpp
+
+	update_dataset_cmd.hpp
+	update_dataset_cmd.cpp
 
 	update_ln_cmd.hpp
 	update_ln_cmd.cpp
+
+	update_rcbs_cmd.hpp
+	update_rcbs_cmd.cpp
 
 	get_filelist_cmd.hpp
 	get_filelist_cmd.cpp

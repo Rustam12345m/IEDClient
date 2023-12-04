@@ -36,16 +36,19 @@ namespace Core
 			m_delimetr = ""; // There isn't a delimetr between IEDName and LDName
 		}
 
-		void		push(QSharedPointer< LogicalNode > t_node) {
-			m_items.push_back(t_node);
+		ptrLN 		lln0() const { return m_lln0; }
+		ptrLN 		lphd1() const { return m_lphd1; }
 
+		void		push(QSharedPointer< Item > t_node) override {
 			QString name = t_node->name();
 			if (name.contains("LLN0")) {
-				m_lln0 = t_node;
+				m_lln0 = t_node.dynamicCast<LogicalNode>();
 			}
-			else if (name.contains("LPHD")) {
-				m_lphd = t_node;
+			else if (name.contains("LPHD1")) {
+				m_lphd1 = t_node.dynamicCast<LogicalNode>();
 			}
+
+			Item::push(t_node);
 		}
 
 		void 		setName(const QString &t_name) {
@@ -53,9 +56,8 @@ namespace Core
 		}
 
 	protected:
-		ptrLN		m_lln0;
-		ptrLN		m_lphd;
+		ptrLN		m_lln0; // LN0
+		ptrLN		m_lphd1; // LPHD1
 	};
-
-	typedef QSharedPointer< LogicalDevice >	ptrLD;
+	typedef QSharedPointer< LogicalDevice >		ptrLD;
 }

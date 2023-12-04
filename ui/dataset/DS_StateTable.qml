@@ -126,6 +126,8 @@ FocusScope {
 		ScrollBar.vertical: ScrollBar {
 			policy: ScrollBar.AsNeeded
 			active: true
+			stepSize: 0.25
+
 			onActiveChanged: {
 				if (!active) {
 					active = true;

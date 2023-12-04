@@ -19,19 +19,18 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "connect_cmd.hpp"
-#include "core/data_model_builder.hpp"
+#include "update_lds_status_cmd.hpp"
 
 #include <QDebug>
-#include "update_ld_status_cmd.hpp"
 
 namespace Core::Cmd
 {
-	void UpdateLD_StatusCmd::execute(LibInterface &t_con)
+	void UpdateLDs_StatusCmd::execute(LibInterface &t_con)
 	{
+		// t_con.updateLDs_Status(m_ied->model());
 	}
 
-	void UpdateLD_StatusCmd::slotMsgProgress(const QString &t_msg)
+	void UpdateLDs_StatusCmd::slotMsgProgress(const QString &t_msg)
 	{
 	}
 }

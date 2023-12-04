@@ -21,29 +21,28 @@
 
 #pragma once
 
-#include "base_command.hpp"
+#include "basic_command.hpp"
 
 namespace Core::Cmd
 {
 	/*
 	 * This class realizes downloading file from the IED
 	 * */
-	class DownloadFile : public IED_BaseCommand
+	class DownloadFileCmd : public BasicCommand
 	{
 		Q_OBJECT
 	public:
-		DownloadFile(const QString &t_name)
-			: IED_BaseCommand(IED_CMD::UNDEFINED)
+		DownloadFileCmd(const QString &t_name)
 		{
 			m_filename = t_name;
 		}
-		~DownloadFile() {}
+		~DownloadFileCmd() {}
 
 		void	execute(LibInterface &t_con) override;
 
 		// Create new command like Builder pattern
-		static QSharedPointer<DownloadFile> create(const QString &t_name) {
-			return QSharedPointer<DownloadFile>::create(t_name);
+		static auto create(const QString &t_name) {
+			return QSharedPointer<DownloadFileCmd>::create(t_name);
 		}
 	
 	private:

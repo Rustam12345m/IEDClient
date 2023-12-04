@@ -100,7 +100,7 @@ namespace App::Models
 		return QVariant(" ? ");
 	}
 
-	void LNs_Table::slotDataUpdated()
+	void LNs_Table::slotDataUpdated(bool t_status)
 	{
 		emit dataChanged(index(0, ModeColumn), index(rowCount() - 1, HealthColumn));
 	}

@@ -27,7 +27,7 @@
 #include "goose_control_block.hpp"
 #include "sv_control_block.hpp"
 
-#include "ln_flat_state.hpp"
+#include "ln_state_table.hpp"
 
 namespace Core
 {
@@ -42,15 +42,35 @@ namespace Core
 			m_delimetr = "/"; // Between LDName and LNName
 		}
 
-		auto& 	getDO_Table() {
+		auto& 	getDO_Table() const {
 			return m_doTable;
 		}
-		void 	setDO_Table(QSharedPointer<LN_FlatState> t_table) {
-			m_doTable = t_table;
+
+		ptrDO	mod() const { return m_mod; }
+		ptrDO	beh() const { return m_beh; }
+		ptrDO	health() const { return m_health; }
+
+		void	push(QSharedPointer< Item > t_child) override {
+			if (t_child->name() == "Mod") {
+				m_mod = t_child.dynamicCast<DataObject>();
+			}
+			if (t_child->name() == "Beh") {
+				m_beh = t_child.dynamicCast<DataObject>();
+			}
+			if (t_child->name() == "Health") {
+				m_health = t_child.dynamicCast<DataObject>();
+			}
+			Item::push(t_child);
 		}
 
 	protected:
-		QSharedPointer<LN_FlatState>	m_doTable;
+		QSharedPointer<LN_StateTable>	m_doTable;
+		QSharedPointer<DataObject>		m_mod;
+		QSharedPointer<DataObject>		m_beh;
+		QSharedPointer<DataObject>		m_health;
+
+	friend class DataModelBuilder;
 	};
+
 	typedef QSharedPointer< LogicalNode >	ptrLN;
 }

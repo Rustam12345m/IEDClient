@@ -28,6 +28,12 @@ namespace App::Models
 	{
 	}
 
+	void RCB_GeneralTable::setSelectedRCB(int t_inx)
+	{
+		m_currentRCB = t_inx;
+		emit sigRCBSelected(m_currentRCB);
+	}
+
 	void RCB_GeneralTable::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
 	{
 		beginResetModel();
@@ -143,5 +149,6 @@ namespace App::Models
 
 	void RCB_GeneralTable::slotDataUpdated(bool t_done)
 	{
+		emit dataChanged(index(0, RCB_ENA_COLUMN), index(rowCount() - 1, ColumnsCount));
 	}
 }

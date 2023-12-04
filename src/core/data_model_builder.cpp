@@ -92,8 +92,7 @@ namespace Core
 			for (size_t j=0;j<ld->getItemCount();j++) {
 				auto ln = ld->getItem<LogicalNode>(j);
 
-				auto doTable = LN_FlatBuilder::create(ln);
-				ln->setDO_Table(doTable);
+				ln->m_doTable = LN_StateTableBuilder::create(ln);
 			}
 		}
 		return m_model;

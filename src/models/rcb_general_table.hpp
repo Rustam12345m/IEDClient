@@ -46,20 +46,25 @@ namespace App::Models
 	public:
 		RCB_GeneralTable(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
 
+		Q_INVOKABLE void setSelectedRCB(int t_inx);
 		void 		setNewIED(QSharedPointer<Core::IED_Object> t_ied);
 
-		QVariant headerData(int t_section, Qt::Orientation t_orientation,
+		QVariant 	headerData(int t_section, Qt::Orientation t_orientation,
 							int t_role = Qt::DisplayRole) const override;
 		QHash<int, QByteArray> roleNames() const override;
 
-		int 	rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
-		int 	columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
-		QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
+		int 		rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
+		int			columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
+		QVariant 	data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
+
+	signals:
+		void	sigRCBSelected(int t_inx);
 
 	public slots:
 		void 	slotDataUpdated(bool t_done);
 
 	private:
 		QSharedPointer<Core::IED_Object> m_ied;
+		int 	m_currentRCB = -1;
 	};
 }

@@ -37,10 +37,11 @@ namespace App::Models
 
 			ColumnsCount
 		};
+
 	public:
 		DataSetsTable(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
 
-		Q_INVOKABLE void setSelectedDS(int t_inx);
+		Q_INVOKABLE void setSelectedDS(int t_ds);
 		void 	setNewIED(QSharedPointer<Core::IED_Object> t_ied);
 		int 	getCurrentDS() const { return m_currentDS; }
 
@@ -55,7 +56,7 @@ namespace App::Models
 		QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
 	signals:
-		void	sigDSSelected(int t_ld, int t_ln);
+		void	sigDSSelected(int t_ds);
 
 	public slots:
 		void 	slotDataUpdated();

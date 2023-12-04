@@ -45,7 +45,7 @@ namespace App
 		QAbstractItemModel* 	getSortedModel() const { return m_sortedModel; }
 
 		// API for QML
-		Q_INVOKABLE QString getFS_TextStatus();
+		Q_INVOKABLE QString fsPageStatus();
 		Q_INVOKABLE void 	updateFilesDirectory(const QString &t_path);
 		Q_INVOKABLE void 	downloadFile(const QString &t_filename);
 		Q_INVOKABLE void 	removeFile(const QString &t_filename, int t_row);

@@ -26,14 +26,12 @@ namespace App::Models
 	LDs_Grid::LDs_Grid(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied)
 		: QAbstractListModel(t_parent), m_ied(t_ied)
 	{
-		connect(&m_ied->model(), SIGNAL(sigUpdated()), this, SLOT(slotDataUpdated()));
 	}
 
 	void LDs_Grid::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
 	{
 		beginResetModel();
 		m_ied = t_ied;
-		connect(&m_ied->model(), SIGNAL(sigUpdated()), this, SLOT(slotDataUpdated()));
 		endResetModel();
 	}
 
@@ -62,7 +60,7 @@ namespace App::Models
 		emit sigLDSelected(t_ld);
 	}
 
-	void LDs_Grid::slotDataUpdated()
+	void LDs_Grid::slotDataUpdated(bool t_status)
 	{
 		beginResetModel();
 		endResetModel();

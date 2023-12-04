@@ -285,8 +285,6 @@ Window {
 							onSigClicked: function() {
 								//rootWindow.updateActivePage()
 								console.log("Clicked: " + prompt)
-
-								lnPage.switchSignalsView()
 							}
 						}
 					}
@@ -439,7 +437,7 @@ Window {
 									focus = true
 
 									setActivePanel(Globals.Panel.LD_INFO)
-									setStatusText(devBackend.getLD_TextStatus())
+									setStatusText(devBackend.ldsPageStatus())
 								} else {
 									focus = false
 								}
@@ -457,7 +455,7 @@ Window {
 									focus = true
 
 									setActivePanel(Globals.Panel.HIDE)
-									setStatusText(devBackend.getLN_TextStatus())
+									setStatusText(devBackend.lnsPageStatus())
 								} else {
 									focus = false
 								}
@@ -472,7 +470,7 @@ Window {
 									fsBackend.updateFilesDirectory("/")
 									setActivePanel(Globals.Panel.HIDE)
 
-									setStatusText(fsBackend.getFS_TextStatus())
+									setStatusText(fsBackend.fsPageStatus())
 								} else {
 									focus = false
 								}
@@ -485,6 +483,7 @@ Window {
 									focus = true
 
 									setActivePanel(Globals.Panel.HIDE)
+									setStatusText(devBackend.dsPageStatus())
 								} else {
 									focus = false
 								}
@@ -496,6 +495,7 @@ Window {
 								if (visible) {
 									focus = true
 									setActivePanel(Globals.Panel.RCB_PROPERTIES)
+									setStatusText(devBackend.rcbPageStatus())
 								} else {
 									focus = false
 								}
@@ -564,12 +564,12 @@ Window {
 						}
 
 						// Selected LD's properties
-						LD.LD_PropPanel {
+						LD.LD_PropertiesPanel {
 							id: ldPropPanel
 						}
 
 						// Selected RCB's settings & controls
-						RCB.RCB_PropPanel {
+						RCB.RCB_PropertiesPanel {
 							id: rcbPropPanel
 						}
 					}
@@ -756,23 +756,25 @@ Window {
 		}
 		case Globals.Page.LD: {
 			devBackend.updateLDs_Status()
-			setStatusText(devBackend.getLD_TextStatus())
+			setStatusText(devBackend.ldsPageStatus())
 			break;
 		}
 		case Globals.Page.LN: {
-			devBackend.updateDO_Table()
-			setStatusText(devBackend.getLN_TextStatus())
+			devBackend.updateLN_TreeValues()
+			setStatusText(devBackend.lnsPageStatus())
 			break;
 		}
 		case Globals.Page.FS: {
 			fsBackend.updateFilesDirectory("/")
-			setStatusText(fsBackend.getFS_TextStatus())
+			setStatusText(fsBackend.fsPageStatus())
 			break;
 		}
 		case Globals.Page.DS: {
+			setStatusText(devBackend.dsPageStatus())
 			break;
 		}
 		case Globals.Page.RCB: {
+			setStatusText(devBackend.rcbPageStatus())
 			break;
 		}
 		}

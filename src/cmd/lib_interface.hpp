@@ -43,8 +43,10 @@ namespace Core::Cmd
 		virtual Core::DevServIdentity 	getServIdentity() = 0;
 		virtual int 	fetchDataModel(Core::DataModelBuilder &t_builder) = 0;
 
-		virtual int		updateLN_PinValues(Core::ptrLN t_node) = 0;
-		virtual int		updateDS_PinValues(Core::ptrLN t_node) = 0;
+		virtual int		updateLDs_Status(Core::ptrDataModel t_model) = 0;
+		virtual int		updateLNs_Status(Core::ptrLD t_ld) = 0;
+		virtual int		updateLN_Signals(Core::ptrLN t_ln) = 0;
+		virtual int		updateDS_Signals(Core::ptrDataSet t_ds) = 0;
 
 		virtual int		getFS_FileList(Core::DirOn &t_dir) = 0;
 		virtual void 	downloadFile(const QString &t_filename) = 0;

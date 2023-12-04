@@ -82,7 +82,7 @@ FocusScope {
 			}
 		}
 
-		onCurrentIndexChanged: function() {
+		onCurrentIndexChanged: {
 			gridView.model.setSelectedLD(gridView.currentIndex)
 		}
 
@@ -100,6 +100,12 @@ FocusScope {
 				}
 			}
 			propagateComposedEvents: true
+		}
+
+		onVisibleChanged: {
+			if ((gridView.currentIndex < 0) && (gridView.count > 0)) {
+				gridView.currentIndex = 0
+			}
 		}
 	}
 

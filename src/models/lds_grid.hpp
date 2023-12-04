@@ -33,6 +33,7 @@ namespace App::Models
 		enum LD_ModelRole {
 			LD_ROLE_NAME = Qt::UserRole + 1
 		};
+
 	public:
 		LDs_Grid(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
 
@@ -48,7 +49,7 @@ namespace App::Models
 		void 		sigLDSelected(int t_ld);
 
 	public slots:
-		void		slotDataUpdated();
+		void		slotDataUpdated(bool t_status);
 
 	private:
 		QSharedPointer<Core::IED_Object>	m_ied;

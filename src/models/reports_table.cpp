@@ -35,12 +35,6 @@ namespace App::Models
 		endResetModel();
 	}
 
-	void ReportsTable::setSelectedLN(int t_ln)
-	{
-		//qDebug() << "ReportsTable: Selected LN = " << t_ln;
-		emit sigLNSelected(m_currentLD, t_ln);
-	}
-
 	QVariant ReportsTable::headerData(int t_section, Qt::Orientation t_orientation, int t_role) const
 	{
 		switch (t_orientation) {
@@ -63,10 +57,6 @@ namespace App::Models
 
 	int ReportsTable::rowCount(const QModelIndex &t_parent) const
 	{
-		auto ld = m_ied->model().getItem<Core::LogicalDevice>(m_currentLD);
-		if (ld) {
-			return ld->getItemCount();
-		}
 		return 0;
 	}
 
@@ -77,26 +67,6 @@ namespace App::Models
 
 	QVariant ReportsTable::data(const QModelIndex &t_index, int t_role) const
 	{
-		auto ln = m_ied->model().getLogicalNode(m_currentLD, t_index.row());
-		if (ln) {
-			switch (t_index.column()) {
-			case NameColumn: {
-				return QVariant(ln->name());
-			}
-			case ModeColumn: {
-				// return QVariant("M");
-				return 1;
-			}
-			case BehColumn: {
-				// return QVariant("B");
-				return 2;
-			}
-			case HealthColumn: {
-				// return QVariant("H");
-				return 3;
-			}
-			}
-		}
 		return QVariant(" ? ");
 	}
 
@@ -105,11 +75,11 @@ namespace App::Models
 		emit dataChanged(index(0, ModeColumn), index(rowCount() - 1, HealthColumn));
 	}
 
-	void ReportsTable::slotLDSelected(int t_ld)
+	void ReportsTable::slotRCBSelected(int t_inx)
 	{
-		if (m_currentLD != t_ld) {
+		if (m_currentRCB != t_inx) {
 			beginResetModel();
-			m_currentLD = t_ld;
+			m_currentRCB = t_inx;
 			endResetModel();
 		}
 	}

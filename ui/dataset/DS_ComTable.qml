@@ -27,127 +27,97 @@ import Qt.labs.qmlmodels
 
 import "qrc:/global/"
 
-// Table with DataObjects for concrete Logical Node
+// Table of all Logical Nodes for one Logical Device
 FocusScope {
 	id: rootID
 
 	readonly property int defDelegateHeight: 30
-
-	signal sigLeftOrRightKey()
-	signal sigForceFocus()
+	readonly property int defDelegateWidth: 60
 
 	property var globals: Globals {}
 
-	function resizeColumns() {
-		globals.resizeColumnsToContent(headerID, tableID)
-	}
+	signal sigLeftOrRightKey()
+	signal sigForceFocus()
+	signal sigSelectedNewDS()
 
-	// Header for TableView below with DO
+	// Header of table below
 	HorizontalHeaderView {
 		id: headerID
 
-		property int sortOrder: 0
-		property int sortedColumn: 0
-
 		anchors {
-			left: tableID.left
+			rightMargin: 5
+			left: parent.left
 			top: parent.top
 			right: parent.right
 		}
 		boundsBehavior: Flickable.StopAtBounds
-		resizableColumns: false
 
 		syncView: tableID
 
 		delegate: Rectangle {
-			property int column: model.column
-			property bool sortable: model.display.sortable
+			property var paramModel: model
 
-			implicitWidth: labelID.implicitWidth + 24 + 10
-			implicitHeight: 30
+			implicitWidth: Math.max(textArea.implicitWidth + 10, defDelegateWidth)
+			implicitHeight: defDelegateHeight
 
 			color: "#f6f6f6"
 			border.color: "#e4e4e4"
 
-			Row {
-				id: rowID
-
-				anchors.centerIn: parent
-				spacing: 5
-
-				Label {
-					id: labelID
-
-					text: model.display.text
-					color: "#ff26282a"
-				}
-				Image {
-					visible: (headerID.sortedColumn == column)
-					source: (headerID.sortOrder == 0) ? "qrc:/img/icons/keyboard_arrow_down.svg"
-													  : "qrc:/img/icons/keyboard_arrow_up.svg"
-
-					width: 24
-					height: 24
-				}
-			}
-			MouseArea {
+			Label {
+				id: textArea
 				anchors.fill: parent
 
-				onClicked: function(msx) {
-					if (sortable == false) {
-						return
-					}
+				horizontalAlignment: Text.AlignHCenter
+				verticalAlignment: Text.AlignVCenter
 
-					if (headerID.sortedColumn != column) {
-						headerID.sortedColumn = column
-						headerID.sortOrder = 0
-					}
-
-					if (headerID.sortOrder == 0) {
-						headerID.sortOrder = 1
-					} else {
-						headerID.sortOrder = 0
-					}
-					tableID.model.sort(parent.column, headerID.sortOrder)
-				}
+				//font.bold: true
+				text: model.display
+				color: "#ff26282a"
 			}
 		}
 	}
 
-	// Table of DO for a selected LN
+	// Table of all DataSets for this IED
 	TableView {
 		id: tableID
 
 		anchors {
-			leftMargin: 5
+			rightMargin: 5
+
 			left: parent.left
 			right: parent.right
 			top: headerID.bottom
 			bottom: parent.bottom
 		}
 
-		model: devBackend.doModel
+		model: devBackend.dataSetsModel
 
 		focus: true
 		clip: true
+		reuseItems: true
 		interactive: true
 		boundsBehavior: Flickable.StopAtBounds
-
-		columnWidthProvider: function(t_column) {
-			return globals.calcColumnsWidth(headerID, tableID, t_column)
-		}
 
 		selectionBehavior: TableView.SelectRows
 		selectionModel: ItemSelectionModel {
 			model: tableID.model
 		}
 
+		onCurrentRowChanged: {
+			tableID.model.setSelectedDS(tableID.currentRow)
+			sigSelectedNewDS()
+		}
+
+		columnWidthProvider: function(t_column) {
+			return globals.calcColumnsWidth(headerID, tableID, t_column)
+		}
+
 		delegate: TextDelegate {
 			delegateHeight: defDelegateHeight
 			selected: (tableID.currentRow == row)
 
-			textAlign: (column == 0) ? Text.AlignLeft : Text.AlignHCenter
-			text: model.display
+			textAlign: Text.AlignHCenter
+			text: model.value
 
 			onSigClick: function(row, col) {
 				globals.setSelectedRow(tableID, row)
@@ -158,6 +128,7 @@ FocusScope {
 		ScrollBar.vertical: ScrollBar {
 			policy: ScrollBar.AsNeeded
 			active: true
+
 			onActiveChanged: {
 				if (!active) {
 					active = true;
@@ -166,7 +137,6 @@ FocusScope {
 		}
 
 		Keys.onPressed: function(event) {
-			//console.log("DO_Table: Key pressed " + event.key)
 			if (event.key == Qt.Key_Left || event.key == Qt.Key_Right || event.key == Qt.Key_Tab) {
 				sigLeftOrRightKey()
 				event.accepted = true
@@ -174,11 +144,9 @@ FocusScope {
 			event.accepted = false
 		}
 
-		Connections {
-			target: devBackend.doModel
-
-			function onDataChanged() {
-				Qt.callLater(rootID.resizeColumns)
+		onVisibleChanged: {
+			if ((tableID.rows > 0) && (tableID.currentRow < 0)) {
+				globals.setSelectedRow(tableID, 0)
 			}
 		}
 	}

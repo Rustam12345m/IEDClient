@@ -32,6 +32,8 @@ FocusScope {
 
 	property var globals: Globals {}
 
+	signal sigValueClicked(string t_ref, string t_msg, string t_value)
+
 	// Header
 	HorizontalHeaderView {
 		id: headerID
@@ -74,6 +76,7 @@ FocusScope {
 		}
 	}
 
+	// Tree of DO
 	TreeView {
 		id: treeView
 
@@ -104,8 +107,11 @@ FocusScope {
 
 		delegate: TreeViewDelegate {
 			TapHandler {
-				acceptedButtons: Qt.RightButton
-				onTapped: someContextMenu.open()
+				acceptedButtons: Qt.RightButton //Qt.LeftButton
+
+				onTapped: function() {
+					sigValueClicked("DO_Reference", "DO_Name", "Value_123")
+				}
 			}
 
 			TapHandler {

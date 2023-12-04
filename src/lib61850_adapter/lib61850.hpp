@@ -58,8 +58,10 @@ namespace Core::Lib
 		int 	fetchLN_SVCB(Core::DataModelBuilder &t_builder);
 
 	public:
-		int		updateLN_PinValues(Core::ptrLN t_node) override;
-		int		updateDS_PinValues(Core::ptrLN t_node) override;
+		int		updateLDs_Status(Core::ptrDataModel t_model) override;
+		int		updateLNs_Status(Core::ptrLD t_ld) override;
+		int		updateLN_Signals(Core::ptrLN t_ln) override;
+		int		updateDS_Signals(Core::ptrDataSet t_ds) override;
 
 		int		getFS_FileList(Core::DirOn &t_dir) override;
 		void 	downloadFile(const QString &t_filename) override;

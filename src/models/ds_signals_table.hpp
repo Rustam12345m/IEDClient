@@ -36,6 +36,7 @@ namespace App::Models
 
 			ColumnsCount
 		};
+
 	public:
 		DS_SignalsTable(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
 
