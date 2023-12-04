@@ -35,9 +35,10 @@ namespace App::Models
 		endResetModel();
 	}
 
-	void DataSetsTable::setSelectedDS(int t_ln)
+	void DataSetsTable::setSelectedDS(int t_ds)
 	{
-		emit sigDSSelected(m_currentDS, t_ln);
+		m_currentDS = t_ds;
+		emit sigDSSelected(m_currentDS);
 	}
 
 	QVariant DataSetsTable::headerData(int t_section, Qt::Orientation t_orientation, int t_role) const

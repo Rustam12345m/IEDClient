@@ -31,7 +31,7 @@ namespace App
 		m_sortedModel->setSourceModel(m_fsModel);
 	}
 
-	Q_INVOKABLE QString FS_Backend::getFS_TextStatus()
+	Q_INVOKABLE QString FS_Backend::fsPageStatus()
 	{
 		auto [count, size] = m_con.m_iedObj->fs().getFS_StatInfo();
 		if (size < 1024 * 1024) {
@@ -49,7 +49,7 @@ namespace App
 	void FS_Backend::downloadFile(const QString &t_filename)
 	{
 		qDebug() << "FS_Backend: Download file " << t_filename;
-		auto cmd = Core::Cmd::DownloadFile::create(t_filename);
+		auto cmd = Core::Cmd::DownloadFileCmd::create(t_filename);
 		putCmdToQueue(cmd);
 	}
 

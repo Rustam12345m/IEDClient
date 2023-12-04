@@ -24,9 +24,9 @@
 
 namespace Core::Cmd
 {
-	void DownloadFile::execute(LibInterface &t_con)
+	void DownloadFileCmd::execute(LibInterface &t_con)
 	{
-		qDebug() << "CMD: DownloadFile " << m_filename;
+		qDebug() << "CMD: DownloadFileCmd " << m_filename;
 
 		t_con.downloadFile(m_filename);
 	}

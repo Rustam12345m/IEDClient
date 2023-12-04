@@ -25,20 +25,24 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
+import "qrc:/global/"
+
 // LN page
 FocusScope {
 	id: root
 
-	function actSignalsTable() {
-		lnSignalsStack.currentIndex = 0
-	}
-	function actSignalsTree() {
-		lnSignalsStack.currentIndex = 1
-	}
 	function switchSignalsView() {
 		lnSignalsStack.currentIndex = (lnSignalsStack.currentIndex == 0) ? 1 : 0
 	}
 
+	// Window for setting a new value for DA/SDA
+	DiaChangeValue {
+		id: diaChangeValue
+
+		anchors.centerIn: parent
+	}
+
+	// 
 	SplitView {
 		id: splitView
 
@@ -67,7 +71,7 @@ FocusScope {
 			color: "white"
 
 			// Table
-			LN_Table {
+			LN_ComTable {
 				id: tableLN
 
 				anchors.fill: parent
@@ -82,7 +86,7 @@ FocusScope {
 					tableDO.focus = false
 				}
 				onSigSelectedNewLN: function() {
-					devBackend.updateDO_Table(tableDO.currentLDevice, tableDO.currentLNode)
+					devBackend.updateLN_TreeValues(tableDO.currentLDevice, tableDO.currentLNode)
 				}
 			}
 		}
@@ -93,16 +97,20 @@ FocusScope {
 			SplitView.fillWidth: true
 			color: "white"
 
+			// Different view pages for the LN
 			StackLayout {
 				id: lnSignalsStack
 
-				anchors.fill: parent
+				anchors {
+					left: parent.left
+					right: lnViewTabBar.left
+					top: parent.top
+					bottom: parent.bottom
+				}
 
 				// Table DO signals
-				LN_SignalsTable {
+				LN_StateView {
 					id: tableDO
-
-					//anchors.fill: parent
 
 					onSigLeftOrRightKey: function() {
 						console.log("LN_Page: Activate LN_Table")
@@ -119,7 +127,66 @@ FocusScope {
 				LN_SignalsTree {
 					id: treeDO
 
-					//anchors.fill: parent
+					onSigValueClicked: function(t_ref, t_msg, t_value) {
+						diaChangeValue.open(t_ref, t_msg, t_value)
+					}
+				}
+
+				LN_ControlsView {
+					id: lnControlsView
+					
+				}
+
+				LN_SettingsView {
+					id: lnSettingsView
+
+				}
+			}
+
+			// Vertical TabBar for lnSignalsStack
+			ListView {
+				id: lnViewTabBar
+
+				anchors {
+					right: parent.right
+					top: parent.top
+					bottom: parent.bottom
+				}
+
+				width: 30
+
+				model: ListModel {
+					ListElement { title: "State" }
+					ListElement { title: "Tree" }
+					ListElement { title: "Controls" }
+					ListElement { title: "Settings" }
+				}
+
+				delegate: Item {
+					width: lnViewTabBar.width
+					height: 120
+
+					Rectangle {
+						width: parent.width
+						height: parent.height
+						color: (lnViewTabBar.currentIndex === index) ? "lightgray" :"#f6f6f6"
+
+						Text {
+							rotation: 90
+        					anchors.top: parent.top
+        					anchors.horizontalCenter: parent.horizontalCenter
+
+							text: title
+							anchors.centerIn: parent
+						}
+						MouseArea {
+							anchors.fill: parent
+							onClicked: {
+								lnViewTabBar.currentIndex = index
+								lnSignalsStack.currentIndex = index
+							}
+						}
+					}
 				}
 			}
 		}
@@ -133,7 +200,6 @@ FocusScope {
 			repeat: true
 
 			onTriggered: function() {
-				//devBackend.updateDO_Table(tableDO.currentLDevice, tableDO.currentLNode)
 			}
 		}
 	}

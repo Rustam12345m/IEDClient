@@ -75,14 +75,11 @@ namespace App::Models
 
 	int DS_SignalsTable::rowCount(const QModelIndex &t_parent) const
 	{
-		/*
-		auto ln = m_ied->model().getLogicalNode(m_currentDS, m_currentLN);
-		if (ln) {
-			return ln->getDO_Table()->size();
+		auto dsList = m_ied->model().dsList();
+		if (m_currentDS >= 0 && m_currentDS < dsList.count()) {
+			return dsList[m_currentDS]->getItemCount();
 		}
 		return 0;
-		*/
-		return 7;
 	}
 
 	int DS_SignalsTable::columnCount(const QModelIndex &t_parent) const
@@ -92,59 +89,35 @@ namespace App::Models
 
 	QVariant DS_SignalsTable::data(const QModelIndex &t_index, int t_role) const
 	{
-		//qDebug() << "DS_SignalsTable: " << QString("index = %1 %2, role = %3").arg(t_index.row()).arg(t_index.column()).arg(t_role);
 		int row = t_index.row(), column = t_index.column();
+		auto dsList = m_ied->model().dsList();
 
-		switch (column) {
-		case DS_REF_COLUMN: {
-			return QVariant(QString("Ref_%1").arg(row));
-		}
-		case DS_FC_COLUMN: {
-			return QVariant(QString("FC_%1").arg(row));
-		}
-		case DS_VALUE_COLUMN: {
-			return QVariant(QString("Value_%1").arg(row));
-		}
-		}
-
-		/*
-		auto ln = m_ied->model().getLogicalNode(m_currentDS, m_currentLN);
-		if (ln) {
-			auto doTable = ln->getDO_Table();
-			if (t_role == ComRoles::ROLE_SORT_VALUE) {
-				// for sorting process
+		if (m_currentDS >= 0 && m_currentDS < dsList.count()) {
+			auto dsItem = dsList[m_currentDS]->getItem<Core::DataSetEntity>(row);
+			if (dsItem) {
 				switch (column) {
 				case DS_REF_COLUMN: {
-					return QVariant(doTable->name(row));
+					return QVariant(dsItem->name());
 				}
 				case DS_FC_COLUMN: {
-					return QVariant(doTable->fc(row));
+					return QVariant(QString("FC_%1").arg(row));
 				}
 				case DS_VALUE_COLUMN: {
-					return QVariant(doTable->value(row));
-				}
-				}
-			} else {
-				// for user interface
-				switch (column) {
-				case DS_REF_COLUMN: {
-					return QVariant(filterDOName(doTable->name(row)));
-				}
-				case DS_FC_COLUMN: {
-					return QVariant(doTable->fc(row));
-				}
-				case DS_VALUE_COLUMN: {
-					return QVariant(doTable->value(row));
+					auto item = dsItem->item();
+					if (item) {
+						return QVariant(item->value());
+					}
+					break;
 				}
 				}
 			}
 		}
-		*/
 		return QVariant(" ? ");
 	}
 
 	void DS_SignalsTable::slotDataUpdated(bool t_done)
 	{
+		emit dataChanged(index(0, DS_VALUE_COLUMN), index(rowCount() - 1, ColumnsCount));
 	}
 
 	void DS_SignalsTable::slotDSSelected(int t_ds)

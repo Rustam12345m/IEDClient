@@ -21,29 +21,28 @@
 
 #pragma once
 
-#include "base_command.hpp"
+#include "basic_command.hpp"
 #include "core/ied_object.hpp"
 
 namespace Core::Cmd
 {
-	class UpdateLNode : public IED_BaseCommand
+	class UpdateLNode_Cmd : public BasicCommand
 	{
-		QSharedPointer<Core::IED_Object> m_ied;
-		int				m_ldIndex = 0;
-		int				m_lnIndex = 0;
-
 	public:
-		UpdateLNode(QSharedPointer<Core::IED_Object> t_ied, int t_ldIndex, int t_lnIndex)
-			: IED_BaseCommand(IED_CMD::UPDATE_LN),
-			  m_ied{t_ied}, m_ldIndex{t_ldIndex}, m_lnIndex{t_lnIndex}
+		UpdateLNode_Cmd(ptrIED_Object t_ied, int t_ldIndex, int t_lnIndex)
+			: m_ied{t_ied}, m_ldIndex{t_ldIndex}, m_lnIndex{t_lnIndex}
 		{
 		}
 
-		void	execute(LibInterface &t_con) override;
+		void execute(LibInterface &t_con) override;
 
-		template<typename... Args>
-		static QSharedPointer<UpdateLNode> create(Args&&... args) {
-			return QSharedPointer<UpdateLNode>::create(std::forward<Args>(args)...);
+		static auto create(ptrIED_Object t_ied, int t_ldInx, int t_lnInx) {
+			return QSharedPointer<UpdateLNode_Cmd>::create(t_ied, t_ldInx, t_lnInx);
 		}
+	
+	private:
+		ptrIED_Object 	m_ied;
+		int				m_ldIndex = -1;
+		int				m_lnIndex = -1;
 	};
 }

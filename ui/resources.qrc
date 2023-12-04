@@ -14,23 +14,26 @@
         <file>global/ModalProgressBar.qml</file>
         <file>global/Led.qml</file>
 
-        <file>dataset/DS_InfoTable.qml</file>
-        <file>dataset/DS_ValTable.qml</file>
+        <file>dataset/DS_ComTable.qml</file>
+        <file>dataset/DS_StateTable.qml</file>
         <file>dataset/Page.qml</file>
 
         <file>reports/Page.qml</file>
-        <file>reports/RCB_PropPanel.qml</file>
+        <file>reports/RCB_PropertiesPanel.qml</file>
         <file>reports/RCB_ReportsTable.qml</file>
 
         <file>logical_device/Page.qml</file>
         <file>logical_device/LD_GridDelegate.qml</file>
-        <file>logical_device/LD_PropPanel.qml</file>
+        <file>logical_device/LD_PropertiesPanel.qml</file>
 
         <file>logical_node/Page.qml</file>
-        <file>logical_node/LN_Table.qml</file>
+        <file>logical_node/LN_ComTable.qml</file>
         <file>logical_node/LN_StateDelegate.qml</file>
-        <file>logical_node/LN_SignalsTable.qml</file>
+        <file>logical_node/LN_StateView.qml</file>
         <file>logical_node/LN_SignalsTree.qml</file>
+        <file>logical_node/LN_ControlsView.qml</file>
+        <file>logical_node/LN_SettingsView.qml</file>
+        <file>logical_node/DiaChangeValue.qml</file>
 
         <file>filesystem/Page.qml</file>
         <file>filesystem/FileTableDelegate.qml</file>

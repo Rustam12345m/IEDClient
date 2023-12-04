@@ -21,15 +21,19 @@
 
 #include "ln_state_table.hpp"
 
-namespace {
+namespace
+{
 	// remove: .stVal and .mag.f
 	QString 	filterDOName(const QString &t_name)
 	{
 		if (t_name.endsWith(".stVal")) {
 			return t_name.first(t_name.size() - 6);
-		} else if (t_name.endsWith(".mag.f")) {
+		} else if (t_name.endsWith(".f")) {
+			return t_name.first(t_name.size() - 2);
+		}/* else if (t_name.endsWith(".mag.f")) {
 			return t_name.first(t_name.size() - 6);
 		}
+		*/
 		return t_name;
 	}
 }
@@ -162,7 +166,6 @@ namespace App::Models
 	void LN_StateTable::slotDataUpdated(bool t_done)
 	{
 		//qDebug() << "LN_StateTable: slotDataUpdated";
-
 		emit dataChanged(index(0, DO_VALUE_COLUMN), index(rowCount() - 1, DO_TS_COLUMN));
 	}
 

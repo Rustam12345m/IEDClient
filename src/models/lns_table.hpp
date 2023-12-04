@@ -38,6 +38,7 @@ namespace App::Models
 
 			ColumnsCount
 		};
+
 	public:
 		LNs_Table(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
 
@@ -59,7 +60,7 @@ namespace App::Models
 		void	sigLNSelected(int t_ld, int t_ln);
 
 	public slots:
-		void 	slotDataUpdated();
+		void 	slotDataUpdated(bool t_status);
 		void 	slotLDSelected(int t_ld);
 
 	private:

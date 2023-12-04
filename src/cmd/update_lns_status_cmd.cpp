@@ -19,37 +19,24 @@
  *  See COPYING file for the complete license text.
  * */
 
-#pragma once
-
-#include "base_command.hpp"
-#include "core/ied_object.hpp"
+#include "update_lns_status_cmd.hpp"
+#include <QDebug>
 
 namespace Core::Cmd
 {
-	/*
-	 * This class ...
-	 * */
-	class UpdateLD_StatusCmd : public IED_BaseCommand
+	void UpdateLNs_StatusCmd::execute(LibInterface &t_con)
 	{
-		Q_OBJECT
-	public:
-		UpdateLD_StatusCmd(int t_inx, QSharedPointer<Core::IED_Object> t_ied)
-				: IED_BaseCommand(IED_CMD::UNDEFINED), m_inx(t_inx), m_ied(t_ied)
-		{
+		ptrLD ld = m_ied->model().getLogicalDevice(m_ldIndex);
+		if (ld) {
+			if (t_con.updateLNs_Status(ld) == 0) {
+				emit sigFinished(true);
+				return;
+			}
 		}
-		~UpdateLD_StatusCmd() override {}
+		emit sigFinished(false);
+	}
 
-		void	execute(LibInterface &t_con) override;
-
-		static QSharedPointer<UpdateLD_StatusCmd> create(int t_inx, ptrIED_Object t_ied) {
-			return QSharedPointer<UpdateLD_StatusCmd>::create(t_inx, t_ied);
-		}
-
-	private slots:
-		void 	slotMsgProgress(const QString &t_msg);
-
-	private:
-		int 								m_inx = -1;
-		QSharedPointer<Core::IED_Object>	m_ied;
-	};
+	void UpdateLNs_StatusCmd::slotMsgProgress(const QString &t_msg)
+	{
+	}
 }

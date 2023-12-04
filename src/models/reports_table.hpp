@@ -41,10 +41,7 @@ namespace App::Models
 	public:
 		ReportsTable(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
 
-		Q_INVOKABLE void setSelectedLN(int t_inx);
-
 		void 	setNewIED(QSharedPointer<Core::IED_Object> t_ied);
-		int 	getCurrentLD() const { return m_currentLD; }
 
 		QVariant headerData(int t_section, Qt::Orientation t_orientation,
 							int t_role = Qt::DisplayRole) const override;
@@ -54,15 +51,12 @@ namespace App::Models
 
 		QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
-	signals:
-		void	sigLNSelected(int t_ld, int t_ln);
-
 	public slots:
 		void 	slotDataUpdated();
-		void 	slotLDSelected(int t_ld);
+		void 	slotRCBSelected(int t_inx);
 
 	private:
 		QSharedPointer<Core::IED_Object> 	m_ied;
-		int		m_currentLD = -1; // selected Logical Device by user
+		int		m_currentRCB = -1;
 	};
 }

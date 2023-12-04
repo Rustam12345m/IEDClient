@@ -49,7 +49,6 @@ namespace Core::Cmd
 
 				// Debug
 				//m_ied->model().print();
-				qDebug() << "Found DS:" << m_ied->model().dsList().count();
 
 				emit sigProgress(100, QString("Data model and other stuff were received from %1:%2").arg(m_ip).arg(m_port));
 				emit sigFinished(true);

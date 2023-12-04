@@ -24,14 +24,14 @@
 
 namespace Core::Cmd
 {
-	void UpdateLNode::execute(LibInterface &t_con)
+	void UpdateLNode_Cmd::execute(LibInterface &t_con)
 	{
-		//qDebug() << "UpdateLNode: ldInx = " << m_ldIndex << ", lnInx " << m_lnIndex;
+		//qDebug() << "UpdateLNode_Cmd: ldInx = " << m_ldIndex << ", lnInx " << m_lnIndex;
 
 		if (t_con.isConnected()) {
 			auto ln = m_ied->model().getLogicalNode(m_ldIndex, m_lnIndex);
 			if (ln) {
-				t_con.updateLN_PinValues(ln);
+				t_con.updateLN_Signals(ln);
 			}
 		}
 		emit sigFinished(true);

@@ -21,51 +21,35 @@
 
 #pragma once
 
-#include <QObject>
-
-#include "lib_interface.hpp"
+#include "basic_command.hpp"
+#include "core/ied_object.hpp"
 
 namespace Core::Cmd
 {
-	enum class IED_CMD
-	{
-		UNDEFINED = 0,
-		CONNECT,
-		UPDATE_LD,
-		UPDATE_LN,
-		UPDATE_DIR,
-		GET_FILELIST,
-		GET_FILE,
-		REMOVE_FILE
-	};
-
 	/*
-	 * This is a basic class for all requests to IED through Lib61850_Adapter
+	 * This class ...
 	 * */
-	class IED_BaseCommand : public QObject
+	class UpdateLNs_StatusCmd : public BasicCommand
 	{
 		Q_OBJECT
-	protected:
-		IED_CMD		m_type = IED_CMD::UNDEFINED;
-
 	public:
-		IED_BaseCommand() = delete;
-		IED_BaseCommand(IED_CMD t_type) : m_type(t_type) {}
-		virtual ~IED_BaseCommand() {}
+		UpdateLNs_StatusCmd(ptrIED_Object t_ied, int t_ldInx)
+				: m_ied(t_ied), m_ldIndex(t_ldInx)
+		{
+		}
+		~UpdateLNs_StatusCmd() override {}
 
-		virtual void	execute(LibInterface &t_con) {
+		void execute(LibInterface &t_con) override;
+
+		static auto create(ptrIED_Object t_ied, int t_ldInx) {
+			return QSharedPointer<UpdateLNs_StatusCmd>::create(t_ied, t_ldInx);
 		}
 
-	signals:
-		void	sigProgress(int t_perc, QString t_msg);
-		void	sigFinished(bool t_done);
+	private slots:
+		void slotMsgProgress(const QString &t_msg);
 
-		/*
-		template<typename... Args>
-		static QSharedPointer<ConnectCmd> create(Args&&... args) {
-			return QSharedPointer<ConnectCmd>::create(std::forward<Args>(args)...);
-		}
-		*/
+	private:
+		ptrIED_Object	m_ied;
+		int 			m_ldIndex = -1;
 	};
-	typedef QSharedPointer< IED_BaseCommand >	ptrCMD;
 }

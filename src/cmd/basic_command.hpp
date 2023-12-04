@@ -21,38 +21,35 @@
 
 #pragma once
 
-#include "ied_connection.hpp"
+#include <QObject>
 
-// All known commands
-#include "cmd/all_cmd_header.hpp"
+#include "lib_interface.hpp"
 
-namespace App
+namespace Core::Cmd
 {
 	/*
-	* Interface for all Backends
-	* */
-	class BackendBase : public QObject
+	 * This is a basic class for all requests to IED through Lib61850_Adapter
+	 * */
+	class BasicCommand : public QObject
 	{
 		Q_OBJECT
-
-		BackendBase() = delete;
 	public:
-		BackendBase(IED_Connection &t_con) : m_con(t_con) {};
-		virtual ~BackendBase() {}
+		BasicCommand() = default;
+		virtual ~BasicCommand() {}
 
-	protected:
-		void	putCmdToQueue(Core::Cmd::ptrCMD t_cmd);
+		virtual void	execute(LibInterface &t_con) {
+		}
 
 	signals:
-		void	sigCmdProgress(int t_perc, QString t_msg);
-		void	sigCmdFinished(bool t_done);
+		void	sigProgress(int t_perc, QString t_msg);
+		void	sigFinished(bool t_done);
 
-	public slots:
-		void			slotCmdProcess(int t_proc, QString t_msg);
-		void			slotCmdFinished(bool t_done);
-		virtual void 	slotConnected(bool t_done);
-
-	protected:
-		IED_Connection& 	m_con;
+		/*
+		template<typename... Args>
+		static QSharedPointer<ConnectCmd> create(Args&&... args) {
+			return QSharedPointer<ConnectCmd>::create(std::forward<Args>(args)...);
+		}
+		*/
 	};
+	typedef QSharedPointer< BasicCommand >	ptrCMD;
 }
