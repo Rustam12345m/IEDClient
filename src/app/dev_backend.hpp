@@ -24,14 +24,14 @@
 #include "backend_base.hpp"
 
 #include "models/sort_proxy_model.hpp"
-#include "models/lds_grid.hpp"
+#include "models/ld_common_grid.hpp"
 #include "models/ld_prop_table.hpp"
-#include "models/lns_table.hpp"
+#include "models/ln_common_table.hpp"
 #include "models/ln_state_table.hpp"
 #include "models/ln_signals_tree.hpp"
-#include "models/datasets_table.hpp"
+#include "models/ds_common_table.hpp"
 #include "models/ds_signals_table.hpp"
-#include "models/rcb_general_table.hpp"
+#include "models/rcb_common_table.hpp"
 #include "models/reports_table.hpp"
 
 namespace App
@@ -46,29 +46,17 @@ namespace App
 		DevBackend(IED_Connection &t_con);
 		~DevBackend() = default;
 
-		Q_PROPERTY(QAbstractListModel* 	ldModel 		READ getLD_Model		CONSTANT)
-		Q_PROPERTY(QAbstractTableModel* lnModel 		READ getLN_Model 		CONSTANT)
-		Q_PROPERTY(QAbstractItemModel* 	doModel 		READ getSortDO_Model 	CONSTANT)
-		Q_PROPERTY(QAbstractItemModel* 	lnTreeModel 	READ getLN_TreeModel 	CONSTANT)
-		Q_PROPERTY(QAbstractListModel* 	ldPropModel 	READ getLD_PropModel	CONSTANT)
-		//Q_PROPERTY(QAbstractTableModel* 	doModel 		READ getDO_Model 		CONSTANT)
-		Q_PROPERTY(QAbstractTableModel* dataSetsModel 	READ getDSInfo_Model 	CONSTANT)
-		Q_PROPERTY(QAbstractTableModel* dataSetModel	READ getDS_Model 		CONSTANT)
-		Q_PROPERTY(QAbstractTableModel* rcbMainModel	READ getRCB_Model 		CONSTANT)
-		Q_PROPERTY(QAbstractTableModel* rcbReportsModel	READ getReports_Model 	CONSTANT)
+		Q_INVOKABLE QAbstractListModel*		getLD_GridModel() const { return m_ldsModel; }
+		Q_INVOKABLE QAbstractListModel*		getLD_PropModel() const { return m_ldPropModel; }
+		Q_INVOKABLE QAbstractTableModel*	getLN_ComModel() const { return m_lnsModel; }
+		Q_INVOKABLE QAbstractItemModel* 	getLN_StateModel() const { return m_sortDOModel; }
+		Q_INVOKABLE QAbstractItemModel* 	getLN_TreeModel() const { return m_lnTreeModel; }
+		Q_INVOKABLE QAbstractListModel*		getDS_ComModel() const { return m_dsComModel; }
+		Q_INVOKABLE QAbstractTableModel*	getDS_ItemModel() const { return m_dsSigModel; }
+		Q_INVOKABLE QAbstractTableModel*	getRCB_ComModel() const { return m_rcbComModel; }
+		Q_INVOKABLE QAbstractTableModel*	getReportsModel() const { return m_reportsModel; }
 
-		QAbstractListModel*		getLD_Model() const { return m_ldsModel; }
-		QAbstractTableModel*	getLN_Model() const { return m_lnsModel; }
-		QAbstractTableModel*	getDO_Model() const { return m_lnStateModel; }
-		QAbstractListModel*		getLD_PropModel() const { return m_ldPropModel; }
-		QAbstractItemModel* 	getSortDO_Model() const { return m_sortDOModel; }
-		QAbstractItemModel* 	getLN_TreeModel() const { return m_lnTreeModel; }
-		QAbstractTableModel*	getDSInfo_Model() const { return m_dsComModel; }
-		QAbstractTableModel*	getDS_Model() const { return m_dsSigModel; }
-		QAbstractTableModel*	getRCB_Model() const { return m_rcbComModel; }
-		QAbstractTableModel*	getReports_Model() const { return m_reportsModel; }
-
-		// Commands
+		// CMD
 		Q_INVOKABLE void 		updateLDs_Status();
 		Q_INVOKABLE void 		updateLNs_Status();
 		Q_INVOKABLE void 		updateRCBs_Status();
@@ -86,15 +74,15 @@ namespace App
 
 	protected:
 		// Models for Tables in GUI
-		Models::LDs_Grid*			m_ldsModel = nullptr;
+		Models::LD_CommonGrid*		m_ldsModel = nullptr;
 		Models::LD_PropTable*		m_ldPropModel = nullptr;
-		Models::LNs_Table*			m_lnsModel = nullptr;
+		Models::LN_CommonTable*		m_lnsModel = nullptr;
 		Models::LN_StateTable*		m_lnStateModel = nullptr;
-		Models::LN_SignalsTree* 	m_lnTreeModel = nullptr;
+		Models::LN_SignalTree* 		m_lnTreeModel = nullptr;
 		Models::SortProxyModel* 	m_sortDOModel = nullptr;
-		Models::DataSetsTable*  	m_dsComModel = nullptr;
+		Models::DS_CommonLModel*	m_dsComModel = nullptr;
 		Models::DS_SignalsTable* 	m_dsSigModel = nullptr;
-		Models::RCB_GeneralTable* 	m_rcbComModel = nullptr;
+		Models::RCB_CommonTable* 	m_rcbComModel = nullptr;
 		Models::ReportsTable* 		m_reportsModel = nullptr;
 	};
 }

@@ -1,6 +1,4 @@
 /*
- *  main.qml
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -25,10 +23,14 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-import "qrc:/global/"
+import "qrc:/common/"
+
+import GlobalVarsModule
+import AppStylesModule
 
 // LLN0 & LPHD info for LD
-Item {
+Item
+{
 	property int defRowHeight: 30
 	property int defTextPadding: 5
 	property int defNameWidth: 100
@@ -39,7 +41,7 @@ Item {
 
 		property int selectedIndex: -1
 
-		model: devBackend.ldPropModel
+		model: devBackend.getLD_PropModel()
 
 		section.property: "section"
 		section.delegate: Rectangle {

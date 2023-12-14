@@ -25,27 +25,27 @@ namespace App
 {
 	DevBackend::DevBackend(IED_Connection &t_con) : BackendBase(t_con)
 	{
-		m_ldsModel = new Models::LDs_Grid(this, m_con.m_iedObj);
+		m_ldsModel = new Models::LD_CommonGrid(this, m_con.m_iedObj);
 		m_ldPropModel = new Models::LD_PropTable(this, m_con.m_iedObj);
-		m_lnsModel = new Models::LNs_Table(this, m_con.m_iedObj);
+		m_lnsModel = new Models::LN_CommonTable(this, m_con.m_iedObj);
 		m_lnStateModel = new Models::LN_StateTable(this, m_con.m_iedObj);
-		m_lnTreeModel = new Models::LN_SignalsTree(this, m_con.m_iedObj);
-		m_dsComModel = new Models::DataSetsTable(this, m_con.m_iedObj);
+		m_lnTreeModel = new Models::LN_SignalTree(this, m_con.m_iedObj);
+		m_dsComModel = new Models::DS_CommonLModel(this, m_con.m_iedObj);
 		m_dsSigModel = new Models::DS_SignalsTable(this, m_con.m_iedObj);
-		m_rcbComModel = new Models::RCB_GeneralTable(this, m_con.m_iedObj);
+		m_rcbComModel = new Models::RCB_CommonTable(this, m_con.m_iedObj);
 		m_reportsModel = new Models::ReportsTable(this, m_con.m_iedObj);
 
 		m_sortDOModel = new Models::SortProxyModel(this);
 		m_sortDOModel->setSourceModel(m_lnStateModel);
 
 		// Selection process LD -> LN -> DO
-		connect(m_ldsModel, &Models::LDs_Grid::sigLDSelected, m_ldPropModel, &Models::LD_PropTable::slotLDSelected);		
-		connect(m_ldsModel, &Models::LDs_Grid::sigLDSelected, m_lnsModel, &Models::LNs_Table::slotLDSelected);
-		connect(m_lnsModel, &Models::LNs_Table::sigLNSelected, m_lnStateModel, &Models::LN_StateTable::slotLNSelected);
-		connect(m_lnsModel, &Models::LNs_Table::sigLNSelected, m_lnTreeModel, &Models::LN_SignalsTree::slotLNSelected);
+		connect(m_ldsModel, &Models::LD_CommonGrid::sigLDSelected, m_ldPropModel, &Models::LD_PropTable::slotLDSelected);		
+		connect(m_ldsModel, &Models::LD_CommonGrid::sigLDSelected, m_lnsModel, &Models::LN_CommonTable::slotLDSelected);
+		connect(m_lnsModel, &Models::LN_CommonTable::sigLNSelected, m_lnStateModel, &Models::LN_StateTable::slotLNSelected);
+		connect(m_lnsModel, &Models::LN_CommonTable::sigLNSelected, m_lnTreeModel, &Models::LN_SignalTree::slotLNSelected);
 
-		connect(m_dsComModel, &Models::DataSetsTable::sigDSSelected, m_dsSigModel, &Models::DS_SignalsTable::slotDSSelected);
-		connect(m_rcbComModel, &Models::RCB_GeneralTable::sigRCBSelected, m_reportsModel, &Models::ReportsTable::slotRCBSelected);
+		connect(m_dsComModel, &Models::DS_CommonLModel::sigDSSelected, m_dsSigModel, &Models::DS_SignalsTable::slotDSSelected);
+		connect(m_rcbComModel, &Models::RCB_CommonTable::sigRCBSelected, m_reportsModel, &Models::ReportsTable::slotRCBSelected);
 	}
 
 	void DevBackend::updateLDs_Status()
@@ -54,7 +54,7 @@ namespace App
 
 		auto cmd = Core::Cmd::UpdateLDs_StatusCmd::create(m_con.m_iedObj);
 		connect(cmd.get(), &Core::Cmd::UpdateLDs_StatusCmd::sigFinished,
-				m_ldsModel, &Models::LDs_Grid::slotDataUpdated);
+				m_ldsModel, &Models::LD_CommonGrid::slotDataUpdated);
 		putCmdToQueue(cmd);
 	}
 
@@ -64,7 +64,7 @@ namespace App
 
 		auto cmd = Core::Cmd::UpdateLNs_StatusCmd::create(m_con.m_iedObj, m_lnsModel->getCurrentLD());
 		connect(cmd.get(), &Core::Cmd::UpdateLNs_StatusCmd::sigFinished,
-				m_lnsModel, &Models::LNs_Table::slotDataUpdated);
+				m_lnsModel, &Models::LN_CommonTable::slotDataUpdated);
 		putCmdToQueue(cmd);
 	}
 
@@ -74,7 +74,7 @@ namespace App
 
 		auto cmd = Core::Cmd::UpdateRCBs_Cmd::create(m_con.m_iedObj);
 		connect(cmd.get(), &Core::Cmd::UpdateRCBs_Cmd::sigFinished,
-				m_rcbComModel, &Models::RCB_GeneralTable::slotDataUpdated);
+				m_rcbComModel, &Models::RCB_CommonTable::slotDataUpdated);
 		putCmdToQueue(cmd);
 	}
 
@@ -89,8 +89,8 @@ namespace App
 		}
 
 		auto cmd = Core::Cmd::UpdateLNode_Cmd::create(m_con.m_iedObj, ld, ln);
-		connect(cmd.get(), &Core::Cmd::BasicCommand::sigFinished,
-				m_lnStateModel, &Models::LN_StateTable::slotDataUpdated);
+		connect(cmd.get(), &Core::Cmd::BasicCommand::sigFinished, m_lnStateModel, &Models::LN_StateTable::slotDataUpdated);
+		connect(cmd.get(), &Core::Cmd::BasicCommand::sigFinished, m_lnTreeModel, &Models::LN_SignalTree::slotDataUpdated);
 		putCmdToQueue(cmd);
 	}
 
@@ -100,7 +100,7 @@ namespace App
 
 		auto cmd = Core::Cmd::UpdateDataSet_Cmd::create(m_con.m_iedObj, m_dsComModel->getCurrentDS());
 		connect(cmd.get(), &Core::Cmd::UpdateDataSet_Cmd::sigFinished,
-				m_dsComModel, &Models::DataSetsTable::slotDataUpdated);
+				m_dsComModel, &Models::DS_CommonLModel::slotDataUpdated);
 		putCmdToQueue(cmd);
 	}
 

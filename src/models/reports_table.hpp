@@ -39,7 +39,7 @@ namespace App::Models
 			ColumnsCount
 		};
 	public:
-		ReportsTable(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
+		ReportsTable(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied);
 
 		void 	setNewIED(QSharedPointer<Core::IED_Object> t_ied);
 

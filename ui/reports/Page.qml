@@ -1,6 +1,4 @@
 /*
- *  main.qml
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -23,22 +21,81 @@
 
 import QtQuick
 import QtQuick.Controls
-import Qt.labs.qmlmodels
 
-import "qrc:/global/"
+import "qrc:/common/"
 
-// Received reports for the particular RCB
+import GlobalVarsModule
+import AppStylesModule
+
 FocusScope {
 	id: rootID
-	
-	property var globals: Globals {}
+
+	// Vertical TabBar: CB
+	Rectangle {
+		id: rectCBViewTabBar
+
+		anchors {
+			left: parent.left
+			top: parent.top
+			bottom: parent.bottom
+		}
+
+		width: 30
+		//border.width: 1
+		//border.color: "black"// "#f6f6f6"
+
+		ListView {
+			id: cbViewTabBar
+
+			anchors {
+				fill: parent
+			}
+
+			model: ListModel {
+				ListElement { title: "Buffered" }
+				ListElement { title: "Unbuffered" }
+				ListElement { title: "GOOSE" }
+				ListElement { title: "SV" }
+			}
+
+			delegate: Item {
+				width: cbViewTabBar.width
+				height: 120
+
+				Rectangle {
+					width: parent.width
+					height: parent.height
+
+					color: (cbViewTabBar.currentIndex === index) ? "lightgray" : "#f6f6f6"
+					border.width: 1
+					border.color: "black"
+
+					Text {
+						rotation: -90
+						anchors.top: parent.top
+						anchors.horizontalCenter: parent.horizontalCenter
+
+						text: title
+						anchors.centerIn: parent
+					}
+					MouseArea {
+						anchors.fill: parent
+						onClicked: {
+							cbViewTabBar.currentIndex = index
+							//cbSignalsStack.currentIndex = index
+						}
+					}
+				}
+			}
+		}
+	}
 
 	// Header for Table below
 	HorizontalHeaderView {
 		id: headerID
 
 		anchors {
-			left: tableID.left
+			left: rectCBViewTabBar.right
 			top: parent.top
 			right: parent.right
 		}
@@ -68,29 +125,29 @@ FocusScope {
 		}
 	}
 
-	// Table of files on the IED
+	// Table of RCB on the IED
 	TableView {
 		id: tableID
-		model: devBackend.rcbMainModel
 
 		anchors {
-			left: parent.left
-			top: headerID.bottom
+			left: rectCBViewTabBar.right
 			right: parent.right
+			top: headerID.bottom
 			bottom: parent.bottom
-			//rightMargin: 5
 		}
 
-		focus: true
-		keyNavigationEnabled: true
-		reuseItems: true
+		model: devBackend.getRCB_ComModel()
 
-		interactive: true
+		focus: true
+		reuseItems: true
+		keyNavigationEnabled: true
+
 		clip: true
+		interactive: true
 		boundsBehavior: Flickable.StopAtBounds
 
 		columnWidthProvider: function(t_column) {
-			return globals.calcColumnsWidth(headerID, tableID, t_column)
+			return Globals.calcColumnsWidth(headerID, tableID, t_column)
 		}
 
 		selectionBehavior: TableView.SelectRows
@@ -111,7 +168,7 @@ FocusScope {
 			text: model.display
 
 			onSigClick: function(row, col) {
-				globals.setSelectedRow(tableID, row)
+				Globals.setSelectedRow(tableID, row)
 			}
 		}
 

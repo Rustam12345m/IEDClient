@@ -1,6 +1,4 @@
 /*
- *  main.qml
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -25,39 +23,29 @@ import QtQuick
 import QtQuick.Controls
 
 Item {
-	property alias color: led.color
+	property alias icon: btn.icon.source
 	property alias prompt: toolTip.text
+	property alias text: btn.text
 
-	function setStatus(color, prompt) {
-		led.color = color
-		toolTip.text = prompt
-	}
+	signal sigClicked()
 
-	width: 20
-	height: 20
+	anchors.verticalCenter: parent.verticalCenter
 
-	Rectangle {
-		id: led
+	Button {
+		id: btn
+		anchors.fill: parent
+		focus: false
+		focusPolicy: Qt.NoFocus
 
-		anchors.centerIn: parent
-		height: 20
-		width: 20
-		radius: height/2
-		border.width: 2
-		border.color: "black"
-
-		color: "gray"
-
-		MouseArea {
-			id: mouseArea
-			anchors.fill: parent
-			hoverEnabled: true
+		onClicked: function() {
+			sigClicked()
 		}
 	}
 	ToolTip {
 		id: toolTip
-		text: ""//"Information isn't found"
-		delay: 200
-		visible: mouseArea.containsMouse && (text != "")
+		text: "Information isn't found"
+		delay: 150
+		timeout: 1500
+		visible: btn.hovered
 	}
 }

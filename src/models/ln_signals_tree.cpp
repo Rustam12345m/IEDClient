@@ -23,19 +23,19 @@
 
 namespace App::Models
 {
-	LN_SignalsTree::LN_SignalsTree(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied)
+	LN_SignalTree::LN_SignalTree(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied)
 		: QAbstractItemModel(t_parent), m_ied(t_ied)
 	{
 	}
 
-	void LN_SignalsTree::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
+	void LN_SignalTree::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
 	{
 		beginResetModel();
 		m_ied = t_ied;
 		endResetModel();
 	}
 
-	QVariant LN_SignalsTree::headerData(int t_sect, Qt::Orientation t_orient, int t_role) const
+	QVariant LN_SignalTree::headerData(int t_sect, Qt::Orientation t_orient, int t_role) const
 	{
 		switch (t_sect) {
 		case NAME_COLUMN: {
@@ -51,7 +51,7 @@ namespace App::Models
 		return QVariant("");
 	}
 
-	int LN_SignalsTree::rowCount(const QModelIndex &t_parent) const
+	int LN_SignalTree::rowCount(const QModelIndex &t_parent) const
 	{
 		if (t_parent.column() > 0) {
 			return 0;
@@ -70,12 +70,12 @@ namespace App::Models
 		return 0;
 	}
 
-	int LN_SignalsTree::columnCount(const QModelIndex &t_parent) const
+	int LN_SignalTree::columnCount(const QModelIndex &t_parent) const
 	{
 		return COLUMN_COUNT;
 	}
 
-	QModelIndex LN_SignalsTree::index(int t_row, int t_column, const QModelIndex &t_parent) const
+	QModelIndex LN_SignalTree::index(int t_row, int t_column, const QModelIndex &t_parent) const
 	{
 		if (!hasIndex(t_row, t_column, t_parent)) {
 			return QModelIndex();
@@ -97,7 +97,7 @@ namespace App::Models
 		return QModelIndex();
 	}
 
-	QModelIndex LN_SignalsTree::parent(const QModelIndex &t_index) const
+	QModelIndex LN_SignalTree::parent(const QModelIndex &t_index) const
 	{
 		if (!t_index.isValid()) {
 			return QModelIndex();
@@ -115,7 +115,7 @@ namespace App::Models
 		return createIndex(parent->getItemCount(), 0, parent);
 	}
 
-	QVariant LN_SignalsTree::data(const QModelIndex &t_index, int t_role) const
+	QVariant LN_SignalTree::data(const QModelIndex &t_index, int t_role) const
 	{
 		if (!t_index.isValid()) {
 			return QVariant();
@@ -142,21 +142,21 @@ namespace App::Models
 		return QVariant(" ? ");
 	}
 
-	void LN_SignalsTree::getSelectedLN(int &t_ld, int &t_ln)
+	void LN_SignalTree::getSelectedLN(int &t_ld, int &t_ln)
 	{
 		t_ld = m_currentLD;
 		t_ln = m_currentLN;
 	}
 
-	void LN_SignalsTree::slotDataUpdated(bool t_done)
+	void LN_SignalTree::slotDataUpdated(bool t_done)
 	{
-		//qDebug() << "LN_SignalsTree: slotDataUpdated";
+		//qDebug() << "LN_SignalTree: slotDataUpdated";
 		emit dataChanged(index(0, 0), index(rowCount() - 1, VALUE_COLUMN));
 	}
 
-	void LN_SignalsTree::slotLNSelected(int t_ld, int t_ln)
+	void LN_SignalTree::slotLNSelected(int t_ld, int t_ln)
 	{
-		//qDebug() << "LN_SignalsTree: ld = " << t_ld << " ln = " << t_ln;
+		//qDebug() << "LN_SignalTree: ld = " << t_ld << " ln = " << t_ln;
 		if ((m_currentLD != t_ld) || (m_currentLN != t_ln)) {
 			beginResetModel();
 			m_currentLD = t_ld;

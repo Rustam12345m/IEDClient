@@ -24,7 +24,8 @@
 #include <QDateTime>
 #include <QDebug>
 
-namespace {
+namespace
+{
 	QString 	convertTimestampMsToUserString(uint64_t t_ms)
 	{
 		uint64_t sec = t_ms / 1000;
@@ -36,7 +37,7 @@ namespace {
 
 namespace App::Models
 {
-	DevFS_Table::DevFS_Table(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied)
+	DevFS_Table::DevFS_Table(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied)
 		: QAbstractTableModel(t_parent), m_ied(t_ied)
 	{
 		connect(&m_ied->fs(), SIGNAL(sigFS_Updated()), this, SLOT(slotDataUpdated()));

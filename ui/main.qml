@@ -1,6 +1,4 @@
 /*
- *  main.qml
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -25,7 +23,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-import "qrc:/global/"
+import "qrc:/common/"
 import "qrc:/main/" as Main
 import "qrc:/logical_device/" as LD
 import "qrc:/logical_node/" as LN
@@ -33,7 +31,11 @@ import "qrc:/filesystem/" as FS
 import "qrc:/dataset/" as DS
 import "qrc:/reports/" as RCB
 
-Window {
+import GlobalVarsModule
+import AppStylesModule
+
+Window
+{
 	title: qsTr("IEDClient - An Open-Source Client for IEC 61850 Protocols")
 
 	id: rootWindow
@@ -41,8 +43,6 @@ Window {
 	height: 650
 	visible: true
 	color: "white"
-
-	property var globals: Globals {}
 
 	// Status timer
 	Timer {
@@ -84,24 +84,24 @@ Window {
 	// Main area
 	Rectangle {
 		id: mainBack
-		anchors.fill: parent
+
+		anchors {
+			fill: parent
+		}
+		color: ColorPalette.toolBarColor
 
 		// Menu + ToolBar
 		Rectangle {
 			id: menuBarRect
 
-			y: 0
-			z: 100500
-			border.width: 1
-			border.color: "black"
-			color: "lightgray"
-
-			height: myMenuBar.implicitHeight + 2
 			anchors {
-				//top: mainBack.top
 				left: mainBack.left
 				right: mainBack.right
 			}
+			z: 100500
+			height: myMenuBar.implicitHeight + 2
+
+			color: "lightgray"
 
 			// Menu + ToolBar
 			RowLayout {
@@ -180,7 +180,7 @@ Window {
 							MenuItem {
 								text: qsTr("About")
 								onTriggered: {
-									var aboutComponent = Qt.createComponent("global/AboutProgram.qml")
+									var aboutComponent = Qt.createComponent("common/AboutProgram.qml")
 									var aboutWindow = aboutComponent.createObject(rootWindow)
 									aboutWindow.show()
 								}
@@ -193,11 +193,9 @@ Window {
 				// ToolBar
 				Item {
 					Layout.preferredWidth: toolBarRow.implicitWidth
-
-					id: toolBar
 					readonly property int btnHeight: 30
 
-					//width: toolBarRow.implicitWidth
+					id: toolBar
 					height: parent.height
 
 					// ToolBar buttons
@@ -290,40 +288,18 @@ Window {
 					}
 				}
 
-				// Spacer
-				Item {
-					Layout.fillWidth: true
-
-					width: 20
-					height: toolBar.height
-
-					/*
-					Text {
-						id: conMessage
-						anchors.centerIn: parent
-
-						horizontalAlignment: Text.AlignHCenter
-						verticalAlignment: Text.AlignVCenter
-
-						clip: true
-						font.bold: true
-						color: "black"
-
-						text: "Disconnected"
-					}
-					*/
-				}
-
 				// Status message
 				Rectangle {
-					Layout.preferredWidth: Math.max(250, statusTextBox.implicitWidth + toolBar.btnHeight)
+					Layout.fillWidth: true
 
 					height: toolBar.btnHeight
 
-					border.width: 1
-					border.color: "gray"
-					clip: true
+					border {
+						width: 1
+						color: "gray"
+					}
 					color: "white"
+					clip: true
 
 					RowLayout {
 						anchors.fill: parent
@@ -340,7 +316,8 @@ Window {
 
 							height: toolBar.btnHeight
 
-							horizontalAlignment: Text.AlignHCenter
+							// horizontalAlignment: Text.AlignHCenter
+							horizontalAlignment: Text.AlignLeft
 							verticalAlignment: Text.AlignVCenter
 
 							font.bold: true
@@ -355,14 +332,15 @@ Window {
 		// Work Area
 		Rectangle {
 			id: workArea
-			color: "white"
 
 			anchors {
 				top: menuBarRect.bottom
 				left: mainBack.left
 				right: mainBack.right
 				bottom: mainBack.bottom
+				margins: 5
 			}
+			color: "white"
 
 			// Pages and Property panel
 			SplitView {
@@ -371,13 +349,14 @@ Window {
 
 				// Delimiter
 				handle: Rectangle {
-					id: handleDelegate
-					implicitWidth: 4
-					implicitHeight: 4
+					id: delimeterRect
+					implicitWidth: 5
+					height: splitView.height
+
 					color: SplitHandle.pressed ? "gray" : "lightgray"
 
 					containmentMask: Item {
-						x: (handleDelegate.width - width) / 2
+						x: (delimeterRect.width - width) / 2
 						width: 20
 						height: splitView.height
 					}
@@ -462,21 +441,6 @@ Window {
 							}
 						}
 
-						FS.Page {
-							onVisibleChanged: {
-								if (visible) {
-									focus = true
-
-									fsBackend.updateFilesDirectory("/")
-									setActivePanel(Globals.Panel.HIDE)
-
-									setStatusText(fsBackend.fsPageStatus())
-								} else {
-									focus = false
-								}
-							}
-						}
-
 						DS.Page {
 							onVisibleChanged: {
 								if (visible) {
@@ -496,6 +460,21 @@ Window {
 									focus = true
 									setActivePanel(Globals.Panel.RCB_PROPERTIES)
 									setStatusText(devBackend.rcbPageStatus())
+								} else {
+									focus = false
+								}
+							}
+						}
+
+						FS.Page {
+							onVisibleChanged: {
+								if (visible) {
+									focus = true
+
+									fsBackend.updateFilesDirectory("/")
+									setActivePanel(Globals.Panel.HIDE)
+
+									setStatusText(fsBackend.fsPageStatus())
 								} else {
 									focus = false
 								}
@@ -532,13 +511,13 @@ Window {
 								text: qsTr("LN")
 							}
 							TabButton {
-								text: qsTr("FS")
-							}
-							TabButton {
 								text: qsTr("DS")
 							}
 							TabButton {
-								text: qsTr("RCB")
+								text: qsTr("CB")
+							}
+							TabButton {
+								text: qsTr("FS")
 							}
 						}
 					}
@@ -640,7 +619,7 @@ Window {
 
 	// Common functions
 	function openEventLog() {
-		var logsComponent = Qt.createComponent("global/EventsViewer.qml")
+		var logsComponent = Qt.createComponent("common/EventsViewer.qml")
 		var logsWindow = logsComponent.createObject(rootWindow)
 		logsWindow.show()
 	}
@@ -760,6 +739,7 @@ Window {
 			break;
 		}
 		case Globals.Page.LN: {
+			devBackend.updateLNs_Status()
 			devBackend.updateLN_TreeValues()
 			setStatusText(devBackend.lnsPageStatus())
 			break;
@@ -770,10 +750,12 @@ Window {
 			break;
 		}
 		case Globals.Page.DS: {
+			devBackend.updateDS_Values()
 			setStatusText(devBackend.dsPageStatus())
 			break;
 		}
 		case Globals.Page.RCB: {
+			devBackend.updateRCBs_Status()
 			setStatusText(devBackend.rcbPageStatus())
 			break;
 		}

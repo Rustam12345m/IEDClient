@@ -1,6 +1,4 @@
 /*
- *  main.qml
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -25,13 +23,14 @@ import QtQuick
 import QtQuick.Controls
 import Qt.labs.qmlmodels
 
-import "qrc:/global/"
+import "qrc:/common/"
+
+import GlobalVarsModule
+import AppStylesModule
 
 // Received reports for the particular RCB
 FocusScope {
 	id: rootID
-	
-	property var globals: Globals {}
 
 	// Header for Table below
 	HorizontalHeaderView {
@@ -71,7 +70,7 @@ FocusScope {
 	// Table of files on the IED
 	TableView {
 		id: tableID
-		model: devBackend.rcbReportsModel
+		model: devBackend.getReportsModel()
 
 		anchors {
 			left: parent.left
@@ -90,7 +89,7 @@ FocusScope {
 		boundsBehavior: Flickable.StopAtBounds
 
 		columnWidthProvider: function(t_column) {
-			return globals.calcColumnsWidth(headerID, tableID, t_column)
+			return Globals.calcColumnsWidth(headerID, tableID, t_column)
 		}
 
 		selectionBehavior: TableView.SelectRows
@@ -111,7 +110,7 @@ FocusScope {
 			text: model.display
 
 			onSigClick: function(row, col) {
-				globals.setSelectedRow(tableID, row)
+				Globals.setSelectedRow(tableID, row)
 				sigForceFocus()
 			}
 		}

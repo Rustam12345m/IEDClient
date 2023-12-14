@@ -19,33 +19,33 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "lds_grid.hpp"
+#include "ld_common_grid.hpp"
 
 namespace App::Models
 {
-	LDs_Grid::LDs_Grid(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied)
+	LD_CommonGrid::LD_CommonGrid(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied)
 		: QAbstractListModel(t_parent), m_ied(t_ied)
 	{
 	}
 
-	void LDs_Grid::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
+	void LD_CommonGrid::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
 	{
 		beginResetModel();
 		m_ied = t_ied;
 		endResetModel();
 	}
 
-	QHash<int, QByteArray> LDs_Grid::roleNames() const
+	QHash<int, QByteArray> LD_CommonGrid::roleNames() const
 	{
 		return { { LD_ROLE_NAME, "name" } };
 	}
 
-	int LDs_Grid::rowCount(const QModelIndex &t_index) const
+	int LD_CommonGrid::rowCount(const QModelIndex &t_index) const
 	{
 		return m_ied->model().getItemCount();
 	}
 
-	QVariant LDs_Grid::data(const QModelIndex &t_index, int t_role) const
+	QVariant LD_CommonGrid::data(const QModelIndex &t_index, int t_role) const
 	{
 		auto ld = m_ied->model().getLogicalDevice(t_index.row());
 		if (ld) {
@@ -54,13 +54,13 @@ namespace App::Models
 		return QVariant(" - ");
 	}
 
-	void LDs_Grid::setSelectedLD(int t_ld)
+	void LD_CommonGrid::setSelectedLD(int t_ld)
 	{
-		//qDebug() << "LDs_Grid: Selected LD = " << t_ld;
+		//qDebug() << "LD_CommonGrid: Selected LD = " << t_ld;
 		emit sigLDSelected(t_ld);
 	}
 
-	void LDs_Grid::slotDataUpdated(bool t_status)
+	void LD_CommonGrid::slotDataUpdated(bool t_status)
 	{
 		beginResetModel();
 		endResetModel();

@@ -21,19 +21,66 @@
 
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
 
-import "qrc:/common/"
+Item {
+	property alias text: msgText.text
 
-import GlobalVarsModule
-import AppStylesModule
+	signal sigResult(bool t_user)
 
-// Page View for all Settings elements of selected LN. SGCB
-FocusScope {
-	id: rootID
+	Dialog {
+		id: root
 
-	Text {
 		anchors.centerIn: parent
 
-		text: "Settings (SGCB)"
+		width: Math.max(400, msgText.implicitWidth + 50)
+		height: 120
+
+		modal: true
+		closePolicy: Dialog.NoAutoClose
+		visible: false
+
+		Label {
+			id: msgText
+
+			anchors.centerIn: parent
+
+			text: ""
+		}
+
+		footer: DialogButtonBox {
+			Button {
+				text: "Ok"
+				onClicked: {
+					console.log("Ok Button Clicked!")
+					root.close()
+
+					sigResult(true)
+				}
+			}
+
+			Button {
+				text: "Cancel"
+				onClicked: {
+					console.log("Cancel Button Clicked!")
+					root.close()
+
+					sigResult(false)
+				}
+			}
+		}
+	}
+
+	function isActive() {
+		return root.visible
+	}
+
+	function open(msg) {
+		msgText.text = msg
+		root.visible = true;
+	}
+
+	function close() {
+		root.visible = false;
 	}
 }

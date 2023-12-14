@@ -1,6 +1,4 @@
 /*
- *  main.qml
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -20,35 +18,11 @@
  *
  *  See COPYING file for the complete license text.
  * */
+pragma Singleton
 
 import QtQuick
-import QtQuick.Controls
 
-Item {
-	property alias icon: btn.icon.source
-	property alias prompt: toolTip.text
-	property alias text: btn.text
-
-	signal sigClicked()
-
-	anchors.verticalCenter: parent.verticalCenter
-
-	Button {
-		id: btn
-		anchors.fill: parent
-		focus: false
-		focusPolicy: Qt.NoFocus
-
-		onClicked: function() {
-			//console.log("Clicked: " + prompt)
-			sigClicked()
-		}
-	}
-	ToolTip {
-		id: toolTip
-		text: "Information isn't found"
-		delay: 150
-		timeout: 1500
-		visible: btn.hovered
-	}
+QtObject
+{
+	property color toolBarColor: "red"// "#D9D9D9"
 }

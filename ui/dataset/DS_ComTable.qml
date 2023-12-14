@@ -1,6 +1,4 @@
 /*
- *  main.qml
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -23,105 +21,141 @@
 
 import QtQuick
 import QtQuick.Controls
-import Qt.labs.qmlmodels
+import QtQuick.Layouts
 
-import "qrc:/global/"
+import "qrc:/common/"
 
-// Table of all Logical Nodes for one Logical Device
+import GlobalVarsModule
+import AppStylesModule
+
+// List of found DataSets in the IED
 FocusScope {
 	id: rootID
 
 	readonly property int defDelegateHeight: 30
 	readonly property int defDelegateWidth: 60
 
-	property var globals: Globals {}
+	property int defRowHeight: 30	
+	property int defTextPadding: 5
+	property int defCountWidth: 50
 
 	signal sigLeftOrRightKey()
 	signal sigForceFocus()
 	signal sigSelectedNewDS()
 
-	// Header of table below
-	HorizontalHeaderView {
-		id: headerID
+	ListView {
+		id: listViewID
 
-		anchors {
-			rightMargin: 5
-			left: parent.left
-			top: parent.top
-			right: parent.right
-		}
-		boundsBehavior: Flickable.StopAtBounds
-
-		syncView: tableID
-
-		delegate: Rectangle {
-			property var paramModel: model
-
-			implicitWidth: Math.max(textArea.implicitWidth + 10, defDelegateWidth)
-			implicitHeight: defDelegateHeight
-
-			color: "#f6f6f6"
-			border.color: "#e4e4e4"
-
-			Label {
-				id: textArea
-				anchors.fill: parent
-
-				horizontalAlignment: Text.AlignHCenter
-				verticalAlignment: Text.AlignVCenter
-
-				//font.bold: true
-				text: model.display
-				color: "#ff26282a"
-			}
-		}
-	}
-
-	// Table of all DataSets for this IED
-	TableView {
-		id: tableID
-
-		anchors {
-			rightMargin: 5
-
-			left: parent.left
-			right: parent.right
-			top: headerID.bottom
-			bottom: parent.bottom
-		}
-
-		model: devBackend.dataSetsModel
+		anchors.fill: parent
 
 		focus: true
-		clip: true
-		reuseItems: true
 		interactive: true
+		keyNavigationEnabled: true
 		boundsBehavior: Flickable.StopAtBounds
 
-		selectionBehavior: TableView.SelectRows
-		selectionModel: ItemSelectionModel {
-			model: tableID.model
-		}
+		model: devBackend.getDS_ComModel()
 
-		onCurrentRowChanged: {
-			tableID.model.setSelectedDS(tableID.currentRow)
+		property int selectedIndex: -1
+		onSelectedIndexChanged: {
 			sigSelectedNewDS()
+			listViewID.model.setSelectedDS(listViewID.selectedIndex)
 		}
 
-		columnWidthProvider: function(t_column) {
-			return globals.calcColumnsWidth(headerID, tableID, t_column)
+		section.property: "section"
+		section.delegate: Rectangle {
+			width: listViewID.width
+			height: defRowHeight
+			color: "#f6f6f6"
+
+			clip: true
+
+			Text {
+				anchors.centerIn: parent
+				font.bold: true
+
+				text: section
+			}
 		}
 
-		delegate: TextDelegate {
-			delegateHeight: defDelegateHeight
-			selected: (tableID.currentRow == row)
+		delegate: Item {
+			width: listViewID.width
+			height: defRowHeight
 
-			textAlign: Text.AlignHCenter
-			text: model.value
+			Rectangle {
+				anchors.fill: parent
 
-			onSigClick: function(row, col) {
-				globals.setSelectedRow(tableID, row)
-				sigForceFocus()
+				RowLayout {
+					anchors.fill: parent
+					spacing: 0
+
+					Rectangle {
+						Layout.fillWidth: true
+						height: defRowHeight
+
+						border.width: 1
+						border.color: (index === listViewID.selectedIndex) ? "black" : "lightgray"
+
+						clip: true
+						color: (index === listViewID.selectedIndex) ? "lightgray" : "white"
+
+						Text {
+							id: textName
+							anchors.fill: parent
+
+							horizontalAlignment: Text.AlignHCenter
+							verticalAlignment: Text.AlignVCenter
+
+							elide: Text.ElideRight
+							leftPadding: defTextPadding
+							rightPadding: defTextPadding
+
+							text: model.name
+						}
+					}
+					Rectangle {
+						Layout.preferredWidth: defCountWidth
+						height: defRowHeight
+
+						border.width: 1
+						border.color: (index === listViewID.selectedIndex) ? "black" : "lightgray"
+
+						clip: true
+						color: (index === listViewID.selectedIndex) ? "lightgray" : "white"
+
+						Text {
+							id: textValue
+							anchors.fill: parent
+
+							horizontalAlignment: Text.AlignHCenter
+							verticalAlignment: Text.AlignVCenter
+
+							elide: Text.ElideRight
+							leftPadding: defTextPadding
+							rightPadding: defTextPadding
+
+							text: model.value
+						}
+					}
+				}
+
+				MouseArea {
+					anchors.fill: parent
+					onClicked: {
+						listViewID.selectedIndex = index
+						listViewID.focus = true
+					}
+				}
+			}
+		}
+
+		Keys.onUpPressed: {
+			if (listViewID.selectedIndex > 0) {
+				listViewID.selectedIndex--;
+			}
+		}
+		Keys.onDownPressed: {
+			if (listViewID.selectedIndex < count - 1) {
+				listViewID.selectedIndex++;
 			}
 		}
 
@@ -136,17 +170,9 @@ FocusScope {
 			}
 		}
 
-		Keys.onPressed: function(event) {
-			if (event.key == Qt.Key_Left || event.key == Qt.Key_Right || event.key == Qt.Key_Tab) {
-				sigLeftOrRightKey()
-				event.accepted = true
-			}
-			event.accepted = false
-		}
-
 		onVisibleChanged: {
-			if ((tableID.rows > 0) && (tableID.currentRow < 0)) {
-				globals.setSelectedRow(tableID, 0)
+			if ((listViewID.selectedIndex < 0) && (listViewID.count > 0)) {
+				listViewID.selectedIndex = 0
 			}
 		}
 	}

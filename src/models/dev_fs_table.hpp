@@ -48,7 +48,7 @@ namespace App::Models
 		QSharedPointer<Core::IED_Object> m_ied;
 
 	public:
-		DevFS_Table(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
+		DevFS_Table(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied);
 		~DevFS_Table() = default;
 
 		void 		setNewIED(QSharedPointer<Core::IED_Object> t_ied);

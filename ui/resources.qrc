@@ -1,18 +1,19 @@
 <RCC>
     <qresource prefix="/">
-        <file>main.qml</file>
+        <file>singletons/Globals.qml</file>
+        <file>singletons/ColorPalette.qml</file>
 
+        <file>common/ToolBarButton.qml</file>
+        <file>common/TextDelegate.qml</file>
+        <file>common/AboutProgram.qml</file>
+        <file>common/EventsViewer.qml</file>
+        <file>common/QuestionForUser.qml</file>
+        <file>common/ModalProgressBar.qml</file>
+        <file>common/Led.qml</file>
+
+        <file>main.qml</file>
         <file>main/Page.qml</file>
         <file>main/LastConn_Panel.qml</file>
-
-        <file>global/Globals.qml</file>
-        <file>global/ToolBarButton.qml</file>
-        <file>global/TextDelegate.qml</file>
-        <file>global/AboutProgram.qml</file>
-        <file>global/EventsViewer.qml</file>
-        <file>global/QuestionForUser.qml</file>
-        <file>global/ModalProgressBar.qml</file>
-        <file>global/Led.qml</file>
 
         <file>dataset/DS_ComTable.qml</file>
         <file>dataset/DS_StateTable.qml</file>

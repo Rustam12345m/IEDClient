@@ -1,6 +1,4 @@
 /*
- *  main.qml
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -23,66 +21,25 @@
 
 import QtQuick
 import QtQuick.Controls
-import QtQuick.Layouts
 
-Item {
-	property alias text: msgText.text
+Window {
+	width: 400
+	height: 200
 
-	signal sigResult(bool t_user)
+	modality: Qt.ApplicationModal
+	flags: Qt.Dialog
 
-	Dialog {
-		id: root
+	Rectangle {
+		anchors.fill: parent
+		color: "white"
 
-		anchors.centerIn: parent
-
-		width: Math.max(400, msgText.implicitWidth + 50)
-		height: 120
-
-		modal: true
-		closePolicy: Dialog.NoAutoClose
-		visible: false
-
-		Label {
-			id: msgText
-
+		Text {
 			anchors.centerIn: parent
 
-			text: ""
+			font.bold: true
+			font.pixelSize: 14
+			color: "black"
+			text: "About IEDClient"
 		}
-
-		footer: DialogButtonBox {
-			Button {
-				text: "Ok"
-				onClicked: {
-					console.log("Ok Button Clicked!")
-					root.close()
-
-					sigResult(true)
-				}
-			}
-
-			Button {
-				text: "Cancel"
-				onClicked: {
-					console.log("Cancel Button Clicked!")
-					root.close()
-
-					sigResult(false)
-				}
-			}
-		}
-	}
-
-	function isActive() {
-		return root.visible
-	}
-
-	function open(msg) {
-		msgText.text = msg
-		root.visible = true;
-	}
-
-	function close() {
-		root.visible = false;
 	}
 }

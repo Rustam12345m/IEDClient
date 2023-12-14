@@ -1,6 +1,4 @@
 /*
- *  main.qml
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -25,7 +23,10 @@ import QtQuick
 import QtQuick.Controls
 import Qt.labs.qmlmodels
 
-import "qrc:/global/"
+import "qrc:/common/"
+
+import GlobalVarsModule
+import AppStylesModule
 
 // Table of all Logical Nodes for one Logical Device
 FocusScope {
@@ -33,8 +34,6 @@ FocusScope {
 
 	readonly property int defDelegateHeight: 30
 	readonly property int defDelegateWidth: 60
-
-	property var globals: Globals {}
 
 	signal sigLeftOrRightKey()
 	signal sigForceFocus()
@@ -81,14 +80,12 @@ FocusScope {
 		id: tableID
 
 		anchors {
-			rightMargin: 5
-
 			left: parent.left
 			right: parent.right
 			top: headerID.bottom
 			bottom: parent.bottom
 		}
-		model: devBackend.lnModel
+		model: devBackend.getLN_ComModel()
 
 		focus: true
 		clip: true
@@ -133,7 +130,7 @@ FocusScope {
 					text: model.value
 
 					onSigClick: function(row, col) {
-						globals.setSelectedRow(tableID, row)
+						Globals.setSelectedRow(tableID, row)
 						sigForceFocus()
 					}
 				}
@@ -150,7 +147,7 @@ FocusScope {
 					value: model.value
 
 					onSigClick: function(row, col) {
-						globals.setSelectedRow(tableID, row)
+						Globals.setSelectedRow(tableID, row)
 						sigForceFocus()
 					}
 				}
@@ -167,7 +164,7 @@ FocusScope {
 					value: model.value
 
 					onSigClick: function(row, col) {
-						globals.setSelectedRow(tableID, row)
+						Globals.setSelectedRow(tableID, row)
 						sigForceFocus()
 					}
 				}
@@ -184,7 +181,7 @@ FocusScope {
 					value: model.value
 
 					onSigClick: function(row, col) {
-						globals.setSelectedRow(tableID, row)
+						Globals.setSelectedRow(tableID, row)
 						sigForceFocus()
 					}
 				}
@@ -212,7 +209,7 @@ FocusScope {
 
 		onVisibleChanged: {
 			if (tableID.rows > 0 && tableID.currentRow < 0) {
-				globals.setSelectedRow(tableID, 0)
+				Globals.setSelectedRow(tableID, 0)
 			}
 		}
 	}

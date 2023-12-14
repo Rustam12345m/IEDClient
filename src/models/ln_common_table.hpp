@@ -21,50 +21,50 @@
 
 #pragma once
 
-#include "models_stub.hpp"
+#include <QAbstractTableModel>
+
 #include "core/ied_object.hpp"
 
 namespace App::Models
 {
-	class RCB_GeneralTable : public QAbstractTableModel
+	class LN_CommonTable : public QAbstractTableModel
 	{
 		Q_OBJECT
 		enum Columns {
-			RCB_ENA_COLUMN = 0,
-			RCB_RESV_COLUMN,
-			RCB_ID_COLUMN,
-			RCB_OWNER_COLUMN,
-			RCB_DS_COLUMN,
-			RCB_TRIG_COLUMN,
-			RCB_CREV_COLUMN,
-			RCB_BUFF_COLUMN,
-			RCB_INTEGRITY_COLUMN,
+			NameColumn = 0,
+			ModeColumn,
+			BehColumn,
+			HealthColumn,
 
 			ColumnsCount
 		};
 
 	public:
-		RCB_GeneralTable(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
+		LN_CommonTable(QObject *t_parent, Core::ptrIED_Object t_ied);
 
-		Q_INVOKABLE void setSelectedRCB(int t_inx);
-		void 		setNewIED(QSharedPointer<Core::IED_Object> t_ied);
+		Q_INVOKABLE void setSelectedLN(int t_inx);
+		void 	setNewIED(Core::ptrIED_Object t_ied);
+		int 	getCurrentLD() const { return m_currentLD; }
 
-		QVariant 	headerData(int t_section, Qt::Orientation t_orientation,
+		QVariant headerData(int t_section, Qt::Orientation t_orientation,
 							int t_role = Qt::DisplayRole) const override;
+
 		QHash<int, QByteArray> roleNames() const override;
 
-		int 		rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
-		int			columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
-		QVariant 	data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
+		int 	rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
+		int 	columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
+
+		QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
 	signals:
-		void	sigRCBSelected(int t_inx);
+		void	sigLNSelected(int t_ld, int t_ln);
 
 	public slots:
-		void 	slotDataUpdated(bool t_done);
+		void 	slotDataUpdated(bool t_status);
+		void 	slotLDSelected(int t_ld);
 
 	private:
-		QSharedPointer<Core::IED_Object> m_ied;
-		int 	m_currentRCB = -1;
+		Core::ptrIED_Object 	m_ied;
+		int		m_currentLD = -1; // selected Logical Device by user
 	};
 }

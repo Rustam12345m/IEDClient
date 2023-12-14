@@ -35,6 +35,10 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationDomain("opensource.org");
     QCoreApplication::setApplicationName("IEDClient");
 
+	// Singletons
+	qmlRegisterSingletonType(QUrl("qrc:/singletons/Globals.qml"), "GlobalVarsModule", 1, 0, "Globals");
+	qmlRegisterSingletonType(QUrl("qrc:/singletons/ColorPalette.qml"), "AppStylesModule", 1, 0, "ColorPalette");
+
 	App::Presenter presenter; // have to be created befor engine
 
 	QQmlApplicationEngine engine;

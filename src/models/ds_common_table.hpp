@@ -21,38 +21,32 @@
 
 #pragma once
 
-#include <QAbstractTableModel>
+#include <QAbstractListModel>
 
 #include "core/ied_object.hpp"
 
 namespace App::Models
 {
-	class DataSetsTable : public QAbstractTableModel
+	class DS_CommonLModel : public QAbstractListModel
 	{
 		Q_OBJECT
-		enum Columns {
-			DS_LD_Column = 0,
-			DS_LN_Column,
-			DS_NameColumn,
-
-			ColumnsCount
+		enum Roles
+		{
+			SECTION_ROLE = Qt::UserRole + 1,
+			NAME_ROLE,
+			VALUE_ROLE
 		};
 
 	public:
-		DataSetsTable(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
+		DS_CommonLModel(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied);
 
 		Q_INVOKABLE void setSelectedDS(int t_ds);
-		void 	setNewIED(QSharedPointer<Core::IED_Object> t_ied);
 		int 	getCurrentDS() const { return m_currentDS; }
 
-		QVariant headerData(int t_section, Qt::Orientation t_orientation,
-							int t_role = Qt::DisplayRole) const override;
+		void 	setNewIED(QSharedPointer<Core::IED_Object> t_ied);
 
 		QHash<int, QByteArray> roleNames() const override;
-
-		int rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
-		int columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
-
+		int 	 rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
 		QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
 	signals:

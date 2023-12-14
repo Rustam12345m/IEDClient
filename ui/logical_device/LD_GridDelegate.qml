@@ -1,6 +1,4 @@
 /*
- *  main.qml
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -25,7 +23,10 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
-import "qrc:/global/"
+import "qrc:/common/"
+
+import GlobalVarsModule
+import AppStylesModule
 
 // LogicalDevice block in GridView
 Item {

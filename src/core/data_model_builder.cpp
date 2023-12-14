@@ -68,10 +68,11 @@ namespace Core
 		return *this;
 	}
 
-	DataModelBuilder& DataModelBuilder::createDataSet(const QString &t_name, const QString &t_ref, bool t_del)
+	DataModelBuilder& DataModelBuilder::createDataSet(const QString &t_name, const QString &t_lnRef, bool t_del)
 	{
-		m_lastDataSet = QSharedPointer<DataSet>::create(m_model.get(), t_name, t_ref, t_del);
+		m_lastDataSet = QSharedPointer<DataSet>::create(lastLN().get(), t_name, t_lnRef, t_del);
 		m_model->pushDataSet(m_lastDataSet);
+		// m_lastLN->
 		return *this;
 	}
 

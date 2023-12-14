@@ -1,6 +1,4 @@
 /*
- *  main.qml
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -25,7 +23,10 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-import "qrc:/global/"
+import "qrc:/common/"
+
+import GlobalVarsModule
+import AppStylesModule
 
 // LN page
 FocusScope {
@@ -42,7 +43,7 @@ FocusScope {
 		anchors.centerIn: parent
 	}
 
-	// 
+	// LN CommonTable | Delimiter | DataTable
 	SplitView {
 		id: splitView
 
@@ -51,14 +52,14 @@ FocusScope {
 		// Delimiter
 		handle: Rectangle {
 			id: handleDelegate
-			implicitWidth: 4
-			implicitHeight: 4
+
+			implicitWidth: 20
+			height: splitView.height
+
 			color: SplitHandle.pressed ? "black" : "gray"
-			//color: SplitHandle.pressed ? "gray" : "lightgray"
-				//: (SplitHandle.hovered ? "gray" : "gray")
 
 			containmentMask: Item {
-				x: (handleDelegate.width - width) / 2
+				x: 0
 				width: 20
 				height: splitView.height
 			}
@@ -74,7 +75,9 @@ FocusScope {
 			LN_ComTable {
 				id: tableLN
 
-				anchors.fill: parent
+				anchors {
+					fill: parent
+				}
 
 				onSigLeftOrRightKey: function() {
 					console.log("LN_Page: Activate DO_Table")
@@ -86,7 +89,7 @@ FocusScope {
 					tableDO.focus = false
 				}
 				onSigSelectedNewLN: function() {
-					devBackend.updateLN_TreeValues(tableDO.currentLDevice, tableDO.currentLNode)
+					// devBackend.updateLN_TreeValues(tableDO.currentLDevice, tableDO.currentLNode)
 				}
 			}
 		}
@@ -102,8 +105,8 @@ FocusScope {
 				id: lnSignalsStack
 
 				anchors {
+					right: rectLnViewTabBar.left
 					left: parent.left
-					right: lnViewTabBar.left
 					top: parent.top
 					bottom: parent.bottom
 				}
@@ -144,8 +147,8 @@ FocusScope {
 			}
 
 			// Vertical TabBar for lnSignalsStack
-			ListView {
-				id: lnViewTabBar
+			Rectangle {
+				id: rectLnViewTabBar
 
 				anchors {
 					right: parent.right
@@ -155,35 +158,41 @@ FocusScope {
 
 				width: 30
 
-				model: ListModel {
-					ListElement { title: "State" }
-					ListElement { title: "Tree" }
-					ListElement { title: "Controls" }
-					ListElement { title: "Settings" }
-				}
+				ListView {
+					id: lnViewTabBar
 
-				delegate: Item {
-					width: lnViewTabBar.width
-					height: 120
+					anchors.fill: parent
 
-					Rectangle {
-						width: parent.width
-						height: parent.height
-						color: (lnViewTabBar.currentIndex === index) ? "lightgray" :"#f6f6f6"
+					model: ListModel {
+						ListElement { title: "State" }
+						ListElement { title: "Tree" }
+						ListElement { title: "Controls" }
+						ListElement { title: "Settings" }
+					}
 
-						Text {
-							rotation: 90
-        					anchors.top: parent.top
-        					anchors.horizontalCenter: parent.horizontalCenter
+					delegate: Item {
+						width: lnViewTabBar.width
+						height: 120
 
-							text: title
-							anchors.centerIn: parent
-						}
-						MouseArea {
-							anchors.fill: parent
-							onClicked: {
-								lnViewTabBar.currentIndex = index
-								lnSignalsStack.currentIndex = index
+						Rectangle {
+							width: parent.width
+							height: parent.height
+							color: (lnViewTabBar.currentIndex === index) ? "lightgray" : "#f6f6f6"
+
+							Text {
+								rotation: 90
+								anchors.top: parent.top
+								anchors.horizontalCenter: parent.horizontalCenter
+
+								text: title
+								anchors.centerIn: parent
+							}
+							MouseArea {
+								anchors.fill: parent
+								onClicked: {
+									lnViewTabBar.currentIndex = index
+									lnSignalsStack.currentIndex = index
+								}
 							}
 						}
 					}

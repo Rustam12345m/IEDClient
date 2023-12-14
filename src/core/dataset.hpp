@@ -46,21 +46,17 @@ namespace Core
 	/*
 	 * Representation a DataSet of IED
 	 * */
-	class DataSet : public QObject, public Item
+	class DataSet : public Item
 	{
-		Q_OBJECT
 	public:
-		DataSet(Item *t_parent, const QString &t_name, const QString &t_ref, bool t_del)
-			: Item(t_parent, t_name), m_ref{t_ref}, m_isDeletable{t_del}
+		DataSet(Item *t_parent, const QString &t_name, const QString &t_lnRef, bool t_del)
+			: Item(t_parent, t_name), m_lnReference{t_lnRef}, m_isDeletable{t_del}
 		{}
 
-		const QString ref() const { return m_ref; }
-
-	signals:
-		void	sigUpdated();
+		const QString ref() const { return m_lnReference; }
 
 	private:
-		QString	m_ref;
+		QString	m_lnReference;
 		bool 	m_isDeletable = false;
 	};
 

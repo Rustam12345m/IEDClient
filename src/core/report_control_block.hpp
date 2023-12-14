@@ -21,8 +21,6 @@
 
 #pragma once
 
-#include <QObject>
-
 #include "dataset.hpp"
 
 namespace Core
@@ -30,18 +28,14 @@ namespace Core
 	/*
 	 * Representation a ReportControlBlock of LD
 	 * */
-	class ReportBlock : public QObject, public Item
+	class ReportBlock : public Item
 	{
-		Q_OBJECT
 	public:
 		ReportBlock() : Item(nullptr, "")
 		{
 		}
 
 		void	print() {}
-
-	signals:
-		void	sigUpdated();
 	};
 
 	typedef QSharedPointer< ReportBlock > 	ptrRCB;

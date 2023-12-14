@@ -12,14 +12,14 @@ set(SOURCES
 	ln_state_table.cpp
 	ln_state_table.hpp
 
-	lds_grid.hpp
-	lds_grid.cpp
+	ld_common_grid.hpp
+	ld_common_grid.cpp
 
 	ld_prop_table.hpp
 	ld_prop_table.cpp
 
-	lns_table.hpp
-	lns_table.cpp
+	ln_common_table.hpp
+	ln_common_table.cpp
 
 	ln_signals_tree.hpp
 	ln_signals_tree.cpp
@@ -30,14 +30,14 @@ set(SOURCES
 	history_con_table.hpp
 	history_con_table.cpp
 
-	datasets_table.hpp
-	datasets_table.cpp
+	ds_common_table.hpp
+	ds_common_table.cpp
 
 	ds_signals_table.hpp
 	ds_signals_table.cpp
 
-	rcb_general_table.hpp
-	rcb_general_table.cpp
+	rcb_common_table.hpp
+	rcb_common_table.cpp
 
 	reports_table.hpp
 	reports_table.cpp
