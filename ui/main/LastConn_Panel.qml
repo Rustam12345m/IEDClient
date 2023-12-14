@@ -1,6 +1,4 @@
 /*
- *  main.qml
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -25,14 +23,15 @@ import QtQuick
 import QtQuick.Controls
 import Qt.labs.qmlmodels
 
-import "qrc:/global/"
+import "qrc:/common/"
+
+import GlobalVarsModule
+import AppStylesModule
 
 Item {
 	id: rootID
 
 	readonly property int defDelegateHeight: 30
-
-	property var globals : Globals {}
 
 	signal sigDeviceSelected(string t_ip, int t_port)
 
@@ -104,7 +103,7 @@ Item {
 		}
 
 		columnWidthProvider: function(t_column) {
-			return globals.calcColumnsWidth(headerID, tableID, t_column)
+			return Globals.calcColumnsWidth(headerID, tableID, t_column)
 		}
 
 		delegate: TextDelegate {
@@ -112,7 +111,7 @@ Item {
 			text: model.display
 
 			onSigClick: function(row, col) {
-				globals.setSelectedRow(tableID, row)
+				Globals.setSelectedRow(tableID, row)
 
 				let ip = rootID.getValue(row, 1)
 				let port = rootID.getValue(row, 2)

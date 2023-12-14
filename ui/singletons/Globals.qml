@@ -1,6 +1,4 @@
 /*
- *  main.qml
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -20,28 +18,32 @@
  *
  *  See COPYING file for the complete license text.
  * */
+pragma Singleton
 
 import QtQuick
 
-QtObject {
-	enum Page {
+QtObject
+{
+	enum Page
+	{
 		START = 0,
 		LD,
 		LN,
-		FS,
 		DS,
 		RCB,
-		RCB_Reports
+		FS
 	}
 
-	enum Panel {
+	enum Panel
+	{
 		HIDE = 0,
 		LAST_CONN,
 		LD_INFO,
 		RCB_PROPERTIES
 	}
 
-	function printObjectToConsole(item) {
+	function printObjectToConsole(item)
+	{
 		for (var p in item) {
 			if (typeof item[p] != "function") {
 				if (p != "objectName") {
@@ -51,7 +53,8 @@ QtObject {
 		}
 	}
 
-	function setSelectedRow(t_tableID, t_row) {
+	function setSelectedRow(t_tableID, t_row)
+	{
 		if (t_tableID.currentRow === t_row) {
 			return;
 		}
@@ -62,7 +65,8 @@ QtObject {
 													| ItemSelectionModel.Rows);
 	}
 
-	function resizeColumnsToContent(t_headerID, t_tableID) {
+	function resizeColumnsToContent(t_headerID, t_tableID)
+	{
 		var iw = []
 		let sum = 0, i = 0
 		for (i=0;i<t_tableID.columns;i++) {
@@ -84,7 +88,8 @@ QtObject {
 		}
 	}
 
-	function calcColumnsWidth(t_headerID, t_tableID, t_column) {
+	function calcColumnsWidth(t_headerID, t_tableID, t_column)
+	{
 		var iw = []
 		let sum = 0, i = 0
 		for (i=0;i<t_tableID.columns;i++) {

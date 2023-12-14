@@ -1,6 +1,4 @@
 /*
- *  main.qml
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -25,13 +23,14 @@ import QtQuick
 import QtQuick.Controls
 import Qt.labs.qmlmodels
 
-import "qrc:/global/"
+import "qrc:/common/"
+
+import GlobalVarsModule
+import AppStylesModule
 
 // Filesystem page
 FocusScope {
 	id: rootID
-	
-	property var globals: Globals {}
 
 	function getFilename(t_row) {
 		let idx = tableID.model.index(t_row, 2)
@@ -40,7 +39,7 @@ FocusScope {
 	function cmdDownloadFile(t_row) {
 		console.log("FS_Table: Download file N" + t_row)
 
-		globals.setSelectedRow(t_row)
+		Globals.setSelectedRow(t_row)
 		fsBackend.downloadFile(getFilename(t_row))
 	}
 	function cmdRemoveFile(t_row) {
@@ -141,7 +140,7 @@ FocusScope {
 		boundsBehavior: Flickable.StopAtBounds
 
 		columnWidthProvider: function(t_column) {
-			return globals.calcColumnsWidth(headerID, tableID, t_column)
+			return Globals.calcColumnsWidth(headerID, tableID, t_column)
 		}
 
 		selectionBehavior: TableView.SelectRows
@@ -164,7 +163,7 @@ FocusScope {
 					text: model.display
 
 					onSigSelectRow: function(t_row) {
-						globals.setSelectedRow(tableID, t_row)
+						Globals.setSelectedRow(tableID, t_row)
 					}
 					onSigDownloadFile: function(t_row) {
 						rootID.cmdDownloadFile(t_row)
@@ -181,7 +180,7 @@ FocusScope {
 					text: model.display
 
 					onSigSelectRow: function(t_row) {
-						globals.setSelectedRow(tableID, t_row)
+						Globals.setSelectedRow(tableID, t_row)
 					}
 					onSigDownloadFile: function(t_row) {
 						rootID.cmdDownloadFile(t_row)
@@ -198,7 +197,7 @@ FocusScope {
 					text: model.display
 
 					onSigSelectRow: function(t_row) {
-						globals.setSelectedRow(tableID, t_row)
+						Globals.setSelectedRow(tableID, t_row)
 					}
 					onSigDownloadFile: function(t_row) {
 						rootID.cmdDownloadFile(t_row)
@@ -215,7 +214,7 @@ FocusScope {
 					text: model.display
 
 					onSigSelectRow: function(t_row) {
-						globals.setSelectedRow(tableID, t_row)
+						Globals.setSelectedRow(tableID, t_row)
 					}
 					onSigDownloadFile: function(t_row) {
 						rootID.cmdDownloadFile(t_row)

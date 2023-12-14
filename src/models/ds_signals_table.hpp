@@ -38,7 +38,7 @@ namespace App::Models
 		};
 
 	public:
-		DS_SignalsTable(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
+		DS_SignalsTable(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied);
 
 		void 	setNewIED(QSharedPointer<Core::IED_Object> t_ied);
 

@@ -39,7 +39,7 @@ namespace App::Models
 		};
 
 	public:
-		LN_StateTable(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
+		LN_StateTable(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied);
 
 		void 	setNewIED(QSharedPointer<Core::IED_Object> t_ied);
 

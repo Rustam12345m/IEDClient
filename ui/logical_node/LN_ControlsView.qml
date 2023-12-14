@@ -1,6 +1,4 @@
 /*
- *  main.qml
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -24,13 +22,15 @@
 import QtQuick
 import QtQuick.Controls
 
-import "qrc:/global/"
+import "qrc:/common/"
+
+import GlobalVarsModule
+import AppStylesModule
 
 // Page View for all Control elements of selected LN
-FocusScope {
+FocusScope
+{
 	id: rootID
-
-	property var globals: Globals {}
 
 	Text {
 		anchors.centerIn: parent

@@ -1,6 +1,4 @@
 /*
- *  main.qml
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -22,49 +20,44 @@
  * */
 
 import QtQuick
+import QtQuick.Controls
 
 Item {
-	required property int delegateHeight
-	required property bool selected
+	property alias color: led.color
+	property alias prompt: toolTip.text
 
-	property alias text: textFild.text
-	property alias textAlign: textFild.horizontalAlignment
-
-	implicitWidth: textFild.implicitWidth + 10
-	implicitHeight: delegateHeight
-
-	signal sigClick(int row, int col)
-	signal sigDoubleClick(int row, int col)
-
-	Rectangle {
-		anchors.fill: parent
-
-		color: (selected ? "lightgray" : "white")
-		border.color: (selected ? "black" : "lightgray")
-		clip: true
-
-		Text {
-			id: textFild
-
-			anchors.fill: parent
-			horizontalAlignment: Text.AlignHCenter
-			verticalAlignment: Text.AlignVCenter
-
-			elide: Text.ElideRight
-			leftPadding: 5
-			text: " - "
-		}
+	function setStatus(color, prompt) {
+		led.color = color
+		toolTip.text = prompt
 	}
 
-	MouseArea {
-		anchors.fill: parent
-		acceptedButtons: Qt.LeftButton | Qt.RightButton
+	width: 20
+	height: 20
 
-		onClicked: function(mouse) {
-			sigClick(row, 1)
+	Rectangle {
+		id: led
+
+		anchors.centerIn: parent
+
+		height: 20
+		width: 20
+		radius: height/2
+
+		border.width: 2
+		border.color: "black"
+
+		color: "gray"
+
+		MouseArea {
+			id: mouseArea
+			anchors.fill: parent
+			hoverEnabled: true
 		}
-		onDoubleClicked: function(mouse) {
-			sigDoubleClick(row, 1)
-		}
+	}
+	ToolTip {
+		id: toolTip
+		text: ""//"Information isn't found"
+		delay: 200
+		visible: mouseArea.containsMouse && (text != "")
 	}
 }

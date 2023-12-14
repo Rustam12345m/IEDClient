@@ -27,7 +27,7 @@
 
 namespace App::Models
 {
-	class LDs_Grid : public QAbstractListModel
+	class LD_CommonGrid : public QAbstractListModel
 	{
 		Q_OBJECT
 		enum LD_ModelRole {
@@ -35,7 +35,7 @@ namespace App::Models
 		};
 
 	public:
-		LDs_Grid(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
+		LD_CommonGrid(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied);
 
 		void 		setNewIED(QSharedPointer<Core::IED_Object> t_ied);
 

@@ -1,6 +1,4 @@
 /*
- *  main.qml
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -25,7 +23,10 @@ import QtQuick
 import QtQuick.Controls
 import Qt.labs.qmlmodels
 
-import "qrc:/global/"
+import "qrc:/common/"
+
+import GlobalVarsModule
+import AppStylesModule
 
 // Table with DataObjects for concrete Logical Node
 FocusScope {
@@ -36,10 +37,8 @@ FocusScope {
 	signal sigLeftOrRightKey()
 	signal sigForceFocus()
 
-	property var globals: Globals {}
-
 	function resizeColumns() {
-		globals.resizeColumnsToContent(headerID, tableID)
+		Globals.resizeColumnsToContent(headerID, tableID)
 	}
 
 	// Header for TableView below with DO
@@ -119,14 +118,13 @@ FocusScope {
 		id: tableID
 
 		anchors {
-			leftMargin: 5
 			left: parent.left
 			right: parent.right
 			top: headerID.bottom
 			bottom: parent.bottom
 		}
 
-		model: devBackend.doModel
+		model: devBackend.getLN_StateModel()
 
 		focus: true
 		keyNavigationEnabled: true
@@ -137,7 +135,7 @@ FocusScope {
 		boundsBehavior: Flickable.StopAtBounds
 
 		columnWidthProvider: function(t_column) {
-			return globals.calcColumnsWidth(headerID, tableID, t_column)
+			return Globals.calcColumnsWidth(headerID, tableID, t_column)
 		}
 
 		selectionBehavior: TableView.SelectRows
@@ -153,7 +151,7 @@ FocusScope {
 			text: model.display
 
 			onSigClick: function(row, col) {
-				globals.setSelectedRow(tableID, row)
+				Globals.setSelectedRow(tableID, row)
 				sigForceFocus()
 			}
 		}
@@ -180,7 +178,7 @@ FocusScope {
 		}
 
 		Connections {
-			target: devBackend.doModel
+			target: devBackend.getLN_StateModel()
 
 			function onDataChanged() {
 				Qt.callLater(rootID.resizeColumns)

@@ -1,6 +1,4 @@
 /*
- *  main.qml
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -24,7 +22,10 @@
 import QtQuick
 import QtQuick.Controls
 
-import "qrc:/global/"
+import "qrc:/common/"
+
+import GlobalVarsModule
+import AppStylesModule
 
 // LD page
 FocusScope {
@@ -51,7 +52,7 @@ FocusScope {
 		keyNavigationEnabled: true
 		boundsBehavior: Flickable.StopAtBounds
 
-		model: devBackend.ldModel
+		model: devBackend.getLD_GridModel()
 
 		delegate: LD_GridDelegate {
 			blkWidth: rootID.blkWidth

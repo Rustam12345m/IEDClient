@@ -23,8 +23,8 @@
 
 namespace
 {
-	// remove: .stVal and .mag.f
-	QString 	filterDOName(const QString &t_name)
+	// remove: .stVal and .f
+	QString 	removeSomeParts(const QString &t_name)
 	{
 		if (t_name.endsWith(".stVal")) {
 			return t_name.first(t_name.size() - 6);
@@ -40,7 +40,7 @@ namespace
 
 namespace App::Models
 {
-	LN_StateTable::LN_StateTable(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied)
+	LN_StateTable::LN_StateTable(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied)
 		: QAbstractTableModel(t_parent), m_ied(t_ied)
 	{
 	}
@@ -90,7 +90,7 @@ namespace App::Models
 	{
 		auto ln = m_ied->model().getLogicalNode(m_currentLD, m_currentLN);
 		if (ln) {
-			return ln->getDO_Table()->size();
+			return ln->getSignalsTable()->size();
 		}
 		return 0;
 	}
@@ -107,7 +107,7 @@ namespace App::Models
 
 		auto ln = m_ied->model().getLogicalNode(m_currentLD, m_currentLN);
 		if (ln) {
-			auto doTable = ln->getDO_Table();
+			auto doTable = ln->getSignalsTable();
 			if (t_role == ComRoles::ROLE_SORT_VALUE) {
 				// for sorting process
 				switch (column) {
@@ -134,7 +134,7 @@ namespace App::Models
 				// for user interface
 				switch (column) {
 				case DO_NAME_COLUMN: {
-					return QVariant(filterDOName(doTable->name(row)));
+					return QVariant(removeSomeParts(doTable->name(row)));
 				}
 				case DO_FC_COLUMN: {
 					return QVariant(doTable->fc(row));

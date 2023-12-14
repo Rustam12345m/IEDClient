@@ -48,7 +48,7 @@ namespace Core::Cmd
 		virtual int		updateLN_Signals(Core::ptrLN t_ln) = 0;
 		virtual int		updateDS_Signals(Core::ptrDataSet t_ds) = 0;
 
-		virtual int		getFS_FileList(Core::DirOn &t_dir) = 0;
+		virtual int		getFileList(Core::DirOn &t_dir) = 0;
 		virtual void 	downloadFile(const QString &t_filename) = 0;
 		virtual int 	removeFile(const QString &t_filename) = 0;
 	};

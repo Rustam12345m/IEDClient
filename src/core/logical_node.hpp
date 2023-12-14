@@ -42,8 +42,11 @@ namespace Core
 			m_delimetr = "/"; // Between LDName and LNName
 		}
 
-		auto& 	getDO_Table() const {
+		auto& 	getSignalsTable() const {
 			return m_doTable;
+		}
+		auto& 	getDataSets() const {
+			return m_dataSets;
 		}
 
 		ptrDO	mod() const { return m_mod; }
@@ -53,21 +56,31 @@ namespace Core
 		void	push(QSharedPointer< Item > t_child) override {
 			if (t_child->name() == "Mod") {
 				m_mod = t_child.dynamicCast<DataObject>();
-			}
-			if (t_child->name() == "Beh") {
+			} else if (t_child->name() == "Beh") {
 				m_beh = t_child.dynamicCast<DataObject>();
-			}
-			if (t_child->name() == "Health") {
+			} else if (t_child->name() == "Health") {
 				m_health = t_child.dynamicCast<DataObject>();
 			}
 			Item::push(t_child);
 		}
+		void 	push(QSharedPointer< DataSet > t_ds) {
+			m_dataSets.push_back(t_ds);
+		}
+		void 	push(QSharedPointer< ReportBlock > t_rcb) {
+			m_rcbs.push_back(t_rcb);
+		}
+		void 	push(QSharedPointer< GooseControlBlock > t_gocb) {
+			m_gooses.push_back(t_gocb);
+		}
 
 	protected:
-		QSharedPointer<LN_StateTable>	m_doTable;
 		QSharedPointer<DataObject>		m_mod;
 		QSharedPointer<DataObject>		m_beh;
 		QSharedPointer<DataObject>		m_health;
+		QList< ptrDataSet >				m_dataSets;
+		QList< ptrRCB >					m_rcbs;
+		QList< ptrGOCB >				m_gooses;
+		QSharedPointer<LN_StateTable>	m_doTable;
 
 	friend class DataModelBuilder;
 	};

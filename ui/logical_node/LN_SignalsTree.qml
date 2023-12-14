@@ -1,6 +1,4 @@
 /*
- *  main.qml
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -24,13 +22,14 @@
 import QtQuick
 import QtQuick.Controls
 
-import "qrc:/global/"
+import "qrc:/common/"
+
+import GlobalVarsModule
+import AppStylesModule
 
 // TreeView with DO/DA/SA for the selected Logical Node
 FocusScope {
 	id: rootID
-
-	property var globals: Globals {}
 
 	signal sigValueClicked(string t_ref, string t_msg, string t_value)
 
@@ -81,7 +80,6 @@ FocusScope {
 		id: treeView
 
 		anchors {
-			leftMargin: 5
 			left: parent.left
 			right: parent.right
 			// top: parent.top
@@ -89,7 +87,7 @@ FocusScope {
 			bottom: parent.bottom
 		}
 
-		model: devBackend.lnTreeModel
+		model: devBackend.getLN_TreeModel()
 
 		focus: true
 		clip: true
@@ -97,7 +95,7 @@ FocusScope {
 		boundsBehavior: Flickable.StopAtBounds
 
 		columnWidthProvider: function(t_column) {
-			return globals.calcColumnsWidth(treeView, treeView, t_column)
+			return Globals.calcColumnsWidth(treeView, treeView, t_column)
 		}
 
 		selectionBehavior: TableView.SelectRows

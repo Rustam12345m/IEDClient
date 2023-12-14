@@ -33,7 +33,7 @@ namespace Core::Cmd
 		emit sigProgress(0, "Send query to device: GetDirectory " + m_path);
 
 		Core::DirOn dir(m_path);
-		int retval = t_con.getFS_FileList(dir);
+		int retval = t_con.getFileList(dir);
 		if (retval == 0) {
 		}
 

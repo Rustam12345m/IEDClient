@@ -1,6 +1,4 @@
 /*
- *  main.qml
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -21,27 +19,50 @@
  *  See COPYING file for the complete license text.
  * */
 
-import QtQuick 2.2
-import QtQuick.Controls
+import QtQuick
 
-Window {
-	width: 400
-	height: 200
+Item {
+	required property int delegateHeight
+	required property bool selected
 
-	modality: Qt.ApplicationModal
-	flags: Qt.Dialog
+	property alias text: textFild.text
+	property alias textAlign: textFild.horizontalAlignment
+
+	implicitWidth: textFild.implicitWidth + 10
+	implicitHeight: delegateHeight
+
+	signal sigClick(int row, int col)
+	signal sigDoubleClick(int row, int col)
 
 	Rectangle {
 		anchors.fill: parent
-		color: "white"
+
+		color: (selected ? "lightgray" : "white")
+		border.color: (selected ? "black" : "lightgray")
+		clip: true
 
 		Text {
-			anchors.centerIn: parent
+			id: textFild
 
-			font.bold: true
-			font.pixelSize: 14
-			color: "black"
-			text: "About IEDClient"
+			anchors.fill: parent
+			horizontalAlignment: Text.AlignHCenter
+			verticalAlignment: Text.AlignVCenter
+
+			elide: Text.ElideRight
+			leftPadding: 5
+			text: " - "
+		}
+	}
+
+	MouseArea {
+		anchors.fill: parent
+		acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+		onClicked: function(mouse) {
+			sigClick(row, 1)
+		}
+		onDoubleClicked: function(mouse) {
+			sigDoubleClick(row, 1)
 		}
 	}
 }

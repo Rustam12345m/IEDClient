@@ -23,7 +23,7 @@
 
 namespace App::Models
 {
-	LD_PropTable::LD_PropTable(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied)
+	LD_PropTable::LD_PropTable(QObject *t_parent, Core::ptrIED_Object t_ied)
 		: QAbstractListModel(t_parent), m_ied{t_ied}
 	{
 		m_ldProp.append(PropertyItem("General information", "Name", ""));
@@ -53,11 +53,10 @@ namespace App::Models
 		m_devProp.append(PropertyItem("Connection", "Max PDU", ""));
 	}
 
-	void LD_PropTable::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
+	void LD_PropTable::setNewIED(Core::ptrIED_Object t_ied)
 	{
 		beginResetModel();
 		m_ied = t_ied;
-		//connect(&m_ied->model(), SIGNAL(sigUpdated()), this, SLOT(slotDataUpdated()));
 		endResetModel();
 	}
 

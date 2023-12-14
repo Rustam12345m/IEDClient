@@ -21,22 +21,9 @@
 
 #include "ds_signals_table.hpp"
 
-namespace {
-	// remove: .stVal and .mag.f
-	QString 	filterDOName(const QString &t_name)
-	{
-		if (t_name.endsWith(".stVal")) {
-			return t_name.first(t_name.size() - 6);
-		} else if (t_name.endsWith(".mag.f")) {
-			return t_name.first(t_name.size() - 6);
-		}
-		return t_name;
-	}
-}
-
 namespace App::Models
 {
-	DS_SignalsTable::DS_SignalsTable(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied)
+	DS_SignalsTable::DS_SignalsTable(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied)
 		: QAbstractTableModel(t_parent), m_ied(t_ied)
 	{
 	}
@@ -100,7 +87,7 @@ namespace App::Models
 					return QVariant(dsItem->name());
 				}
 				case DS_FC_COLUMN: {
-					return QVariant(QString("FC_%1").arg(row));
+					return QVariant(dsItem->fc());
 				}
 				case DS_VALUE_COLUMN: {
 					auto item = dsItem->item();

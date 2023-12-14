@@ -63,7 +63,7 @@ namespace Core::Lib
 		int		updateLN_Signals(Core::ptrLN t_ln) override;
 		int		updateDS_Signals(Core::ptrDataSet t_ds) override;
 
-		int		getFS_FileList(Core::DirOn &t_dir) override;
+		int		getFileList(Core::DirOn &t_dir) override;
 		void 	downloadFile(const QString &t_filename) override;
 		int 	removeFile(const QString &t_filename) override;
 

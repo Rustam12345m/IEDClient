@@ -1,6 +1,4 @@
 /*
- *  main.qml
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -22,6 +20,12 @@
  * */
 
 import QtQuick
+import QtQuick.Controls
+
+import "qrc:/common/"
+
+import GlobalVarsModule
+import AppStylesModule
 
 // Special delegate for Mod-Beh-Health cells in LN_Table
 Item {
@@ -32,7 +36,9 @@ Item {
 	required property bool selected
 	required property int value
 
-	// property alias text: textFild.text
+	//property alias color: led.color
+	property alias prompt: toolTip.text
+	property alias text: textFild.text
 
 	implicitHeight: delegateHeight
 	implicitWidth: delegateWidth
@@ -43,33 +49,53 @@ Item {
 	Rectangle {
 		anchors.fill: parent
 
-		color: {
-			switch (root.value) {
-			case 0: return "red";
-			case 1: return "green";
-			case 2: return "yellow";
-			case 3: return "blue";
-			case 4: return "darkred";
-			}
-			return "lightgray";
-		}
 		border.color: (selected ? "black" : "lightgray")
-		//clip: true
+		clip: true
 
-		Text {
-			id: textFild
+		Rectangle {
+			id: led
 
 			anchors.centerIn: parent
-			horizontalAlignment: Text.AlignHCenter
-			verticalAlignment: Text.AlignVCenter
 
-			text: root.value
+			color: {
+				switch (root.value) {
+				case 0: return "red";
+				case 1: return "green";
+				case 2: return "yellow";
+				case 3: return "blue";
+				case 4: return "darkred";
+				}
+				return "lightgray";
+			}
+
+			height: delegateHeight - 4
+			width: height
+			radius: height/2
+
+			Text {
+				id: textFild
+
+				anchors.centerIn: parent
+				horizontalAlignment: Text.AlignHCenter
+				verticalAlignment: Text.AlignVCenter
+
+				text: root.value
+			}
+		}
+		ToolTip {
+			id: toolTip
+			text: ""//Information isn't found"
+			delay: 200
+			visible: mouseArea.containsMouse && (text != "")
 		}
 	}
 
 	MouseArea {
+		id: mouseArea
+
 		anchors.fill: parent
 		acceptedButtons: Qt.LeftButton | Qt.RightButton
+		//hoverEnabled: true
 
 		onClicked: function(mouse) {
 			sigClick(row, 1)

@@ -30,15 +30,14 @@ namespace Core
 	/*
 	 * Representation of a model available by MMS of an IED
 	 * */
-	class DataModel : public QObject, public Item
+	class DataModel : public Item
 	{
-		Q_OBJECT
 	public:
 		DataModel(const QString &t_name) : Item(nullptr, t_name)
 		{
 			m_delimetr = ""; // There isn't a delimetr because it is a top node
 		}
-		~DataModel() {};
+		~DataModel() = default;
 
 		void 	calcIEDNameFromLD();
 
@@ -46,9 +45,6 @@ namespace Core
 		ptrLD 	getLogicalDevice(int t_ld);
 
 		void	print();
-		void	update() {
-			emit sigUpdated();
-		}
 
 		void 	pushDataSet(ptrDataSet t_ds);
 		void 	pushReportCB(ptrRCB t_cb);
@@ -67,9 +63,6 @@ namespace Core
 		const QList<ptrSVCB>	svcbList() {
 			return m_svcb;
 		}
-
-	signals:
-		void	sigUpdated();
 
 	private:
 		QList<ptrDataSet>	m_ds;

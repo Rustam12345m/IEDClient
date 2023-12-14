@@ -19,29 +19,29 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "lns_table.hpp"
+#include "ln_common_table.hpp"
 
 namespace App::Models
 {
-	LNs_Table::LNs_Table(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied)
+	LN_CommonTable::LN_CommonTable(QObject *t_parent, Core::ptrIED_Object t_ied)
 		: QAbstractTableModel(t_parent), m_ied(t_ied)
 	{
 	}
 
-	void LNs_Table::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
+	void LN_CommonTable::setNewIED(Core::ptrIED_Object t_ied)
 	{
 		beginResetModel();
 		m_ied = t_ied;
 		endResetModel();
 	}
 
-	void LNs_Table::setSelectedLN(int t_ln)
+	void LN_CommonTable::setSelectedLN(int t_ln)
 	{
 		//qDebug() << "LNs_Table: Selected LN = " << t_ln;
 		emit sigLNSelected(m_currentLD, t_ln);
 	}
 
-	QVariant LNs_Table::headerData(int t_section, Qt::Orientation t_orientation, int t_role) const
+	QVariant LN_CommonTable::headerData(int t_section, Qt::Orientation t_orientation, int t_role) const
 	{
 		switch (t_orientation) {
 		case Qt::Horizontal: {
@@ -56,12 +56,12 @@ namespace App::Models
 		return QVariant();
 	}
 
-	QHash<int, QByteArray> LNs_Table::roleNames() const
+	QHash<int, QByteArray> LN_CommonTable::roleNames() const
 	{
 		return { { Qt::DisplayRole, "value" } };
 	}
 
-	int LNs_Table::rowCount(const QModelIndex &t_parent) const
+	int LN_CommonTable::rowCount(const QModelIndex &t_parent) const
 	{
 		auto ld = m_ied->model().getItem<Core::LogicalDevice>(m_currentLD);
 		if (ld) {
@@ -70,12 +70,12 @@ namespace App::Models
 		return 0;
 	}
 
-	int LNs_Table::columnCount(const QModelIndex &t_parent) const
+	int LN_CommonTable::columnCount(const QModelIndex &t_parent) const
 	{
 		return ColumnsCount;
 	}
 
-	QVariant LNs_Table::data(const QModelIndex &t_index, int t_role) const
+	QVariant LN_CommonTable::data(const QModelIndex &t_index, int t_role) const
 	{
 		auto ln = m_ied->model().getLogicalNode(m_currentLD, t_index.row());
 		if (ln) {
@@ -100,12 +100,12 @@ namespace App::Models
 		return QVariant(" ? ");
 	}
 
-	void LNs_Table::slotDataUpdated(bool t_status)
+	void LN_CommonTable::slotDataUpdated(bool t_status)
 	{
 		emit dataChanged(index(0, ModeColumn), index(rowCount() - 1, HealthColumn));
 	}
 
-	void LNs_Table::slotLDSelected(int t_ld)
+	void LN_CommonTable::slotLDSelected(int t_ld)
 	{
 		if (m_currentLD != t_ld) {
 			beginResetModel();

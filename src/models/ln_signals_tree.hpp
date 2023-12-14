@@ -26,7 +26,7 @@
 
 namespace App::Models
 {
-	class LN_SignalsTree : public QAbstractItemModel
+	class LN_SignalTree : public QAbstractItemModel
 	{
 		Q_OBJECT
 		enum Columns {
@@ -38,7 +38,7 @@ namespace App::Models
 		};
 
 	public:
-		LN_SignalsTree(QObject *t_parent, QSharedPointer<Core::IED_Object> &t_ied);
+		LN_SignalTree(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied);
 
 		void 	setNewIED(QSharedPointer<Core::IED_Object> t_ied);
 

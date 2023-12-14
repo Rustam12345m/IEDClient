@@ -1,6 +1,4 @@
 /*
- *  main.qml
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -25,13 +23,14 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-// DS page
+// DataSets page
 FocusScope {
 	id: root
 
 	SplitView {
 		id: splitView
 
+		focus: true
 		anchors.fill: parent
 
 		// Delimiter
@@ -59,17 +58,15 @@ FocusScope {
 				id: tableDS_Info
 
 				anchors.fill: parent
+				anchors.rightMargin: 3
 
 				onSigLeftOrRightKey: function() {
-					//console.log("DS_Page: Activate DO_Table")
 					tableDS_Info.focus = false
 					tableDS_Val.focus = true
 				}
 				onSigForceFocus: function() {
 					tableDS_Info.focus = true
 					tableDS_Val.focus = false
-				}
-				onSigSelectedNewDS: function() {
 				}
 			}
 		}
@@ -85,6 +82,7 @@ FocusScope {
 				id: tableDS_Val
 
 				anchors.fill: parent
+				anchors.leftMargin: 3
 
 				onSigLeftOrRightKey: function() {
 					//console.log("DS_Page: Activate LN_Table")
@@ -100,19 +98,18 @@ FocusScope {
 	}
 
 	onVisibleChanged: {
+		if (visible) {
+			tableDS_Info.focus = true
+		}
 	}
 
 	Keys.onPressed: function(event) {
-		console.log("DS_Page: Key pressed " + event.key)
-
 		if (event.key == Qt.Key_Left) {
-			console.log("DS_Page: Activate LN_Table")
 			tableDS_Info.focus = true
 			tableDS_Val.focus = false
 			event.accepted = true
 		}
 		if (event.key == Qt.Key_Right) {
-			console.log("DS_Page: Activate DO_Table")
 			tableDS_Info.focus = false
 			tableDS_Val.focus = true
 			event.accepted = true

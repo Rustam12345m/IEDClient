@@ -55,7 +55,7 @@ namespace Core::Lib
 			return std::make_tuple(daName, fc, fcNum);
 		}
 
-		std::tuple<QString, QString> parseDataSetElement(const QString &t_ref)
+		std::tuple<QString, QString> parseDataSetItemRef(const QString &t_ref)
 		{
 			// 
 			QString ref = t_ref.left(t_ref.size() - 4);
@@ -125,10 +125,10 @@ namespace Core::Lib
 		}
 
 		// Call-back for monitor close event
-		void 	callback_ConnectionHandler(void* parameter, IedConnection connection)
+		void 	callback_ConnectionHandler(void *t_param, sIedConnection *t_con)
 		{
 			printf("Callback CloseEvent: \r\n");
-			Lib61850_Adapter *l = static_cast<Lib61850_Adapter*>(parameter);
+			Lib61850_Adapter *l = static_cast<Lib61850_Adapter*>(t_param);
 			if (l != nullptr) {
 				l->callbackOnCloseEvent();
 			}
@@ -241,6 +241,21 @@ namespace Core::Lib
 			}
 		}
 
+		int 	updateItemByMMS(ptrItem t_item, sIedConnection *t_con, FunctionalConstraint t_fc)
+		{
+			IedClientError retval = IED_ERROR_OK;
+			auto ref = t_item->ref().toStdString();
+
+			MmsValue *value = IedConnection_readObject(t_con, &retval, ref.data(), t_fc);
+			if (retval != IED_ERROR_OK) {
+				return -1;
+			}
+
+			updateItemValueByMmsValue(t_item, value);
+			MmsValue_delete(value);
+			return 0;
+		}
+
 		int 	updateDataObjectItem(Core::ptrDO t_do, sIedConnection *t_con)
 		{
 			if (t_do == nullptr || t_con == nullptr) {
@@ -249,15 +264,9 @@ namespace Core::Lib
 
 			for (size_t j=0;j<t_do->getItemCount();j++) {
 				auto daNode = t_do->getItem< Core::DataAttribute >(j);
-				auto ref = daNode->ref().toStdString();
 				auto fcNum = (FunctionalConstraint)daNode->fcNum();
 
-				IedClientError retval = IED_ERROR_OK;
-				MmsValue *value = IedConnection_readObject(t_con, &retval, ref.data(), fcNum);
-				if (retval == IED_ERROR_OK) {
-					updateItemValueByMmsValue(daNode, value);
-					MmsValue_delete(value);
-				}
+				updateItemByMMS(daNode, t_con, fcNum);
 			}
 			return 0;
 		}
@@ -435,27 +444,27 @@ namespace Core::Lib
 	int Lib61850_Adapter::fetchLN_DS(Core::DataModelBuilder &t_builder)
 	{
 		IedClientError retval = IED_ERROR_OK;
-		QString ref = t_builder.lastLN()->ref();
+		QString lnRef = t_builder.lastLN()->ref();
 
-		LinkedList dsList = IedConnection_getLogicalNodeDirectory(m_libConn, &retval, ref.toStdString().data(),
+		LinkedList dsList = IedConnection_getLogicalNodeDirectory(m_libConn, &retval, lnRef.toStdString().data(),
 																ACSI_CLASS_DATA_SET);
 		LinkedList dataSet = LinkedList_getNext(dsList);
 		while (dataSet != nullptr) {
-			char *dsName = (char *) dataSet->data;
+			char *dsName = (char *)dataSet->data;
 			bool isDeletable = false;
 
-			char dataSetRef[130];
-			sprintf(dataSetRef, "%s.%s", ref.toStdString().data(), dsName);
+			char dataSetRef[130] = { 0 };
+			sprintf(dataSetRef, "%s.%s", lnRef.toStdString().data(), dsName);
 
-			t_builder.createDataSet(QString::fromLocal8Bit(dsName), QString::fromLocal8Bit(dataSetRef), isDeletable);
-			
+			t_builder.createDataSet(QString::fromLocal8Bit(dsName), lnRef, isDeletable);
+
 			LinkedList dsEntityList = IedConnection_getDataSetDirectory(m_libConn, &retval, dataSetRef,
 																		&isDeletable);
 			LinkedList dsEntity = LinkedList_getNext(dsEntityList);
 			while (dsEntity != nullptr) {
 				QString dsElemRef = QString::fromLocal8Bit((char *)dsEntity->data);
 
-				auto [ref, fc] = parseDataSetElement(dsElemRef);
+				auto [ref, fc] = parseDataSetItemRef(dsElemRef);
 				t_builder.createDataSet_Elem(ref, fc);
 
 				dsEntity = LinkedList_getNext(dsEntity);
@@ -528,6 +537,11 @@ namespace Core::Lib
 		return 0;
 	}
 
+	void Lib61850_Adapter::callbackOnCloseEvent()
+	{
+		emit sigConClosed();
+	}
+
 	int Lib61850_Adapter::updateLDs_Status(Core::ptrDataModel t_model)
 	{
 		if (!isConnected()) {
@@ -587,7 +601,7 @@ namespace Core::Lib
 		return 0;
 	}
 
-	int Lib61850_Adapter::getFS_FileList(Core::DirOn &t_dir)
+	int Lib61850_Adapter::getFileList(Core::DirOn &t_dir)
 	{
 		if (isConnected()) {
 			std::string path = t_dir.name().toStdString();
@@ -624,11 +638,6 @@ namespace Core::Lib
 		IedClientError retval = IED_ERROR_OK;
 		IedConnection_deleteFile(m_libConn, &retval, t_filename.toStdString().c_str());
 		return (retval != IED_ERROR_OK);
-	}
-
-	void Lib61850_Adapter::callbackOnCloseEvent()
-	{
-		emit sigConClosed();
 	}
 
 	void Lib61850_Adapter::downloadFile(const QString &t_filename)
