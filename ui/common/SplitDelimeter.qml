@@ -22,45 +22,32 @@
 import QtQuick
 import QtQuick.Controls
 
-Item
+import AppStylesModule
+
+Rectangle
 {
-	required property bool selected
-	property int delegateHeight: 30
-	property alias text: textFild.text
+	id: rootID
 
-	signal sigSelectRow(int t_row)
-	signal sigDownloadFile(int row)
+	required property bool pressed
 
-	implicitWidth: textFild.implicitWidth + 20
-	implicitHeight: delegateHeight
+	implicitWidth: ColorPalette.delimeterWidth
+	width: ColorPalette.delimeterWidth
+
+	color: rootID.pressed ? "#707070" : ColorPalette.borderColor
 
 	Rectangle {
-		anchors.fill: parent
+		anchors.centerIn: parent
 
-		border.width: 1
-		border.color: (selected ? "black" : "lightgray")
-		color: (selected ? "lightgray" : "white")
+		width: 2
+		height: 40
+		radius: 1
 
-		Text {
-			id: textFild
-
-			anchors.fill: parent
-			horizontalAlignment: Text.AlignHCenter
-			verticalAlignment: Text.AlignVCenter
-			leftPadding: 5
-
-			text: " "
-		}
+		// color: rootID.pressed ? "#202020" : "#707070"
+		color: rootID.pressed ? "white" : "#707070"
 	}
-	MouseArea {
-		anchors.fill: parent
-		acceptedButtons: Qt.LeftButton | Qt.RightButton
 
-		onClicked: function(mouse) {
-			sigSelectRow(row)
-		}
-		onDoubleClicked: function(mouse) {
-			sigDownloadFile(row)
-		}
+	containmentMask: Item {
+		width: ColorPalette.delimeterWidth
+		height: rootID.height
 	}
 }

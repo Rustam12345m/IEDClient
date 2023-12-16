@@ -31,16 +31,18 @@ namespace App::Models
 	{
 		Q_OBJECT
 		enum Columns {
-			IED_NAME = 0,
+			NUMBER = 0,
+			IED_NAME,
 			IP_ADDR,
 			PORT_COLUMN,
+			LAST_CONNECT,
 			COLUMNS_COUNT
 		};
 
 	public:
 		HistConTable(QObject *t_parent, App::AppSettings &t_ini);
 
-		QVariant headerData(int t_section, Qt::Orientation t_orientation,
+		QVariant headerData(int t_column, Qt::Orientation t_orientation,
 							int t_role = Qt::DisplayRole) const override;
 
 		QHash<int, QByteArray> roleNames() const override;

@@ -23,15 +23,17 @@ import QtQuick
 import QtQuick.Controls
 import Qt.labs.qmlmodels
 
-import "qrc:/common/"
-
 import GlobalVarsModule
 import AppStylesModule
 
-Item {
+import "qrc:/common/"
+
+FocusScope
+{
 	id: rootID
 
 	readonly property int defDelegateHeight: 30
+	readonly property int defDelegateWidth: 150
 
 	signal sigDeviceSelected(string t_ip, int t_port)
 
@@ -41,37 +43,16 @@ Item {
 	}
 
 	// Header for TableView below
-	HorizontalHeaderView {
+	TableHeader {
 		id: headerID
 
+		defDelegateWidth: rootID.defDelegateWidth
+		defDelegateHeight: rootID.defDelegateHeight
+
 		anchors {
-			//leftMargin: 5
 			left: parent.left
 			top: parent.top
 			right: parent.right
-		}
-		boundsBehavior: Flickable.StopAtBounds
-		clip: true
-
-		syncView: tableID
-
-		delegate: Rectangle {
-			implicitWidth: textID.implicitWidth + 10
-			implicitHeight: defDelegateHeight
-
-			color: "#f6f6f6"
-			border.color: "#e4e4e4"
-
-			Label {
-				id: textID
-
-				anchors.fill: parent
-				horizontalAlignment: Text.AlignHCenter
-				verticalAlignment: Text.AlignVCenter
-
-				text: model[headerID.textRole]
-				color: "#ff26282a"
-			}
 		}
 	}
 
@@ -80,7 +61,6 @@ Item {
 		id: tableID
 
 		anchors {
-			//leftMargin: 5
 			left: parent.left
 			right: parent.right
 			top: headerID.bottom
@@ -89,6 +69,7 @@ Item {
 		boundsBehavior: Flickable.StopAtBounds
 		clip: true
 
+		focus: false
 		model: appBackend.lastConnList
 		interactive: true
 
@@ -113,8 +94,8 @@ Item {
 			onSigClick: function(row, col) {
 				Globals.setSelectedRow(tableID, row)
 
-				let ip = rootID.getValue(row, 1)
-				let port = rootID.getValue(row, 2)
+				let ip = rootID.getValue(row, 2)
+				let port = rootID.getValue(row, 3)
 
 				sigDeviceSelected(ip, port)
 			}

@@ -23,13 +23,14 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-import "qrc:/common/"
-
 import GlobalVarsModule
 import AppStylesModule
 
+import "qrc:/common/"
+
 // RCB Settings
-Item {
+Item
+{
 	property int defRowHeight: 30
 	property int defTextPadding: 5
 	property int defNameWidth: 100

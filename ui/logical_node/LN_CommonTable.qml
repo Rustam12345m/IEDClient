@@ -29,7 +29,8 @@ import GlobalVarsModule
 import AppStylesModule
 
 // Table of all Logical Nodes for one Logical Device
-FocusScope {
+FocusScope
+{
 	id: rootID
 
 	readonly property int defDelegateHeight: 30
@@ -40,38 +41,16 @@ FocusScope {
 	signal sigSelectedNewLN()
 
 	// Header of LN table below
-	HorizontalHeaderView {
+	TableHeader {
 		id: headerID
 
+		defDelegateWidth: rootID.defDelegateWidth
+		defDelegateHeight: rootID.defDelegateHeight
+
 		anchors {
-			rightMargin: 5
-			left: parent.left
+			left: tableID.left
 			top: parent.top
 			right: parent.right
-		}
-		boundsBehavior: Flickable.StopAtBounds
-
-		syncView: tableID
-
-		delegate: Rectangle {
-			property var paramModel: model
-
-			implicitWidth: Math.max(textArea.implicitWidth + 10, defDelegateWidth)
-			implicitHeight: defDelegateHeight
-
-			color: "#f6f6f6"
-			border.color: "#e4e4e4"
-
-			Label {
-				id: textArea
-				anchors.centerIn: parent
-				horizontalAlignment: Text.AlignHCenter
-				verticalAlignment: Text.AlignVCenter
-
-				//font.bold: true
-				text: model[headerID.textRole]
-				color: "#ff26282a"
-			}
 		}
 	}
 
@@ -139,7 +118,7 @@ FocusScope {
 			DelegateChoice {
 				column: 1
 
-				delegate: LN_StateDelegate {
+				delegate: ModBehHealthDelegate {
 					delegateHeight: defDelegateHeight
 					delegateWidth: defDelegateWidth
 					selected: (tableID.currentRow == row)
@@ -156,7 +135,7 @@ FocusScope {
 			DelegateChoice {
 				column: 2
 
-				delegate: LN_StateDelegate {
+				delegate: ModBehHealthDelegate {
 					delegateHeight: defDelegateHeight
 					delegateWidth: defDelegateWidth
 					selected: (tableID.currentRow == row)
@@ -173,7 +152,7 @@ FocusScope {
 			DelegateChoice {
 				column: 3
 
-				delegate: LN_StateDelegate {
+				delegate: ModBehHealthDelegate {
 					delegateHeight: defDelegateHeight
 					delegateWidth: defDelegateWidth
 					selected: (tableID.currentRow == row)

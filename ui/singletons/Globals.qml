@@ -37,7 +37,6 @@ QtObject
 	enum Panel
 	{
 		HIDE = 0,
-		LAST_CONN,
 		LD_INFO,
 		RCB_PROPERTIES
 	}
@@ -56,7 +55,7 @@ QtObject
 	function setSelectedRow(t_tableID, t_row)
 	{
 		if (t_tableID.currentRow === t_row) {
-			return;
+			// return;
 		}
 
 		let idx = t_tableID.model.index(t_row, 0);

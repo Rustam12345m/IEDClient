@@ -47,7 +47,7 @@ Item
 		section.delegate: Rectangle {
 			width: ldPropertyList.width
 			height: defRowHeight
-			color: "#f6f6f6"
+			color: ColorPalette.tableHeaderColor
 
 			clip: true
 
@@ -64,27 +64,25 @@ Item
 
 			Rectangle {
 				anchors.fill: parent
+				clip: true
 
 				RowLayout {
 					anchors.fill: parent
 					spacing: 0
 
 					Rectangle {
-						border.width: 1
-						border.color: "lightgray"
-
-						color: (index === ldPropertyList.selectedIndex) ? "lightgray" : "white"
-						clip: true
-
 						Layout.preferredWidth: defNameWidth
 						width: defNameWidth
 						height: defRowHeight
+
+						border.color: ColorPalette.tableRowBorderColor2
+						color: (index === ldPropertyList.selectedIndex) ? ColorPalette.tableRowColor1 : ColorPalette.tableRowColor2
 
 						Text {
 							id: textName
 							anchors.fill: parent
 
-							horizontalAlignment: Text.AlignLeft//HCenter
+							horizontalAlignment: Text.AlignLeft
 							verticalAlignment: Text.AlignVCenter
 							elide: Text.ElideRight
 							leftPadding: defTextPadding
@@ -97,7 +95,7 @@ Item
 						border.width: 1
 						border.color: "lightgray"
 
-						color: (index === ldPropertyList.selectedIndex) ? "lightgray" : "white"
+						color: (index === ldPropertyList.selectedIndex) ? ColorPalette.tableRowColor1 : ColorPalette.tableRowColor2
 						clip: true
 
 						Layout.fillWidth: true

@@ -23,62 +23,42 @@ import QtQuick
 import QtQuick.Controls
 import Qt.labs.qmlmodels
 
-import "qrc:/common/"
-
 import GlobalVarsModule
 import AppStylesModule
 
+import "qrc:/common/"
+
 // Received reports for the particular RCB
-FocusScope {
+FocusScope
+{
 	id: rootID
 
 	// Header for Table below
-	HorizontalHeaderView {
+	TableHeader {
 		id: headerID
+
+		defDelegateWidth: 60
+		defDelegateHeight: 30
 
 		anchors {
 			left: tableID.left
 			top: parent.top
 			right: parent.right
 		}
-		boundsBehavior: Flickable.StopAtBounds
-		resizableColumns: false
-
-		syncView: tableID
-
-		delegate: Rectangle {
-			implicitWidth: labelID.implicitWidth + 10
-			implicitHeight: 30
-
-			color: "#f6f6f6"
-			border.color: "#e4e4e4"
-
-			Row {
-				anchors.centerIn: parent
-				spacing: 5
-
-				Label {
-					id: labelID
-
-					text: model.display
-					color: "#ff26282a"
-				}
-			}
-		}
 	}
 
 	// Table of files on the IED
 	TableView {
 		id: tableID
-		model: devBackend.getReportsModel()
 
 		anchors {
 			left: parent.left
 			top: headerID.bottom
 			right: parent.right
 			bottom: parent.bottom
-			//rightMargin: 5
 		}
+
+		model: devBackend.getReportsModel()
 
 		focus: true
 		keyNavigationEnabled: true

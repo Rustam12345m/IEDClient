@@ -20,49 +20,44 @@
  * */
 
 import QtQuick
+import QtQuick.Controls
+
 import AppStylesModule
 
-Item {
-	required property int delegateHeight
-	required property bool selected
+// Header for TableView
+HorizontalHeaderView
+{
+	id: headerID
 
-	property alias text: textFild.text
-	property alias textAlign: textFild.horizontalAlignment
+	required property int defDelegateWidth
+	required property int defDelegateHeight
 
-	implicitWidth: textFild.implicitWidth + 10
-	implicitHeight: delegateHeight
+	boundsBehavior: Flickable.StopAtBounds
 
-	signal sigClick(int row, int col)
-	signal sigDoubleClick(int row, int col)
+	syncView: tableID
+	clip: true
 
-	Rectangle {
-		anchors.fill: parent
+	delegate: Rectangle {
+		property var paramModel: model
+
+		implicitWidth: Math.max(textArea.implicitWidth + 10, defDelegateWidth)
+		implicitHeight: defDelegateHeight
 
 		border.color: ColorPalette.tableRowBorderColor2
-		color: (selected ? ColorPalette.tableRowColor1 : ColorPalette.tableRowColor2)
+		color: ColorPalette.tableHeaderColor
 
-		Text {
-			id: textFild
+		Label {
+			id: textArea
 
-			anchors.fill: parent
+			anchors.centerIn: parent
 
 			horizontalAlignment: Text.AlignHCenter
 			verticalAlignment: Text.AlignVCenter
 
-			elide: Text.ElideRight
-			text: " - "
-		}
-	}
+			color: ColorPalette.tableTextColor
+			font.bold: true
 
-	MouseArea {
-		anchors.fill: parent
-		acceptedButtons: Qt.LeftButton | Qt.RightButton
-
-		onClicked: function(mouse) {
-			sigClick(row, 1)
-		}
-		onDoubleClicked: function(mouse) {
-			sigDoubleClick(row, 1)
+			text: model[headerID.textRole]
 		}
 	}
 }

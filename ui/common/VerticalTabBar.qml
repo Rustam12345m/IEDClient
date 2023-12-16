@@ -22,45 +22,57 @@
 import QtQuick
 import QtQuick.Controls
 
+import AppStylesModule
+
+import "qrc:/common/"
+
+// Vertical TabBar
 Item
 {
-	required property bool selected
-	property int delegateHeight: 30
-	property alias text: textFild.text
+	id: rootID
 
-	signal sigSelectRow(int t_row)
-	signal sigDownloadFile(int row)
+	property bool leftSide: false
+	property alias model: vertTabBar.model
 
-	implicitWidth: textFild.implicitWidth + 20
-	implicitHeight: delegateHeight
+	signal sigTabSelected(int index)
+	
+	width: 30
 
-	Rectangle {
+	ListView {
+		id: vertTabBar
+
 		anchors.fill: parent
 
-		border.width: 1
-		border.color: (selected ? "black" : "lightgray")
-		color: (selected ? "lightgray" : "white")
+		// model: ListModel {
+		// 	ListElement { title: "Test 1" }
+		// 	ListElement { title: "Test 2" }
+		// }
 
-		Text {
-			id: textFild
+		delegate: Item {
+			width: vertTabBar.width
+			height: 120
 
-			anchors.fill: parent
-			horizontalAlignment: Text.AlignHCenter
-			verticalAlignment: Text.AlignVCenter
-			leftPadding: 5
+			Rectangle {
+				width: parent.width
+				height: parent.height
+				color: (vertTabBar.currentIndex === index) ? "lightgray" : "#f6f6f6"
 
-			text: " "
-		}
-	}
-	MouseArea {
-		anchors.fill: parent
-		acceptedButtons: Qt.LeftButton | Qt.RightButton
+				Text {
+					rotation: rootID.leftSide ? -90 : 90
+					anchors {
+						centerIn: parent
+					}
 
-		onClicked: function(mouse) {
-			sigSelectRow(row)
-		}
-		onDoubleClicked: function(mouse) {
-			sigDownloadFile(row)
+					text: title
+				}
+				MouseArea {
+					anchors.fill: parent
+					onClicked: {
+						vertTabBar.currentIndex = index
+						sigTabSelected(index)
+					}
+				}
+			}
 		}
 	}
 }

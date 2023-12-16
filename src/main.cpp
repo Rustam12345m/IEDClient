@@ -25,11 +25,15 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
+#include <QQuickStyle>
+
 #include "presenter.hpp"
 
 int main(int argc, char *argv[])
 {
 	QGuiApplication app(argc, argv);
+
+	//QQuickStyle::setStyle("Material");
 
 	QCoreApplication::setOrganizationName("OSI");
     QCoreApplication::setOrganizationDomain("opensource.org");

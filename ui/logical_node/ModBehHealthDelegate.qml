@@ -28,15 +28,15 @@ import GlobalVarsModule
 import AppStylesModule
 
 // Special delegate for Mod-Beh-Health cells in LN_Table
-Item {
-	id: root
+Item
+{
+	id: rootID
 
 	required property int delegateHeight
 	required property int delegateWidth
 	required property bool selected
 	required property int value
 
-	//property alias color: led.color
 	property alias prompt: toolTip.text
 	property alias text: textFild.text
 
@@ -49,8 +49,10 @@ Item {
 	Rectangle {
 		anchors.fill: parent
 
-		border.color: (selected ? "black" : "lightgray")
 		clip: true
+		// border.color: (selected ? "black" : "lightgray")
+		border.color: ColorPalette.tableRowBorderColor2
+		color: (selected ? ColorPalette.tableRowColor1 : ColorPalette.tableRowColor2)
 
 		Rectangle {
 			id: led
@@ -58,7 +60,7 @@ Item {
 			anchors.centerIn: parent
 
 			color: {
-				switch (root.value) {
+				switch (rootID.value) {
 				case 0: return "red";
 				case 1: return "green";
 				case 2: return "yellow";
@@ -79,7 +81,7 @@ Item {
 				horizontalAlignment: Text.AlignHCenter
 				verticalAlignment: Text.AlignVCenter
 
-				text: root.value
+				text: rootID.value
 			}
 		}
 		ToolTip {

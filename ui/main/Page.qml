@@ -21,15 +21,17 @@
 
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
 import QtQuick.Dialogs
-
-import "qrc:/common/"
 
 import GlobalVarsModule
 import AppStylesModule
 
-FocusScope {
-	id: root
+import "qrc:/common/"
+
+FocusScope
+{
+	id: rootID
 
 	signal sigConnectTo(string ip, int port, bool tls, string user, string pass)
 	signal sigDumpModel(string dir, string ip, int port, bool tls, string user, string pass)
@@ -43,212 +45,254 @@ FocusScope {
 	Rectangle {
 		anchors.fill: parent
 
-		color: "white" //"lightgray"
-
-		// Folder for the model dump
-		FolderDialog {
-			id: dumpFolderDialog
-
-			title: "Please, select folder for the model dump file"
-			currentFolder: "~/"
-			options: FolderDialog.ShowDirsOnly
-
-			acceptLabel: "Select"
-			rejectLabel: "Cansel"
-
-			onAccepted: {
-				sigDumpModel(dumpFolderDialog.selectedFolder, ipAddrInput.text, portInput.text,
-							tlsSwitcher.checked, userNameInput.text, userPassInput.text)
-			}
-		}
+		color: ColorPalette.backgroundColor1
 
 		// mini-window
 		Rectangle {
-			id: window
+			id: miniWindowID
+
 			//anchors.centerIn: parent
+			width: 800
+			height: 400
 
-			width: 460
-			height: 250
-			color: "lightgray" //"white"
+			border.width: ColorPalette.borderWidth
+			border.color: ColorPalette.modalColor
 
-			border.width: 2
-			smooth: false
+			// Connect properties
+			Rectangle {
+				id: connectToDevBarID
 
-			MouseArea {
-				anchors.fill: parent
-				drag.target: window
-			}
-
-			// Label
-			Text {
-				text: qsTr("Connection to IED")
-				x: 150
-				y: 14
-				width: 150
-
-				font.pixelSize: 16
-				font.bold: true
-
-				horizontalAlignment: Text.AlignHCenter
-				verticalAlignment: Text.AlignVCenter
-			}
-
-			// IP box
-			Text {
-				text: qsTr("IP address")
-				x: 16
-				y: 67
-				width: 100
-				height: 25
-
-				font.pixelSize: 14
-				horizontalAlignment: Text.AlignRight
-				verticalAlignment: Text.AlignVCenter
-			}
-			// Input box for IP address
-			TextField {
-				id: ipAddrInput
-				x: 135
-				y: 67
-				width: 180
-				height: 25
-
-				text: qsTr("127.0.0.1")
-				font.pixelSize: 14
-				verticalAlignment: Text.AlignVCenter
-				leftPadding: 5
-				clip: true
-				focus: true
-
-				KeyNavigation.backtab: connButton
-				KeyNavigation.tab: portInput
-			}
-
-			// Port of MMS server
-			Text {
-				x: 16
-				y: 101
-				width: 100
-				height: 25
-				text: qsTr("MMS port")
-				font.pixelSize: 14
-				horizontalAlignment: Text.AlignRight
-				verticalAlignment: Text.AlignVCenter
-			}
-			// Input box for MMS port
-			TextField {
-				id: portInput
-				x: 135
-				y: 101
-				width: 180
-				height: 25
-
-				text: qsTr("102")
-				font.pixelSize: 14
-				verticalAlignment: Text.AlignVCenter
-				leftPadding: 5
-				clip: true
-
-				KeyNavigation.backtab: ipAddrInput
-				KeyNavigation.tab: tlsSwitcher
-			}
-
-			// Dump model
-			Button {
-				id: dumpButton
-				x: 336
-				y: 162
-				height: 25
-				width: 100
-
-				text: qsTr("Dump")
-
-				icon.source: "qrc:/img/icons/download.svg"
-
-				onClicked: {
-					dumpFolderDialog.open()
+				anchors {
+					left: parent.left
+					right: parent.right
+					top: parent.top
+					margins: parent.border.width
 				}
 
-				KeyNavigation.backtab: connButton
-				KeyNavigation.tab: ipAddrInput
-			}
+				height: 45
+				color: ColorPalette.modalColor
 
-			// Connect
-			Button {
-				id: connButton
-				x: 336
-				y: 82
-				height: 25
-				width: 100
-
-				text: qsTr("Connect")
-
-				icon.source: "qrc:/img/icons/call.svg"
-
-				onClicked: {
-					sigConnectTo(ipAddrInput.text, portInput.text,
-								tlsSwitcher.checked, userNameInput.text, userPassInput.text)
+				MouseArea {
+					anchors.fill: parent
+					drag.target: miniWindowID
 				}
 
-				KeyNavigation.backtab: userPassInput
-				KeyNavigation.tab: dumpButton
+				RowLayout {
+					anchors.fill: parent
+
+					property int inputBoxHeight: 20
+
+					spacing: 6
+					clip: true
+
+					// IP box
+					Text {
+						Layout.preferredWidth: 25
+						Layout.alignment: Qt.AlignVCenter
+
+						height: parent.height
+
+						text: qsTr("IP")
+
+						font.pixelSize: 14
+						font.bold: true
+
+						horizontalAlignment: Text.AlignRight
+						verticalAlignment: Text.AlignVCenter
+					}
+					// Input box for IP address
+					Rectangle {
+						Layout.preferredWidth: 120
+						Layout.alignment: Qt.AlignVCenter
+
+						height: parent.inputBoxHeight
+						color: "white"
+
+						TextInput {
+							id: ipAddrInput
+
+							anchors.fill: parent
+
+							text: qsTr("127.0.0.1")
+							font.pixelSize: 14
+
+							verticalAlignment: Text.AlignVCenter
+							leftPadding: 2
+
+							focus: true
+							color: "black"
+
+							KeyNavigation.backtab: connButton
+							KeyNavigation.tab: portInput
+						}
+					}
+
+					// Port of MMS server
+					Text {
+						Layout.preferredWidth: 25
+						Layout.alignment: Qt.AlignVCenter
+
+						height: parent.height
+
+						text: qsTr("Port")
+
+						font.pixelSize: 14
+						font.bold: true
+
+						horizontalAlignment: Text.AlignRight
+						verticalAlignment: Text.AlignVCenter
+					}
+					// Input box for MMS port
+					Rectangle {
+						Layout.preferredWidth: 60
+						Layout.alignment: Qt.AlignVCenter
+
+						height: parent.inputBoxHeight
+						color: "white"
+
+						TextInput {
+							id: portInput
+							anchors.fill: parent
+
+							text: qsTr("102")
+
+							font.pixelSize: 14
+
+							verticalAlignment: Text.AlignVCenter
+							leftPadding: 2
+
+							color: "black"
+
+							KeyNavigation.backtab: ipAddrInput
+							KeyNavigation.tab: tlsSwitcher
+						}
+					}
+
+					// TLS switcher
+					Rectangle {
+						Layout.preferredWidth: 100
+						Layout.alignment: Qt.AlignVCenter
+
+						height: parent.inputBoxHeight
+						color: "transparent"
+
+						Switch {
+							id: tlsSwitcher
+							anchors.centerIn: parent
+
+							height: parent.height
+							text: qsTr("TLS")
+
+							font.pixelSize: 14
+							font.bold: true
+
+							KeyNavigation.backtab: portInput
+							KeyNavigation.tab: userNameInput
+						}
+					}
+
+					// Input box user name
+					Rectangle {
+						Layout.preferredWidth: 120
+						Layout.alignment: Qt.AlignVCenter
+
+						height: parent.inputBoxHeight
+						color: "white"
+
+						TextInput {
+							id: userNameInput
+							anchors.fill: parent
+
+							// placeholderText: "Enter username"
+							// placeholderTextColor: "lightgray"
+
+							text: ""
+							font.pixelSize: 14
+
+							verticalAlignment: Text.AlignVCenter
+							leftPadding: 2
+
+							color: "black"
+
+							KeyNavigation.backtab: tlsSwitcher
+							KeyNavigation.tab: userPassInput
+						}
+					}
+
+					// Input box user password
+					Rectangle {
+						Layout.preferredWidth: 120
+						Layout.alignment: Qt.AlignVCenter
+
+						height: parent.inputBoxHeight
+						color: "white"
+
+						TextInput {
+							id: userPassInput
+							anchors.fill: parent
+
+							// placeholderText: "Enter password"
+							// placeholderTextColor: "lightgray"
+							echoMode: TextField.Password
+
+							//text: qsTr("pass")
+							font.pixelSize: 14
+							
+							verticalAlignment: Text.AlignVCenter
+							leftPadding: 2
+
+							color: "black"
+
+							KeyNavigation.backtab: userNameInput
+							KeyNavigation.tab: connButton
+						}
+					}
+
+					// Connect
+					Button {
+						Layout.preferredWidth: 100
+						Layout.alignment: Qt.AlignVCenter
+
+						id: connButton
+
+						height: parent.inputBoxHeight
+
+						text: qsTr("Connect")
+
+						font.pixelSize: 14
+						font.bold: true
+
+						icon.source: "qrc:/img/icons/call.svg"
+
+						onClicked: {
+							sigConnectTo(ipAddrInput.text, portInput.text,
+										tlsSwitcher.checked, userNameInput.text, userPassInput.text)
+						}
+
+						KeyNavigation.backtab: userPassInput
+						KeyNavigation.tab: ipAddrInput
+					}
+				}
 			}
+			// History connect table
+			Rectangle {
+				anchors {
+					left: parent.left
+					right: parent.right
+					top: connectToDevBarID.bottom
+					bottom: parent.bottom
+					margins: parent.border.width
+					topMargin: 0
+				}
 
-			// Input box user name
-			TextField {
-				id: userNameInput
-				x: 135
-				y: 147
-				width: 180
-				height: 25
+				ConnectHistoryTable {
+					anchors.fill: parent
 
-				placeholderText: "Enter username"
-				placeholderTextColor: "lightgray"
-
-				text: ""
-				font.pixelSize: 14
-				verticalAlignment: Text.AlignVCenter
-				leftPadding: 5
-				clip: true
-
-				KeyNavigation.backtab: tlsSwitcher
-				KeyNavigation.tab: userPassInput
-			}
-
-			// Input box user password
-			TextField {
-				id: userPassInput
-
-				x: 135
-				y: 182
-				width: 180
-				height: 25
-
-				placeholderText: "Enter password"
-				placeholderTextColor: "lightgray"
-				echoMode: TextField.Password
-
-				//text: qsTr("pass")
-				font.pixelSize: 14
-				verticalAlignment: Text.AlignVCenter
-				leftPadding: 5
-				clip: true
-				smooth: false
-
-				KeyNavigation.backtab: userNameInput
-				KeyNavigation.tab: connButton
-			}
-
-			// TLS switcher
-			Switch {
-				id: tlsSwitcher
-				x: 35//334
-				y: 162
-				height: 30
-				text: qsTr("TLS")
-
-				KeyNavigation.backtab: portInput
-				KeyNavigation.tab: userNameInput
+					onSigDeviceSelected: function(t_ip, t_port) {
+						ipAddrInput.text = t_ip
+						portInput.text = t_port
+					}
+				}
 			}
 		}
 	}
@@ -264,7 +308,7 @@ FocusScope {
 	onHeightChanged: moveToCenter()
 
 	function moveToCenter() {
-		window.x = (root.width - window.width) / 2
-		window.y = (root.height - window.height) / 2
+		miniWindowID.x = (rootID.width - miniWindowID.width) / 2
+		miniWindowID.y = (rootID.height - miniWindowID.height) / 2
 	}
 }

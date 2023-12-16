@@ -44,37 +44,16 @@ FocusScope
 	}
 
 	// Header for TableView below
-	HorizontalHeaderView {
+	TableHeader {
 		id: headerID
+
+		defDelegateWidth: rootID.defDelegateWidth
+		defDelegateHeight: rootID.defDelegateHeight
 
 		anchors {
 			left: tableID.left
 			top: parent.top
 			right: parent.right
-		}
-		boundsBehavior: Flickable.StopAtBounds
-		resizableColumns: false
-
-		syncView: tableID
-
-		delegate: Rectangle {
-			implicitWidth: Math.max(textArea.implicitWidth + 10, defDelegateWidth)
-			implicitHeight: defDelegateHeight
-
-			color: "#f6f6f6"
-			border.color: "#e4e4e4"
-
-			Label {
-				id: textArea
-				anchors.fill: parent
-
-				horizontalAlignment: Text.AlignHCenter
-				verticalAlignment: Text.AlignVCenter
-
-				//font.bold: true
-				text: model.display
-				color: "#ff26282a"
-			}
 		}
 	}
 

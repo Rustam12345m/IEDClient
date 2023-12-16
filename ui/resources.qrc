@@ -1,5 +1,9 @@
 <RCC>
     <qresource prefix="/">
+        <file>main.qml</file>
+        <file>main/Page.qml</file>
+        <file>main/ConnectHistoryTable.qml</file>
+
         <file>singletons/Globals.qml</file>
         <file>singletons/ColorPalette.qml</file>
 
@@ -10,12 +14,12 @@
         <file>common/QuestionForUser.qml</file>
         <file>common/ModalProgressBar.qml</file>
         <file>common/Led.qml</file>
+        <file>common/SplitDelimeter.qml</file>
+        <file>common/MTableHeader.qml</file>
+        <file>common/TableHeader.qml</file>
+        <file>common/VerticalTabBar.qml</file>
 
-        <file>main.qml</file>
-        <file>main/Page.qml</file>
-        <file>main/LastConn_Panel.qml</file>
-
-        <file>dataset/DS_ComTable.qml</file>
+        <file>dataset/DS_CommonTable.qml</file>
         <file>dataset/DS_StateTable.qml</file>
         <file>dataset/Page.qml</file>
 
@@ -28,8 +32,8 @@
         <file>logical_device/LD_PropertiesPanel.qml</file>
 
         <file>logical_node/Page.qml</file>
-        <file>logical_node/LN_ComTable.qml</file>
-        <file>logical_node/LN_StateDelegate.qml</file>
+        <file>logical_node/LN_CommonTable.qml</file>
+        <file>logical_node/ModBehHealthDelegate.qml</file>
         <file>logical_node/LN_StateView.qml</file>
         <file>logical_node/LN_SignalsTree.qml</file>
         <file>logical_node/LN_ControlsView.qml</file>

@@ -22,7 +22,8 @@
 import QtQuick
 import QtQuick.Controls
 
-Item {
+Item
+{
 	required property bool selected
 
 	signal sigDownloadFile(int row)

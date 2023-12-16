@@ -29,7 +29,8 @@ import GlobalVarsModule
 import AppStylesModule
 
 // Table with DataObjects for concrete Logical Node
-FocusScope {
+FocusScope
+{
 	id: rootID
 
 	readonly property int defDelegateHeight: 30
@@ -42,74 +43,13 @@ FocusScope {
 	}
 
 	// Header for TableView below with DO
-	HorizontalHeaderView {
+	MTableHeader {
 		id: headerID
-
-		property int sortOrder: 0
-		property int sortedColumn: 0
 
 		anchors {
 			left: tableID.left
 			top: parent.top
 			right: parent.right
-		}
-		boundsBehavior: Flickable.StopAtBounds
-		resizableColumns: false
-
-		syncView: tableID
-
-		delegate: Rectangle {
-			property int column: model.column
-			property bool sortable: model.display.sortable
-
-			implicitWidth: labelID.implicitWidth + 24 + 10
-			implicitHeight: 30
-
-			color: "#f6f6f6"
-			border.color: "#e4e4e4"
-
-			Row {
-				id: rowID
-
-				anchors.centerIn: parent
-				spacing: 5
-
-				Label {
-					id: labelID
-
-					text: model.display.text
-					color: "#ff26282a"
-				}
-				Image {
-					visible: (headerID.sortedColumn == column)
-					source: (headerID.sortOrder == 0) ? "qrc:/img/icons/keyboard_arrow_down.svg"
-													  : "qrc:/img/icons/keyboard_arrow_up.svg"
-
-					width: 24
-					height: 24
-				}
-			}
-			MouseArea {
-				anchors.fill: parent
-
-				onClicked: function(msx) {
-					if (sortable == false) {
-						return
-					}
-
-					if (headerID.sortedColumn != column) {
-						headerID.sortedColumn = column
-						headerID.sortOrder = 0
-					}
-
-					if (headerID.sortOrder == 0) {
-						headerID.sortOrder = 1
-					} else {
-						headerID.sortOrder = 0
-					}
-					tableID.model.sort(parent.column, headerID.sortOrder)
-				}
-			}
 		}
 	}
 
@@ -147,7 +87,7 @@ FocusScope {
 			delegateHeight: defDelegateHeight
 			selected: (tableID.currentRow == row)
 
-			textAlign: (column == 0) ? Text.AlignLeft : Text.AlignHCenter
+			// textAlign: (column == 0) ? Text.AlignRight : Text.AlignHCenter
 			text: model.display
 
 			onSigClick: function(row, col) {

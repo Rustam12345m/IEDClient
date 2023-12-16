@@ -23,8 +23,11 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
+import "qrc:/common/"
+
 // DataSets page
-FocusScope {
+FocusScope
+{
 	id: root
 
 	SplitView {
@@ -34,31 +37,23 @@ FocusScope {
 		anchors.fill: parent
 
 		// Delimiter
-		handle: Rectangle {
-			id: handleDelegate
-			implicitWidth: 4
-			implicitHeight: 4
-			color: SplitHandle.pressed ? "black" : "gray"
-
-			containmentMask: Item {
-				x: (handleDelegate.width - width) / 2
-				width: 20
-				height: splitView.height
-			}
+		handle: SplitDelimeter {
+			height: splitView.height
+			pressed: SplitHandle.pressed
 		}
 
 		// Area for TableView of all DS
 		Rectangle {
 			SplitView.minimumWidth: 300
 			SplitView.fillWidth: false
+
 			color: "white"
 
 			// Table
-			DS_ComTable {
+			DS_CommonTable {
 				id: tableDS_Info
 
 				anchors.fill: parent
-				anchors.rightMargin: 3
 
 				onSigLeftOrRightKey: function() {
 					tableDS_Info.focus = false
@@ -75,6 +70,7 @@ FocusScope {
 		Rectangle {
 			SplitView.minimumWidth: 100
 			SplitView.fillWidth: true
+
 			color: "white"
 
 			// Table
@@ -82,10 +78,8 @@ FocusScope {
 				id: tableDS_Val
 
 				anchors.fill: parent
-				anchors.leftMargin: 3
 
 				onSigLeftOrRightKey: function() {
-					//console.log("DS_Page: Activate LN_Table")
 					tableDS_Info.focus = true
 					tableDS_Val.focus = false
 				}
