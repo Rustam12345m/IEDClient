@@ -23,13 +23,14 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-import "qrc:/common/"
-
 import GlobalVarsModule
 import AppStylesModule
 
+import "qrc:/common/"
+
 // LN page
-FocusScope {
+FocusScope
+{
 	id: root
 
 	function switchSignalsView() {
@@ -50,29 +51,19 @@ FocusScope {
 		anchors.fill: parent
 
 		// Delimiter
-		handle: Rectangle {
-			id: handleDelegate
-
-			implicitWidth: 20
+		handle: SplitDelimeter {
 			height: splitView.height
-
-			color: SplitHandle.pressed ? "black" : "gray"
-
-			containmentMask: Item {
-				x: 0
-				width: 20
-				height: splitView.height
-			}
+			pressed: SplitHandle.pressed
 		}
 
 		// Area for LogicalNode's table
 		Rectangle {
 			SplitView.minimumWidth: 300
 			SplitView.fillWidth: false
-			color: "white"
+			color: ColorPalette.backgroundColor2
 
 			// Table
-			LN_ComTable {
+			LN_CommonTable {
 				id: tableLN
 
 				anchors {
@@ -98,7 +89,7 @@ FocusScope {
 		Rectangle {
 			SplitView.minimumWidth: 100
 			SplitView.fillWidth: true
-			color: "white"
+			color: ColorPalette.backgroundColor1
 
 			// Different view pages for the LN
 			StackLayout {
@@ -158,9 +149,7 @@ FocusScope {
 
 				width: 30
 
-				ListView {
-					id: lnViewTabBar
-
+				VerticalTabBar {
 					anchors.fill: parent
 
 					model: ListModel {
@@ -170,31 +159,8 @@ FocusScope {
 						ListElement { title: "Settings" }
 					}
 
-					delegate: Item {
-						width: lnViewTabBar.width
-						height: 120
-
-						Rectangle {
-							width: parent.width
-							height: parent.height
-							color: (lnViewTabBar.currentIndex === index) ? "lightgray" : "#f6f6f6"
-
-							Text {
-								rotation: 90
-								anchors.top: parent.top
-								anchors.horizontalCenter: parent.horizontalCenter
-
-								text: title
-								anchors.centerIn: parent
-							}
-							MouseArea {
-								anchors.fill: parent
-								onClicked: {
-									lnViewTabBar.currentIndex = index
-									lnSignalsStack.currentIndex = index
-								}
-							}
-						}
+					onSigTabSelected: function(index) {
+						lnSignalsStack.currentIndex = index
 					}
 				}
 			}

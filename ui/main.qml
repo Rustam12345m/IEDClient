@@ -23,6 +23,9 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
+import GlobalVarsModule
+import AppStylesModule
+
 import "qrc:/common/"
 import "qrc:/main/" as Main
 import "qrc:/logical_device/" as LD
@@ -30,9 +33,6 @@ import "qrc:/logical_node/" as LN
 import "qrc:/filesystem/" as FS
 import "qrc:/dataset/" as DS
 import "qrc:/reports/" as RCB
-
-import GlobalVarsModule
-import AppStylesModule
 
 Window
 {
@@ -88,7 +88,7 @@ Window
 		anchors {
 			fill: parent
 		}
-		color: ColorPalette.toolBarColor
+		color: ColorPalette.borderColor
 
 		// Menu + ToolBar
 		Rectangle {
@@ -101,7 +101,7 @@ Window
 			z: 100500
 			height: myMenuBar.implicitHeight + 2
 
-			color: "lightgray"
+			color: ColorPalette.toolBarColor
 
 			// Menu + ToolBar
 			RowLayout {
@@ -296,9 +296,9 @@ Window
 
 					border {
 						width: 1
-						color: "gray"
+						color: ColorPalette.borderColor
 					}
-					color: "white"
+					color: ColorPalette.backgroundColor2
 					clip: true
 
 					RowLayout {
@@ -316,12 +316,11 @@ Window
 
 							height: toolBar.btnHeight
 
-							// horizontalAlignment: Text.AlignHCenter
 							horizontalAlignment: Text.AlignLeft
 							verticalAlignment: Text.AlignVCenter
 
 							font.bold: true
-							color: "black"
+							color: ColorPalette.textColor
 							text: ""
 						}
 					}
@@ -338,9 +337,10 @@ Window
 				left: mainBack.left
 				right: mainBack.right
 				bottom: mainBack.bottom
-				margins: 5
+				margins: ColorPalette.borderWidth
+				topMargin: ColorPalette.delimeterWidth
 			}
-			color: "white"
+			color: ColorPalette.backgroundColor1
 
 			// Pages and Property panel
 			SplitView {
@@ -348,18 +348,9 @@ Window
 				anchors.fill: parent
 
 				// Delimiter
-				handle: Rectangle {
-					id: delimeterRect
-					implicitWidth: 5
+				handle: SplitDelimeter {
 					height: splitView.height
-
-					color: SplitHandle.pressed ? "gray" : "lightgray"
-
-					containmentMask: Item {
-						x: (delimeterRect.width - width) / 2
-						width: 20
-						height: splitView.height
-					}
+					pressed: SplitHandle.pressed
 				}
 
 				// Pages Area
@@ -393,7 +384,7 @@ Window
 									focus = true
 
 									setStatusText(presenter.getAppVersion())
-									setActivePanel(Globals.Panel.LAST_CONN)
+									setActivePanel(Globals.Panel.HIDE)
 								} else {
 									focus = false
 								}
@@ -524,23 +515,20 @@ Window
 				}
 
 				// Property panel
-				Item {
+				Rectangle {
 					id: propertyPanel
 					width: 100
 
 					SplitView.fillWidth: false
 					SplitView.preferredWidth: 250
 
+					color: ColorPalette.backgroundColor2
+
 					// Stack for Panels
 					StackLayout {
 						id: panelStack
 
 						anchors.fill: parent
-
-						// Start panel with last connections
-						Main.LastConn_Panel {
-							id: lastConnPanel
-						}
 
 						// Selected LD's properties
 						LD.LD_PropertiesPanel {
@@ -654,13 +642,6 @@ Window
 			break;
 		}
 		}
-
-		// var prev = pageHistoryList.pop()
-		// if (prev >= 0) {
-		// 	//setActivePage(prev)
-		// 	tabBar.currentIndex = prev
-		// 	console.log("Switch to previous page: " + prev)
-		// }
 	}
 
 	// Active Page + Panel
@@ -706,16 +687,12 @@ Window
 			propertyPanel.visible = true
 
 			switch (index) {
-			case Globals.Panel.LAST_CONN: {
+			case Globals.Panel.LD_INFO: {
 				panelStack.currentIndex = 0
 				break
 			}
-			case Globals.Panel.LD_INFO: {
-				panelStack.currentIndex = 1
-				break
-			}
 			case Globals.Panel.RCB_PROPERTIES: {
-				panelStack.currentIndex = 2
+				panelStack.currentIndex = 1
 				break
 			}
 			}
@@ -794,10 +771,8 @@ Window
 		fsBackend.sigCmdProgress.connect(slotOnProgress)
 		fsBackend.sigCmdFinished.connect(slotOnFinished)
 
-		// GUI
-		lastConnPanel.sigDeviceSelected.connect(startPage.slotSetCurrentDevice)
-
 		// Start status
 		setStatusText(presenter.getAppVersion())
+		setActivePanel(Globals.Panel.HIDE)
 	}
 }

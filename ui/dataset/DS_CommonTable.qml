@@ -29,13 +29,14 @@ import GlobalVarsModule
 import AppStylesModule
 
 // List of found DataSets in the IED
-FocusScope {
+FocusScope
+{
 	id: rootID
 
 	readonly property int defDelegateHeight: 30
 	readonly property int defDelegateWidth: 60
 
-	property int defRowHeight: 30	
+	property int defRowHeight: 30
 	property int defTextPadding: 5
 	property int defCountWidth: 50
 

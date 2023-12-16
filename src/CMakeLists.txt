@@ -10,4 +10,4 @@ qt6_add_resources(QRC_SOURCE ${CMAKE_SOURCE_DIR}/ui/resources.qrc)
 qt_add_executable(${PROJECT} main.cpp ${QRC_SOURCE})
 
 target_link_libraries(${PROJECT} PRIVATE app_lib core_lib lib61850_adapter cmd_lib models_lib tools_lib)
-target_link_libraries(${PROJECT} PRIVATE Qt::Core Qt::Qml Qt::Quick)
+target_link_libraries(${PROJECT} PRIVATE Qt::Core Qt6::Qml Qt6::Quick Qt6::QuickControls2)

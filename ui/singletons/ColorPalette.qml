@@ -24,5 +24,28 @@ import QtQuick
 
 QtObject
 {
-	property color toolBarColor: "red"// "#D9D9D9"
+	// Window
+	property color backgroundColor1: 		"white" //#F0F0F0"
+	property color backgroundColor2: 		"white" //EFEFEF"
+	property color toolBarColor: 			"#F0F0F0"//"#D9D9D9"
+	property color borderColor: 			"#F0F0F0"//"#D9D9D9"//"#595959"
+	property color textColor: 				"#0D0D0D"
+	property color modalColor: 				"#A9A9A9"//"#D9D9D9"
+	property int   borderWidth: 			4
+	property int   delimeterWidth: 			6
+
+	// Tables
+	property color tableHeaderColor: 		"white"//"#D9D9D9"//"#A9A9A9"
+	property color tableRowBorderColor1: 	"#707070"
+	property color tableRowBorderColor2: 	"#D9D9D9"
+	property color selectedRowColor: 		"#A9A9A9"
+	property color tableTextColor:			"#0D0D0D"
+	property color tableRowColor1: 			"#EFEFEF"// "white"// #CCCCCC"
+	property color tableRowColor2: 			"white"//#EFEFEF"
+
+	// LD grid
+	property color ldBorderColor: 			"lightgray"
+	property color ldBorderSelectColor: 	"black"
+	property color ldColor: 				"lightgray"
+	property color ldColorSelect: 			"gray"
 }

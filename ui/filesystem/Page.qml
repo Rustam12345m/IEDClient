@@ -23,13 +23,14 @@ import QtQuick
 import QtQuick.Controls
 import Qt.labs.qmlmodels
 
-import "qrc:/common/"
-
 import GlobalVarsModule
 import AppStylesModule
 
+import "qrc:/common/"
+
 // Filesystem page
-FocusScope {
+FocusScope
+{
 	id: rootID
 
 	function getFilename(t_row) {
@@ -49,86 +50,28 @@ FocusScope {
 	}
 
 	// Header for Table below with columns for Files
-	HorizontalHeaderView {
+	MTableHeader {
 		id: headerID
-
-		property int sortOrder: 0
-		property int sortedColumn: 0
 
 		anchors {
 			left: tableID.left
 			top: parent.top
 			right: parent.right
 		}
-		boundsBehavior: Flickable.StopAtBounds
-		resizableColumns: false
-
-		syncView: tableID
-
-		delegate: Rectangle {
-			property int column: model.column
-			property bool sortable: model.display.sortable
-
-			implicitWidth: labelID.implicitWidth + 10
-			implicitHeight: 30
-
-			color: "#f6f6f6"
-			border.color: "#e4e4e4"
-
-			Row {
-				anchors.centerIn: parent
-				spacing: 5
-
-				Label {
-					id: labelID
-
-					text: model.display.text
-					color: "#ff26282a"
-				}
-				Image {
-					visible: (headerID.sortedColumn == column)
-					source: (headerID.sortOrder == 0) ? "qrc:/img/icons/keyboard_arrow_down.svg"
-													  : "qrc:/img/icons/keyboard_arrow_up.svg"
-
-					width: 24
-					height: 24
-				}
-			}
-			MouseArea {
-				anchors.fill: parent
-
-				onClicked: function(msx) {
-					if (sortable == false) {
-						return
-					}
-
-					if (headerID.sortedColumn != column) {
-						headerID.sortedColumn = column
-						headerID.sortOrder = 0
-					}
-
-					if (headerID.sortOrder == 0) {
-						headerID.sortOrder = 1
-					} else {
-						headerID.sortOrder = 0
-					}
-					tableID.model.sort(parent.column, headerID.sortOrder)
-				}
-			}
-		}
 	}
 
 	// Table of files on the IED
 	TableView {
 		id: tableID
-		model: fsBackend.sortModel //fsBackend.filesModel
 
 		anchors {
-			left: parent.left
 			top: headerID.bottom
-			right: parent.right
 			bottom: parent.bottom
+			left: parent.left
+			right: parent.right
 		}
+
+		model: fsBackend.sortModel //fsBackend.filesModel
 
 		focus: true
 		keyNavigationEnabled: true
@@ -170,7 +113,6 @@ FocusScope {
 					}
 				}
 			}
-
 			// Last modified time
 			DelegateChoice {
 				column: 1
@@ -187,7 +129,6 @@ FocusScope {
 					}
 				}
 			}
-
 			// File name
 			DelegateChoice {
 				column: 2
@@ -204,7 +145,6 @@ FocusScope {
 					}
 				}
 			}
-
 			// File size
 			DelegateChoice {
 				column: 3
@@ -221,7 +161,6 @@ FocusScope {
 					}
 				}
 			}
-
 			// Controls
 			DelegateChoice {
 				column: 4

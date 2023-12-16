@@ -30,25 +30,11 @@ namespace App::Models
 		m_con.push_front(App::DevConInfo("Test", "192.168.0.201", 102));
 	}
 
-	QVariant HistConTable::headerData(int t_section, Qt::Orientation t_orientation, int t_role) const
+	QVariant HistConTable::headerData(int t_column, Qt::Orientation t_orientation, int t_role) const
 	{
-		switch (t_orientation) {
-		case Qt::Horizontal: {
-			switch (t_section) {
-			case Columns::IED_NAME: {
-				return QVariant("Name");
-			}
-			case Columns::IP_ADDR : {
-				return QVariant("IP");
-			}
-			case Columns::PORT_COLUMN : {
-				return QVariant("Port");
-			}
-			}
-		}
-		case Qt::Vertical: {
-			break;
-		}
+		const QString headerNames[] = { "№", "Name", "IP", "Port", "Last connection" };
+		if (t_column >= 0 && t_column < COLUMNS_COUNT) {
+			return QVariant(headerNames[t_column]);
 		}
 		return QVariant(" ? ");
 	}
@@ -71,6 +57,9 @@ namespace App::Models
 	QVariant HistConTable::data(const QModelIndex &t_index, int t_role) const
 	{
 		switch (t_index.column()) {
+		case Columns::NUMBER: {
+			return QVariant(t_index.row() + 1);
+		}
 		case Columns::IED_NAME: {
 			return m_con[t_index.row()].name();
 		}
@@ -79,6 +68,9 @@ namespace App::Models
 		}
 		case Columns::PORT_COLUMN : {
 			return m_con[t_index.row()].port();
+		}
+		case Columns::LAST_CONNECT: {
+			return QVariant("HZ");
 		}
 		}
 		return QVariant(" ? ");

@@ -23,10 +23,9 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
-import "qrc:/common/"
-
-import GlobalVarsModule
 import AppStylesModule
+
+import "qrc:/common/"
 
 // LogicalDevice block in GridView
 Item {
@@ -56,7 +55,7 @@ Item {
 	Rectangle {
 		anchors.fill: parent
 
-		border.color: selected ? "black" : "gray"
+		border.color: (selected ? ColorPalette.ldBorderSelectColor : ColorPalette.ldBorderColor)
 		border.width: blkBorder
 
 		Rectangle {
@@ -67,7 +66,6 @@ Item {
 
 			width: blkWidth
 			height: blkHeight - blkBottomH - blkBorder
-			color: "white"
 
 			Text {
 				id: ldName
@@ -77,7 +75,6 @@ Item {
 				verticalAlignment: Text.AlignTop
 				padding: 10
 
-				width: parent.width
 				wrapMode: Text.Wrap
 
 				clip: true
@@ -97,7 +94,7 @@ Item {
 			width: blkWidth
 			height: blkBorder
 
-			color: "gray"
+			color: ColorPalette.ldBorderColor
 		}
 		Rectangle {
 			x: blkBorder
@@ -105,8 +102,6 @@ Item {
 
 			width: blkWidth
 			height: blkBottomH
-
-			color: "white"
 
 			RowLayout {
 				anchors.fill: parent

@@ -22,106 +22,49 @@
 import QtQuick
 import QtQuick.Controls
 
-import "qrc:/common/"
-
 import GlobalVarsModule
 import AppStylesModule
 
-FocusScope {
+import "qrc:/common/"
+
+FocusScope
+{
 	id: rootID
 
 	// Vertical TabBar: CB
-	Rectangle {
-		id: rectCBViewTabBar
+	VerticalTabBar {
+		id: cbViewTabBar
 
 		anchors {
 			left: parent.left
 			top: parent.top
 			bottom: parent.bottom
 		}
+		leftSide: true
 
-		width: 30
-		//border.width: 1
-		//border.color: "black"// "#f6f6f6"
+		model: ListModel {
+			ListElement { title: "Buffered" }
+			ListElement { title: "Unbuffered" }
+			ListElement { title: "GOOSE" }
+			ListElement { title: "SV" }
+		}
 
-		ListView {
-			id: cbViewTabBar
-
-			anchors {
-				fill: parent
-			}
-
-			model: ListModel {
-				ListElement { title: "Buffered" }
-				ListElement { title: "Unbuffered" }
-				ListElement { title: "GOOSE" }
-				ListElement { title: "SV" }
-			}
-
-			delegate: Item {
-				width: cbViewTabBar.width
-				height: 120
-
-				Rectangle {
-					width: parent.width
-					height: parent.height
-
-					color: (cbViewTabBar.currentIndex === index) ? "lightgray" : "#f6f6f6"
-					border.width: 1
-					border.color: "black"
-
-					Text {
-						rotation: -90
-						anchors.top: parent.top
-						anchors.horizontalCenter: parent.horizontalCenter
-
-						text: title
-						anchors.centerIn: parent
-					}
-					MouseArea {
-						anchors.fill: parent
-						onClicked: {
-							cbViewTabBar.currentIndex = index
-							//cbSignalsStack.currentIndex = index
-						}
-					}
-				}
-			}
+		onSigTabSelected: function(index) {
+			console.log("Selected TAB: " + index)
 		}
 	}
 
 	// Header for Table below
-	HorizontalHeaderView {
+	TableHeader {
 		id: headerID
 
+		defDelegateWidth: 60
+		defDelegateHeight: 30
+
 		anchors {
-			left: rectCBViewTabBar.right
-			top: parent.top
+			left: cbViewTabBar.right
 			right: parent.right
-		}
-		boundsBehavior: Flickable.StopAtBounds
-		resizableColumns: false
-
-		syncView: tableID
-
-		delegate: Rectangle {
-			implicitWidth: labelID.implicitWidth + 10
-			implicitHeight: 30
-
-			color: "#f6f6f6"
-			border.color: "#e4e4e4"
-
-			Row {
-				anchors.centerIn: parent
-				spacing: 5
-
-				Label {
-					id: labelID
-
-					text: model.display
-					color: "#ff26282a"
-				}
-			}
+			top: parent.top
 		}
 	}
 
@@ -130,7 +73,7 @@ FocusScope {
 		id: tableID
 
 		anchors {
-			left: rectCBViewTabBar.right
+			left: cbViewTabBar.right
 			right: parent.right
 			top: headerID.bottom
 			bottom: parent.bottom
