@@ -1,8 +1,9 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>main/Page.qml</file>
-        <file>main/ConnectHistoryTable.qml</file>
+
+        <file>home/Page.qml</file>
+        <file>home/ConnectHistoryTable.qml</file>
 
         <file>singletons/Globals.qml</file>
         <file>singletons/ColorPalette.qml</file>
@@ -15,9 +16,9 @@
         <file>common/ModalProgressBar.qml</file>
         <file>common/Led.qml</file>
         <file>common/SplitDelimeter.qml</file>
-        <file>common/MTableHeader.qml</file>
+        <file>common/SortTableHeader.qml</file>
         <file>common/TableHeader.qml</file>
-        <file>common/VerticalTabBar.qml</file>
+        <file>common/CustomTabBar.qml</file>
 
         <file>dataset/DS_CommonTable.qml</file>
         <file>dataset/DS_StateTable.qml</file>
@@ -29,6 +30,7 @@
 
         <file>logical_device/Page.qml</file>
         <file>logical_device/LD_GridDelegate.qml</file>
+        <file>logical_device/LD_GridItem.qml</file>
         <file>logical_device/LD_PropertiesPanel.qml</file>
 
         <file>logical_node/Page.qml</file>
@@ -41,8 +43,8 @@
         <file>logical_node/DiaChangeValue.qml</file>
 
         <file>filesystem/Page.qml</file>
-        <file>filesystem/FileTableDelegate.qml</file>
-        <file>filesystem/FileControlDelegate.qml</file>
+        <file>filesystem/FS_TextDelegate.qml</file>
+        <file>filesystem/FS_ControlDelegate.qml</file>
     </qresource>
     <qresource prefix="/img">
         <file>icons/arrow_back.svg</file>
@@ -53,6 +55,7 @@
         <file>icons/clear_all.svg</file>
         <file>icons/clear.svg</file>
         <file>icons/close.svg</file>
+        <file>icons/code.svg</file>
         <file>icons/done.svg</file>
         <file>icons/download.svg</file>
         <file>icons/electric_bolt.svg</file>

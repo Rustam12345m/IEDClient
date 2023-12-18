@@ -33,9 +33,9 @@ HorizontalHeaderView
 	property int sortedColumn: 0
 
 	boundsBehavior: Flickable.StopAtBounds
-	resizableColumns: false
-	clip: true
+	resizableColumns: true
 
+	clip: true
 	syncView: tableID
 
 	delegate: Rectangle {
@@ -47,14 +47,31 @@ HorizontalHeaderView
 
 		border.color: ColorPalette.tableRowBorderColor2
 		color: ColorPalette.tableHeaderColor
+		clip: true
 
 		Row {
 			id: rowID
 
-			anchors.centerIn: parent
+			anchors.fill: parent
 			spacing: 5
 
+			layoutDirection: Qt.RightToLeft
+			rightPadding: 10
+
+			Text {
+				id: labelID
+
+				anchors.verticalCenter: parent.verticalCenter
+
+				// horizontalAlignment: Text.AlignRight
+				color: ColorPalette.tableTextColor
+				font.bold: true
+
+				text: model.display.text
+			}
 			Image {
+				anchors.verticalCenter: parent.verticalCenter
+
 				visible: (headerID.sortedColumn == column)
 				source: (headerID.sortOrder == 0) ? "qrc:/img/icons/keyboard_arrow_down.svg"
 													: "qrc:/img/icons/keyboard_arrow_up.svg"
@@ -62,17 +79,13 @@ HorizontalHeaderView
 				width: 24
 				height: 24
 			}
-			Label {
-				id: labelID
-
-				color: ColorPalette.tableTextColor
-				font.bold: true
-
-				text: model.display.text
-			}
 		}
 		MouseArea {
-			anchors.fill: parent
+			anchors {
+				fill: parent
+				leftMargin: 4
+				rightMargin: 4
+			}
 
 			onClicked: function(msx) {
 				if (sortable == false) {

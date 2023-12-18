@@ -31,10 +31,10 @@ import "qrc:/common/"
 // LN page
 FocusScope
 {
-	id: root
+	id: rootID
 
-	function switchSignalsView() {
-		lnSignalsStack.currentIndex = (lnSignalsStack.currentIndex == 0) ? 1 : 0
+	function resizeColumnsOnPage() {
+		tableDO.resizeColumns()
 	}
 
 	// Window for setting a new value for DA/SDA
@@ -89,6 +89,7 @@ FocusScope
 		Rectangle {
 			SplitView.minimumWidth: 100
 			SplitView.fillWidth: true
+
 			color: ColorPalette.backgroundColor1
 
 			// Different view pages for the LN
@@ -96,10 +97,12 @@ FocusScope
 				id: lnSignalsStack
 
 				anchors {
-					right: rectLnViewTabBar.left
+					// right: rectLnViewTabBar.left
 					left: parent.left
+					right: parent.right
 					top: parent.top
-					bottom: parent.bottom
+					// bottom: parent.bottom
+					bottom: rectLnViewTabBar.top
 				}
 
 				// Table DO signals
@@ -137,20 +140,25 @@ FocusScope
 				}
 			}
 
-			// Vertical TabBar for lnSignalsStack
+			// TabBar for lnSignalsStack
 			Rectangle {
 				id: rectLnViewTabBar
 
 				anchors {
+					left: parent.left
 					right: parent.right
-					top: parent.top
+					// top: parent.top
 					bottom: parent.bottom
 				}
+				height: 25//lnTabBar.implicitHeight
 
-				width: 30
+				CustomTabBar {
+					id: lnTabBar
 
-				VerticalTabBar {
 					anchors.fill: parent
+
+					horizontalBar: true
+					cellWidth: 80
 
 					model: ListModel {
 						ListElement { title: "State" }

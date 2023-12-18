@@ -27,12 +27,15 @@ QtObject
 	// Window
 	property color backgroundColor1: 		"white" //#F0F0F0"
 	property color backgroundColor2: 		"white" //EFEFEF"
-	property color toolBarColor: 			"#F0F0F0"//"#D9D9D9"
+	property color statusBarColor:	 		"#F0F0F0" //EFEFEF"
 	property color borderColor: 			"#F0F0F0"//"#D9D9D9"//"#595959"
 	property color textColor: 				"#0D0D0D"
 	property color modalColor: 				"#A9A9A9"//"#D9D9D9"
 	property int   borderWidth: 			4
 	property int   delimeterWidth: 			6
+
+	// ToolBar & TabBar
+	property color toolBarColor: 			"#F0F0F0"//"#D9D9D9"
 
 	// Tables
 	property color tableHeaderColor: 		"white"//"#D9D9D9"//"#A9A9A9"

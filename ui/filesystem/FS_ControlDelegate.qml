@@ -22,6 +22,8 @@
 import QtQuick
 import QtQuick.Controls
 
+import AppStylesModule
+
 Item
 {
 	required property bool selected
@@ -29,15 +31,17 @@ Item
 	signal sigDownloadFile(int row)
 	signal sigRemoveFile(int row)
 
-	id: root
+	id: rootID
 	implicitWidth: downloadBtn.width + progressBar.width + removeBtn.width + 5
 
 	Rectangle {
 		anchors.fill: parent
 
 		border.width: 1
-		border.color: (selected ? "black" : "lightgray")
-		color: (selected ? "lightgray" : "white")
+		// border.color: (selected ? "black" : "lightgray")
+		// color: (selected ? "lightgray" : "white")
+		border.color: ColorPalette.tableRowBorderColor2
+		color: (selected ? ColorPalette.tableRowColor1 : ColorPalette.tableRowColor2)
 
 		Row {
 			anchors {
@@ -50,8 +54,8 @@ Item
 			Button {
 				id: downloadBtn
 
-				width: root.height
-				height: root.height
+				width: rootID.height
+				height: rootID.height
 
 				icon.source: "qrc:/img/icons/download.svg"
 
@@ -64,7 +68,7 @@ Item
 				id: progressBar
 
 				width: 120
-				height: root.height
+				height: rootID.height
 
 				from: 0.0
 				to: 100.0
@@ -81,8 +85,8 @@ Item
 			Button {
 				id: removeBtn
 
-				width: root.height
-				height: root.height
+				width: rootID.height
+				height: rootID.height
 
 				icon.source: "qrc:/img/icons/clear.svg"
 

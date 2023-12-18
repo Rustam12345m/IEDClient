@@ -23,8 +23,6 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-import "qrc:/common/"
-
 import GlobalVarsModule
 import AppStylesModule
 
@@ -66,7 +64,8 @@ FocusScope
 		section.delegate: Rectangle {
 			width: listViewID.width
 			height: defRowHeight
-			color: "#f6f6f6"
+			color: ColorPalette.tableHeaderColor
+			border.color: ColorPalette.tableRowBorderColor2
 
 			clip: true
 
@@ -94,10 +93,11 @@ FocusScope
 						height: defRowHeight
 
 						border.width: 1
-						border.color: (index === listViewID.selectedIndex) ? "black" : "lightgray"
+						border.color: ColorPalette.tableRowBorderColor2
 
 						clip: true
-						color: (index === listViewID.selectedIndex) ? "lightgray" : "white"
+						// color: (index === listViewID.selectedIndex) ? "lightgray" : "white"
+						color: (index === listViewID.selectedIndex) ? ColorPalette.tableRowColor1 : ColorPalette.tableRowColor2
 
 						Text {
 							id: textName
@@ -118,10 +118,11 @@ FocusScope
 						height: defRowHeight
 
 						border.width: 1
-						border.color: (index === listViewID.selectedIndex) ? "black" : "lightgray"
+						border.color: ColorPalette.tableRowBorderColor2
 
 						clip: true
-						color: (index === listViewID.selectedIndex) ? "lightgray" : "white"
+						// color: (index === listViewID.selectedIndex) ? "lightgray" : "white"
+						color: (index === listViewID.selectedIndex) ? ColorPalette.tableRowColor1 : ColorPalette.tableRowColor2
 
 						Text {
 							id: textValue

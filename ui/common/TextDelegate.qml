@@ -46,8 +46,11 @@ Item {
 
 			anchors.fill: parent
 
-			horizontalAlignment: Text.AlignHCenter
+			// horizontalAlignment: Text.AlignHCenter
+			horizontalAlignment: Text.AlignRight
 			verticalAlignment: Text.AlignVCenter
+			rightPadding: 10
+			leftPadding: 10
 
 			elide: Text.ElideRight
 			text: " - "

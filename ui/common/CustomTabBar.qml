@@ -24,41 +24,62 @@ import QtQuick.Controls
 
 import AppStylesModule
 
-import "qrc:/common/"
-
-// Vertical TabBar
-Item
+// Custom TabBar
+Rectangle
 {
 	id: rootID
 
+	color: "white"
+
 	property bool leftSide: false
+	property bool horizontalBar: false
 	property alias model: vertTabBar.model
+	property alias currentIndex: vertTabBar.currentIndex
+	property int cellWidth: 60
+	property int cellHeight: 120
+
+	property color selectedColor: "gray"
+	property color unselectedColor: "lightgray"
 
 	signal sigTabSelected(int index)
-	
-	width: 30
+
+	implicitHeight: rootID.horizontalBar ? rootID.height : (vertTabBar.count * rootID.cellHeight)
+	implicitWidth: rootID.horizontalBar ? (vertTabBar.count * rootID.cellWidth) : rootID.width
 
 	ListView {
 		id: vertTabBar
 
-		anchors.fill: parent
+		anchors {
+			fill: parent
+		}
+		boundsBehavior: Flickable.StopAtBounds
 
 		// model: ListModel {
 		// 	ListElement { title: "Test 1" }
 		// 	ListElement { title: "Test 2" }
 		// }
 
+		focus: false
+		spacing: 1
+		orientation: rootID.horizontalBar ? ListView.Horizontal	: ListView.Vertical
+
 		delegate: Item {
-			width: vertTabBar.width
-			height: 120
+			required property int index
+			required property string title
+
+			implicitHeight: rootID.horizontalBar ? rootID.height : rootID.cellHeight
+			implicitWidth: rootID.horizontalBar ? rootID.cellWidth : rootID.width
 
 			Rectangle {
 				width: parent.width
 				height: parent.height
-				color: (vertTabBar.currentIndex === index) ? "lightgray" : "#f6f6f6"
+
+				border.width: 1
+				border.color: (vertTabBar.currentIndex === index) ? ColorPalette.modalColor : ColorPalette.toolBarColor
+				color: rootID.unselectedColor
 
 				Text {
-					rotation: rootID.leftSide ? -90 : 90
+					rotation: rootID.horizontalBar ? 0 : (rootID.leftSide ? -90 : 90)
 					anchors {
 						centerIn: parent
 					}
@@ -67,6 +88,8 @@ Item
 				}
 				MouseArea {
 					anchors.fill: parent
+					acceptedButtons: Qt.LeftButton
+
 					onClicked: {
 						vertTabBar.currentIndex = index
 						sigTabSelected(index)
