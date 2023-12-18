@@ -33,6 +33,9 @@ FocusScope
 {
 	id: rootID
 
+	function resizeColumnsOnPage() {
+		Globals.resizeColumnsToContent(headerID, tableID)
+	}
 	function getFilename(t_row) {
 		let idx = tableID.model.index(t_row, 2)
 		return tableID.model.data(idx, "display")
@@ -40,7 +43,7 @@ FocusScope
 	function cmdDownloadFile(t_row) {
 		console.log("FS_Table: Download file N" + t_row)
 
-		Globals.setSelectedRow(t_row)
+		Globals.setSelectedRow(tableID, t_row)
 		fsBackend.downloadFile(getFilename(t_row))
 	}
 	function cmdRemoveFile(t_row) {
@@ -50,7 +53,7 @@ FocusScope
 	}
 
 	// Header for Table below with columns for Files
-	MTableHeader {
+	SortTableHeader {
 		id: headerID
 
 		anchors {
@@ -82,9 +85,9 @@ FocusScope
 		clip: true
 		boundsBehavior: Flickable.StopAtBounds
 
-		columnWidthProvider: function(t_column) {
-			return Globals.calcColumnsWidth(headerID, tableID, t_column)
-		}
+		// columnWidthProvider: function(t_column) {
+		// 	return Globals.calcColumnsWidth(headerID, tableID, t_column)
+		// }
 
 		selectionBehavior: TableView.SelectRows
 		selectionModel: ItemSelectionModel {
@@ -101,7 +104,7 @@ FocusScope
 			DelegateChoice {
 				column: 0
 
-				delegate: FileTableDelegate {
+				delegate: FS_TextDelegate {
 					selected: (tableID.currentRow == row)
 					text: model.display
 
@@ -117,7 +120,7 @@ FocusScope
 			DelegateChoice {
 				column: 1
 
-				delegate: FileTableDelegate {
+				delegate: FS_TextDelegate {
 					selected: (tableID.currentRow == row)
 					text: model.display
 
@@ -133,7 +136,7 @@ FocusScope
 			DelegateChoice {
 				column: 2
 
-				delegate: FileTableDelegate {
+				delegate: FS_TextDelegate {
 					selected: (tableID.currentRow == row)
 					text: model.display
 
@@ -149,7 +152,7 @@ FocusScope
 			DelegateChoice {
 				column: 3
 
-				delegate: FileTableDelegate {
+				delegate: FS_TextDelegate {
 					selected: (tableID.currentRow == row)
 					text: model.display
 
@@ -165,7 +168,7 @@ FocusScope
 			DelegateChoice {
 				column: 4
 
-				delegate: FileControlDelegate {
+				delegate: FS_ControlDelegate {
 					selected: (tableID.currentRow == row)
 
 					onSigDownloadFile: function(t_row) {

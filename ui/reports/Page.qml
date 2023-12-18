@@ -31,27 +31,8 @@ FocusScope
 {
 	id: rootID
 
-	// Vertical TabBar: CB
-	VerticalTabBar {
-		id: cbViewTabBar
-
-		anchors {
-			left: parent.left
-			top: parent.top
-			bottom: parent.bottom
-		}
-		leftSide: true
-
-		model: ListModel {
-			ListElement { title: "Buffered" }
-			ListElement { title: "Unbuffered" }
-			ListElement { title: "GOOSE" }
-			ListElement { title: "SV" }
-		}
-
-		onSigTabSelected: function(index) {
-			console.log("Selected TAB: " + index)
-		}
+	function resizeColumnsOnPage() {
+		Globals.resizeColumnsToContent(headerID, tableID)
 	}
 
 	// Header for Table below
@@ -62,7 +43,7 @@ FocusScope
 		defDelegateHeight: 30
 
 		anchors {
-			left: cbViewTabBar.right
+			left: parent.left
 			right: parent.right
 			top: parent.top
 		}
@@ -73,10 +54,10 @@ FocusScope
 		id: tableID
 
 		anchors {
-			left: cbViewTabBar.right
+			left: parent.left
 			right: parent.right
 			top: headerID.bottom
-			bottom: parent.bottom
+			bottom: cbViewTabBar.top
 		}
 
 		model: devBackend.getRCB_ComModel()
@@ -88,10 +69,6 @@ FocusScope
 		clip: true
 		interactive: true
 		boundsBehavior: Flickable.StopAtBounds
-
-		columnWidthProvider: function(t_column) {
-			return Globals.calcColumnsWidth(headerID, tableID, t_column)
-		}
 
 		selectionBehavior: TableView.SelectRows
 		selectionModel: ItemSelectionModel {
@@ -111,6 +88,7 @@ FocusScope
 			text: model.display
 
 			onSigClick: function(row, col) {
+				tableID.focus = true
 				Globals.setSelectedRow(tableID, row)
 			}
 		}
@@ -118,6 +96,17 @@ FocusScope
 		ScrollBar.vertical: ScrollBar {
 			policy: ScrollBar.AsNeeded
 			active: true
+
+			onActiveChanged: {
+				if (!active) {
+					active = true;
+				}
+			}
+		}
+		ScrollBar.horizontal: ScrollBar {
+			policy: ScrollBar.AsNeeded
+			active: true
+
 			onActiveChanged: {
 				if (!active) {
 					active = true;
@@ -126,6 +115,37 @@ FocusScope
 		}
 
 		Keys.onPressed: function(event) {
+			console.log("CB: Key pressed")
+			if (event.key == Qt.Key_H) {
+				console.log("CB: Resize columns")
+				Globals.resizeColumnsToContent(headerID, tableID)
+			}
+		}
+	}
+
+	// TabBar: Different types of CB
+	CustomTabBar {
+		id: cbViewTabBar
+
+		anchors {
+			left: parent.left
+			right: parent.right
+			bottom: parent.bottom
+		}
+		height: 28
+
+		horizontalBar: true
+		cellWidth: 120
+
+		model: ListModel {
+			ListElement { title: "BRCB" }
+			ListElement { title: "URCB" }
+			ListElement { title: "GOOSE" }
+			ListElement { title: "SV" }
+		}
+
+		onSigTabSelected: function(index) {
+			// console.log("Selected TAB: " + index)
 		}
 	}
 

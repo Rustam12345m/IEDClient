@@ -22,6 +22,8 @@
 import QtQuick
 import QtQuick.Controls
 
+import AppStylesModule
+
 Item
 {
 	required property bool selected
@@ -38,16 +40,22 @@ Item
 		anchors.fill: parent
 
 		border.width: 1
-		border.color: (selected ? "black" : "lightgray")
-		color: (selected ? "lightgray" : "white")
+		// border.color: (selected ? "black" : "lightgray")
+		// color: (selected ? "lightgray" : "white")
+		border.color: ColorPalette.tableRowBorderColor2
+		color: (selected ? ColorPalette.tableRowColor1 : ColorPalette.tableRowColor2)
 
 		Text {
 			id: textFild
 
 			anchors.fill: parent
-			horizontalAlignment: Text.AlignHCenter
+			
+			// horizontalAlignment: Text.AlignHCenter
+			horizontalAlignment: Text.AlignRight
 			verticalAlignment: Text.AlignVCenter
-			leftPadding: 5
+			
+			leftPadding: 10
+			rightPadding: 10
 
 			text: " "
 		}

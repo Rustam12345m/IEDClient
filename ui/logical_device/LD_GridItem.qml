@@ -29,22 +29,17 @@ import "qrc:/common/"
 
 // LogicalDevice block in GridView
 Item {
-	id: root
+	id: rootID
 
-	required property string name
-	required property int index
-	required property bool selected
+	required property string 	name
+	required property int 		index
+	required property bool 		selected
 
 	// Geometry
-	required property int blkWidth
-	required property int blkHeight
-	required property int blkBorder
-
-	readonly property int blkBottomH: 40
-	readonly property int ledWH: 25
-
-	width: blkWidth + 2 * blkBorder
-	height: blkHeight + 2 * blkBorder
+	property int cellEdge: 28
+	property int borderWidth: 2
+	width: 200 //6 * rootID.cellEdge
+	height: (5 / 6 * width) // rootID.cellEdge
 
 	signal sigLeftClicked()
 	signal sigDLeftClicked()
@@ -55,107 +50,91 @@ Item {
 	Rectangle {
 		anchors.fill: parent
 
-		border.color: (selected ? ColorPalette.ldBorderSelectColor : ColorPalette.ldBorderColor)
-		border.width: blkBorder
+		border.color: (selected ? "gray" : "lightgray")
+		border.width: rootID.borderWidth
+		color: "pink"
 
+		// Label
 		Rectangle {
-			id: textRect
+			id: labelRectID
 
-			x: blkBorder
-			y: blkBorder
+			anchors {
+				top: parent.top
+				left: parent.left
+				right: parent.right
 
-			width: blkWidth
-			height: blkHeight - blkBottomH - blkBorder
+				margins: rootID.borderWidth
+				bottomMargin: 0
+			}
+			height: rootID.cellEdge
+
+			color: (selected ? "gray" : "lightgray")
 
 			Text {
 				id: ldName
 
 				anchors.fill: parent
-				horizontalAlignment: Text.AlignHCenter
-				verticalAlignment: Text.AlignTop
-				padding: 10
+
+				horizontalAlignment: Text.AlignLeft
+				verticalAlignment: Text.AlignVCenter
+				padding: 6
 
 				wrapMode: Text.Wrap
-
-				clip: true
 				elide: Text.ElideRight
 
 				font.bold: true
-				font.pointSize: 14
-				text: root.name
+				font.pointSize: 12
+				color: "black"
+
+				text: "LD: " + rootID.name
 			}
 		}
+		// Values
 		Rectangle {
-			id: separator
+			anchors {
+				top: labelRectID.bottom
+				bottom: parent.bottom
+				left: parent.left
+				right: parent.right
 
-			x: blkBorder
-			y: blkBorder + textRect.height
+				margins: rootID.borderWidth
+				topMargin: 0
+			}
+			// color: "red"
 
-			width: blkWidth
-			height: blkBorder
-
-			color: ColorPalette.ldBorderColor
-		}
-		Rectangle {
-			x: blkBorder
-			y: blkBorder + textRect.height + separator.height
-
-			width: blkWidth
-			height: blkBottomH
-
-			RowLayout {
+			ListView {
 				anchors.fill: parent
-				Layout.alignment: Qt.AlignVCenter
 
-				RowLayout {
-					Layout.alignment: Qt.AlignVCenter
-					Layout.leftMargin: 10
-					Layout.preferredWidth: parent.width / 3
-
-					Led {
-						id: ledMode
-						width: ledWH
-						height: ledWH
-						color: "green"
-					}
-					Text {
-						font.pointSize: 14
-						font.bold: true
-						text: "M"
-					}
+				model: ListModel {
+					ListElement { param: "Mod"; value: "On-blocked" }
+					ListElement { param: "Beh"; value: "On-blocked" }
+					ListElement { param: "Health"; value: "Alarm" }
+					ListElement { param: ""; value: "" }
+					ListElement { param: "Sim"; value: "False" }
+					ListElement { param: "Blk"; value: "False" }
 				}
-				RowLayout {
-					Layout.alignment: Qt.AlignVCenter
-					Layout.leftMargin: 10
-					Layout.preferredWidth: parent.width / 3
 
-					Led {
-						id: ledBeh
-						width: ledWH
-						height: ledWH
-						color: "green"
-					}
-					Text {
-						font.pointSize: 14
-						font.bold: true
-						text: "B"
-					}
-				}
-				RowLayout {
-					Layout.alignment: Qt.AlignVCenter
-					Layout.leftMargin: 10
-					Layout.preferredWidth: parent.width / 3
+				delegate: Rectangle {
+					height: 20
 
-					Led {
-						id: ledHealth
-						width: ledWH
-						height: ledWH
-						color: "green"
-					}
-					Text {
-						font.pointSize: 14
-						font.bold: true
-						text: "H"
+					RowLayout {
+						anchors.fill: parent
+
+						Text {
+							Layout.preferredWidth: 50
+							padding: 6
+
+							text: param
+
+							font.pointSize: 10
+						}
+						Text {
+							padding: 6
+
+							text: value
+
+							font.pointSize: 10
+						}
 					}
 				}
 			}

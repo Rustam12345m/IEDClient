@@ -37,7 +37,9 @@ Item
 
 	ListView {
 		id: ldPropertyList
+
 		anchors.fill: parent
+		boundsBehavior: Flickable.StopAtBounds
 
 		property int selectedIndex: -1
 
@@ -48,6 +50,7 @@ Item
 			width: ldPropertyList.width
 			height: defRowHeight
 			color: ColorPalette.tableHeaderColor
+			border.color: ColorPalette.tableRowBorderColor2
 
 			clip: true
 
@@ -75,6 +78,7 @@ Item
 						width: defNameWidth
 						height: defRowHeight
 
+						border.width: 1
 						border.color: ColorPalette.tableRowBorderColor2
 						color: (index === ldPropertyList.selectedIndex) ? ColorPalette.tableRowColor1 : ColorPalette.tableRowColor2
 
@@ -93,7 +97,7 @@ Item
 					}
 					Rectangle {
 						border.width: 1
-						border.color: "lightgray"
+						border.color: ColorPalette.tableRowBorderColor2
 
 						color: (index === ldPropertyList.selectedIndex) ? ColorPalette.tableRowColor1 : ColorPalette.tableRowColor2
 						clip: true

@@ -23,10 +23,10 @@ import QtQuick
 import QtQuick.Controls
 import Qt.labs.qmlmodels
 
-import "qrc:/common/"
-
 import GlobalVarsModule
 import AppStylesModule
+
+import "qrc:/common/"
 
 // Table with DataObjects for concrete DataSet
 FocusScope
@@ -51,8 +51,8 @@ FocusScope
 		defDelegateHeight: rootID.defDelegateHeight
 
 		anchors {
-			left: tableID.left
 			top: parent.top
+			left: parent.left
 			right: parent.right
 		}
 	}
@@ -62,10 +62,10 @@ FocusScope
 		id: tableID
 
 		anchors {
-			left: parent.left
-			right: parent.right
 			top: headerID.bottom
 			bottom: parent.bottom
+			left: parent.left
+			right: parent.right
 		}
 
 		model: devBackend.getDS_ItemModel()
@@ -75,16 +75,16 @@ FocusScope
 		interactive: true
 		boundsBehavior: Flickable.StopAtBounds
 
-		columnWidthProvider: function(t_column) {
-			return Globals.calcColumnsWidth(headerID, tableID, t_column)
-		}
+		// columnWidthProvider: function(t_column) {
+		// 	return Globals.calcColumnsWidth(headerID, tableID, t_column)
+		// }
 
 		selectionBehavior: TableView.SelectRows
 		selectionModel: ItemSelectionModel {
 			model: tableID.model
 
 			onCurrentChanged: {
-				Qt.callLater(rootID.resizeColumns)
+				// Qt.callLater(rootID.resizeColumns)
 			}
 		}
 
@@ -102,6 +102,17 @@ FocusScope
 		}
 
 		ScrollBar.vertical: ScrollBar {
+			policy: ScrollBar.AsNeeded
+			active: true
+			stepSize: 0.25
+
+			onActiveChanged: {
+				if (!active) {
+					active = true;
+				}
+			}
+		}
+		ScrollBar.horizontal: ScrollBar {
 			policy: ScrollBar.AsNeeded
 			active: true
 			stepSize: 0.25

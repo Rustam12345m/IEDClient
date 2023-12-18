@@ -54,10 +54,11 @@ FocusScope {
 
 		model: devBackend.getLD_GridModel()
 
-		delegate: LD_GridDelegate {
-			blkWidth: rootID.blkWidth
-			blkHeight: rootID.blkHeight
-			blkBorder: rootID.blkBorder
+		// delegate: LD_GridDelegate {
+		delegate: LD_GridItem {
+			// blkWidth: rootID.blkWidth
+			// blkHeight: rootID.blkHeight
+			// blkBorder: rootID.blkBorder
 
 			selected: (gridView.currentIndex == index)
 

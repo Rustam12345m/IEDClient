@@ -27,7 +27,7 @@ import GlobalVarsModule
 import AppStylesModule
 
 import "qrc:/common/"
-import "qrc:/main/" as Main
+import "qrc:/home/" as Home
 import "qrc:/logical_device/" as LD
 import "qrc:/logical_node/" as LN
 import "qrc:/filesystem/" as FS
@@ -95,11 +95,12 @@ Window
 			id: menuBarRect
 
 			anchors {
+				top: mainBack.top
 				left: mainBack.left
 				right: mainBack.right
 			}
 			z: 100500
-			height: myMenuBar.implicitHeight + 2
+			height: 30 + 4 // myMenuBar.implicitHeight + 2
 
 			color: ColorPalette.toolBarColor
 
@@ -108,7 +109,7 @@ Window
 				anchors {
 					fill: parent
 					leftMargin: 0
-					rightMargin: 2
+					rightMargin: 10
 				}
 				spacing: 10
 
@@ -148,7 +149,27 @@ Window
 							}
 						}
 						Menu {
+							title: qsTr("&View")
+
+							MenuItem {
+								text: qsTr("[LD] Logical devices")
+							}
+							MenuItem {
+								text: qsTr("[LN] Logical nodes")
+							}
+							MenuItem {
+								text: qsTr("[DS] Datasets")
+							}
+							MenuItem {
+								text: qsTr("[CB] Report blocks")
+							}
+							MenuItem {
+								text: qsTr("[FS] Filesystem")
+							}
+						}
+						Menu {
 							title: qsTr("&Tools")
+
 							MenuItem {
 								text: qsTr("Save model")
 								icon.source: "qrc:/img/icons/save.svg"
@@ -171,6 +192,7 @@ Window
 						}
 						Menu {
 							title: qsTr("&Program")
+							
 							MenuItem {
 								text: qsTr("Documentation")
 								icon.source: "qrc:/img/icons/school.svg"
@@ -273,55 +295,49 @@ Window
 								rootWindow.updateActivePage()
 							}
 						}
-						// Tree or Table
+						// Table's columns to content size
 						ToolBarButton {
-							icon: "qrc:/img/icons/tune.svg"
-							prompt: "Switch between Tree and Table view"
+							icon: "qrc:/img/icons/code.svg"
+							prompt: "Set appropriate width for columns"
 							width: toolBar.btnHeight
 							height: toolBar.btnHeight
 
 							onSigClicked: function() {
-								//rootWindow.updateActivePage()
 								console.log("Clicked: " + prompt)
+								rootWindow.resizeColumnsOnPage()
 							}
 						}
 					}
 				}
 
-				// Status message
-				Rectangle {
+				// Spacer
+				Item {
 					Layout.fillWidth: true
-
 					height: toolBar.btnHeight
+				}
 
-					border {
-						width: 1
-						color: ColorPalette.borderColor
-					}
-					color: ColorPalette.backgroundColor2
-					clip: true
+				// TabBar for StackLayout
+				Item {
+					Layout.fillWidth: false
+					Layout.preferredWidth: tabBar.implicitWidth
 
-					RowLayout {
+					id: mainTabBar
+					// height: toolBar.btnHeight
+					height: 26
+
+					CustomTabBar {
+						id: tabBar
 						anchors.fill: parent
 
-						Led {
-							height: toolBar.btnHeight
-							width: toolBar.btnHeight
-							color: presenter.isConnected ? "green" : "gray"
-						}
-						Text {
-							Layout.fillWidth: true
+						horizontalBar: true
 
-							id: statusTextBox
-
-							height: toolBar.btnHeight
-
-							horizontalAlignment: Text.AlignLeft
-							verticalAlignment: Text.AlignVCenter
-
-							font.bold: true
-							color: ColorPalette.textColor
-							text: ""
+						model: ListModel {
+							ListElement { title: "Home" }
+							ListElement { title: "LD" }
+							ListElement { title: "LN" }
+							ListElement { title: "DS" }
+							ListElement { title: "CB" }
+							ListElement { title: "FS" }
 						}
 					}
 				}
@@ -336,9 +352,10 @@ Window
 				top: menuBarRect.bottom
 				left: mainBack.left
 				right: mainBack.right
-				bottom: mainBack.bottom
+				bottom: statusArea.top
+
 				margins: ColorPalette.borderWidth
-				topMargin: ColorPalette.delimeterWidth
+				bottomMargin: 0
 			}
 			color: ColorPalette.backgroundColor1
 
@@ -369,13 +386,14 @@ Window
 							top: tabsArea.top
 							left: tabsArea.left
 							right: tabsArea.right
-							bottom: mainTabBar.top
+							// bottom: mainTabBar.top
+							bottom: tabsArea.bottom
 						}
 
 						clip: true
 						currentIndex: tabBar.currentIndex
 
-						Main.Page {
+						Home.Page {
 							id: startPage
 							focus: true
 
@@ -418,7 +436,7 @@ Window
 						}
 
 						LN.Page {
-							id: lnPage
+							id: lnPageID
 
 							onVisibleChanged: {
 								if (visible) {
@@ -433,6 +451,8 @@ Window
 						}
 
 						DS.Page {
+							id: dsPageID
+
 							onVisibleChanged: {
 								if (visible) {
 									focus = true
@@ -446,6 +466,8 @@ Window
 						}
 
 						RCB.Page {
+							id: rcbPageID
+
 							onVisibleChanged: {
 								if (visible) {
 									focus = true
@@ -458,6 +480,8 @@ Window
 						}
 
 						FS.Page {
+							id: fsPageID
+
 							onVisibleChanged: {
 								if (visible) {
 									focus = true
@@ -469,46 +493,6 @@ Window
 								} else {
 									focus = false
 								}
-							}
-						}
-					}
-
-					// TabBar in the bottom of Tabs
-					Item {
-						id: mainTabBar
-						height: tabBar.implicitHeight
-
-						anchors {
-							left: tabsArea.left
-							right: tabsArea.right
-							bottom: tabsArea.bottom
-						}
-
-						TabBar {
-							id: tabBar
-							anchors.fill: parent
-
-							currentIndex: 0
-							focus: false
-							focusPolicy: Qt.NoFocus
-
-							TabButton {
-								text: qsTr("Main")
-							}
-							TabButton {
-								text: qsTr("LD")
-							}
-							TabButton {
-								text: qsTr("LN")
-							}
-							TabButton {
-								text: qsTr("DS")
-							}
-							TabButton {
-								text: qsTr("CB")
-							}
-							TabButton {
-								text: qsTr("FS")
 							}
 						}
 					}
@@ -546,6 +530,54 @@ Window
 							width = 0;
 						}
 					}
+				}
+			}
+		}
+
+		// Status line
+		Rectangle {
+			id: statusArea
+
+			anchors {
+				left: mainBack.left
+				right: mainBack.right
+				bottom: mainBack.bottom
+			}
+
+			height: 24
+
+			color: ColorPalette.statusBarColor
+			clip: true
+
+			RowLayout {
+				anchors {
+					fill: parent
+
+					leftMargin: 5
+					rightMargin: 5
+				}
+
+				Text {
+					Layout.fillWidth: true
+					Layout.alignment: Qt.AlignVCenter
+
+					id: statusTextBox
+
+					height: statusArea.height
+
+					horizontalAlignment: Text.AlignLeft
+					verticalAlignment: Text.AlignVCenter
+
+					font.bold: false
+					color: ColorPalette.textColor
+					text: ""
+				}
+				Led {
+					Layout.alignment: Qt.AlignVCenter
+
+					height: 20
+					width: 20 //toolBar.btnHeight
+					color: presenter.isConnected ? "green" : "gray"
 				}
 			}
 		}
@@ -700,6 +732,30 @@ Window
 	}
 	function setStatusText(msg) {
 		statusTextBox.text = msg
+	}
+	function resizeColumnsOnPage() {
+		switch (tabBar.currentIndex) {
+		case Globals.Page.START:
+		case Globals.Page.LD: {
+			break;
+		}
+		case Globals.Page.LN: {
+			lnPageID.resizeColumnsOnPage()
+			break;
+		}
+		case Globals.Page.DS: {
+			dsPageID.resizeColumnsOnPage()
+			break;
+		}
+		case Globals.Page.RCB: {
+			rcbPageID.resizeColumnsOnPage()
+			break;
+		}
+		case Globals.Page.FS: {
+			fsPageID.resizeColumnsOnPage()
+			break;
+		}
+		}
 	}
 
 	// Process

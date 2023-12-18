@@ -29,8 +29,7 @@ namespace App::Models
 		m_ldProp.append(PropertyItem("General information", "Name", ""));
 		m_ldProp.append(PropertyItem("General information", "LN", ""));
 		m_ldProp.append(PropertyItem("General information", "DS", ""));
-		m_ldProp.append(PropertyItem("General information", "BRCB", ""));
-		m_ldProp.append(PropertyItem("General information", "URCB", ""));
+		m_ldProp.append(PropertyItem("General information", "RCB", ""));
 		m_ldProp.append(PropertyItem("General information", "GOOSE", ""));
 		m_ldProp.append(PropertyItem("General information", "SV", ""));
 
@@ -103,12 +102,16 @@ namespace App::Models
 			Core::ptrLD ld = m_ied->model().getLogicalDevice(m_currentLD);
 			if (ld) {
 				if (m_ldProp[row].obj.isEmpty()) {
+					// LD's common properties like: count of LN, DS or RCB
 					if (m_ldProp[row].name == "Name") {
 						return ld->name();
 					} else if (m_ldProp[row].name == "LN") {
 						return QVariant(QString::number(ld->getItemCount()));
+					} else if (m_ldProp[row].name == "RCB") {
+						return QVariant(QString("%1 B / %2 U").arg(7).arg(3));
 					}
 				} else {
+					// DataModel LD parameters
 					auto item = ld->find(m_ldProp[row].section, m_ldProp[row].obj, m_ldProp[row].name);
 					if (item) {
 						return item->value();

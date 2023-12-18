@@ -22,7 +22,8 @@
 import QtQuick
 import QtQuick.Controls
 
-Item {
+Item
+{
 	property alias color: led.color
 	property alias prompt: toolTip.text
 
@@ -39,11 +40,11 @@ Item {
 
 		anchors.centerIn: parent
 
-		height: 20
-		width: 20
+		height: 16
+		width: 16
 		radius: height/2
 
-		border.width: 2
+		border.width: 1
 		border.color: "black"
 
 		color: "gray"
@@ -56,7 +57,7 @@ Item {
 	}
 	ToolTip {
 		id: toolTip
-		text: ""//"Information isn't found"
+		text: ""
 		delay: 200
 		visible: mouseArea.containsMouse && (text != "")
 	}

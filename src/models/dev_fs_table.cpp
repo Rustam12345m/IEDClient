@@ -79,7 +79,7 @@ namespace App::Models
 
 		switch (t_column) {
 		case FS_INDEX_COLUMN: {
-			return QVariant::fromValue(SortHeaderValue("N", true));
+			return QVariant::fromValue(SortHeaderValue("№", true));
 		}
 		case FS_DATE_COLUMN: {
 			return QVariant::fromValue(SortHeaderValue("Last modification", true));

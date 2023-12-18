@@ -23,10 +23,10 @@ import QtQuick
 import QtQuick.Controls
 import Qt.labs.qmlmodels
 
-import "qrc:/common/"
-
 import GlobalVarsModule
 import AppStylesModule
+
+import "qrc:/common/"
 
 // Table with DataObjects for concrete Logical Node
 FocusScope
@@ -43,7 +43,7 @@ FocusScope
 	}
 
 	// Header for TableView below with DO
-	MTableHeader {
+	SortTableHeader {
 		id: headerID
 
 		anchors {
@@ -74,9 +74,9 @@ FocusScope
 		interactive: true
 		boundsBehavior: Flickable.StopAtBounds
 
-		columnWidthProvider: function(t_column) {
-			return Globals.calcColumnsWidth(headerID, tableID, t_column)
-		}
+		// columnWidthProvider: function(t_column) {
+		// 	return Globals.calcColumnsWidth(headerID, tableID, t_column)
+		// }
 
 		selectionBehavior: TableView.SelectRows
 		selectionModel: ItemSelectionModel {
@@ -87,7 +87,7 @@ FocusScope
 			delegateHeight: defDelegateHeight
 			selected: (tableID.currentRow == row)
 
-			// textAlign: (column == 0) ? Text.AlignRight : Text.AlignHCenter
+			textAlign: (column == 0) ? Text.AlignLeft : Text.AlignRight
 			text: model.display
 
 			onSigClick: function(row, col) {
@@ -97,6 +97,17 @@ FocusScope
 		}
 
 		ScrollBar.vertical: ScrollBar {
+			policy: ScrollBar.AsNeeded
+			active: true
+			stepSize: 0.25
+
+			onActiveChanged: {
+				if (!active) {
+					active = true;
+				}
+			}
+		}
+		ScrollBar.horizontal: ScrollBar {
 			policy: ScrollBar.AsNeeded
 			active: true
 			stepSize: 0.25

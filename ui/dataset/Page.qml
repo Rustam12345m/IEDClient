@@ -28,7 +28,11 @@ import "qrc:/common/"
 // DataSets page
 FocusScope
 {
-	id: root
+	id: rootID
+
+	function resizeColumnsOnPage() {
+		tableDS_Val.resizeColumns()
+	}
 
 	SplitView {
 		id: splitView

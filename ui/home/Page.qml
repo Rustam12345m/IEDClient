@@ -69,7 +69,7 @@ FocusScope
 					margins: parent.border.width
 				}
 
-				height: 45
+				height: 50
 				color: ColorPalette.modalColor
 
 				MouseArea {
@@ -80,7 +80,7 @@ FocusScope
 				RowLayout {
 					anchors.fill: parent
 
-					property int inputBoxHeight: 20
+					property int inputBoxHeight: 28
 
 					spacing: 6
 					clip: true
@@ -108,16 +108,18 @@ FocusScope
 						height: parent.inputBoxHeight
 						color: "white"
 
-						TextInput {
+						TextField {
 							id: ipAddrInput
 
 							anchors.fill: parent
 
 							text: qsTr("127.0.0.1")
-							font.pixelSize: 14
+							placeholderText: "IED address"
+							placeholderTextColor: "lightgray"
 
+							font.pixelSize: 14
 							verticalAlignment: Text.AlignVCenter
-							leftPadding: 2
+							leftPadding: 4
 
 							focus: true
 							color: "black"
@@ -150,16 +152,19 @@ FocusScope
 						height: parent.inputBoxHeight
 						color: "white"
 
-						TextInput {
+						TextField {
 							id: portInput
 							anchors.fill: parent
 
 							text: qsTr("102")
 
+							placeholderText: "MMS"
+							placeholderTextColor: "lightgray"
+
 							font.pixelSize: 14
 
 							verticalAlignment: Text.AlignVCenter
-							leftPadding: 2
+							leftPadding: 4
 
 							color: "black"
 
@@ -188,6 +193,16 @@ FocusScope
 
 							KeyNavigation.backtab: portInput
 							KeyNavigation.tab: userNameInput
+
+							onCheckedChanged: function() {
+								if (tlsSwitcher.checked) {
+									portInput.text = "443";
+								} else {
+									portInput.text = "102"
+								}
+								userNameInput.enabled = tlsSwitcher.checked
+								userPassInput.enabled = tlsSwitcher.checked
+							}
 						}
 					}
 
@@ -199,18 +214,18 @@ FocusScope
 						height: parent.inputBoxHeight
 						color: "white"
 
-						TextInput {
+						TextField {
 							id: userNameInput
 							anchors.fill: parent
 
-							// placeholderText: "Enter username"
-							// placeholderTextColor: "lightgray"
+							placeholderText: "Enter username"
+							placeholderTextColor: "lightgray"
 
 							text: ""
 							font.pixelSize: 14
 
 							verticalAlignment: Text.AlignVCenter
-							leftPadding: 2
+							leftPadding: 4
 
 							color: "black"
 
@@ -227,19 +242,19 @@ FocusScope
 						height: parent.inputBoxHeight
 						color: "white"
 
-						TextInput {
+						TextField {
 							id: userPassInput
 							anchors.fill: parent
 
-							// placeholderText: "Enter password"
-							// placeholderTextColor: "lightgray"
+							placeholderText: "Enter password"
+							placeholderTextColor: "lightgray"
 							echoMode: TextField.Password
 
 							//text: qsTr("pass")
 							font.pixelSize: 14
 							
 							verticalAlignment: Text.AlignVCenter
-							leftPadding: 2
+							leftPadding: 4
 
 							color: "black"
 

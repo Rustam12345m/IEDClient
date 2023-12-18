@@ -45,6 +45,7 @@ HorizontalHeaderView
 
 		border.color: ColorPalette.tableRowBorderColor2
 		color: ColorPalette.tableHeaderColor
+		clip: true
 
 		Label {
 			id: textArea
