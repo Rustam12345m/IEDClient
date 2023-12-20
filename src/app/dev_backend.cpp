@@ -23,7 +23,7 @@
 
 namespace App
 {
-	DevBackend::DevBackend(IED_Connection &t_con) : BackendBase(t_con)
+	DevBackend::DevBackend(AppConContainer &t_con) : BackendBase(t_con)
 	{
 		m_ldsModel = new Models::LD_CommonGrid(this, m_con.m_iedObj);
 		m_ldPropModel = new Models::LD_PropTable(this, m_con.m_iedObj);

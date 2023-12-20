@@ -23,6 +23,7 @@
 
 #include "basic_command.hpp"
 #include "core/ied_object.hpp"
+#include "cmd/con_credentials.hpp"
 
 namespace Core::Cmd
 {
@@ -33,32 +34,21 @@ namespace Core::Cmd
 	{
 		Q_OBJECT
 	public:
-		ConnectCmd(const QString &t_ip, unsigned t_port, bool t_tls,
-					const QString &t_user, const QString &t_pass,
-					ptrIED_Object t_ied)
-				: m_ip(t_ip), m_port(t_port), m_tls(t_tls),
-				  m_user(t_user), m_password(t_pass),
-				  m_ied(t_ied)
-		{
-		}
+		ConnectCmd(const ConCredentials &t_cred, ptrIED_Object t_ied)
+				: m_cred(t_cred), m_ied(t_ied) {}
 		~ConnectCmd() {}
 
 		void	execute(LibInterface &t_con) override;
 
-		static auto create(const QString &t_ip, unsigned t_port, bool t_tls,
-							const QString &t_user, const QString &t_pass,
-							ptrIED_Object t_ied) {
-			return QSharedPointer<ConnectCmd>::create(t_ip, t_port, t_tls, t_user, t_pass, t_ied);
+		static auto create(const ConCredentials &t_cred, ptrIED_Object t_ied) {
+			return QSharedPointer<ConnectCmd>::create(t_cred, t_ied);
 		}
 
 	private slots:
 		void 	slotMsgProgress(const QString &t_msg);
 
 	private:
-		QString			m_ip;
-		unsigned		m_port;
-		bool			m_tls;
-		QString			m_user, m_password;
+		ConCredentials	m_cred;
 		ptrIED_Object	m_ied;
 	};
 }

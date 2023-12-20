@@ -30,13 +30,13 @@ namespace Core::Cmd
 	void ConnectCmd::execute(LibInterface &t_lib)
 	{
 		for (int i=0;i<3;i++) {
-			emit sigProgress(0, QString("Connecting to %1:%2. Attempt (%3 / 3)").arg(m_ip).arg(m_port).arg(i + 1));
+			emit sigProgress(0, QString("Connecting to %1:%2. Attempt (%3 / 3)").arg(m_cred.ip()).arg(m_cred.port()).arg(i + 1));
 
-			if (t_lib.connect(m_ip, m_port, m_tls, m_user, m_password)) {
-				emit sigProgress(10, QString("Successfully connected to %1:%2").arg(m_ip).arg(m_port));
+			if (t_lib.connect(m_cred.ip(), m_cred.port(), m_cred.tls(), m_cred.login(), m_cred.password())) {
+				emit sigProgress(10, QString("Successfully connected to %1:%2").arg(m_cred.ip()).arg(m_cred.port()));
 				// QThread::sleep(1);
 
-				emit sigProgress(20, QString("Fetch data model from %1:%2").arg(m_ip).arg(m_port));
+				emit sigProgress(20, QString("Fetch data model from %1:%2").arg(m_cred.ip()).arg(m_cred.port()));
 				// QThread::sleep(1);
 
 				// New Data Model
@@ -50,11 +50,11 @@ namespace Core::Cmd
 				// Debug
 				//m_ied->model().print();
 
-				emit sigProgress(100, QString("Data model and other stuff were received from %1:%2").arg(m_ip).arg(m_port));
+				emit sigProgress(100, QString("Data model and other stuff were received from %1:%2").arg(m_cred.ip()).arg(m_cred.port()));
 				emit sigFinished(true);
 				return;
 			} else {
-				qDebug() << QString("Cannot connect to %1:%2").arg(m_ip).arg(m_port);
+				qDebug() << QString("Cannot connect to %1:%2").arg(m_cred.ip()).arg(m_cred.port());
 				QThread::sleep(3);
 			}
 		}

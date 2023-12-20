@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include "ied_connection.hpp"
+#include "app_con_container.hpp"
 
 // All known commands
 #include "cmd/all_cmd_header.hpp"
@@ -29,15 +29,15 @@
 namespace App
 {
 	/*
-	* Interface for all Backends
-	* */
+	 * Interface for all Backends
+	 * */
 	class BackendBase : public QObject
 	{
 		Q_OBJECT
 
 		BackendBase() = delete;
 	public:
-		BackendBase(IED_Connection &t_con) : m_con(t_con) {};
+		BackendBase(AppConContainer &t_con) : m_con(t_con) {};
 		virtual ~BackendBase() {}
 
 	protected:
@@ -53,6 +53,6 @@ namespace App
 		virtual void 	slotConnected(bool t_done);
 
 	protected:
-		IED_Connection& 	m_con;
+		AppConContainer& 	m_con;
 	};
 }

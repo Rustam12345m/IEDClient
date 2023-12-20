@@ -21,44 +21,41 @@
 
 #pragma once
 
+#include <QObject>
 #include <QSettings>
+
+#include "cmd/con_credentials.hpp"
+#include "config/conf_connection_info.hpp"
 
 namespace App
 {
-	class DevConInfo
+	static const int 		DefSaveHistoryLength = 10;
+	static const QString 	ConfigFileName = "iedclient_config.xml";
+
+	typedef QList< App::ConfConnectionInfo >	listConfConectInfo;
+
+	/*
+	 * 
+	 * */
+	class AppSettings : public QObject
 	{
+		Q_OBJECT
 	public:
-		DevConInfo(const QString &t_name, const QString &t_ip, int t_port)
-			: m_name(t_name), m_ip(t_ip), m_port(t_port)
-		{
-		}
-
-		QString 	name() const { return m_name; }
-		QString 	ip() const { return m_ip; }
-		int 		port() const { return m_port; }
-
-		bool operator==(const DevConInfo &t_right) {
-			return (m_name == t_right.name()) && (m_ip == t_right.ip()) && (m_port == t_right.port());
-		}
-
-	protected:
-		QString 	m_name;
-		QString 	m_ip;
-		int 		m_port = 102;
-	};
-
-	/**
-	 * @brief AppSettings is a class which get/set IEDClient's settings
-	 */
-	class AppSettings
-	{
-	public:
-		AppSettings() = default;
+		AppSettings();
+		AppSettings(const QString &t_filepath);
 		~AppSettings() = default;
 
-		QList<DevConInfo>	getDevConList();
-		void 				saveNewDevCon(const DevConInfo &t_dev);
+		listConfConectInfo	getConnectionList();
+		void 	putConnectionToConfig(const Core::Cmd::ConCredentials &t_cred, const QString &t_ied);
 
-		const int SaveDevsHistoryLen = 10;
+	signals:
+		void 	sigConfUpdated();
+
+	private:
+		int  	readConfigFile(const QString &t_filepath, listConfConectInfo &t_list);
+		int  	writeConfigFile(const QString &t_filepath, listConfConectInfo &t_list);
+
+	private:
+		QString 	m_configFilepath;
 	};
 }

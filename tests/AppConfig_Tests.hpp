@@ -1,6 +1,4 @@
 /*
- *  main.cpp
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -21,14 +19,24 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "Cmd_Tests.hpp"
-#include "DataModel_Tests.hpp"
-#include "DumpModel_Tests.hpp"
-#include "Items_Tests.hpp"
-#include "AppConfig_Tests.hpp"
+#include <gtest/gtest.h>
 
-int main(int argc, char **argv)
+#include "app/app_settings.hpp"
+
+namespace AppConfigTests
 {
-	::testing::InitGoogleTest(&argc, argv);
-	return RUN_ALL_TESTS();
+	TEST(AppConfig_ConCredentials, CheckSaveParameters) {
+		Core::Cmd::ConCredentials con("ip", 123, false, "name", "pass");
+
+		ASSERT_EQ(con.login(), "name");
+		ASSERT_EQ(con.ip(), "ip");
+		ASSERT_EQ(con.port(), 123);
+		ASSERT_EQ(con.tls(), false);
+	}
+
+	TEST(AppConfig_Parser, ParseBrokenFile_ExpectOK) {
+		App::AppSettings conf;
+
+		ASSERT_EQ(conf.getConnectionList().empty(), true);
+	}
 }

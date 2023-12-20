@@ -22,44 +22,35 @@
 #pragma once
 
 #include <QString>
-#include <QVariant>
 
-namespace Core::Cmd
+namespace App
 {
-	class ConCredentials
+	class ConfConnectionInfo
 	{
 	public:
-		ConCredentials() = default;
-		ConCredentials(const QString &t_ip, int t_port, bool t_tls, const QString &t_login, const QString &t_pass)
-			: m_ip(t_ip), m_port(t_port), m_tls(t_tls), m_login(t_login), m_password(t_pass) {}
-		ConCredentials(const QVariantMap &t_data)
-		{
-			m_ip = t_data.value("ip").toString();
-			m_port = t_data.value("port").toInt();
-			m_tls = t_data.value("tls").toBool();
-			m_login = t_data.value("login").toString();
-			m_password = t_data.value("password").toString();
-		}
+		ConfConnectionInfo() = default;
+		ConfConnectionInfo(const QString &t_ip, int t_port, bool t_tls, const QString &t_name, const QString &t_date)
+			: m_ip(t_ip), m_port(t_port), m_tls(t_tls), m_name(t_name), m_date(t_date) {}
 
 		const auto 	ip() const { return m_ip; }
 		const auto 	port() const { return m_port; }
 		const auto	tls() const { return m_tls; }
-		const auto 	login() const { return m_login; }
-		const auto 	password() const { return m_password; }
+		const auto 	ied() const { return m_name; }
+		const auto 	date() const { return m_date; }
 
-		bool operator==(const ConCredentials &t_right) {
+		bool operator==(const ConfConnectionInfo &t_right) {
 			return (m_ip == t_right.m_ip)
 					&& (m_port == t_right.m_port)
 					&& (m_tls == t_right.m_tls)
-					&& (m_login == t_right.m_login)
-					/*&& (m_password == t_right.m_password)*/;
+					&& (m_name == t_right.m_name)
+					/* && (m_date == t_right.m_date) */;
 		}
 
-	protected:
+	public:
 		QString 	m_ip;
 		int			m_port = 0;
 		bool 		m_tls = false;
-		QString 	m_login;
-		QString 	m_password;
+		QString 	m_name;
+		QString 	m_date;
 	};
-};
+}

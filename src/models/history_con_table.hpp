@@ -40,7 +40,7 @@ namespace App::Models
 		};
 
 	public:
-		HistConTable(QObject *t_parent, App::AppSettings &t_ini);
+		HistConTable(QObject *t_parent, App::AppSettings &t_conf);
 
 		QVariant headerData(int t_column, Qt::Orientation t_orientation,
 							int t_role = Qt::DisplayRole) const override;
@@ -52,8 +52,11 @@ namespace App::Models
 
 		QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
+	public slots:
+		void 	slotAppConfigUpdated();
+
 	protected:
-		App::AppSettings& 		m_ini;
-		QList<App::DevConInfo> 	m_con;
+		App::AppSettings&	 	m_settings;
+		App::listConfConectInfo	m_con;
 	};
 }

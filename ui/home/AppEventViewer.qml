@@ -23,16 +23,19 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-Window {
+Window
+{
 	title: qsTr("IEDClient - System messages")
 
-	id: root
+	id: windowID
 
 	width: 800
 	height: 300
 	visible: true
 
 	Rectangle {
+		id: rootID
+
 		anchors.fill: parent
 
 		HorizontalHeaderView {
@@ -68,17 +71,18 @@ Window {
 		TableView {
 			id: tableID
 
-
-			anchors.left: parent.left
-			anchors.top: header.bottom
-			anchors.right: parent.right
-			anchors.bottom: parent.bottom
+			anchors {
+				left: parent.left
+				top: header.bottom
+				right: parent.right
+				bottom: parent.bottom
+			}
 
 			clip: true
 			interactive: true
 			boundsBehavior: Flickable.StopAtBounds
 
-			model: comBackend.eventsModel
+			model: appBackend.appLogsModel
 
 			selectionBehavior: TableView.SelectRows
 			selectionModel: ItemSelectionModel {
@@ -117,7 +121,6 @@ Window {
 			onWidthChanged: function() {
 				setGoodColumnsWidth()
 			}
-			//columnWidthProvider: calcGoodWidthFoColumn
 
 			ScrollBar.vertical: ScrollBar {
 				policy: ScrollBar.AsNeeded

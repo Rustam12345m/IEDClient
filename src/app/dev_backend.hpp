@@ -43,7 +43,7 @@ namespace App
 	{
 		Q_OBJECT
 	public:
-		DevBackend(IED_Connection &t_con);
+		DevBackend(AppConContainer &t_con);
 		~DevBackend() = default;
 
 		Q_INVOKABLE QAbstractListModel*		getLD_GridModel() const { return m_ldsModel; }

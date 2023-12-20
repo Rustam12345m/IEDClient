@@ -8,7 +8,8 @@ set(SOURCES
 
 	cmd_thread.hpp
 	cmd_thread.cpp
-	
+
+	con_credentials.hpp
 	connect_cmd.hpp
 	connect_cmd.cpp
 

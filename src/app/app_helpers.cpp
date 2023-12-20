@@ -1,6 +1,4 @@
 /*
- *  main.cpp
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -21,14 +19,15 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "Cmd_Tests.hpp"
-#include "DataModel_Tests.hpp"
-#include "DumpModel_Tests.hpp"
-#include "Items_Tests.hpp"
-#include "AppConfig_Tests.hpp"
+#include "app_helpers.hpp"
 
-int main(int argc, char **argv)
+#include <QDateTime>
+
+namespace App
 {
-	::testing::InitGoogleTest(&argc, argv);
-	return RUN_ALL_TESTS();
+	QString GetCurrentDateTime()
+	{
+		QDateTime current = QDateTime::currentDateTime();
+		return current.toString("dd.MM.yyyy HH:mm:ss"); // Custom format: "2023-12-31 23:59:59"
+	}
 }

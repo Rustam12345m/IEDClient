@@ -23,9 +23,14 @@
 
 namespace App
 {
-	ComBackend::ComBackend(IED_Connection &t_con) : BackendBase(t_con)
+	AppBackend::AppBackend(AppConContainer &t_con) : BackendBase(t_con)
 	{
 		m_eventsModel = new Models::AppEventsTable(this);
-		m_lastConnModel = new Models::HistConTable(this, m_ini);
+		m_lastConnModel = new Models::HistConTable(this, m_settings);
+	}
+
+	void AppBackend::newConnection(const Core::Cmd::ConCredentials &t_cred)
+	{
+		m_settings.putConnectionToConfig(t_cred, m_con.m_iedObj->model().name());
 	}
 }

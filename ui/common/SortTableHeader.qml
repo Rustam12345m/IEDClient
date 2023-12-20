@@ -31,6 +31,7 @@ HorizontalHeaderView
 
 	property int sortOrder: 0
 	property int sortedColumn: 0
+	property bool rightTextAlign: true
 
 	boundsBehavior: Flickable.StopAtBounds
 	resizableColumns: true
@@ -63,7 +64,7 @@ HorizontalHeaderView
 
 				anchors.verticalCenter: parent.verticalCenter
 
-				// horizontalAlignment: Text.AlignRight
+				horizontalAlignment: rightTextAlign ? Text.AlignRight : Text.AlignHCenter
 				color: ColorPalette.tableTextColor
 				font.bold: true
 
@@ -83,8 +84,8 @@ HorizontalHeaderView
 		MouseArea {
 			anchors {
 				fill: parent
-				leftMargin: 4
-				rightMargin: 4
+				leftMargin: 5
+				rightMargin: 5
 			}
 
 			onClicked: function(msx) {
