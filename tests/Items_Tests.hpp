@@ -20,6 +20,7 @@
  * */
 
 #include <gtest/gtest.h>
+
 #include "core/data_model_builder.hpp"
 #include "core/item_factory.hpp"
 

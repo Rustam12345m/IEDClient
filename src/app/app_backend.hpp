@@ -22,7 +22,7 @@
 #pragma once
 
 #include "backend_base.hpp"
-#include "app/app_settings.hpp"
+#include "app_settings.hpp"
 
 #include "models/app_events_table.hpp"
 #include "models/history_con_table.hpp"
@@ -30,23 +30,25 @@
 namespace App
 {
 	/*
-	* Presenter of other small tables
+	* Presenter of other application related data and tables
 	* */
-	class ComBackend : public BackendBase
+	class AppBackend : public BackendBase
 	{
 		Q_OBJECT
 	public:
-		ComBackend(IED_Connection &t_con);
-		~ComBackend() = default;
+		AppBackend(AppConContainer &t_con);
+		~AppBackend() = default;
 
-		Q_PROPERTY(QAbstractTableModel* eventsModel 	READ getEventsModel 	CONSTANT)
+		Q_PROPERTY(QAbstractTableModel* appLogsModel 	READ getEventsModel 	CONSTANT)
 		Q_PROPERTY(QAbstractItemModel* 	lastConnList 	READ getLastConn_Model 	CONSTANT)
 
 		Models::AppEventsTable*	getEventsModel() const { return m_eventsModel; }
 		Models::HistConTable* 	getLastConn_Model() const { return m_lastConnModel; }
 
+		void 	newConnection(const Core::Cmd::ConCredentials &t_cred);
+
 	protected:
-		AppSettings				m_ini;
+		AppSettings		m_settings;
 
 		Models::AppEventsTable*	m_eventsModel = nullptr;
 		Models::HistConTable*	m_lastConnModel = nullptr;

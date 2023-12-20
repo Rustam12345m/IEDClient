@@ -32,6 +32,8 @@ HorizontalHeaderView
 	required property int defDelegateWidth
 	required property int defDelegateHeight
 
+	property bool rightTextAlign: true
+
 	boundsBehavior: Flickable.StopAtBounds
 
 	syncView: tableID
@@ -40,20 +42,21 @@ HorizontalHeaderView
 	delegate: Rectangle {
 		property var paramModel: model
 
-		implicitWidth: Math.max(textArea.implicitWidth + 10, defDelegateWidth)
+		implicitWidth: Math.max(labelID.implicitWidth + 10, defDelegateWidth)
 		implicitHeight: defDelegateHeight
 
 		border.color: ColorPalette.tableRowBorderColor2
 		color: ColorPalette.tableHeaderColor
 		clip: true
 
-		Label {
-			id: textArea
+		Text {
+			id: labelID
 
-			anchors.centerIn: parent
+			anchors.fill: parent
 
-			horizontalAlignment: Text.AlignHCenter
+			horizontalAlignment: rightTextAlign ? Text.AlignRight : Text.AlignHCenter
 			verticalAlignment: Text.AlignVCenter
+			rightPadding: 10
 
 			color: ColorPalette.tableTextColor
 			font.bold: true

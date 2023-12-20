@@ -407,9 +407,9 @@ Window
 									focus = false
 								}
 							}
-							onSigConnectTo: function(ip, port, tls, user, pass) {
+							onSigConnectTo: function(con) {
 								globalProgressBar.startLoad()
-								presenter.connectTo(ip, port, tls, user, pass)
+								presenter.connectTo(con)
 							}
 							onSigDumpModel: function(dir, ip, port, tls, user, pass) {
 								globalProgressBar.startLoad()
@@ -639,7 +639,7 @@ Window
 
 	// Common functions
 	function openEventLog() {
-		var logsComponent = Qt.createComponent("common/EventsViewer.qml")
+		var logsComponent = Qt.createComponent("home/AppEventViewer.qml")
 		var logsWindow = logsComponent.createObject(rootWindow)
 		logsWindow.show()
 	}

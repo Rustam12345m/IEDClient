@@ -1,6 +1,4 @@
 /*
- *  main.cpp
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -21,14 +19,9 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "Cmd_Tests.hpp"
-#include "DataModel_Tests.hpp"
-#include "DumpModel_Tests.hpp"
-#include "Items_Tests.hpp"
-#include "AppConfig_Tests.hpp"
+#include <QString>
 
-int main(int argc, char **argv)
+namespace App
 {
-	::testing::InitGoogleTest(&argc, argv);
-	return RUN_ALL_TESTS();
-}
+	QString 	GetCurrentDateTime();
+};

@@ -4,6 +4,7 @@
 
         <file>home/Page.qml</file>
         <file>home/ConnectHistoryTable.qml</file>
+        <file>home/AppEventViewer.qml</file>
 
         <file>singletons/Globals.qml</file>
         <file>singletons/ColorPalette.qml</file>
@@ -11,7 +12,6 @@
         <file>common/ToolBarButton.qml</file>
         <file>common/TextDelegate.qml</file>
         <file>common/AboutProgram.qml</file>
-        <file>common/EventsViewer.qml</file>
         <file>common/QuestionForUser.qml</file>
         <file>common/ModalProgressBar.qml</file>
         <file>common/Led.qml</file>

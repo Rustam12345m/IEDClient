@@ -1,5 +1,4 @@
 # Building models's classes to a static library
-
 set(SOURCES
 	models_stub.hpp
 
@@ -45,7 +44,7 @@ set(SOURCES
 
 qt_add_library(models_lib STATIC ${SOURCES})
 
-target_link_libraries(models_lib PUBLIC app_lib core_lib cmd_lib)
-target_link_libraries(models_lib PRIVATE Qt6::Core)
+target_link_libraries(models_lib PUBLIC core_lib cmd_lib)
+target_link_libraries(models_lib PUBLIC Qt6::Core)
 
 target_include_directories(models_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

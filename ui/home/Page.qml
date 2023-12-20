@@ -33,8 +33,8 @@ FocusScope
 {
 	id: rootID
 
-	signal sigConnectTo(string ip, int port, bool tls, string user, string pass)
-	signal sigDumpModel(string dir, string ip, int port, bool tls, string user, string pass)
+	signal sigConnectTo(var t_con)
+	signal sigDumpModel(var t_con)
 
 	function slotSetCurrentDevice(ip, port) {
 		ipAddrInput.text = ip
@@ -280,8 +280,14 @@ FocusScope
 						icon.source: "qrc:/img/icons/call.svg"
 
 						onClicked: {
-							sigConnectTo(ipAddrInput.text, portInput.text,
-										tlsSwitcher.checked, userNameInput.text, userPassInput.text)
+							var con = {
+								"ip": ipAddrInput.text,
+								"port":  portInput.text,
+								"tls": tlsSwitcher.checked,
+								"login": userNameInput.text,
+								"password": userPassInput.text
+							};
+							sigConnectTo(con);
 						}
 
 						KeyNavigation.backtab: userPassInput
@@ -314,6 +320,7 @@ FocusScope
 
 	Keys.onPressed: function(event) {
 		console.log("StartPage: Key pressed " + event.key)
+
 		if (event.key == Qt.Key_Return || event.key == Qt.Key_Enter) {
 			connButton.onClicked()
 		}

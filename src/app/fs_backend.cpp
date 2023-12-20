@@ -23,7 +23,7 @@
 
 namespace App
 {
-	FS_Backend::FS_Backend(IED_Connection &t_con) : BackendBase(t_con)
+	FS_Backend::FS_Backend(AppConContainer &t_con) : BackendBase(t_con)
 	{
 		m_fsModel = new Models::DevFS_Table(this, m_con.m_iedObj);
 

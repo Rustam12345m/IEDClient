@@ -49,13 +49,11 @@ namespace App
 		}
 
 		// API for QML
-		Q_INVOKABLE void 	connectTo(const QString &t_ip, unsigned int t_port, bool t_checked,
-										const QString &t_name, const QString &t_pass);
+		Q_INVOKABLE void 	connectTo(const QVariantMap &t_data);
 		Q_INVOKABLE void 	disconnectFrom();
 		Q_INVOKABLE QString getAppVersion();
 
-		Q_INVOKABLE void 	toolDumpModel(const QString &t_dir, const QString &t_ip, unsigned int t_port,
-										bool t_checked, const QString &t_name, const QString &t_pass);
+		Q_INVOKABLE void 	toolDumpModel(const QVariantMap &t_data);
 
 	public slots:
 		void		slotCmdProgress(int t_proc, QString t_msg) {
@@ -64,9 +62,7 @@ namespace App
 		void		slotCmdFinished(bool t_done) {
 			emit sigCmdFinished(t_done);
 		}
-		void 		slotConnected(bool t_done) {
-			emit sigConnected(t_done);
-		}
+		void 		slotConnected(bool t_done);
 
 	signals:
 		void		sigCmdProgress(int t_perc, QString t_msg);
@@ -74,10 +70,10 @@ namespace App
 		void 		sigConnected(bool t_done);
 
 	protected:
-		IED_Connection	m_con; // Complex component of IED's stub
+		AppConContainer	m_con; // Complex component of IED's stub
 
 		// Backends for QML
-		ComBackend		m_comBackend;
+		AppBackend		m_appBackend;
 		DevBackend		m_ldBackend;
 		FS_Backend		m_fsBackend;
 	};

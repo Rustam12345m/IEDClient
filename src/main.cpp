@@ -27,7 +27,7 @@
 
 #include <QQuickStyle>
 
-#include "presenter.hpp"
+#include "app/presenter.hpp"
 
 int main(int argc, char *argv[])
 {

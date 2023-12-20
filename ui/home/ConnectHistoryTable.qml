@@ -48,6 +48,7 @@ FocusScope
 
 		defDelegateWidth: rootID.defDelegateWidth
 		defDelegateHeight: rootID.defDelegateHeight
+		rightTextAlign: true
 
 		anchors {
 			left: parent.left
@@ -69,7 +70,7 @@ FocusScope
 		boundsBehavior: Flickable.StopAtBounds
 		clip: true
 
-		focus: false
+		focus: true
 		model: appBackend.lastConnList
 		interactive: true
 
@@ -103,6 +104,11 @@ FocusScope
 			onSigDoubleClick: function(row, col) {
 				//console.log("On double click: row = " + row + ", col = " + col)
 			}
+		}
+
+		Keys.onPressed: function(event) {
+			console.log("ConHistoryTable: " + event.key)
+			event.accepted = false
 		}
 	}
 }
