@@ -200,8 +200,8 @@ FocusScope
 								} else {
 									portInput.text = "102"
 								}
-								userNameInput.enabled = tlsSwitcher.checked
-								userPassInput.enabled = tlsSwitcher.checked
+								// userNameInput.enabled = tlsSwitcher.checked
+								// userPassInput.enabled = tlsSwitcher.checked
 							}
 						}
 					}
@@ -217,6 +217,8 @@ FocusScope
 						TextField {
 							id: userNameInput
 							anchors.fill: parent
+
+							enabled: tlsSwitcher.checked
 
 							placeholderText: "Enter username"
 							placeholderTextColor: "lightgray"
@@ -246,11 +248,12 @@ FocusScope
 							id: userPassInput
 							anchors.fill: parent
 
+							enabled: tlsSwitcher.checked
+
 							placeholderText: "Enter password"
 							placeholderTextColor: "lightgray"
 							echoMode: TextField.Password
 
-							//text: qsTr("pass")
 							font.pixelSize: 14
 							
 							verticalAlignment: Text.AlignVCenter

@@ -41,7 +41,7 @@ namespace Core::Lib
 		~Lib61850_Adapter() override {}
 
 		bool	isConnected() const override;
-		void	printfVersion() const override;
+		QString	getLibVersion() const override;
 
 		bool	connect(const QString &t_ip, unsigned int t_port, bool t_checked,
 						const QString &t_name, const QString &t_pass) override;

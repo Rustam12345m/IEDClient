@@ -45,6 +45,10 @@ namespace App
 		Models::AppEventsTable*	getEventsModel() const { return m_eventsModel; }
 		Models::HistConTable* 	getLastConn_Model() const { return m_lastConnModel; }
 
+		Q_INVOKABLE QString 	getAppVersion();
+		Q_INVOKABLE QString 	getQtVersion();
+		Q_INVOKABLE QString 	getLibVersion();
+
 		void 	newConnection(const Core::Cmd::ConCredentials &t_cred);
 
 	protected:

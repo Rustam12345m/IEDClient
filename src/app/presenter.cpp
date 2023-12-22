@@ -20,8 +20,6 @@
  * */
 
 #include "presenter.hpp"
-#include "builder_information.hpp"
-
 #include "tools/dump_model.hpp"
 
 namespace App
@@ -37,11 +35,6 @@ namespace App
 		t_context->setContextProperty("appBackend", &m_appBackend);
 		t_context->setContextProperty("fsBackend", &m_fsBackend);
 		t_context->setContextProperty("devBackend", &m_ldBackend);
-	}
-
-	QString Presenter::getAppVersion()
-	{
-		return QString("IEDClient v%1").arg(PROJECT_VERSION);
 	}
 
 	void Presenter::connectTo(const QVariantMap &t_data)

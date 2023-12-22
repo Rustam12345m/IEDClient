@@ -24,6 +24,8 @@
 #include <QObject>
 #include <QQmlContext>
 
+#include "app/app_status.hpp"
+
 // bk
 #include "app/app_backend.hpp"
 #include "app/fs_backend.hpp"
@@ -51,7 +53,6 @@ namespace App
 		// API for QML
 		Q_INVOKABLE void 	connectTo(const QVariantMap &t_data);
 		Q_INVOKABLE void 	disconnectFrom();
-		Q_INVOKABLE QString getAppVersion();
 
 		Q_INVOKABLE void 	toolDumpModel(const QVariantMap &t_data);
 

@@ -7,6 +7,9 @@ set(APP_SOURCES
 	app_helpers.hpp
 	app_helpers.cpp
 
+	app_status.hpp
+	app_status.cpp
+
 	app_settings.hpp
 	app_settings.cpp
 
