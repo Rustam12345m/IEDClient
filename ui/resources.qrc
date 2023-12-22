@@ -12,13 +12,13 @@
         <file>common/ToolBarButton.qml</file>
         <file>common/TextDelegate.qml</file>
         <file>common/AboutProgram.qml</file>
-        <file>common/QuestionForUser.qml</file>
         <file>common/ModalProgressBar.qml</file>
         <file>common/Led.qml</file>
         <file>common/SplitDelimeter.qml</file>
         <file>common/SortTableHeader.qml</file>
         <file>common/TableHeader.qml</file>
         <file>common/CustomTabBar.qml</file>
+        <file>common/AppStatusBar.qml</file>
 
         <file>dataset/DS_CommonTable.qml</file>
         <file>dataset/DS_StateTable.qml</file>

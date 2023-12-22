@@ -285,10 +285,10 @@ namespace Core::Lib
 		return true;
 	}
 
-	void Lib61850_Adapter::printfVersion() const
+	QString Lib61850_Adapter::getLibVersion() const
 	{
 		char *pv = LibIEC61850_getVersionString();
-		printf("Libiec61850: Version %s \r\n", pv);
+		return QString("%1").arg(pv);
 	}
 
 	bool Lib61850_Adapter::connect(const QString &t_ip, unsigned int t_port, bool t_checked,

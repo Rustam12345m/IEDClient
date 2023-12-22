@@ -34,7 +34,7 @@ namespace Core::Cmd
 		virtual ~LibInterface() {}
 
 		virtual bool	isConnected() const = 0;
-		virtual void	printfVersion() const = 0;
+		virtual QString	getLibVersion() const = 0;
 
 		virtual bool	connect(const QString &t_ip, unsigned int t_port, bool t_checked,
 								const QString &t_name, const QString &t_pass) = 0;

@@ -41,45 +41,11 @@ Window
 	id: rootWindow
 	width: 1000
 	height: 650
+	minimumWidth: 800
+	minimumHeight: 600
+
 	visible: true
 	color: "white"
-
-	// Status timer
-	Timer {
-		property int tick: 0
-		interval: 1000 // every 1 second
-		running: true
-		repeat: true
-		onTriggered: {
-			tick++
-			//statusTextBox.text = Qt.formatDateTime(new Date(), "hh:mm:ss") + " Uptime: " + tick
-		}
-	}
-	// Close modal window timer
-	Timer {
-		id: timerModalWindow
-
-		interval: 3000
-		running: false
-		repeat: false
-
-		onTriggered: {
-			console.log("Hide modal window by timeout")
-			globalProgressBar.finishLoad()
-		}
-	}
-
-	ModalProgressBar {
-		id: globalProgressBar
-
-		anchors.centerIn: parent
-	}
-
-	QuestionForUser {
-		id: globalQuestionWindow
-
-		anchors.centerIn: parent
-	}
 
 	// Main area
 	Rectangle {
@@ -100,9 +66,10 @@ Window
 				right: mainBack.right
 			}
 			z: 100500
-			height: 30 + 4 // myMenuBar.implicitHeight + 2
+			height: 30 + 4
 
 			color: ColorPalette.toolBarColor
+			clip: true
 
 			// Menu + ToolBar
 			RowLayout {
@@ -128,14 +95,17 @@ Window
 							MenuItem {
 								text: qsTr("Connect")
 								icon.source: "qrc:/img/icons/call.svg"
+								enabled: false
 							}
 							MenuItem {
 								text: qsTr("Disconnect")
 								icon.source: "qrc:/img/icons/call_end.svg"
+								enabled: false
 							}
 							MenuItem {
 								text: qsTr("Settings")
 								icon.source: "qrc:/img/icons/build.svg"
+								enabled: false
 							}
 							MenuSeparator {
 							}
@@ -148,6 +118,7 @@ Window
 								icon.source: "qrc:/img/icons/close.svg"
 							}
 						}
+						/*
 						Menu {
 							title: qsTr("&View")
 
@@ -167,16 +138,19 @@ Window
 								text: qsTr("[FS] Filesystem")
 							}
 						}
+						*/
 						Menu {
 							title: qsTr("&Tools")
 
 							MenuItem {
 								text: qsTr("Save model")
 								icon.source: "qrc:/img/icons/save.svg"
+								enabled: false
 							}
 							MenuItem {
 								text: qsTr("Check SCL")
 								icon.source: "qrc:/img/icons/task_alt.svg"
+								enabled: false
 							}
 							MenuSeparator {
 							}
@@ -196,15 +170,14 @@ Window
 							MenuItem {
 								text: qsTr("Documentation")
 								icon.source: "qrc:/img/icons/school.svg"
+								enabled: false
 							}
 							MenuSeparator {
 							}
 							MenuItem {
 								text: qsTr("About")
 								onTriggered: {
-									var aboutComponent = Qt.createComponent("common/AboutProgram.qml")
-									var aboutWindow = aboutComponent.createObject(rootWindow)
-									aboutWindow.show()
+									rootWindow.showAbotProgramWindow()
 								}
 								icon.source: "qrc:/img/icons/info.svg"
 							}
@@ -256,11 +229,13 @@ Window
 							prompt: "Close the connection"
 							width: toolBar.btnHeight
 							height: toolBar.btnHeight
+							visible: presenter.isConnected
 
 							onSigClicked: function() {
-								globalQuestionWindow.open("Disconnect from ... ?")
+								presenter.disconnectFrom()
 							}
 						}
+						/*
 						// Back
 						ToolBarButton {
 							icon: "qrc:/img/icons/arrow_back.svg"
@@ -284,6 +259,7 @@ Window
 
 							enabled: false
 						}
+						*/
 						// Update
 						ToolBarButton {
 							icon: "qrc:/img/icons/refresh.svg"
@@ -294,6 +270,11 @@ Window
 							onSigClicked: function() {
 								rootWindow.updateActivePage()
 							}
+						}
+						Rectangle {
+							width: 1
+							height: parent.height// - 8
+							color: ColorPalette.modalColor
 						}
 						// Table's columns to content size
 						ToolBarButton {
@@ -352,7 +333,7 @@ Window
 				top: menuBarRect.bottom
 				left: mainBack.left
 				right: mainBack.right
-				bottom: statusArea.top
+				bottom: statusBarID.top
 
 				margins: ColorPalette.borderWidth
 				bottomMargin: 0
@@ -401,7 +382,7 @@ Window
 								if (visible) {
 									focus = true
 
-									setStatusText(presenter.getAppVersion())
+									setStatusText(appBackend.getAppVersion())
 									setActivePanel(Globals.Panel.HIDE)
 								} else {
 									focus = false
@@ -535,51 +516,15 @@ Window
 		}
 
 		// Status line
-		Rectangle {
-			id: statusArea
+		AppStatusBar {
+			id: statusBarID
 
 			anchors {
 				left: mainBack.left
 				right: mainBack.right
 				bottom: mainBack.bottom
 			}
-
 			height: 24
-
-			color: ColorPalette.statusBarColor
-			clip: true
-
-			RowLayout {
-				anchors {
-					fill: parent
-
-					leftMargin: 5
-					rightMargin: 5
-				}
-
-				Text {
-					Layout.fillWidth: true
-					Layout.alignment: Qt.AlignVCenter
-
-					id: statusTextBox
-
-					height: statusArea.height
-
-					horizontalAlignment: Text.AlignLeft
-					verticalAlignment: Text.AlignVCenter
-
-					font.bold: false
-					color: ColorPalette.textColor
-					text: ""
-				}
-				Led {
-					Layout.alignment: Qt.AlignVCenter
-
-					height: 20
-					width: 20 //toolBar.btnHeight
-					color: presenter.isConnected ? "green" : "gray"
-				}
-			}
 		}
 
 		Keys.onPressed: function(event) {
@@ -634,7 +579,30 @@ Window
 				}
 				}
 			}
+			// Ctrl
+			if (event.modifiers & Qt.ControlModifier) {
+				if (event.key == Qt.Key_H) {
+					rootWindow.showAbotProgramWindow()
+				}
+			}
 		}
+	}
+
+	// Close modal window timer
+	Timer {
+		id: timerModalWindow
+
+		interval: 3000
+		running: false
+		repeat: false
+
+		onTriggered: {
+			console.log("Hide modal window by timeout")
+			globalProgressBar.finishLoad()
+		}
+	}
+	ModalProgressBar {
+		id: globalProgressBar
 	}
 
 	// Common functions
@@ -651,6 +619,11 @@ Window
 			rootWindow.visibility = Window.Windowed;
 			fullScreenBtn.icon = "qrc:/img/icons/fullscreen.svg"
 		}
+	}
+	function showAbotProgramWindow() {
+		var aboutComponent = Qt.createComponent("common/AboutProgram.qml")
+		var aboutWindow = aboutComponent.createObject(rootWindow)
+		aboutWindow.show()
 	}
 
 	// History page list
@@ -731,7 +704,7 @@ Window
 		}
 	}
 	function setStatusText(msg) {
-		statusTextBox.text = msg
+		statusBarID.pageStatusText = msg
 	}
 	function resizeColumnsOnPage() {
 		switch (tabBar.currentIndex) {
@@ -828,7 +801,7 @@ Window
 		fsBackend.sigCmdFinished.connect(slotOnFinished)
 
 		// Start status
-		setStatusText(presenter.getAppVersion())
+		setStatusText(appBackend.getAppVersion())
 		setActivePanel(Globals.Panel.HIDE)
 	}
 }

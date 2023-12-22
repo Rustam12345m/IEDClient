@@ -23,11 +23,22 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-Item {
-	Popup {
-		id: progressOverlay
+Rectangle
+{
+	id: rootID
+
+	anchors.fill: parent
+
+	color: "gray"
+	opacity: 0.8
+	z: 100500
+	visible: false
+
+	Dialog {
+		id: dialogID
 
 		anchors.centerIn: parent
+		z: 100501
 
 		width: Math.max(600, progressText.implicitWidth + 50)
 		height: 150
@@ -82,28 +93,27 @@ Item {
 	}
 
 	function isActive() {
-		return progressOverlay.visible
+		return dialogID.visible
 	}
-
 	function startLoad() {
 		//console.log("ModalProgressBar: startLoad")
+		parent.enabled = false
 
 		progressBar.value = 0
-		progressOverlay.visible = true;
-		parent.enabled = false;
+		rootID.visible = true
+		dialogID.visible = true
 	}
+	function finishLoad() {
+		//console.log("ModalProgressBar: finishLoad")
+		rootID.visible = false
+		dialogID.visible = false
 
+		parent.enabled = true
+	}
 	function updateLoad(t_perc, t_msg) {
 		progressBar.value = t_perc
 		progressValue.text = t_perc + " %"
 
 		progressText.text = t_msg
-	}
-
-	function finishLoad() {
-		//console.log("ModalProgressBar: finishLoad")
-
-		progressOverlay.visible = false;
-		parent.enabled = true;
 	}
 }
