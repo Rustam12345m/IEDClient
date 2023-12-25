@@ -38,8 +38,6 @@ Item
 		anchors.fill: parent
 
 		border.width: 1
-		// border.color: (selected ? "black" : "lightgray")
-		// color: (selected ? "lightgray" : "white")
 		border.color: ColorPalette.tableRowBorderColor2
 		color: (selected ? ColorPalette.tableRowColor1 : ColorPalette.tableRowColor2)
 

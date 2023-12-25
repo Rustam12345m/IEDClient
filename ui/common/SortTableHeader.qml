@@ -36,6 +36,7 @@ HorizontalHeaderView
 	boundsBehavior: Flickable.StopAtBounds
 	resizableColumns: true
 
+	focus: false
 	clip: true
 	syncView: tableID
 
@@ -43,7 +44,8 @@ HorizontalHeaderView
 		property int column: model.column
 		property bool sortable: model.display.sortable
 
-		implicitWidth: labelID.implicitWidth + 24 + 10
+		implicitWidth: labelID.implicitWidth + 24 + 24
+		// implicitWidth: rowID.implicitWidth + 10
 		implicitHeight: 30
 
 		border.color: ColorPalette.tableRowBorderColor2
@@ -54,10 +56,12 @@ HorizontalHeaderView
 			id: rowID
 
 			anchors.fill: parent
-			spacing: 5
+			spacing: 8
 
 			layoutDirection: Qt.RightToLeft
-			rightPadding: 10
+			rightPadding: 8
+			leftPadding: 8
+			focus: false
 
 			Text {
 				id: labelID
@@ -67,10 +71,13 @@ HorizontalHeaderView
 				horizontalAlignment: rightTextAlign ? Text.AlignRight : Text.AlignHCenter
 				color: ColorPalette.tableTextColor
 				font.bold: true
+				focus: false
 
 				text: model.display.text
 			}
 			Image {
+				id: imgID
+
 				anchors.verticalCenter: parent.verticalCenter
 
 				visible: (headerID.sortedColumn == column)
@@ -79,6 +86,7 @@ HorizontalHeaderView
 
 				width: 24
 				height: 24
+				focus: false
 			}
 		}
 		MouseArea {
@@ -88,22 +96,22 @@ HorizontalHeaderView
 				rightMargin: 5
 			}
 
-			onClicked: function(msx) {
-				if (sortable == false) {
-					return
-				}
+			onClicked: function(mouse) {
+				mouse.accepted = true
 
-				if (headerID.sortedColumn != column) {
-					headerID.sortedColumn = column
-					headerID.sortOrder = 0
-				}
+				if (sortable) {
+					if (headerID.sortedColumn != column) {
+						headerID.sortedColumn = column
+						headerID.sortOrder = 0
+					}
 
-				if (headerID.sortOrder == 0) {
-					headerID.sortOrder = 1
-				} else {
-					headerID.sortOrder = 0
+					if (headerID.sortOrder == 0) {
+						headerID.sortOrder = 1
+					} else {
+						headerID.sortOrder = 0
+					}
+					tableID.model.sort(parent.column, headerID.sortOrder)
 				}
-				tableID.model.sort(parent.column, headerID.sortOrder)
 			}
 		}
 	}

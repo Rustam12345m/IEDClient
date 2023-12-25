@@ -39,7 +39,6 @@ FocusScope
 	property int defCountWidth: 50
 
 	signal sigLeftOrRightKey()
-	signal sigForceFocus()
 	signal sigSelectedNewDS()
 
 	ListView {

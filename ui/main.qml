@@ -34,11 +34,11 @@ import "qrc:/filesystem/" as FS
 import "qrc:/dataset/" as DS
 import "qrc:/reports/" as RCB
 
-Window
+ApplicationWindow
 {
 	title: qsTr("IEDClient - An Open-Source Client for IEC 61850 Protocols")
 
-	id: rootWindow
+	id: rootWindowID
 	width: 1000
 	height: 650
 	minimumWidth: 800
@@ -177,7 +177,7 @@ Window
 							MenuItem {
 								text: qsTr("About")
 								onTriggered: {
-									rootWindow.showAbotProgramWindow()
+									rootWindowID.showAbotProgramWindow()
 								}
 								icon.source: "qrc:/img/icons/info.svg"
 							}
@@ -208,7 +208,7 @@ Window
 							height: toolBar.btnHeight
 
 							onSigClicked: function() {
-								rootWindow.setActivePage(Globals.Page.START)
+								rootWindowID.setActivePage(Globals.Page.START)
 							}
 						}
 						// Full-screen
@@ -235,40 +235,16 @@ Window
 								presenter.disconnectFrom()
 							}
 						}
-						/*
-						// Back
+						// Navigation screen
 						ToolBarButton {
-							icon: "qrc:/img/icons/arrow_back.svg"
-							prompt: "Back to previous page"
+							icon: "qrc:/img/icons/view_comfy_alt.svg"
+							prompt: "Navigation window"
 							width: toolBar.btnHeight
 							height: toolBar.btnHeight
 
 							onSigClicked: function() {
-								switchToPreviousPage()
-							}
-						}
-						// Forward
-						ToolBarButton {
-							icon: "qrc:/img/icons/arrow_forward.svg"
-							prompt: "Go to next page"
-							width: toolBar.btnHeight
-							height: toolBar.btnHeight
-
-							onSigClicked: function() {
-							}
-
-							enabled: false
-						}
-						*/
-						// Update
-						ToolBarButton {
-							icon: "qrc:/img/icons/refresh.svg"
-							prompt: "Update data on this page"
-							width: toolBar.btnHeight
-							height: toolBar.btnHeight
-
-							onSigClicked: function() {
-								rootWindow.updateActivePage()
+								console.log("Clicked: " + prompt)
+								rootWindowID.showNavigationGrid()
 							}
 						}
 						Rectangle {
@@ -285,7 +261,18 @@ Window
 
 							onSigClicked: function() {
 								console.log("Clicked: " + prompt)
-								rootWindow.resizeColumnsOnPage()
+								rootWindowID.resizeColumnsOnPage()
+							}
+						}
+						// Update
+						ToolBarButton {
+							icon: "qrc:/img/icons/refresh.svg"
+							prompt: "Update data on this page"
+							width: toolBar.btnHeight
+							height: toolBar.btnHeight
+
+							onSigClicked: function() {
+								rootWindowID.updateActivePage()
 							}
 						}
 					}
@@ -295,32 +282,6 @@ Window
 				Item {
 					Layout.fillWidth: true
 					height: toolBar.btnHeight
-				}
-
-				// TabBar for StackLayout
-				Item {
-					Layout.fillWidth: false
-					Layout.preferredWidth: tabBar.implicitWidth
-
-					id: mainTabBar
-					// height: toolBar.btnHeight
-					height: 26
-
-					CustomTabBar {
-						id: tabBar
-						anchors.fill: parent
-
-						horizontalBar: true
-
-						model: ListModel {
-							ListElement { title: "Home" }
-							ListElement { title: "LD" }
-							ListElement { title: "LN" }
-							ListElement { title: "DS" }
-							ListElement { title: "CB" }
-							ListElement { title: "FS" }
-						}
-					}
 				}
 			}
 		}
@@ -361,7 +322,7 @@ Window
 
 					// Pages
 					StackLayout {
-						id: mainStack
+						id: mainStackID
 
 						anchors {
 							top: tabsArea.top
@@ -372,7 +333,6 @@ Window
 						}
 
 						clip: true
-						currentIndex: tabBar.currentIndex
 
 						Home.Page {
 							id: startPage
@@ -412,7 +372,7 @@ Window
 								}
 							}
 							onSigActivatePage: function(page) {
-								rootWindow.setActivePage(page)
+								rootWindowID.setActivePage(page)
 							}
 						}
 
@@ -537,6 +497,7 @@ Window
 				event.accepted = true
 				return
 			}
+
 			// Fullscreen
 			if (event.key == Qt.Key_F11) {
 				toFullscreenMode()
@@ -548,41 +509,47 @@ Window
 			if (event.modifiers & Qt.AltModifier) {
 				switch (event.key) {
 				case Qt.Key_1: {
-					rootWindow.setActivePage(Globals.Page.START)
+					rootWindowID.setActivePage(Globals.Page.START)
 					event.accepted = true
 					return
 				}
 				case Qt.Key_2: {
-					rootWindow.setActivePage(Globals.Page.LD)
+					rootWindowID.setActivePage(Globals.Page.LD)
 					event.accepted = true
 					return
 				}
 				case Qt.Key_3: {
-					rootWindow.setActivePage(Globals.Page.LN)
+					rootWindowID.setActivePage(Globals.Page.LN)
 					event.accepted = true
 					return
 				}
 				case Qt.Key_4: {
-					rootWindow.setActivePage(Globals.Page.FS)
+					rootWindowID.setActivePage(Globals.Page.FS)
 					event.accepted = true
 					return
 				}
 				case Qt.Key_5: {
-					rootWindow.setActivePage(Globals.Page.DS)
+					rootWindowID.setActivePage(Globals.Page.DS)
 					event.accepted = true
 					return
 				}
 				case Qt.Key_6: {
-					rootWindow.setActivePage(Globals.Page.RCB)
+					rootWindowID.setActivePage(Globals.Page.RCB)
 					event.accepted = true
 					return
 				}
 				}
 			}
+
+			// Navigation panel
+			if ((event.key == Qt.Key_E) && (event.modifiers & Qt.AltModifier)) {
+				showNavigationGrid()
+			}
+
 			// Ctrl
 			if (event.modifiers & Qt.ControlModifier) {
 				if (event.key == Qt.Key_H) {
-					rootWindow.showAbotProgramWindow()
+					rootWindowID.showAbotProgramWindow()
 				}
 			}
 		}
@@ -601,88 +568,47 @@ Window
 			globalProgressBar.finishLoad()
 		}
 	}
-	ModalProgressBar {
+	Home.AppProgressBar {
 		id: globalProgressBar
+	}
+
+	// Navigation grid
+	Home.NavigationGrid {
+		id: navigationGridID
+
+		onSigSelectedNextPage: function(t_id) {
+			setActivePage(t_id)
+		}
+	}
+	function showNavigationGrid() {
+		navigationGridID.currentIndex = mainStackID.currentIndex
+		navigationGridID.showNavigationGrid()
 	}
 
 	// Common functions
 	function openEventLog() {
 		var logsComponent = Qt.createComponent("home/AppEventViewer.qml")
-		var logsWindow = logsComponent.createObject(rootWindow)
+		var logsWindow = logsComponent.createObject(rootWindowID)
 		logsWindow.show()
 	}
 	function toFullscreenMode() {
-		if (rootWindow.visibility === Window.Windowed) {
-			rootWindow.visibility = Window.FullScreen;
+		if (rootWindowID.visibility === Window.Windowed) {
+			rootWindowID.visibility = Window.FullScreen;
 			fullScreenBtn.icon = "qrc:/img/icons/close_fullscreen.svg"
 		} else {
-			rootWindow.visibility = Window.Windowed;
+			rootWindowID.visibility = Window.Windowed;
 			fullScreenBtn.icon = "qrc:/img/icons/fullscreen.svg"
 		}
 	}
 	function showAbotProgramWindow() {
-		var aboutComponent = Qt.createComponent("common/AboutProgram.qml")
-		var aboutWindow = aboutComponent.createObject(rootWindow)
+		var aboutComponent = Qt.createComponent("home/AboutProgram.qml")
+		var aboutWindow = aboutComponent.createObject(rootWindowID)
 		aboutWindow.show()
-	}
-
-	// History page list
-	property var pageHistoryList: [ 0 ]
-	function pushPageToHistoryList(page) {
-		pageHistoryList.push(page)
-	}
-	function switchToPreviousPage() {
-		console.log("Switch to previous page: " + pageHistoryList)
-
-		switch (tabBar.currentIndex) {
-		case Globals.Page.LD: {
-			setActivePage(Globals.Page.Main)
-			break;
-		}
-		case Globals.Page.LN:
-		case Globals.Page.FS:
-		case Globals.Page.DS:
-		case Globals.Page.RCB: {
-			setActivePage(Globals.Page.LD)
-			break;
-		}
-		}
 	}
 
 	// Active Page + Panel
 	function setActivePage(page) {
-		//console.log("ActivatePage: new index = " + page)
-		pushPageToHistoryList(mainStack.currentIndex)
-
-		switch (page) {
-		case Globals.Page.START: {
-			tabBar.currentIndex = 0;
-			break;
-		}
-		case Globals.Page.LD: {
-			tabBar.currentIndex = 1;
-			break;
-		}
-		case Globals.Page.LN: {
-			tabBar.currentIndex = 2;
-			break;
-		}
-		case Globals.Page.FS: {
-			tabBar.currentIndex = 3;
-			break;
-		}
-		case Globals.Page.DS: {
-			tabBar.currentIndex = 4;
-			break;
-		}
-		case Globals.Page.RCB: {
-			tabBar.currentIndex = 5;
-			break;
-		}
-		default: {
-			return;
-		}
-		}
+		mainStackID.currentIndex = page
 	}
 	function setActivePanel(index) {
 		//console.log("ActivatePanel: new index = " + index)
@@ -707,7 +633,7 @@ Window
 		statusBarID.pageStatusText = msg
 	}
 	function resizeColumnsOnPage() {
-		switch (tabBar.currentIndex) {
+		switch (mainStackID.currentIndex) {
 		case Globals.Page.START:
 		case Globals.Page.LD: {
 			break;
@@ -735,7 +661,7 @@ Window
 	function updateActivePage() {
 		console.log("F5: Update active page")
 
-		switch (tabBar.currentIndex) {
+		switch (mainStackID.currentIndex) {
 		case Globals.Page.START: {
 			break;
 		}
@@ -781,7 +707,7 @@ Window
 	function slotOnConnected(t_done) {
 		if (t_done) {
 			globalProgressBar.finishLoad()
-			rootWindow.setActivePage(Globals.Page.LD)
+			rootWindowID.setActivePage(Globals.Page.LD)
 		} else {
 			timerModalWindow.running = true
 		}
@@ -803,5 +729,18 @@ Window
 		// Start status
 		setStatusText(appBackend.getAppVersion())
 		setActivePanel(Globals.Panel.HIDE)
+	}
+
+	// Debug
+	Timer {
+		id: debugTimerID
+
+		interval: 5000
+		//running: true
+		repeat: true
+
+		onTriggered: {
+			console.log("Currently focused item:", rootWindowID.activeFocusItem)
+		}
 	}
 }

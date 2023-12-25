@@ -91,7 +91,6 @@ FocusScope
 
 			onSigClick: function(row, col) {
 				Globals.setSelectedRow(tableID, row)
-				sigForceFocus()
 			}
 		}
 

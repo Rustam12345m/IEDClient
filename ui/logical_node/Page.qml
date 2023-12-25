@@ -34,7 +34,7 @@ FocusScope
 	id: rootID
 
 	function resizeColumnsOnPage() {
-		tableDO.resizeColumns()
+		tableDO.resizeColumnsToContent()
 	}
 
 	// Window for setting a new value for DA/SDA
@@ -58,8 +58,9 @@ FocusScope
 
 		// Area for LogicalNode's table
 		Rectangle {
-			SplitView.minimumWidth: 300
+			SplitView.preferredWidth: 300
 			SplitView.fillWidth: false
+
 			color: ColorPalette.backgroundColor2
 
 			// Table
@@ -75,19 +76,21 @@ FocusScope
 					tableLN.focus = false
 					tableDO.focus = true
 				}
-				onSigForceFocus: function() {
-					tableLN.focus = true
-					tableDO.focus = false
-				}
 				onSigSelectedNewLN: function() {
 					// devBackend.updateLN_TreeValues(tableDO.currentLDevice, tableDO.currentLNode)
+				}
+			}
+
+			onWidthChanged: {
+				if (width < 50) {
+					width = 0
 				}
 			}
 		}
 
 		// Area for DataObject's table
 		Rectangle {
-			SplitView.minimumWidth: 100
+			SplitView.minimumWidth: 200
 			SplitView.fillWidth: true
 
 			color: ColorPalette.backgroundColor1
@@ -97,11 +100,9 @@ FocusScope
 				id: lnSignalsStack
 
 				anchors {
-					// right: rectLnViewTabBar.left
 					left: parent.left
 					right: parent.right
 					top: parent.top
-					// bottom: parent.bottom
 					bottom: rectLnViewTabBar.top
 				}
 
@@ -113,10 +114,6 @@ FocusScope
 						console.log("LN_Page: Activate LN_Table")
 						tableLN.focus = true
 						tableDO.focus = false
-					}
-					onSigForceFocus: function() {
-						tableLN.focus = false
-						tableDO.focus = true
 					}
 				}
 

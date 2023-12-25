@@ -23,10 +23,10 @@ import QtQuick
 import QtQuick.Controls
 import Qt.labs.qmlmodels
 
-import "qrc:/common/"
-
 import GlobalVarsModule
 import AppStylesModule
+
+import "qrc:/common/"
 
 // Table of all Logical Nodes for one Logical Device
 FocusScope
@@ -34,10 +34,9 @@ FocusScope
 	id: rootID
 
 	readonly property int defDelegateHeight: 30
-	readonly property int defDelegateWidth: 60
+	readonly property int defDelegateWidth: 70
 
 	signal sigLeftOrRightKey()
-	signal sigForceFocus()
 	signal sigSelectedNewLN()
 
 	// Header of LN table below
@@ -48,9 +47,9 @@ FocusScope
 		defDelegateHeight: rootID.defDelegateHeight
 
 		anchors {
-			left: tableID.left
-			top: parent.top
+			left: parent.left
 			right: parent.right
+			top: parent.top
 		}
 	}
 
@@ -110,7 +109,6 @@ FocusScope
 
 					onSigClick: function(row, col) {
 						Globals.setSelectedRow(tableID, row)
-						sigForceFocus()
 					}
 				}
 			}
@@ -127,7 +125,6 @@ FocusScope
 
 					onSigClick: function(row, col) {
 						Globals.setSelectedRow(tableID, row)
-						sigForceFocus()
 					}
 				}
 			}
@@ -144,7 +141,6 @@ FocusScope
 
 					onSigClick: function(row, col) {
 						Globals.setSelectedRow(tableID, row)
-						sigForceFocus()
 					}
 				}
 			}
@@ -161,7 +157,6 @@ FocusScope
 
 					onSigClick: function(row, col) {
 						Globals.setSelectedRow(tableID, row)
-						sigForceFocus()
 					}
 				}
 			}

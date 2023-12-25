@@ -56,9 +56,11 @@ FocusScope
 	SortTableHeader {
 		id: headerID
 
+		focus: false
+
 		anchors {
-			left: tableID.left
 			top: parent.top
+			left: tableID.left
 			right: parent.right
 		}
 	}
@@ -77,17 +79,12 @@ FocusScope
 		model: fsBackend.sortModel //fsBackend.filesModel
 
 		focus: true
-		keyNavigationEnabled: true
 		reuseItems: true
-
-		interactive: true
+		keyNavigationEnabled: true
 
 		clip: true
+		interactive: true
 		boundsBehavior: Flickable.StopAtBounds
-
-		// columnWidthProvider: function(t_column) {
-		// 	return Globals.calcColumnsWidth(headerID, tableID, t_column)
-		// }
 
 		selectionBehavior: TableView.SelectRows
 		selectionModel: ItemSelectionModel {
@@ -99,86 +96,16 @@ FocusScope
 			*/
 		}
 
-		delegate: DelegateChooser {
-			// Index
-			DelegateChoice {
-				column: 0
+		delegate: TextDelegate {
+			delegateHeight: 30
+			selected: (tableID.currentRow == row)
+			text: model.display
 
-				delegate: FS_TextDelegate {
-					selected: (tableID.currentRow == row)
-					text: model.display
-
-					onSigSelectRow: function(t_row) {
-						Globals.setSelectedRow(tableID, t_row)
-					}
-					onSigDownloadFile: function(t_row) {
-						rootID.cmdDownloadFile(t_row)
-					}
-				}
+			onSigClick: function(t_row) {
+				Globals.setSelectedRow(tableID, t_row)
 			}
-			// Last modified time
-			DelegateChoice {
-				column: 1
-
-				delegate: FS_TextDelegate {
-					selected: (tableID.currentRow == row)
-					text: model.display
-
-					onSigSelectRow: function(t_row) {
-						Globals.setSelectedRow(tableID, t_row)
-					}
-					onSigDownloadFile: function(t_row) {
-						rootID.cmdDownloadFile(t_row)
-					}
-				}
-			}
-			// File name
-			DelegateChoice {
-				column: 2
-
-				delegate: FS_TextDelegate {
-					selected: (tableID.currentRow == row)
-					text: model.display
-
-					onSigSelectRow: function(t_row) {
-						Globals.setSelectedRow(tableID, t_row)
-					}
-					onSigDownloadFile: function(t_row) {
-						rootID.cmdDownloadFile(t_row)
-					}
-				}
-			}
-			// File size
-			DelegateChoice {
-				column: 3
-
-				delegate: FS_TextDelegate {
-					selected: (tableID.currentRow == row)
-					text: model.display
-
-					onSigSelectRow: function(t_row) {
-						Globals.setSelectedRow(tableID, t_row)
-					}
-					onSigDownloadFile: function(t_row) {
-						rootID.cmdDownloadFile(t_row)
-					}
-				}
-			}
-			// Controls
-			DelegateChoice {
-				column: 4
-
-				delegate: FS_ControlDelegate {
-					selected: (tableID.currentRow == row)
-
-					onSigDownloadFile: function(t_row) {
-						rootID.cmdDownloadFile(t_row)
-					}
-
-					onSigRemoveFile: function(t_row) {
-						rootID.cmdRemoveFile(t_row)
-					}
-				}
+			onSigDoubleClick: function(t_row) {
+				rootID.cmdDownloadFile(t_row)
 			}
 		}
 
@@ -195,13 +122,20 @@ FocusScope
 		}
 
 		Keys.onPressed: function(event) {
+			console.log("FS: Key pressed " + event.key)
+
 			if (event.key == Qt.Key_Return || event.key == Qt.Key_Enter) {
-				rootID.downloadFile(tableID.currentRow)
+				rootID.cmdDownloadFile(tableID.currentRow)
+				event.accepted = true
+				return
 			}
+			event.accepted = false
 		}
 	}
 
 	onVisibleChanged: {
-		tableID.focus = visible
+		if (visible) {
+			tableID.forceActiveFocus()
+		}
 	}
 }

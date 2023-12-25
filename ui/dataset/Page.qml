@@ -31,7 +31,7 @@ FocusScope
 	id: rootID
 
 	function resizeColumnsOnPage() {
-		tableDS_Val.resizeColumns()
+		tableDS_Val.resizeColumnsToContent()
 	}
 
 	SplitView {
@@ -63,10 +63,6 @@ FocusScope
 					tableDS_Info.focus = false
 					tableDS_Val.focus = true
 				}
-				onSigForceFocus: function() {
-					tableDS_Info.focus = true
-					tableDS_Val.focus = false
-				}
 			}
 		}
 
@@ -86,10 +82,6 @@ FocusScope
 				onSigLeftOrRightKey: function() {
 					tableDS_Info.focus = true
 					tableDS_Val.focus = false
-				}
-				onSigForceFocus: function() {
-					tableDS_Info.focus = false
-					tableDS_Val.focus = true
 				}
 			}
 		}
