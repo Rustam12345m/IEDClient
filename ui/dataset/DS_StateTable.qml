@@ -37,9 +37,8 @@ FocusScope
 	readonly property int defDelegateWidth: 60
 
 	signal sigLeftOrRightKey()
-	signal sigForceFocus()
 
-	function resizeColumns() {
+	function resizeColumnsToContent(){
 		Globals.resizeColumnsToContent(headerID, tableID)
 	}
 
@@ -75,17 +74,12 @@ FocusScope
 		interactive: true
 		boundsBehavior: Flickable.StopAtBounds
 
-		// columnWidthProvider: function(t_column) {
-		// 	return Globals.calcColumnsWidth(headerID, tableID, t_column)
-		// }
-
 		selectionBehavior: TableView.SelectRows
 		selectionModel: ItemSelectionModel {
 			model: tableID.model
 
-			onCurrentChanged: {
-				// Qt.callLater(rootID.resizeColumns)
-			}
+			// onCurrentChanged: {
+			// }
 		}
 
 		delegate: TextDelegate {
@@ -97,7 +91,6 @@ FocusScope
 
 			onSigClick: function(row, col) {
 				Globals.setSelectedRow(tableID, row)
-				sigForceFocus()
 			}
 		}
 

@@ -48,12 +48,16 @@ Item {
 			anchors.fill: parent
 
 			Label {
+				Layout.alignment: Qt.AlignHCenter
+
 				id: msgText
 
 				text: ""
 			}
 
 			TextField {
+				Layout.alignment: Qt.AlignHCenter
+
 				id: valueBox
 
 				width: 100

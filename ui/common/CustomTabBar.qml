@@ -30,6 +30,7 @@ Rectangle
 	id: rootID
 
 	color: "white"
+	focus: false
 
 	property bool leftSide: false
 	property bool horizontalBar: false
@@ -85,14 +86,17 @@ Rectangle
 					}
 
 					text: title
+					focus: false
 				}
 				MouseArea {
 					anchors.fill: parent
 					acceptedButtons: Qt.LeftButton
 
-					onClicked: {
+					onClicked: function(mouse) {
 						vertTabBar.currentIndex = index
 						sigTabSelected(index)
+
+						mouse.accepted = true
 					}
 				}
 			}

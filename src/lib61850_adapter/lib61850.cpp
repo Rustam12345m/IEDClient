@@ -635,6 +635,10 @@ namespace Core::Lib
 
 	int Lib61850_Adapter::removeFile(const QString &t_filename)
 	{
+		if (!isConnected()) {
+			return -1;
+		}
+
 		IedClientError retval = IED_ERROR_OK;
 		IedConnection_deleteFile(m_libConn, &retval, t_filename.toStdString().c_str());
 		return (retval != IED_ERROR_OK);
@@ -642,6 +646,10 @@ namespace Core::Lib
 
 	void Lib61850_Adapter::downloadFile(const QString &t_filename)
 	{
+		if (!isConnected()) {
+			return;
+		}
+
 		IedClientError error = IED_ERROR_OK;
 		uint32_t id = IedConnection_getFileAsync(m_libConn, &error, t_filename.toStdString().c_str(),
 												getFileAsyncHandler, nullptr);

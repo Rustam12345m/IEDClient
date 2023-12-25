@@ -36,9 +36,8 @@ FocusScope
 	readonly property int defDelegateHeight: 30
 
 	signal sigLeftOrRightKey()
-	signal sigForceFocus()
 
-	function resizeColumns() {
+	function resizeColumnsToContent(){
 		Globals.resizeColumnsToContent(headerID, tableID)
 	}
 
@@ -92,7 +91,6 @@ FocusScope
 
 			onSigClick: function(row, col) {
 				Globals.setSelectedRow(tableID, row)
-				sigForceFocus()
 			}
 		}
 
@@ -128,6 +126,7 @@ FocusScope
 			event.accepted = false
 		}
 
+		/*
 		Connections {
 			target: devBackend.getLN_StateModel()
 
@@ -135,5 +134,6 @@ FocusScope
 				Qt.callLater(rootID.resizeColumns)
 			}
 		}
+		*/
 	}
 }

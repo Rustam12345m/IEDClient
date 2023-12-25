@@ -54,7 +54,6 @@ FocusScope {
 
 		model: devBackend.getLD_GridModel()
 
-		// delegate: LD_GridDelegate {
 		delegate: LD_GridItem {
 			// blkWidth: rootID.blkWidth
 			// blkHeight: rootID.blkHeight

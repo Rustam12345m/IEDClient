@@ -38,6 +38,7 @@ HorizontalHeaderView
 
 	syncView: tableID
 	clip: true
+	focus: false
 
 	delegate: Rectangle {
 		property var paramModel: model
@@ -56,10 +57,12 @@ HorizontalHeaderView
 
 			horizontalAlignment: rightTextAlign ? Text.AlignRight : Text.AlignHCenter
 			verticalAlignment: Text.AlignVCenter
-			rightPadding: 10
+			rightPadding: 8
+			leftPadding: 8
 
 			color: ColorPalette.tableTextColor
 			font.bold: true
+			focus: false
 
 			text: model[headerID.textRole]
 		}

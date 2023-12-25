@@ -5,14 +5,15 @@
         <file>home/Page.qml</file>
         <file>home/ConnectHistoryTable.qml</file>
         <file>home/AppEventViewer.qml</file>
+        <file>home/AboutProgram.qml</file>
+        <file>home/AppProgressBar.qml</file>
+        <file>home/NavigationGrid.qml</file>
 
         <file>singletons/Globals.qml</file>
         <file>singletons/ColorPalette.qml</file>
 
         <file>common/ToolBarButton.qml</file>
         <file>common/TextDelegate.qml</file>
-        <file>common/AboutProgram.qml</file>
-        <file>common/ModalProgressBar.qml</file>
         <file>common/Led.qml</file>
         <file>common/SplitDelimeter.qml</file>
         <file>common/SortTableHeader.qml</file>
@@ -29,7 +30,6 @@
         <file>reports/RCB_ReportsTable.qml</file>
 
         <file>logical_device/Page.qml</file>
-        <file>logical_device/LD_GridDelegate.qml</file>
         <file>logical_device/LD_GridItem.qml</file>
         <file>logical_device/LD_PropertiesPanel.qml</file>
 
@@ -43,10 +43,10 @@
         <file>logical_node/DiaChangeValue.qml</file>
 
         <file>filesystem/Page.qml</file>
-        <file>filesystem/FS_TextDelegate.qml</file>
         <file>filesystem/FS_ControlDelegate.qml</file>
     </qresource>
     <qresource prefix="/img">
+        <file>icons/apps.svg</file>
         <file>icons/arrow_back.svg</file>
         <file>icons/arrow_forward.svg</file>
         <file>icons/build.svg</file>
@@ -103,5 +103,9 @@
         <file>icons/tune.svg</file>
         <file>icons/vertical_split.svg</file>
         <file>icons/view_sidebar.svg</file>
+
+        <file>icons/horizontal_distribute.svg</file>
+        <file>icons/settings_ethernet.svg</file>
+        <file>icons/view_comfy_alt.svg</file>
     </qresource>
 </RCC>

@@ -55,6 +55,7 @@ Window
 			TextEdit {
 				anchors.centerIn: parent
 
+				focus: false
 				textFormat: Text.RichText
 				readOnly: true
 				cursorVisible: false
@@ -81,7 +82,7 @@ Window
 				anchors.fill: parent
 
 				clip: true
-				focus: true
+				focus: false
 				boundsBehavior: Flickable.StopAtBounds
 
 				model: rootID.appInfoListModel
@@ -160,12 +161,19 @@ Window
 					right: parent.right
 					bottom: parent.bottom
 				}
+				focus: true
 
 				text: "Ok"
 
 				onClicked: {
 					close()
 				}
+			}
+		}
+
+		Keys.onPressed: function(event) {
+			if (event.key == Qt.Key_Return || event.key == Qt.Key_Enter || event.key == Qt.Key_Escape) {
+				rootID.close()
 			}
 		}
 	}

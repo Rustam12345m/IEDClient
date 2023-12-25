@@ -62,9 +62,18 @@ QtObject
 		t_tableID.selectionModel.setCurrentIndex(idx, ItemSelectionModel.Clear
 													| ItemSelectionModel.Select
 													| ItemSelectionModel.Rows);
+		t_tableID.forceActiveFocus()
 	}
 
 	function resizeColumnsToContent(t_headerID, t_tableID)
+	{
+		for (let i=0;i<t_tableID.columns;i++) {
+			let w = Math.max(t_headerID.implicitColumnWidth(i), t_tableID.implicitColumnWidth(i))
+			t_tableID.setColumnWidth(i, w)
+		}
+	}
+
+	function resizeColumnsToAvailableWidth(t_headerID, t_tableID)
 	{
 		var iw = []
 		let sum = 0, i = 0

@@ -46,17 +46,15 @@ Item {
 
 			anchors.fill: parent
 
-			// horizontalAlignment: Text.AlignHCenter
 			horizontalAlignment: Text.AlignRight
 			verticalAlignment: Text.AlignVCenter
-			rightPadding: 10
-			leftPadding: 10
+			rightPadding: 8
+			leftPadding: 8
 
 			elide: Text.ElideRight
 			text: " - "
 		}
 	}
-
 	MouseArea {
 		anchors.fill: parent
 		acceptedButtons: Qt.LeftButton | Qt.RightButton
