@@ -58,10 +58,10 @@ namespace Core::Lib
 		int 	fetchLN_SVCB(Core::DataModelBuilder &t_builder);
 
 	public:
-		int		updateLDs_Status(Core::ptrDataModel t_model) override;
-		int		updateLNs_Status(Core::ptrLD t_ld) override;
-		int		updateLN_Signals(Core::ptrLN t_ln) override;
-		int		updateDS_Signals(Core::ptrDataSet t_ds) override;
+		Core::ptrValuesUpdater 	getValuesForLN(Core::ptrLN t_ln) override;
+		Core::ptrValuesUpdater 	getValuesForDS(Core::ptrDataSet t_ds) override;
+		Core::ptrValuesUpdater 	getStatusValuesForLD(Core::ptrLD t_ld) override;
+		Core::ptrValuesUpdater	getStatusValuesForLN(Core::ptrLN t_ln) override;
 
 		int		getFileList(Core::DirOn &t_dir) override;
 		void 	downloadFile(const QString &t_filename) override;

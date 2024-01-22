@@ -26,6 +26,7 @@ namespace Core::Cmd
 {
 	void UpdateLNs_StatusCmd::execute(LibInterface &t_con)
 	{
+		/*
 		ptrLD ld = m_ied->model().getLogicalDevice(m_ldIndex);
 		if (ld) {
 			if (t_con.updateLNs_Status(ld) == 0) {
@@ -33,6 +34,7 @@ namespace Core::Cmd
 				return;
 			}
 		}
+		*/
 		emit sigFinished(false);
 	}
 

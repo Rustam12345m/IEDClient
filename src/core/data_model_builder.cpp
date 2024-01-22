@@ -35,21 +35,21 @@ namespace Core
 	DataModelBuilder& DataModelBuilder::createLD(const QString &t_name)
 	{
 		m_lastLD = QSharedPointer<LogicalDevice>::create(m_model.get(), t_name);
-		m_model->push(m_lastLD);
+		m_model->addSubItem(m_lastLD);
 		return *this;
 	}
 
 	DataModelBuilder& DataModelBuilder::createLN(const QString &t_name)
 	{
 		m_lastLN = QSharedPointer<LogicalNode>::create(m_lastLD.get(), t_name);
-		m_lastLD->push(m_lastLN);
+		m_lastLD->addSubItem(m_lastLN);
 		return *this;
 	}
 
 	DataModelBuilder& DataModelBuilder::createDO(const QString &t_name)
 	{
 		m_lastDO = QSharedPointer<DataObject>::create(m_lastLN.get(), t_name);
-		m_lastLN->push(m_lastDO);
+		m_lastLN->addSubItem(m_lastDO);
 		return *this;
 	}
 
@@ -57,14 +57,14 @@ namespace Core
 												const QString &t_fc, int t_fcNum)
 	{
 		m_lastDA = QSharedPointer<DataAttribute>::create(m_lastDO.get(), t_name, t_fc, t_fcNum);
-		m_lastDO->push(m_lastDA);
+		m_lastDO->addSubItem(m_lastDA);
 		return *this;
 	}
 
 	DataModelBuilder& DataModelBuilder::createSDA(QSharedPointer<Item> t_parent, const QString &t_name)
 	{
 		m_lastSDA = QSharedPointer<SubAttribute>::create(t_parent.get(), t_name);
-		t_parent->push(m_lastSDA);
+		t_parent->addSubItem(m_lastSDA);
 		return *this;
 	}
 
@@ -79,11 +79,11 @@ namespace Core
 	DataModelBuilder& DataModelBuilder::createDataSet_Elem(const QString &t_ref, const QString &t_fc)
 	{
 		auto dsEnt = QSharedPointer<DataSetEntity>::create(lastDataSet().get(), t_ref, t_fc);
-		lastDataSet()->push(dsEnt);
+		lastDataSet()->addSubItem(dsEnt);
 		return *this;
 	}
 
-	QSharedPointer<DataModel> DataModelBuilder::build()
+	QSharedPointer<DataModel> DataModelBuilder::build(QThread *t_guiThread)
 	{
 		m_model->calcIEDNameFromLD();
 
@@ -92,8 +92,9 @@ namespace Core
 
 			for (size_t j=0;j<ld->getItemCount();j++) {
 				auto ln = ld->getItem<LogicalNode>(j);
+				ln->moveToThread(t_guiThread); // GUI thread
 
-				ln->m_doTable = LN_StateTableBuilder::create(ln);
+				ln->m_sigMatrix = LN_SignalMatrixBuilder::create(ln);
 			}
 		}
 		return m_model;

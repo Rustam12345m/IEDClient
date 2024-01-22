@@ -2,16 +2,26 @@
 
 set(CORE_SOURCES
 	item.hpp
+	item.cpp
+
+	item_value.hpp
+	item_value_updater.hpp
+
 	item_factory.hpp
 	item_factory.cpp
 
 	sub_attribute.hpp
 	data_attribute.hpp
 	data_object.hpp
+
 	logical_node.hpp
+	logical_node.cpp
+
 	logical_device.hpp
 
 	dataset.hpp
+	dataset.cpp
+
 	report_control_block.hpp
 	goose_control_block.hpp
 	sv_control_block.hpp
@@ -23,8 +33,8 @@ set(CORE_SOURCES
 	data_model_builder.hpp
 	data_model_builder.cpp
 
-	ln_state_table.hpp
-	ln_state_table.cpp
+	ln_signal_matrix.hpp
+	ln_signal_matrix.cpp
 
 	ied_object.hpp
 	ied_object.cpp

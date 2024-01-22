@@ -29,14 +29,13 @@ import AppStylesModule
 import "qrc:/common/"
 
 // Table of all Logical Nodes for one Logical Device
-FocusScope
+Item
 {
 	id: rootID
 
 	readonly property int defDelegateHeight: 30
 	readonly property int defDelegateWidth: 70
 
-	signal sigLeftOrRightKey()
 	signal sigSelectedNewLN()
 
 	// Header of LN table below
@@ -104,7 +103,7 @@ FocusScope
 					delegateHeight: defDelegateHeight
 					selected: (tableID.currentRow == row)
 
-					textAlign: Text.AlignHCenter
+					textAlign: Text.AlignRight// HCenter
 					text: model.value
 
 					onSigClick: function(row, col) {
@@ -170,15 +169,6 @@ FocusScope
 					active = true;
 				}
 			}
-		}
-
-		Keys.onPressed: function(event) {
-			//console.log("LN_Table: Key pressed " + event.key)
-			if (event.key == Qt.Key_Left || event.key == Qt.Key_Right || event.key == Qt.Key_Tab) {
-				sigLeftOrRightKey()
-				event.accepted = true
-			}
-			event.accepted = false
 		}
 
 		onVisibleChanged: {

@@ -27,47 +27,31 @@
 
 namespace App::Models
 {
-	/*
-	* ListModel with properties of selected LD
-	* */
-	class LD_PropTable : public QAbstractListModel
+	class LD_OverviewGrid : public QAbstractListModel
 	{
 		Q_OBJECT
-		enum Roles
-		{
-			SECTION_ROLE = Qt::UserRole + 1,
-			NAME_ROLE,
-			VALUE_ROLE
-		};
-		struct PropertyItem
-		{
-			QString		section;
-			QString 	name;
-			QString 	obj;
-
-			PropertyItem(const QString &t_node, const QString &t_name, const QString &t_obj)
-				: section{t_node}, name{t_name}, obj{t_obj} {}
+		enum LD_ModelRole {
+			LD_ROLE_VALUES = Qt::UserRole + 1
 		};
 
 	public:
-		LD_PropTable(QObject *t_parent, Core::ptrIED_Object t_ied);
+		LD_OverviewGrid(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied);
 
-		void 	setNewIED(Core::ptrIED_Object t_ied);
+		void 		setNewIED(QSharedPointer<Core::IED_Object> t_ied);
 
 		QHash<int, QByteArray> roleNames() const override;
-		int rowCount(const QModelIndex &t_index = QModelIndex()) const override;
-		QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
-	private:
-		QVariant dataLD(const QModelIndex &t_index, int t_role) const;
-		QVariant dataIED(const QModelIndex &t_index, int t_role) const;
+		int			rowCount(const QModelIndex &t_index = QModelIndex()) const override;
+		QVariant	data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
+
+		Q_INVOKABLE void 	setSelectedLD(int t_ld);
+
+	signals:
+		void 		sigLDSelected(int t_ld);
 
 	public slots:
-		void 	slotLDSelected(int t_ld);
+		void		slotDataUpdated(bool t_status);
 
 	private:
-		Core::ptrIED_Object		m_ied;
-		QList<PropertyItem> 	m_ldProp;
-		QList<PropertyItem> 	m_devProp;
-		int 					m_currentLD = -1;
+		QSharedPointer<Core::IED_Object>	m_ied;
 	};
 }

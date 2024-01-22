@@ -42,7 +42,7 @@ namespace App
 			return (m_ip == t_right.m_ip)
 					&& (m_port == t_right.m_port)
 					&& (m_tls == t_right.m_tls)
-					&& (m_name == t_right.m_name)
+					/* && (m_name == t_right.m_name) */
 					/* && (m_date == t_right.m_date) */;
 		}
 

@@ -21,45 +21,52 @@
 
 #pragma once
 
-#include "models_stub.hpp"
+#include <QAbstractTableModel>
+
 #include "core/ied_object.hpp"
 
 namespace App::Models
 {
-	class LN_StateTable : public QAbstractTableModel
+	class LN_OverviewTable : public QAbstractTableModel
 	{
 		Q_OBJECT
 		enum Columns {
-			DO_NAME_COLUMN = 0,
-			DO_FC_COLUMN,
-			DO_VALUE_COLUMN,
-			DO_QUALITY_COLUMN,
-			DO_TS_COLUMN,
-			DO_DESC_COLUMN
+			NameColumn = 0,
+			ModeColumn,
+			BehColumn,
+			HealthColumn,
+
+			ColumnsCount
 		};
 
 	public:
-		LN_StateTable(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied);
+		LN_OverviewTable(QObject *t_parent, Core::ptrIED_Object t_ied);
 
-		void 	setNewIED(QSharedPointer<Core::IED_Object> t_ied);
+		Q_INVOKABLE void setSelectedLN(int t_inx);
+
+		void 	setNewIED(Core::ptrIED_Object t_ied);
+		auto 	getLogicalDevice() const { return m_ldev; }
 
 		QVariant headerData(int t_section, Qt::Orientation t_orientation,
 							int t_role = Qt::DisplayRole) const override;
+
 		QHash<int, QByteArray> roleNames() const override;
 
 		int 	rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
 		int 	columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
+
 		QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
-		void 	getSelectedLN(int &t_ld, int &t_ln);
+	signals:
+		void	sigLNSelected(int t_ld, int t_ln);
 
 	public slots:
-		void 	slotLNSelected(int t_ld, int t_ln);
-		void 	slotDataUpdated(bool t_done);
+		void 	slotDataUpdated(bool t_status);
+		void 	slotLDSelected(int t_ld);
 
 	private:
-		QSharedPointer<Core::IED_Object> m_ied;
-		int		m_currentLD = -1; // current index of Logical Device
-		int		m_currentLN = -1; // current index of Logical Node
+		Core::ptrIED_Object 	m_ied;
+		Core::ptrLD	 			m_ldev; // selected Logical Device by user
+		int 					m_ldevIndex = 0; //
 	};
 }

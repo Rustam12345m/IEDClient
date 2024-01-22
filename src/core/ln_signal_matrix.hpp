@@ -30,6 +30,57 @@ namespace Core
 	class LogicalNode;
 
 	/*
+	 * 
+	 * */
+	class SignalMatrixRow
+	{
+	public:
+		SignalMatrixRow() = default;
+		SignalMatrixRow(const QString &t_path, const QString &t_fc, ptrItem t_v, ptrItem t_q, ptrItem t_ts, ptrItem t_desc)
+			: m_path{t_path}, m_fc{t_fc}, m_value(t_v), m_quality(t_q), m_timestamp(t_ts), m_desc(t_desc)
+		{}
+
+		ptrItem 	base() const { return m_dataObject; }
+		QString 	name() const { return m_path; }
+		QString 	fc() const { return m_fc; }
+		QString 	value() const {
+			if (m_value) {
+				return m_value->getValue();
+			}
+			return QString();
+		}
+		QString 	quality() const {
+			if (m_quality) {
+				return m_quality->getValue();
+			}
+			return QString();
+		}
+		QString 	timestamp() const {
+			if (m_timestamp) {
+				return m_timestamp->getValue();
+			}
+			return QString();
+		}
+		QString 	desc() const {
+			if (m_desc) {
+				return m_desc->getValue();
+			}
+			return QString();
+		}
+
+	private:
+		ptrItem 	m_dataObject;
+		QString 	m_path;
+		QString 	m_fc; // Functional constraint of the Value
+		ptrItem		m_value;
+		ptrItem		m_quality;
+		ptrItem		m_timestamp;
+		ptrItem		m_desc;
+
+		friend class LN_SignalMatrixBuilder;
+	};
+
+	/*
 	 * Representation Logical Node as a Table by particular FC or their combination
 	 * 1. ST + MX + DC(d)
 	 * 2. CO
@@ -43,56 +94,10 @@ namespace Core
 	 * - Timestamp
 	 * - Description
 	 * */
-	class LN_StateTable
+	class LN_SignalMatrix
 	{
-		class OneSignal
-		{
-		public:
-			OneSignal() = default;
-			OneSignal(const QString &t_path, const QString &t_fc, ptrItem t_v, ptrItem t_q, ptrItem t_ts, ptrItem t_desc)
-				: m_name{t_path}, m_fc{t_fc}, m_value(t_v), m_quality(t_q), m_timestamp(t_ts), m_desc(t_desc)
-			{}
-
-			QString 	name() const { return m_name; }
-			QString 	fc() const { return m_fc; }
-			QString 	value() const {
-				if (m_value) {
-					return m_value->value();
-				}
-				return QString();
-			}
-			QString 	quality() const {
-				if (m_quality) {
-					return m_quality->value();
-				}
-				return QString();
-			}
-			QString 	timestamp() const {
-				if (m_timestamp) {
-					return m_timestamp->value();
-				}
-				return QString();
-			}
-			QString 	desc() const {
-				if (m_desc) {
-					return m_desc->value();
-				}
-				return QString();
-			}
-
-		private:
-			QString 				m_name;
-			QString 				m_fc; // Functional constraint of the Value
-			QSharedPointer<Item>	m_value;
-			QSharedPointer<Item>	m_quality;
-			QSharedPointer<Item>	m_timestamp;
-			QSharedPointer<Item>	m_desc;
-
-			friend class LN_StateTableBuilder;
-		};
-
 	public:
-		LN_StateTable() {}
+		LN_SignalMatrix() {}
 
 		int 		size() const {
 			return m_signals.size();
@@ -141,23 +146,28 @@ namespace Core
 			return "";
 		}
 
-	protected:
-		QList<OneSignal>	m_signals;
+		auto& 		getRows() const {
+			return m_signals;
+		}
 
-		friend class LN_StateTableBuilder;
+	protected:
+		QList<SignalMatrixRow>	m_signals;
+
+		friend class LN_SignalMatrixBuilder;
 	};
 
 	/*
 	 * SignalsTable's builder
 	 * */
-	class LN_StateTableBuilder
+	class LN_SignalMatrixBuilder
 	{
 	public:
-		static QSharedPointer<LN_StateTable> create(QSharedPointer<LogicalNode> t_ln);
+		static QSharedPointer<LN_SignalMatrix> create(QSharedPointer<LogicalNode> t_ln);
 
 	private:
-		static void recursFindSignals(QSharedPointer<LN_StateTable> t_table,
-									  QSharedPointer<Item> t_root, QSharedPointer<Item> t_item,
-									  LN_StateTable::OneSignal t_prototype);
+		static void recursiveFillMatrix(QSharedPointer<LN_SignalMatrix> t_table,
+									  	QSharedPointer<Item> t_root,
+									  	QSharedPointer<Item> t_item,
+									  	SignalMatrixRow t_prototype);
 	};
 }

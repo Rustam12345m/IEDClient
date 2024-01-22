@@ -20,12 +20,25 @@
  * */
 
 #include "update_dataset_cmd.hpp"
-#include <QDebug>
 
 namespace Core::Cmd
 {
 	void UpdateDataSet_Cmd::execute(LibInterface &t_con)
 	{
-		emit sigFinished(false);
+		/*
+		ptrValuesUpdater vals = t_con.getValuesForLN(m_lnode);
+		if (vals) {
+			connect(this, &Core::Cmd::UpdateLNode_Cmd::sigNewValues,
+					m_lnode.get(), &Core::LogicalNode::slotUpdateValues,
+					Qt::QueuedConnection); // Qt::BlockingQueuedConnection
+
+			// Update process must to be finished in the GUI thread
+			emit sigNewValues(vals);
+
+			emit sigFinished(true);
+		} else {
+			emit sigFinished(false);
+		}
+		*/
 	}
 }

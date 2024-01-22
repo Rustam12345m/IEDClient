@@ -24,9 +24,13 @@
 #include <QObject>
 
 #include "data_object.hpp"
+#include "item_value_updater.hpp"
 
 namespace Core
 {
+	/*
+	 * 
+	 * */
 	class DataSetEntity : public Item
 	{
 	public:
@@ -44,21 +48,24 @@ namespace Core
 	};
 
 	/*
-	 * Representation a DataSet of IED
+	 * Representation of a DataSet of IED
 	 * */
-	class DataSet : public Item
+	class DataSet : public QObject, public Item
 	{
+		Q_OBJECT
 	public:
 		DataSet(Item *t_parent, const QString &t_name, const QString &t_lnRef, bool t_del)
-			: Item(t_parent, t_name), m_lnReference{t_lnRef}, m_isDeletable{t_del}
+			: QObject(nullptr), Item(t_parent, t_name), m_lnReference{t_lnRef}, m_isDeletable{t_del}
 		{}
 
 		const QString ref() const { return m_lnReference; }
+
+	signals:
+		void 	sigItemUpdated(QList<ptrItem> t_items);
 
 	private:
 		QString	m_lnReference;
 		bool 	m_isDeletable = false;
 	};
-
 	typedef QSharedPointer< DataSet > 	ptrDataSet;
 }

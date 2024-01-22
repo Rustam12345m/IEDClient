@@ -21,34 +21,35 @@
 
 #pragma once
 
-#include "basic_command.hpp"
-#include "core/ied_object.hpp"
+#include <QString>
+#include <QSharedPointer>
 
-namespace Core::Cmd
+namespace Core
 {
 	/*
 	 * 
 	 * */
-	class UpdateDataSet_Cmd : public BasicCommand
+	class ItemValue
 	{
-		Q_OBJECT
 	public:
-		UpdateDataSet_Cmd(ptrIED_Object t_ied, ptrDataSet t_ds)
-			: m_ied{t_ied}, m_dataset{t_ds}
-		{
+		ItemValue() {}
+		ItemValue(const QString &t_value) : m_value(t_value) {}
+
+		QString 	str() {
+			return m_value;
 		}
 
-		void 	execute(LibInterface &t_con) override;
-
-		static auto create(ptrIED_Object t_ied, ptrDataSet t_ds) {
-			return QSharedPointer<UpdateDataSet_Cmd>::create(t_ied, t_ds);
+		bool operator==(const ItemValue &t_other) {
+			return (m_value == t_other.m_value);
 		}
 
-	signals:
-		void 	sigNewValues(ptrValuesUpdater t_vals);
+		static auto		create(const QString &t_value) {
+			return QSharedPointer<ItemValue>::create(t_value);
+		}
 
 	private:
-		ptrIED_Object 	m_ied;
-		ptrDataSet		m_dataset;
+		QString 	m_value;
 	};
+
+	typedef QSharedPointer<ItemValue> 	ptrValue;
 }

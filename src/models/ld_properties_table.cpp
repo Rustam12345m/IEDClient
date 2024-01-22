@@ -19,11 +19,11 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "ld_prop_table.hpp"
+#include "ld_properties_table.hpp"
 
 namespace App::Models
 {
-	LD_PropTable::LD_PropTable(QObject *t_parent, Core::ptrIED_Object t_ied)
+	LD_PropertiesTable::LD_PropertiesTable(QObject *t_parent, Core::ptrIED_Object t_ied)
 		: QAbstractListModel(t_parent), m_ied{t_ied}
 	{
 		m_ldProp.append(PropertyItem("General information", "Name", ""));
@@ -52,19 +52,19 @@ namespace App::Models
 		m_devProp.append(PropertyItem("Connection", "Max PDU", ""));
 	}
 
-	void LD_PropTable::setNewIED(Core::ptrIED_Object t_ied)
+	void LD_PropertiesTable::setNewIED(Core::ptrIED_Object t_ied)
 	{
 		beginResetModel();
 		m_ied = t_ied;
 		endResetModel();
 	}
 
-	QHash<int, QByteArray> LD_PropTable::roleNames() const
+	QHash<int, QByteArray> LD_PropertiesTable::roleNames() const
 	{
 		return { { SECTION_ROLE, "section" }, { NAME_ROLE, "name" }, { VALUE_ROLE, "value" } };
 	}
 
-	int LD_PropTable::rowCount(const QModelIndex &t_index) const
+	int LD_PropertiesTable::rowCount(const QModelIndex &t_index) const
 	{
 		if (m_currentLD >= 0) {
 			return m_ldProp.count();
@@ -73,7 +73,7 @@ namespace App::Models
 		}
 	}
 
-	QVariant LD_PropTable::data(const QModelIndex &t_index, int t_role) const
+	QVariant LD_PropertiesTable::data(const QModelIndex &t_index, int t_role) const
 	{
 		if (m_currentLD >= 0) {
 			return dataLD(t_index, t_role);
@@ -82,7 +82,7 @@ namespace App::Models
 		}
 	}
 
-	QVariant LD_PropTable::dataLD(const QModelIndex &t_index, int t_role) const
+	QVariant LD_PropertiesTable::dataLD(const QModelIndex &t_index, int t_role) const
 	{
 		int row = t_index.row();
 		if (row < 0 || row >= m_ldProp.size()) {
@@ -104,7 +104,7 @@ namespace App::Models
 				if (m_ldProp[row].obj.isEmpty()) {
 					// LD's common properties like: count of LN, DS or RCB
 					if (m_ldProp[row].name == "Name") {
-						return ld->name();
+						return ld->getName();
 					} else if (m_ldProp[row].name == "LN") {
 						return QVariant(QString::number(ld->getItemCount()));
 					} else if (m_ldProp[row].name == "RCB") {
@@ -112,9 +112,9 @@ namespace App::Models
 					}
 				} else {
 					// DataModel LD parameters
-					auto item = ld->find(m_ldProp[row].section, m_ldProp[row].obj, m_ldProp[row].name);
+					auto item = ld->findSubItem(m_ldProp[row].section, m_ldProp[row].obj, m_ldProp[row].name);
 					if (item) {
-						return item->value();
+						return item->getValue();
 					}
 				}
 				return " ? ";
@@ -125,7 +125,7 @@ namespace App::Models
 		return QVariant(" - ");
 	}
 
-	QVariant LD_PropTable::dataIED(const QModelIndex &t_index, int t_role) const
+	QVariant LD_PropertiesTable::dataIED(const QModelIndex &t_index, int t_role) const
 	{
 		int row = t_index.row();
 		if (row < 0 || row >= m_devProp.size()) {
@@ -155,7 +155,7 @@ namespace App::Models
 		return QVariant(" - ");
 	}
 
-	void LD_PropTable::slotLDSelected(int t_ld)
+	void LD_PropertiesTable::slotLDSelected(int t_ld)
 	{
 		beginResetModel();
 		m_currentLD = t_ld;

@@ -29,15 +29,13 @@ import AppStylesModule
 import "qrc:/common/"
 
 // Table with DataObjects for concrete Logical Node
-FocusScope
+Item
 {
 	id: rootID
 
 	readonly property int defDelegateHeight: 30
 
-	signal sigLeftOrRightKey()
-
-	function resizeColumnsToContent(){
+	function resizeColumnsToContent() {
 		Globals.resizeColumnsToContent(headerID, tableID)
 	}
 
@@ -117,23 +115,12 @@ FocusScope
 			}
 		}
 
-		Keys.onPressed: function(event) {
-			//console.log("DO_Table: Key pressed " + event.key)
-			if (event.key == Qt.Key_Left || event.key == Qt.Key_Right || event.key == Qt.Key_Tab) {
-				sigLeftOrRightKey()
-				event.accepted = true
-			}
-			event.accepted = false
-		}
-
-		/*
 		Connections {
 			target: devBackend.getLN_StateModel()
 
 			function onDataChanged() {
-				Qt.callLater(rootID.resizeColumns)
+				Qt.callLater(rootID.resizeColumnsToContent)
 			}
 		}
-		*/
 	}
 }

@@ -21,50 +21,54 @@
 
 #pragma once
 
-#include <QAbstractTableModel>
+#include <QAbstractListModel>
 
 #include "core/ied_object.hpp"
 
 namespace App::Models
 {
-	class LN_CommonTable : public QAbstractTableModel
+	/*
+	 * ListModel with properties for the selected LD
+	 * */
+	class LD_PropertiesTable : public QAbstractListModel
 	{
 		Q_OBJECT
-		enum Columns {
-			NameColumn = 0,
-			ModeColumn,
-			BehColumn,
-			HealthColumn,
+		enum Roles
+		{
+			SECTION_ROLE = Qt::UserRole + 1,
+			NAME_ROLE,
+			VALUE_ROLE
+		};
+		struct PropertyItem
+		{
+			QString		section;
+			QString 	name;
+			QString 	obj;
 
-			ColumnsCount
+			PropertyItem(const QString &t_node, const QString &t_name, const QString &t_obj)
+				: section{t_node}, name{t_name}, obj{t_obj} {}
 		};
 
 	public:
-		LN_CommonTable(QObject *t_parent, Core::ptrIED_Object t_ied);
+		LD_PropertiesTable(QObject *t_parent, Core::ptrIED_Object t_ied);
 
-		Q_INVOKABLE void setSelectedLN(int t_inx);
 		void 	setNewIED(Core::ptrIED_Object t_ied);
-		int 	getCurrentLD() const { return m_currentLD; }
-
-		QVariant headerData(int t_section, Qt::Orientation t_orientation,
-							int t_role = Qt::DisplayRole) const override;
 
 		QHash<int, QByteArray> roleNames() const override;
-
-		int 	rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
-		int 	columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
-
+		int rowCount(const QModelIndex &t_index = QModelIndex()) const override;
 		QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
-	signals:
-		void	sigLNSelected(int t_ld, int t_ln);
+	private:
+		QVariant dataLD(const QModelIndex &t_index, int t_role) const;
+		QVariant dataIED(const QModelIndex &t_index, int t_role) const;
 
 	public slots:
-		void 	slotDataUpdated(bool t_status);
 		void 	slotLDSelected(int t_ld);
 
 	private:
-		Core::ptrIED_Object 	m_ied;
-		int		m_currentLD = -1; // selected Logical Device by user
+		Core::ptrIED_Object		m_ied;
+		QList<PropertyItem> 	m_ldProp;
+		QList<PropertyItem> 	m_devProp;
+		int 					m_currentLD = -1;
 	};
 }

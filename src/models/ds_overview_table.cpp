@@ -19,39 +19,39 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "ds_common_table.hpp"
+#include "ds_overview_table.hpp"
 
 namespace App::Models
 {
-	DS_CommonLModel::DS_CommonLModel(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied)
+	DS_OverviewTable::DS_OverviewTable(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied)
 		: QAbstractListModel(t_parent), m_ied(t_ied)
 	{
 	}
 
-	void DS_CommonLModel::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
+	void DS_OverviewTable::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
 	{
 		beginResetModel();
 		m_ied = t_ied;
 		endResetModel();
 	}
 
-	void DS_CommonLModel::setSelectedDS(int t_ds)
+	void DS_OverviewTable::setSelectedDS(int t_ds)
 	{
 		m_currentDS = t_ds;
 		emit sigDSSelected(m_currentDS);
 	}
 
-	QHash<int, QByteArray> DS_CommonLModel::roleNames() const
+	QHash<int, QByteArray> DS_OverviewTable::roleNames() const
 	{
 		return { { SECTION_ROLE, "section" }, { NAME_ROLE, "name" }, { VALUE_ROLE, "value" } };
 	}
 
-	int DS_CommonLModel::rowCount(const QModelIndex &t_parent) const
+	int DS_OverviewTable::rowCount(const QModelIndex &t_parent) const
 	{
 		return m_ied->model().dsList().count();
 	}
 
-	QVariant DS_CommonLModel::data(const QModelIndex &t_index, int t_role) const
+	QVariant DS_OverviewTable::data(const QModelIndex &t_index, int t_role) const
 	{
 		int row = t_index.row();
 		auto dsList = m_ied->model().dsList();
@@ -61,10 +61,10 @@ namespace App::Models
 
 		switch (t_role) {
 		case SECTION_ROLE: {
-			return QVariant(dsList[row]->parent()->ref());
+			return QVariant(dsList[row]->Core::Item::getParent()->getReference());
 		}
 		case NAME_ROLE: {
-			return QVariant(dsList[row]->name());
+			return QVariant(dsList[row]->getName());
 		}
 		case VALUE_ROLE: {
 			return QVariant(QString::number(dsList[row]->getItemCount()));
@@ -73,7 +73,7 @@ namespace App::Models
 		return QVariant("??");
 	}
 
-	void DS_CommonLModel::slotDataUpdated()
+	void DS_OverviewTable::slotDataUpdated()
 	{
 		//emit dataChanged(index(0, DS_LD_Column), index(rowCount() - 1, ColumnsCount));
 	}

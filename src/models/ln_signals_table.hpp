@@ -26,45 +26,46 @@
 
 namespace App::Models
 {
-	class RCB_CommonTable : public QAbstractTableModel
+	/*
+	 * This is a model for the selected LogicalNode that contains the following columns:
+	 * Path to the attirubte, value, quality, timestamp and description
+	 * 
+	 * */
+	class LN_SignalTable : public QAbstractTableModel
 	{
 		Q_OBJECT
 		enum Columns {
-			RCB_ENA_COLUMN = 0,
-			RCB_RESV_COLUMN,
-			RCB_ID_COLUMN,
-			RCB_OWNER_COLUMN,
-			RCB_DS_COLUMN,
-			RCB_TRIG_COLUMN,
-			RCB_CREV_COLUMN,
-			RCB_BUFF_COLUMN,
-			RCB_INTEGRITY_COLUMN,
-
-			ColumnsCount
+			DO_NAME_COLUMN = 0,
+			DO_FC_COLUMN,
+			DO_VALUE_COLUMN,
+			DO_QUALITY_COLUMN,
+			DO_TS_COLUMN,
+			DO_DESC_COLUMN
 		};
 
 	public:
-		RCB_CommonTable(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied);
+		LN_SignalTable(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied);
 
-		Q_INVOKABLE void setSelectedRCB(int t_inx);
-		void 		setNewIED(QSharedPointer<Core::IED_Object> t_ied);
+		void 	setNewIED(QSharedPointer<Core::IED_Object> t_ied);
+		auto 	getCurrectLN() const {
+			return m_lnode;
+		}
 
-		QVariant 	headerData(int t_section, Qt::Orientation t_orientation,
+		QVariant headerData(int t_section, Qt::Orientation t_orientation,
 							int t_role = Qt::DisplayRole) const override;
 		QHash<int, QByteArray> roleNames() const override;
 
-		int 		rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
-		int			columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
-		QVariant 	data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
-
-	signals:
-		void	sigRCBSelected(int t_inx);
+		int 	rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
+		int 	columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
+		QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
 	public slots:
-		void 	slotDataUpdated(bool t_done);
+		void 	slotDataUpdated(QSharedPointer<QList<Core::Item*>> t_nodes);
+		void 	slotLNSelected(int t_ld, int t_ln);
 
 	private:
 		QSharedPointer<Core::IED_Object> m_ied;
-		int 	m_currentRCB = -1;
+		Core::ptrLN 					 m_lnode; // currect logical node of this model
+		QMetaObject::Connection 		 m_updConnection; // signal from LogicalNode
 	};
 }

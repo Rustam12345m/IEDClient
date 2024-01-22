@@ -21,34 +21,36 @@
 
 #pragma once
 
-#include "basic_command.hpp"
-#include "core/ied_object.hpp"
+#include "item.hpp"
 
-namespace Core::Cmd
+namespace Core
 {
 	/*
-	 * 
+	 * This class holds pointers to current Items and new values for them.
+	 * To prevent race conditions, the values of Item must be updated in the GUI thread.
 	 * */
-	class UpdateDataSet_Cmd : public BasicCommand
+	class ItemValuesUpdater
 	{
-		Q_OBJECT
 	public:
-		UpdateDataSet_Cmd(ptrIED_Object t_ied, ptrDataSet t_ds)
-			: m_ied{t_ied}, m_dataset{t_ds}
-		{
+		ItemValuesUpdater() {}
+
+		void 	push(ptrItem t_item, ptrValue t_value) {
+			m_values.emplace_back(t_item, t_value);
 		}
 
-		void 	execute(LibInterface &t_con) override;
-
-		static auto create(ptrIED_Object t_ied, ptrDataSet t_ds) {
-			return QSharedPointer<UpdateDataSet_Cmd>::create(t_ied, t_ds);
+		auto 	update() {
+			QList<ptrItem> result; // updated items (new value)
+			for (const auto&[item, value] : m_values) {
+				if (item->updateValue(value)) {
+					result.push_back(item);
+				}
+			}
+			m_values.clear();
+			return result;
 		}
-
-	signals:
-		void 	sigNewValues(ptrValuesUpdater t_vals);
 
 	private:
-		ptrIED_Object 	m_ied;
-		ptrDataSet		m_dataset;
+		QList< QPair<ptrItem, ptrValue> > 	m_values;
 	};
+	typedef QSharedPointer< ItemValuesUpdater >	ptrValuesUpdater;
 }

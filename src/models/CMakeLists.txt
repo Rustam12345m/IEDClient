@@ -8,17 +8,17 @@ set(SOURCES
 	dev_fs_table.hpp
 	dev_fs_table.cpp
 
-	ln_state_table.cpp
-	ln_state_table.hpp
+	ln_signals_table.cpp
+	ln_signals_table.hpp
 
-	ld_common_grid.hpp
-	ld_common_grid.cpp
+	ld_overview_grid.hpp
+	ld_overview_grid.cpp
 
-	ld_prop_table.hpp
-	ld_prop_table.cpp
+	ld_properties_table.hpp
+	ld_properties_table.cpp
 
-	ln_common_table.hpp
-	ln_common_table.cpp
+	ln_overview_table.hpp
+	ln_overview_table.cpp
 
 	ln_signals_tree.hpp
 	ln_signals_tree.cpp
@@ -29,14 +29,14 @@ set(SOURCES
 	history_con_table.hpp
 	history_con_table.cpp
 
-	ds_common_table.hpp
-	ds_common_table.cpp
+	ds_overview_table.hpp
+	ds_overview_table.cpp
 
 	ds_signals_table.hpp
 	ds_signals_table.cpp
 
-	rcb_common_table.hpp
-	rcb_common_table.cpp
+	rcb_overview_table.hpp
+	rcb_overview_table.cpp
 
 	reports_table.hpp
 	reports_table.cpp

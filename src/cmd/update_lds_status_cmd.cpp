@@ -27,7 +27,7 @@ namespace Core::Cmd
 {
 	void UpdateLDs_StatusCmd::execute(LibInterface &t_con)
 	{
-		// t_con.updateLDs_Status(m_ied->model());
+		// ptrValuesUpdater vals = t_con.getStatusValuesForLDs(m_ied->getDataModel());
 	}
 
 	void UpdateLDs_StatusCmd::slotMsgProgress(const QString &t_msg)

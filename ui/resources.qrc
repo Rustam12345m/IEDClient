@@ -21,7 +21,7 @@
         <file>common/CustomTabBar.qml</file>
         <file>common/AppStatusBar.qml</file>
 
-        <file>dataset/DS_CommonTable.qml</file>
+        <file>dataset/DS_OverviewTable.qml</file>
         <file>dataset/DS_StateTable.qml</file>
         <file>dataset/Page.qml</file>
 
@@ -34,7 +34,7 @@
         <file>logical_device/LD_PropertiesPanel.qml</file>
 
         <file>logical_node/Page.qml</file>
-        <file>logical_node/LN_CommonTable.qml</file>
+        <file>logical_node/LN_OverviewTable.qml</file>
         <file>logical_node/ModBehHealthDelegate.qml</file>
         <file>logical_node/LN_StateView.qml</file>
         <file>logical_node/LN_SignalsTree.qml</file>

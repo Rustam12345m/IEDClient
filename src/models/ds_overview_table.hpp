@@ -27,7 +27,7 @@
 
 namespace App::Models
 {
-	class DS_CommonLModel : public QAbstractListModel
+	class DS_OverviewTable : public QAbstractListModel
 	{
 		Q_OBJECT
 		enum Roles
@@ -38,7 +38,7 @@ namespace App::Models
 		};
 
 	public:
-		DS_CommonLModel(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied);
+		DS_OverviewTable(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied);
 
 		Q_INVOKABLE void setSelectedDS(int t_ds);
 		int 	getCurrentDS() const { return m_currentDS; }

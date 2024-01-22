@@ -34,8 +34,9 @@ Rectangle
 
 	property bool leftSide: false
 	property bool horizontalBar: false
-	property alias model: vertTabBar.model
-	property alias currentIndex: vertTabBar.currentIndex
+	property alias model: listViewID.model
+	property alias currentIndex: listViewID.currentIndex
+	property alias spacing: listViewID.spacing
 	property int cellWidth: 60
 	property int cellHeight: 120
 
@@ -44,11 +45,11 @@ Rectangle
 
 	signal sigTabSelected(int index)
 
-	implicitHeight: rootID.horizontalBar ? rootID.height : (vertTabBar.count * rootID.cellHeight)
-	implicitWidth: rootID.horizontalBar ? (vertTabBar.count * rootID.cellWidth) : rootID.width
+	implicitHeight: rootID.horizontalBar ? rootID.height : (listViewID.count * rootID.cellHeight)
+	implicitWidth: rootID.horizontalBar ? (listViewID.count * rootID.cellWidth) : rootID.width
 
 	ListView {
-		id: vertTabBar
+		id: listViewID
 
 		anchors {
 			fill: parent
@@ -67,6 +68,7 @@ Rectangle
 		delegate: Item {
 			required property int index
 			required property string title
+			property bool selected: (listViewID.currentIndex === index)
 
 			implicitHeight: rootID.horizontalBar ? rootID.height : rootID.cellHeight
 			implicitWidth: rootID.horizontalBar ? rootID.cellWidth : rootID.width
@@ -76,8 +78,10 @@ Rectangle
 				height: parent.height
 
 				border.width: 1
-				border.color: (vertTabBar.currentIndex === index) ? ColorPalette.modalColor : ColorPalette.toolBarColor
-				color: rootID.unselectedColor
+				// border.color: (listViewID.currentIndex === index) ? rootID.selectedColor : ColorPalette.borderColor
+				// border.color: selected ? rootID.selectedColor : "lightgray"
+				border.color: "lightgray"
+				color: selected ? rootID.selectedColor : rootID.unselectedColor
 
 				Text {
 					rotation: rootID.horizontalBar ? 0 : (rootID.leftSide ? -90 : 90)
@@ -93,7 +97,7 @@ Rectangle
 					acceptedButtons: Qt.LeftButton
 
 					onClicked: function(mouse) {
-						vertTabBar.currentIndex = index
+						listViewID.currentIndex = index
 						sigTabSelected(index)
 
 						mouse.accepted = true

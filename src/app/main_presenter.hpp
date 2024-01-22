@@ -26,22 +26,22 @@
 
 #include "app/app_status.hpp"
 
-// bk
-#include "app/app_backend.hpp"
-#include "app/fs_backend.hpp"
-#include "app/dev_backend.hpp"
+// other specific presenters for GUI
+#include "app/app_presenter.hpp"
+#include "app/fs_presenter.hpp"
+#include "app/ied_presenter.hpp"
 
 namespace App
 {
 	/*
-	 * Presenter for QML contains specific backends like FS, LD
+	 * MainPresenter for QML contains specific backends like FS, LD
 	 * */
-	class Presenter : public QObject
+	class MainPresenter : public QObject
 	{
 		Q_OBJECT
 	public:
-		Presenter();
-		~Presenter() = default;
+		MainPresenter();
+		~MainPresenter() = default;
 
 		void 		setContextMembers(QQmlContext *t_context);
 
@@ -75,7 +75,7 @@ namespace App
 
 		// Backends for QML
 		AppBackend		m_appBackend;
-		DevBackend		m_ldBackend;
+		IED_Presenter	m_ldBackend;
 		FS_Backend		m_fsBackend;
 	};
 }

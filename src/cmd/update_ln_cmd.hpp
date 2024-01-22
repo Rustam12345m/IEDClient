@@ -26,23 +26,29 @@
 
 namespace Core::Cmd
 {
+	/*
+	 * 
+	 * */
 	class UpdateLNode_Cmd : public BasicCommand
 	{
+		Q_OBJECT
 	public:
-		UpdateLNode_Cmd(ptrIED_Object t_ied, int t_ldIndex, int t_lnIndex)
-			: m_ied{t_ied}, m_ldIndex{t_ldIndex}, m_lnIndex{t_lnIndex}
+		UpdateLNode_Cmd(ptrIED_Object t_ied, ptrLN t_lnode)
+			: m_ied{t_ied}, m_lnode{t_lnode}
 		{
 		}
 
-		void execute(LibInterface &t_con) override;
+		void 	execute(LibInterface &t_con) override;
 
-		static auto create(ptrIED_Object t_ied, int t_ldInx, int t_lnInx) {
-			return QSharedPointer<UpdateLNode_Cmd>::create(t_ied, t_ldInx, t_lnInx);
+		static auto create(ptrIED_Object t_ied, ptrLN t_lnode) {
+			return QSharedPointer<UpdateLNode_Cmd>::create(t_ied, t_lnode);
 		}
-	
+
+	signals:
+		void 	sigNewValues(ptrValuesUpdater t_vals);
+
 	private:
 		ptrIED_Object 	m_ied;
-		int				m_ldIndex = -1;
-		int				m_lnIndex = -1;
+		ptrLN			m_lnode;
 	};
 }

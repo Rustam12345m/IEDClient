@@ -18,17 +18,17 @@ set(APP_SOURCES
 	backend_base.hpp
 	backend_base.cpp
 
-	app_backend.hpp
-	app_backend.cpp
+	app_presenter.hpp
+	app_presenter.cpp
 
-	fs_backend.hpp
-	fs_backend.cpp
+	fs_presenter.hpp
+	fs_presenter.cpp
 
-	dev_backend.hpp
-	dev_backend.cpp
+	ied_presenter.hpp
+	ied_presenter.cpp
 
-	presenter.hpp
-	presenter.cpp
+	main_presenter.hpp
+	main_presenter.cpp
 )
 
 qt_add_library(app_lib STATIC ${APP_SOURCES})

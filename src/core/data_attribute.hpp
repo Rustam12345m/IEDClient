@@ -26,7 +26,7 @@
 namespace Core
 {
 	/*
-	 * Representation a Data Attribute of Data Object
+	 * Representation of a Data Attribute of Data Object
 	 * Has important FunctionConstrain = FC
 	 * */
 	class DataAttribute : public Item
@@ -39,13 +39,6 @@ namespace Core
 			return m_fcNum;
 		}
 
-		QString		value() override {
-			return m_value;
-		}
-		void		update(const QString &t_value) override {
-			m_value = t_value;
-		}
-
 	public:
 		DataAttribute(Item *t_parent, const QString &t_name, const QString &t_fc, int t_fcNum)
 			: Item(t_parent, t_name)
@@ -54,16 +47,10 @@ namespace Core
 			m_fcNum = t_fcNum;
 			m_delimetr = "."; // Between DOName and DAName
 		}
-
-	protected:
-		void 	debug(QDebug &t_debug) const {
-			t_debug.noquote() << m_name << "[" << m_fc << "] =" << m_value;
-		}
 	
 	protected:
 		QString		m_fc;
 		int			m_fcNum = -1;
-		QString		m_value;
 	};
 	typedef QSharedPointer< DataAttribute >		ptrDA;
 }

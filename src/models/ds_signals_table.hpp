@@ -41,6 +41,9 @@ namespace App::Models
 		DS_SignalsTable(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied);
 
 		void 	setNewIED(QSharedPointer<Core::IED_Object> t_ied);
+		auto 	getDataSet() {
+			return m_dataSet;
+		}
 
 		QVariant headerData(int t_section, Qt::Orientation t_orientation,
 							int t_role = Qt::DisplayRole) const override;
@@ -51,11 +54,12 @@ namespace App::Models
 		QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
 	public slots:
-		void 	slotDSSelected(int t_ds);
-		void 	slotDataUpdated(bool t_done);
+		void 	slotDataSetSelected(int t_ds);
+		void 	slotDataUpdated(QList<Core::ptrItem> t_items);
 
 	private:
 		QSharedPointer<Core::IED_Object> m_ied;
-		int		m_currentDS = -1; // current index of Logical Node
+		Core::ptrDataSet 				 m_dataSet;
+		QMetaObject::Connection 		 m_updConnection; // signal from LogicalNode
 	};
 }

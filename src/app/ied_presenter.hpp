@@ -24,27 +24,27 @@
 #include "backend_base.hpp"
 
 #include "models/sort_proxy_model.hpp"
-#include "models/ld_common_grid.hpp"
-#include "models/ld_prop_table.hpp"
-#include "models/ln_common_table.hpp"
-#include "models/ln_state_table.hpp"
+#include "models/ld_overview_grid.hpp"
+#include "models/ld_properties_table.hpp"
+#include "models/ln_overview_table.hpp"
+#include "models/ln_signals_table.hpp"
 #include "models/ln_signals_tree.hpp"
-#include "models/ds_common_table.hpp"
+#include "models/ds_overview_table.hpp"
 #include "models/ds_signals_table.hpp"
-#include "models/rcb_common_table.hpp"
+#include "models/rcb_overview_table.hpp"
 #include "models/reports_table.hpp"
 
 namespace App
 {
 	/*
-	* Presenter for LD, LN, DO table in QML
-	* */
-	class DevBackend : public BackendBase
+	 * Presenter for LD, LN, DO table in QML
+	 * */
+	class IED_Presenter : public BackendBase
 	{
 		Q_OBJECT
 	public:
-		DevBackend(AppConContainer &t_con);
-		~DevBackend() = default;
+		IED_Presenter(AppConContainer &t_con);
+		~IED_Presenter() = default;
 
 		Q_INVOKABLE QAbstractListModel*		getLD_GridModel() const { return m_ldsModel; }
 		Q_INVOKABLE QAbstractListModel*		getLD_PropModel() const { return m_ldPropModel; }
@@ -71,18 +71,19 @@ namespace App
 
 	public slots:
 		void 	slotConnected(bool t_done) override;
+		void 	slotUpdateItems(Core::ptrValuesUpdater t_vals);
 
 	protected:
 		// Models for Tables in GUI
-		Models::LD_CommonGrid*		m_ldsModel = nullptr;
-		Models::LD_PropTable*		m_ldPropModel = nullptr;
-		Models::LN_CommonTable*		m_lnsModel = nullptr;
-		Models::LN_StateTable*		m_lnStateModel = nullptr;
+		Models::LD_OverviewGrid*		m_ldsModel = nullptr;
+		Models::LD_PropertiesTable*		m_ldPropModel = nullptr;
+		Models::LN_OverviewTable*		m_lnsModel = nullptr;
+		Models::LN_SignalTable*		m_lnStateModel = nullptr;
 		Models::LN_SignalTree* 		m_lnTreeModel = nullptr;
 		Models::SortProxyModel* 	m_sortDOModel = nullptr;
-		Models::DS_CommonLModel*	m_dsComModel = nullptr;
+		Models::DS_OverviewTable*	m_dsComModel = nullptr;
 		Models::DS_SignalsTable* 	m_dsSigModel = nullptr;
-		Models::RCB_CommonTable* 	m_rcbComModel = nullptr;
+		Models::RCB_OverviewTable* 	m_rcbComModel = nullptr;
 		Models::ReportsTable* 		m_reportsModel = nullptr;
 	};
 }

@@ -73,7 +73,7 @@ namespace CoreTests
 							.createDA("serNum", "", 0)
 							.createDA("model", "", 0);
 
-			m_model = builder.build();
+			m_model = builder.build(nullptr);
 		}
 		void TearDown() override {
 			m_model.reset();
@@ -92,9 +92,9 @@ namespace CoreTests
 						.createDO("Beh")
 						.createDO("Health");
 
-		auto model = builder.build();
+		auto model = builder.build(nullptr);
 
-		ASSERT_EQ(model->name(), "IEDName");
+		ASSERT_EQ(model->getName(), "IEDName");
 	}
 
 	TEST(DataModelBuilder, DataModel_Creation_2) {
@@ -121,9 +121,9 @@ namespace CoreTests
 						.createDO("Ind1")
 							.createDA("stVal", "ST", 0);
 
-		auto model = builder.build();
+		auto model = builder.build(nullptr);
 
-		ASSERT_EQ(model->name(), "IEDName");
+		ASSERT_EQ(model->getName(), "IEDName");
 	}
 
 	TEST(DataModel, Find_Items_In_The_Tree) {
@@ -160,95 +160,98 @@ namespace CoreTests
 							.createDA("serNum", "", 0)
 							.createDA("model", "", 0);
 
-		auto model = builder.build();
+		auto model = builder.build(nullptr);
 
-		ASSERT_EQ(model->name(), "IEDName");
+		ASSERT_EQ(model->getName(), "IEDName");
 
 		// LLN0
-		ASSERT_NE(model->find("A_LD_1"), nullptr);
-		ASSERT_NE(model->find("A_LD_1", "LLN0"), nullptr);
-		ASSERT_NE(model->find("A_LD_1", "LLN0", "NamPlt"), nullptr);
-		ASSERT_NE(model->find("A_LD_1", "LLN0", "NamPlt", "vendor"), nullptr);
-		ASSERT_NE(model->find("A_LD_1", "LLN0", "NamPlt", "ldNs"), nullptr);
+		ASSERT_NE(model->findSubItem("A_LD_1"), nullptr);
+		ASSERT_NE(model->findSubItem("A_LD_1", "LLN0"), nullptr);
+		ASSERT_NE(model->findSubItem("A_LD_1", "LLN0", "NamPlt"), nullptr);
+		ASSERT_NE(model->findSubItem("A_LD_1", "LLN0", "NamPlt", "vendor"), nullptr);
+		ASSERT_NE(model->findSubItem("A_LD_1", "LLN0", "NamPlt", "ldNs"), nullptr);
 
 		// LPHD1
-		ASSERT_NE(model->find("B_LD_2"), nullptr);
-		ASSERT_NE(model->find("B_LD_2", "LPHD1"), nullptr);
-		ASSERT_NE(model->find("B_LD_2", "LPHD1", "PhyNam"), nullptr);
-		ASSERT_NE(model->find("B_LD_2", "LPHD1", "PhyNam", "vendor"), nullptr);
-		ASSERT_NE(model->find("B_LD_2", "LPHD1", "PhyNam", "model"), nullptr);
+		ASSERT_NE(model->findSubItem("B_LD_2"), nullptr);
+		ASSERT_NE(model->findSubItem("B_LD_2", "LPHD1"), nullptr);
+		ASSERT_NE(model->findSubItem("B_LD_2", "LPHD1", "PhyNam"), nullptr);
+		ASSERT_NE(model->findSubItem("B_LD_2", "LPHD1", "PhyNam", "vendor"), nullptr);
+		ASSERT_NE(model->findSubItem("B_LD_2", "LPHD1", "PhyNam", "model"), nullptr);
 	}
 
 
 	TEST_F(Data_Model_Fixt, Check_Find_Items_By_Names) {
-		ASSERT_EQ(m_model->name(), "IEDName");
+		ASSERT_EQ(m_model->getName(), "IEDName");
 
 		// LLN0
-		ASSERT_NE(m_model->find("A_LD_1"), nullptr);
-		ASSERT_NE(m_model->find("A_LD_1", "LLN0"), nullptr);
-		ASSERT_NE(m_model->find("A_LD_1", "LLN0", "NamPlt"), nullptr);
-		ASSERT_NE(m_model->find("A_LD_1", "LLN0", "NamPlt", "vendor"), nullptr);
-		ASSERT_NE(m_model->find("A_LD_1", "LLN0", "NamPlt", "ldNs"), nullptr);
+		ASSERT_NE(m_model->findSubItem("A_LD_1"), nullptr);
+		ASSERT_NE(m_model->findSubItem("A_LD_1", "LLN0"), nullptr);
+		ASSERT_NE(m_model->findSubItem("A_LD_1", "LLN0", "NamPlt"), nullptr);
+		ASSERT_NE(m_model->findSubItem("A_LD_1", "LLN0", "NamPlt", "vendor"), nullptr);
+		ASSERT_NE(m_model->findSubItem("A_LD_1", "LLN0", "NamPlt", "ldNs"), nullptr);
 
 		// LPHD1
-		ASSERT_NE(m_model->find("B_LD_2"), nullptr);
-		ASSERT_NE(m_model->find("B_LD_2", "LPHD1"), nullptr);
-		ASSERT_NE(m_model->find("B_LD_2", "LPHD1", "PhyNam"), nullptr);
-		ASSERT_NE(m_model->find("B_LD_2", "LPHD1", "PhyNam", "vendor"), nullptr);
-		ASSERT_NE(m_model->find("B_LD_2", "LPHD1", "PhyNam", "model"), nullptr);
+		ASSERT_NE(m_model->findSubItem("B_LD_2"), nullptr);
+		ASSERT_NE(m_model->findSubItem("B_LD_2", "LPHD1"), nullptr);
+		ASSERT_NE(m_model->findSubItem("B_LD_2", "LPHD1", "PhyNam"), nullptr);
+		ASSERT_NE(m_model->findSubItem("B_LD_2", "LPHD1", "PhyNam", "vendor"), nullptr);
+		ASSERT_NE(m_model->findSubItem("B_LD_2", "LPHD1", "PhyNam", "model"), nullptr);
 	}
 
 	TEST_F(Data_Model_Fixt, Check_SubAttr_And_DataAttr_Values) {
 		// Analogue values
 		{
-			auto da = m_model->find("A_LD_1", "GGIO1", "AnIn1", "mag", "f");
-			ASSERT_NE(da, nullptr);
+			auto item = m_model->findSubItem("A_LD_1", "GGIO1", "AnIn1", "mag", "f");
+			ASSERT_NE(item, nullptr);
 
-			EXPECT_EQ(da->value(), "");
+			EXPECT_EQ(item->getValue(), "");
 
-			da->update("3.1415");
-			EXPECT_EQ(da->value(), "3.1415") << "DA = " << da->value().toStdString();
+			item->updateValue(Core::ItemValue::create("3.1415"));
+			EXPECT_EQ(item->getValue(), "3.1415") << "DA = " << item->getValue().toStdString();
 		}
 
 		// State signals
 		{
-			auto item = m_model->find("A_LD_1", "GGIO1", "Ind1", "stVal");
+			auto item = m_model->findSubItem("A_LD_1", "GGIO1", "Ind1", "stVal");
 			ASSERT_NE(item, nullptr);
 
-			item->update("1");
-			EXPECT_EQ(item->value(), "1");
+			item->updateValue(Core::ItemValue::create("1"));
+			EXPECT_EQ(item->getValue(), "1");
 
-			item->update("0");
-			EXPECT_EQ(item->value(), "0");
+			item->updateValue(Core::ItemValue::create("0"));
+			EXPECT_EQ(item->getValue(), "0");
 		}
 	}
 
 	TEST_F(Data_Model_Fixt, Check_Properties_From_LLN0_LPHD1) {
 		// LLN0
 		{
-			auto namPlt = m_model->find("A_LD_1", "LLN0", "NamPlt");
+			auto namPlt = m_model->findSubItem("A_LD_1", "LLN0", "NamPlt");
 			ASSERT_NE(namPlt, nullptr);
 
-			auto vendor = namPlt->getItem("vendor");
+			auto vendor = namPlt->findSubItem("vendor");
 			ASSERT_NE(vendor, nullptr);
 
-			vendor->update("Test_Company_Name");
-			ASSERT_EQ(vendor->value(), "Test_Company_Name");
+			vendor->updateValue(Core::ItemValue::create("Test_Company_Name"));
+			ASSERT_EQ(vendor->getValue(), "Test_Company_Name");
 		}
 
 		// LPHD1
 		{
-			auto phyNam = m_model->find("A_LD_1", "LLN0", "NamPlt");
+			auto phyNam = m_model->findSubItem("A_LD_1", "LLN0", "NamPlt");
 			ASSERT_NE(phyNam, nullptr);
 
-			auto vendor = phyNam->getItem("vendor");
+			auto vendor = phyNam->findSubItem("vendor");
 			ASSERT_NE(vendor, nullptr);
 
-			vendor->update("Test_Company_Name");
-			ASSERT_EQ(vendor->value(), "Test_Company_Name");
+			vendor->updateValue(Core::ItemValue::create("Test_Company_Name"));
+			ASSERT_EQ(vendor->getValue(), "Test_Company_Name");
 		}
 	}
 
+	TEST_F(Data_Model_Fixt, Check_Update_LNode) {
+
+	}
 
 	TEST(DataModelBuilder, DataModel_DataSet_Creation_1) {
 		Core::DataModelBuilder builder;
@@ -263,8 +266,8 @@ namespace CoreTests
 						.createDataSet_Elem("IEDNameA_LD_10/LLN0.Beh", "ST")
 						.createDataSet_Elem("IEDNameA_LD_10/LLN0.Health", "ST");
 
-		auto model = builder.build();
+		auto model = builder.build(nullptr);
 
-		ASSERT_EQ(model->name(), "IEDName");
+		ASSERT_EQ(model->getName(), "IEDName");
 	}
 }

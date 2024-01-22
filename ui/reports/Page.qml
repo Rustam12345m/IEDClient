@@ -35,6 +35,42 @@ FocusScope
 		Globals.resizeColumnsToContent(headerID, tableID)
 	}
 
+	// TabBar: Different types of CB
+	Rectangle {
+		id: rectRcbViewTabBar
+
+		anchors {
+			top: parent.top
+			bottom: parent.bottom
+			left: parent.left
+		}
+		width: 30
+
+		CustomTabBar {
+			id: rcbTabBarID
+
+			anchors.fill: parent
+
+			leftSide: true
+			cellWidth: 30
+			color: ColorPalette.toolBarColor
+
+			selectedColor: "white"
+			unselectedColor: ColorPalette.toolBarColor
+
+			model: ListModel {
+				ListElement { title: "BRCB" }
+				ListElement { title: "URCB" }
+				ListElement { title: "GOOSE" }
+				ListElement { title: "SV" }
+			}
+
+			onSigTabSelected: function(index) {
+				// lnSignalsStack.currentIndex = index
+			}
+		}
+	}
+
 	// Header for Table below
 	TableHeader {
 		id: headerID
@@ -43,7 +79,7 @@ FocusScope
 		defDelegateHeight: 30
 
 		anchors {
-			left: parent.left
+			left: rectRcbViewTabBar.right
 			right: parent.right
 			top: parent.top
 		}
@@ -54,10 +90,10 @@ FocusScope
 		id: tableID
 
 		anchors {
-			left: parent.left
+			left: rectRcbViewTabBar.right
 			right: parent.right
 			top: headerID.bottom
-			bottom: cbViewTabBar.top
+			bottom: parent.bottom
 		}
 
 		model: devBackend.getRCB_ComModel()
@@ -120,32 +156,6 @@ FocusScope
 				console.log("CB: Resize columns")
 				Globals.resizeColumnsToContent(headerID, tableID)
 			}
-		}
-	}
-
-	// TabBar: Different types of CB
-	CustomTabBar {
-		id: cbViewTabBar
-
-		anchors {
-			left: parent.left
-			right: parent.right
-			bottom: parent.bottom
-		}
-		height: 28
-
-		horizontalBar: true
-		cellWidth: 120
-
-		model: ListModel {
-			ListElement { title: "BRCB" }
-			ListElement { title: "URCB" }
-			ListElement { title: "GOOSE" }
-			ListElement { title: "SV" }
-		}
-
-		onSigTabSelected: function(index) {
-			// console.log("Selected TAB: " + index)
 		}
 	}
 
