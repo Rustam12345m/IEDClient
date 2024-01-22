@@ -50,15 +50,13 @@ namespace App::Models
 		QModelIndex parent(const QModelIndex &t_index) const override;
 		QVariant 	data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
-		void 	getSelectedLN(int &t_ld, int &t_ln);
-
 	public slots:
 		void 	slotLNSelected(int t_ld, int t_ln);
-		void 	slotDataUpdated(bool t_done);
+		void 	slotDataUpdated(QSharedPointer<QList<Core::Item*>> t_nodes);
 
 	private:
 		QSharedPointer<Core::IED_Object> m_ied;
-		int		m_currentLD = -1; // current index of Logical Device
-		int		m_currentLN = -1; // current index of Logical Node
+		Core::ptrLN	 					 m_lnode;
+		QMetaObject::Connection 		 m_updConnection; // signal from LogicalNode
 	};
 }

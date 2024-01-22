@@ -38,6 +38,8 @@ namespace Core
 
 		DataModel&	model() { return *m_model; }
 		FS_Model&	fs() { return *m_fsModel; }
+		auto 		getDataModel() const { return m_model; }
+		auto 		getFSModel() const { return m_fsModel; }
 
 		const DevServIdentity& identify() { return m_servIdent; }
 		void setIdentify(const DevServIdentity &t_ident) {

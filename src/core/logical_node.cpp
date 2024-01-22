@@ -19,36 +19,13 @@
  *  See COPYING file for the complete license text.
  * */
 
-#pragma once
+#include "logical_node.hpp"
 
-#include "basic_command.hpp"
-#include "core/ied_object.hpp"
-
-namespace Core::Cmd
+namespace Core
 {
-	/*
-	 * 
-	 * */
-	class UpdateDataSet_Cmd : public BasicCommand
+	void LogicalNode::notifyFromChild(QSharedPointer<QList<Item*>> t_nodes)
 	{
-		Q_OBJECT
-	public:
-		UpdateDataSet_Cmd(ptrIED_Object t_ied, ptrDataSet t_ds)
-			: m_ied{t_ied}, m_dataset{t_ds}
-		{
-		}
-
-		void 	execute(LibInterface &t_con) override;
-
-		static auto create(ptrIED_Object t_ied, ptrDataSet t_ds) {
-			return QSharedPointer<UpdateDataSet_Cmd>::create(t_ied, t_ds);
-		}
-
-	signals:
-		void 	sigNewValues(ptrValuesUpdater t_vals);
-
-	private:
-		ptrIED_Object 	m_ied;
-		ptrDataSet		m_dataset;
-	};
+		emit sigDataObjectUpdated(t_nodes);
+		// Item::notifyFromChild(t_nodes);
+	}
 }

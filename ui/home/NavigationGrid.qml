@@ -32,8 +32,8 @@ Rectangle
 
 	anchors.fill: parent
 
-	color: "gray"
-	opacity: 0.75
+	color: "gray" //"lightgray"
+	opacity: 0.8
 	z: 100500
 	visible: false
 
@@ -46,7 +46,7 @@ Rectangle
 		z: 100501
 
 		width: 635
-		height: 135
+		height: 65
 
 		modal: true
 		closePolicy: Dialog.CloseOnEscape | Dialog.CloseOnPressOutside
@@ -57,7 +57,7 @@ Rectangle
 
 			anchors {
 				fill: parent
-				margins: 10
+				margins: 5
 			}
 
 			// clip: true
@@ -66,7 +66,7 @@ Rectangle
 			boundsBehavior: Flickable.StopAtBounds
 
 			cellWidth: 100
-			cellHeight: 100
+			cellHeight: 50
 
 			model: ListModel {
 				ListElement { name: "Home"; 	page: Globals.Page.START }
@@ -81,7 +81,7 @@ Rectangle
 				property int page: model.page
 
 				width: 90
-				height: 90
+				height: 40
 
 				color: "lightgray"
 				border.width: 2

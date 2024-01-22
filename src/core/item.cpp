@@ -19,36 +19,44 @@
  *  See COPYING file for the complete license text.
  * */
 
-#pragma once
+#include "item.hpp"
+#include "item_value_updater.hpp"
 
-#include "basic_command.hpp"
-#include "core/ied_object.hpp"
-
-namespace Core::Cmd
+namespace Core
 {
-	/*
-	 * 
-	 * */
-	class UpdateDataSet_Cmd : public BasicCommand
+	void Item::addSubItem(QSharedPointer<Item> t_child)
 	{
-		Q_OBJECT
-	public:
-		UpdateDataSet_Cmd(ptrIED_Object t_ied, ptrDataSet t_ds)
-			: m_ied{t_ied}, m_dataset{t_ds}
-		{
+		m_items.push_back(t_child);
+	}
+
+	QString Item::getValue() const
+	{
+		if (m_value) {
+			return m_value->str();
+		}
+		return "";
+	}
+
+	bool Item::updateValue(ptrValue t_newValue)
+	{
+		if (m_value && (*m_value == *t_newValue)) {
+			return false;
 		}
 
-		void 	execute(LibInterface &t_con) override;
+		m_value = t_newValue;
 
-		static auto create(ptrIED_Object t_ied, ptrDataSet t_ds) {
-			return QSharedPointer<UpdateDataSet_Cmd>::create(t_ied, t_ds);
+		if (m_parent != nullptr) {
+			auto nodes = QSharedPointer<QList<Item*>>::create();
+			m_parent->notifyFromChild(nodes);
 		}
+		return true;
+	}
 
-	signals:
-		void 	sigNewValues(ptrValuesUpdater t_vals);
-
-	private:
-		ptrIED_Object 	m_ied;
-		ptrDataSet		m_dataset;
-	};
+	void Item::notifyFromChild(QSharedPointer<QList<Item*>> t_nodes)
+	{
+		if (m_parent != nullptr) {
+			t_nodes->push_front(this);
+			m_parent->notifyFromChild(t_nodes);
+		}
+	}
 }

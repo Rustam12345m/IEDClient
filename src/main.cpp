@@ -27,13 +27,11 @@
 
 #include <QQuickStyle>
 
-#include "app/presenter.hpp"
+#include "app/main_presenter.hpp"
 
 int main(int argc, char *argv[])
 {
 	QGuiApplication app(argc, argv);
-
-	//QQuickStyle::setStyle("Material");
 
 	QCoreApplication::setOrganizationName("OSI");
     QCoreApplication::setOrganizationDomain("opensource.org");
@@ -43,12 +41,13 @@ int main(int argc, char *argv[])
 	qmlRegisterSingletonType(QUrl("qrc:/singletons/Globals.qml"), "GlobalVarsModule", 1, 0, "Globals");
 	qmlRegisterSingletonType(QUrl("qrc:/singletons/ColorPalette.qml"), "AppStylesModule", 1, 0, "ColorPalette");
 
-	App::Presenter presenter; // have to be created befor engine
-
+	App::MainPresenter presenter; // have to be created befor engine
 	QQmlApplicationEngine engine;
 
 	presenter.setContextMembers(engine.rootContext());
 
 	engine.load(QStringLiteral("qrc:/main.qml"));
+
+	QThread::currentThread()->setObjectName("GUI");
 	return app.exec();
 }

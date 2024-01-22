@@ -21,8 +21,6 @@
 
 #pragma once
 
-#include <QObject>
-
 #include "logical_device.hpp"
 
 namespace Core

@@ -65,7 +65,7 @@ ApplicationWindow
 				left: mainBack.left
 				right: mainBack.right
 			}
-			z: 100500
+			// width: parent.width
 			height: 30 + 4
 
 			color: ColorPalette.toolBarColor
@@ -118,27 +118,6 @@ ApplicationWindow
 								icon.source: "qrc:/img/icons/close.svg"
 							}
 						}
-						/*
-						Menu {
-							title: qsTr("&View")
-
-							MenuItem {
-								text: qsTr("[LD] Logical devices")
-							}
-							MenuItem {
-								text: qsTr("[LN] Logical nodes")
-							}
-							MenuItem {
-								text: qsTr("[DS] Datasets")
-							}
-							MenuItem {
-								text: qsTr("[CB] Report blocks")
-							}
-							MenuItem {
-								text: qsTr("[FS] Filesystem")
-							}
-						}
-						*/
 						Menu {
 							title: qsTr("&Tools")
 
@@ -236,20 +215,23 @@ ApplicationWindow
 							}
 						}
 						// Navigation screen
-						ToolBarButton {
-							icon: "qrc:/img/icons/view_comfy_alt.svg"
-							prompt: "Navigation window"
-							width: toolBar.btnHeight
-							height: toolBar.btnHeight
+						// ToolBarButton {
+						// 	icon: "qrc:/img/icons/view_comfy_alt.svg"
+						// 	prompt: "Navigation window"
+						// 	width: toolBar.btnHeight
+						// 	height: toolBar.btnHeight
 
-							onSigClicked: function() {
-								console.log("Clicked: " + prompt)
-								rootWindowID.showNavigationGrid()
-							}
-						}
+						// 	onSigClicked: function() {
+						// 		console.log("Clicked: " + prompt)
+						// 		rootWindowID.showNavigationGrid()
+						// 	}
+						// }
+						// Delimiter
 						Rectangle {
+							anchors.verticalCenter: parent.verticalCenter
+
 							width: 1
-							height: parent.height// - 8
+							height: toolBar.btnHeight - 4
 							color: ColorPalette.modalColor
 						}
 						// Table's columns to content size
@@ -275,6 +257,13 @@ ApplicationWindow
 								rootWindowID.updateActivePage()
 							}
 						}
+						// Delimiter
+						Rectangle {
+							anchors.verticalCenter: parent.verticalCenter
+							width: 1
+							height: toolBar.btnHeight - 4
+							color: ColorPalette.modalColor
+						}
 					}
 				}
 
@@ -286,17 +275,63 @@ ApplicationWindow
 			}
 		}
 
-		// Work Area
+		// TabBar
 		Rectangle {
-			id: workArea
+			id: tabsRectID
 
 			anchors {
 				top: menuBarRect.bottom
 				left: mainBack.left
 				right: mainBack.right
+			}
+			// width: parent.width
+			height: 30 + 2 * ColorPalette.borderWidth
+			color: ColorPalette.toolBarColor
+
+			CustomTabBar {
+				id: mainTabBarID
+
+				anchors {
+					fill: parent
+					margins: ColorPalette.borderWidth
+				}
+
+				horizontalBar: true
+				cellHeight: 30
+				cellWidth: 125
+				spacing: ColorPalette.borderWidth
+
+				color: ColorPalette.toolBarColor
+				selectedColor: "white"// "lightgray" //"#595959"
+				unselectedColor: "#F0F0F0"
+
+				model: ListModel {
+					ListElement { title: "Home" }
+					ListElement { title: "Logical devices" }
+					ListElement { title: "Logical nodes" }
+					ListElement { title: "DataSets" }
+					ListElement { title: "Report blocks" }
+					ListElement { title: "Files" }
+				}
+
+				onSigTabSelected: function(inx) {
+					setActivePage(inx)
+				}
+			}
+		}
+
+		// Work Area
+		Rectangle {
+			id: workArea
+
+			anchors {
+				top: tabsRectID.bottom
 				bottom: statusBarID.top
+				left: mainBack.left
+				right: mainBack.right
 
 				margins: ColorPalette.borderWidth
+				topMargin: 0
 				bottomMargin: 0
 			}
 			color: ColorPalette.backgroundColor1
@@ -328,10 +363,8 @@ ApplicationWindow
 							top: tabsArea.top
 							left: tabsArea.left
 							right: tabsArea.right
-							// bottom: mainTabBar.top
 							bottom: tabsArea.bottom
 						}
-
 						clip: true
 
 						Home.Page {
@@ -524,26 +557,21 @@ ApplicationWindow
 					return
 				}
 				case Qt.Key_4: {
-					rootWindowID.setActivePage(Globals.Page.FS)
-					event.accepted = true
-					return
-				}
-				case Qt.Key_5: {
 					rootWindowID.setActivePage(Globals.Page.DS)
 					event.accepted = true
 					return
 				}
-				case Qt.Key_6: {
+				case Qt.Key_5: {
 					rootWindowID.setActivePage(Globals.Page.RCB)
 					event.accepted = true
 					return
 				}
+				case Qt.Key_6: {
+					rootWindowID.setActivePage(Globals.Page.FS)
+					event.accepted = true
+					return
 				}
-			}
-
-			// Navigation panel
-			if ((event.key == Qt.Key_E) && (event.modifiers & Qt.AltModifier)) {
-				showNavigationGrid()
+				}
 			}
 
 			// Ctrl
@@ -572,19 +600,6 @@ ApplicationWindow
 		id: globalProgressBar
 	}
 
-	// Navigation grid
-	Home.NavigationGrid {
-		id: navigationGridID
-
-		onSigSelectedNextPage: function(t_id) {
-			setActivePage(t_id)
-		}
-	}
-	function showNavigationGrid() {
-		navigationGridID.currentIndex = mainStackID.currentIndex
-		navigationGridID.showNavigationGrid()
-	}
-
 	// Common functions
 	function openEventLog() {
 		var logsComponent = Qt.createComponent("home/AppEventViewer.qml")
@@ -609,6 +624,7 @@ ApplicationWindow
 	// Active Page + Panel
 	function setActivePage(page) {
 		mainStackID.currentIndex = page
+		mainTabBarID.currentIndex = page
 	}
 	function setActivePanel(index) {
 		//console.log("ActivatePanel: new index = " + index)

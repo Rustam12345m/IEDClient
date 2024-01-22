@@ -32,6 +32,7 @@ namespace App::Models
 	{
 		beginResetModel();
 		m_ied = t_ied;
+		m_dataSet.reset();
 		endResetModel();
 	}
 
@@ -62,9 +63,8 @@ namespace App::Models
 
 	int DS_SignalsTable::rowCount(const QModelIndex &t_parent) const
 	{
-		auto dsList = m_ied->model().dsList();
-		if (m_currentDS >= 0 && m_currentDS < dsList.count()) {
-			return dsList[m_currentDS]->getItemCount();
+		if (m_dataSet) {
+			return m_dataSet->getItemCount();
 		}
 		return 0;
 	}
@@ -77,14 +77,13 @@ namespace App::Models
 	QVariant DS_SignalsTable::data(const QModelIndex &t_index, int t_role) const
 	{
 		int row = t_index.row(), column = t_index.column();
-		auto dsList = m_ied->model().dsList();
 
-		if (m_currentDS >= 0 && m_currentDS < dsList.count()) {
-			auto dsItem = dsList[m_currentDS]->getItem<Core::DataSetEntity>(row);
+		if (m_dataSet) {
+			auto dsItem = m_dataSet->getItem<Core::DataSetEntity>(row);
 			if (dsItem) {
 				switch (column) {
 				case DS_REF_COLUMN: {
-					return QVariant(dsItem->name());
+					return QVariant(dsItem->getName());
 				}
 				case DS_FC_COLUMN: {
 					return QVariant(dsItem->fc());
@@ -92,7 +91,7 @@ namespace App::Models
 				case DS_VALUE_COLUMN: {
 					auto item = dsItem->item();
 					if (item) {
-						return QVariant(item->value());
+						return QVariant(item->getValue());
 					}
 					break;
 				}
@@ -102,17 +101,29 @@ namespace App::Models
 		return QVariant(" ? ");
 	}
 
-	void DS_SignalsTable::slotDataUpdated(bool t_done)
+	void DS_SignalsTable::slotDataUpdated(QList<Core::ptrItem> t_items)
 	{
 		emit dataChanged(index(0, DS_VALUE_COLUMN), index(rowCount() - 1, ColumnsCount));
 	}
 
-	void DS_SignalsTable::slotDSSelected(int t_ds)
+	void DS_SignalsTable::slotDataSetSelected(int t_ds)
 	{
-		if (m_currentDS != t_ds) {
-			beginResetModel();
-			m_currentDS = t_ds;
-			endResetModel();
+		auto dsList = m_ied->model().dsList();
+		Core::ptrDataSet newDS;
+		if (t_ds >= 0 && t_ds < dsList.size()) {
+			newDS = dsList[t_ds];
+
+			if (m_dataSet != newDS) {
+				if (m_dataSet) {
+					disconnect(m_updConnection);
+				}
+
+				beginResetModel();
+				m_dataSet = newDS;
+				m_updConnection = connect(m_dataSet.get(), &Core::DataSet::sigItemUpdated,
+										  this, &DS_SignalsTable::slotDataUpdated);
+				endResetModel();
+			}
 		}
 	}
 }

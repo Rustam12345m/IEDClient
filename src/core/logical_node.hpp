@@ -21,57 +21,74 @@
 
 #pragma once
 
+#include <QObject>
+
 #include "data_object.hpp"
+
 #include "dataset.hpp"
 #include "report_control_block.hpp"
 #include "goose_control_block.hpp"
 #include "sv_control_block.hpp"
 
-#include "ln_state_table.hpp"
+#include "ln_signal_matrix.hpp"
 
 namespace Core
 {
 	/*
-	 * Representation a Logical Node
+	 * Representation of Logical Node
+	 * As a QObject this Item should live in GUI's thread
 	 * */
-	class LogicalNode : public Item
+	class LogicalNode : public QObject, public Item
 	{
+		Q_OBJECT
 	public:
-		LogicalNode(Item *t_parent, const QString &t_name) : Item(t_parent, t_name)
+		LogicalNode(Item *t_parent, const QString &t_name) : QObject(nullptr), Item(t_parent, t_name)
 		{
 			m_delimetr = "/"; // Between LDName and LNName
 		}
 
-		auto& 	getSignalsTable() const {
-			return m_doTable;
+		ptrDO	getModItem() const { return m_mod; }
+		ptrDO	getBehItem() const { return m_beh; }
+		ptrDO	getHealthItem() const { return m_health; }
+
+		void	addSubItem(QSharedPointer< Item > t_child) override {
+			if (t_child->getName() == "Mod") {
+				m_mod = t_child.dynamicCast<DataObject>();
+			} else if (t_child->getName() == "Beh") {
+				m_beh = t_child.dynamicCast<DataObject>();
+			} else if (t_child->getName() == "Health") {
+				m_health = t_child.dynamicCast<DataObject>();
+			}
+			Item::addSubItem(t_child);
+		}
+		void 	addSubItem(QSharedPointer< DataSet > t_ds) {
+			m_dataSets.push_back(t_ds);
+		}
+		void 	addSubItem(QSharedPointer< ReportBlock > t_rcb) {
+			m_rcbs.push_back(t_rcb);
+		}
+		void 	addSubItem(QSharedPointer< GooseControlBlock > t_gocb) {
+			m_gooses.push_back(t_gocb);
+		}
+
+		auto& 	getSignalMatrix() const {
+			return m_sigMatrix;
 		}
 		auto& 	getDataSets() const {
 			return m_dataSets;
 		}
+		auto& 	getReportBlocks() const {
+			return m_rcbs;
+		}
+		auto& 	getGooseCB() const {
+			return m_gooses;
+		}
 
-		ptrDO	mod() const { return m_mod; }
-		ptrDO	beh() const { return m_beh; }
-		ptrDO	health() const { return m_health; }
+	signals:
+		void 	sigDataObjectUpdated(QSharedPointer<QList<Item*>> t_nodes);
 
-		void	push(QSharedPointer< Item > t_child) override {
-			if (t_child->name() == "Mod") {
-				m_mod = t_child.dynamicCast<DataObject>();
-			} else if (t_child->name() == "Beh") {
-				m_beh = t_child.dynamicCast<DataObject>();
-			} else if (t_child->name() == "Health") {
-				m_health = t_child.dynamicCast<DataObject>();
-			}
-			Item::push(t_child);
-		}
-		void 	push(QSharedPointer< DataSet > t_ds) {
-			m_dataSets.push_back(t_ds);
-		}
-		void 	push(QSharedPointer< ReportBlock > t_rcb) {
-			m_rcbs.push_back(t_rcb);
-		}
-		void 	push(QSharedPointer< GooseControlBlock > t_gocb) {
-			m_gooses.push_back(t_gocb);
-		}
+	protected:
+	 	void 	notifyFromChild(QSharedPointer<QList<Item*>> t_nodes) override;
 
 	protected:
 		QSharedPointer<DataObject>		m_mod;
@@ -80,7 +97,7 @@ namespace Core
 		QList< ptrDataSet >				m_dataSets;
 		QList< ptrRCB >					m_rcbs;
 		QList< ptrGOCB >				m_gooses;
-		QSharedPointer<LN_StateTable>	m_doTable;
+		QSharedPointer<LN_SignalMatrix>	m_sigMatrix;
 
 	friend class DataModelBuilder;
 	};

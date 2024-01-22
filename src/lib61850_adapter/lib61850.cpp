@@ -34,8 +34,7 @@ extern "C"
 namespace Core::Lib
 {
 	// static functions for this file
-	namespace
-	{
+	namespace {
 		std::tuple<QString, QString, int> getFX_fromName(const char *t_data)
 		{
 			// Parse paramets from string like: ctlModel[CF]
@@ -76,7 +75,7 @@ namespace Core::Lib
 					QString name = QString::fromLocal8Bit((char *)attr->data);
 
 					auto subAttrNode = ItemFactory::createSA(t_parent.get(), name);
-					t_parent->push(subAttrNode);
+					t_parent->addSubItem(subAttrNode);
 
 					QString ref = t_ref + "." + name;
 					recursiveReadAttributes(t_con, ref, subAttrNode);
@@ -90,7 +89,7 @@ namespace Core::Lib
 		void	recursiveReadAttributes(IedConnection t_con, QSharedPointer<Item> t_parent, DataModelBuilder &t_builder)
 		{
 			IedClientError retval = IED_ERROR_OK;
-			LinkedList daList = IedConnection_getDataDirectory(t_con, &retval, t_parent->ref().toLocal8Bit().data());
+			LinkedList daList = IedConnection_getDataDirectory(t_con, &retval, t_parent->getReference().toLocal8Bit().data());
 			if ((retval == IED_ERROR_OK) && (daList != nullptr)) {
 				LinkedList attr = LinkedList_getNext(daList);
 
@@ -100,7 +99,7 @@ namespace Core::Lib
 					t_builder.createSDA(t_parent, name);
 					auto sda = t_builder.lastSDA();
 
-					QString ref = t_parent->ref() + "." + name;
+					QString ref = t_parent->getReference() + "." + name;
 					recursiveReadAttributes(t_con, sda, t_builder);
 
 					attr = LinkedList_getNext(attr);
@@ -133,28 +132,30 @@ namespace Core::Lib
 				l->callbackOnCloseEvent();
 			}
 		}
+	}
 
+	// static function for updating Items
+	namespace {
 		QString convertTimestampMsToUserString(uint64_t t_ms)
 		{
 			uint64_t sec = t_ms / 1000;
 			QDateTime dt = QDateTime::fromSecsSinceEpoch(sec);
 			return dt.toString("HH:mm:ss dd.MM.yyyy"); // ms isn't important
 		}
-	
-		void 	updateItemValueByMmsValue(ptrItem t_item, MmsValue *t_mmsValue)
+
+		void 	getValuesForItemByMmsValue(ptrItem t_item, ptrValuesUpdater t_vals, MmsValue *t_mmsValue)
 		{
-			if (t_item == nullptr || t_mmsValue == nullptr) {
+			if (t_item == nullptr || t_vals == nullptr || t_mmsValue == nullptr) {
 				return;
 			}
 
 			switch (MmsValue_getType(t_mmsValue)) {
 			case MMS_ARRAY:
 			case MMS_STRUCTURE: {
-				// t_item->update("Struct");
 				int count = MmsValue_getArraySize(t_mmsValue);
 				int items = t_item->getItemCount();
 				if (count != items) {
-					t_item->update("Error: Number of values");
+					t_vals->push(t_item, Core::ptrValue::create("Mismatch number of elements"));
 					break;
 				}
 
@@ -162,12 +163,13 @@ namespace Core::Lib
 					MmsValue *subMmsValue = (MmsValue *)MmsValue_getElement(t_mmsValue, i);
 					ptrItem subItem = t_item->getItem(i);
 
-					updateItemValueByMmsValue(subItem, subMmsValue);
+					getValuesForItemByMmsValue(subItem, t_vals, subMmsValue);
 				}
 				break;
 			}
 			case MMS_BOOLEAN: {
-				t_item->update(MmsValue_getBoolean(t_mmsValue) ? "True" : "False");
+				QString v = MmsValue_getBoolean(t_mmsValue) ? "True" : "False";
+				t_vals->push(t_item, Core::ptrValue::create(v));
 				break;
 			}
 			case MMS_BIT_STRING: {
@@ -178,19 +180,24 @@ namespace Core::Lib
 						value |= MmsValue_getBitStringBit(t_mmsValue, i) ? 1 << i : 0;
 					}
 				}
-				t_item->update(QString::number((qulonglong)value, 2));
+
+				QString v = QString::number((qulonglong)value, 2);
+				t_vals->push(t_item, Core::ptrValue::create(v));
 				break;
 			}
 			case MMS_INTEGER: {
-				t_item->update(QString::number((long long)MmsValue_toInt64(t_mmsValue)));
+				QString v = QString::number((long long)MmsValue_toInt64(t_mmsValue));
+				t_vals->push(t_item, Core::ptrValue::create(v));
 				break;
 			}
 			case MMS_UNSIGNED: {
-				t_item->update(QString::number(MmsValue_toUint32(t_mmsValue)));
+				QString v = QString::number(MmsValue_toUint32(t_mmsValue));
+				t_vals->push(t_item, Core::ptrValue::create(v));
 				break;
 			}
 			case MMS_FLOAT: {
-				t_item->update(QString::number(MmsValue_toFloat(t_mmsValue)));
+				QString v = QString::number(MmsValue_toFloat(t_mmsValue));
+				t_vals->push(t_item, Core::ptrValue::create(v));
 				break;
 			}
 			case MMS_OCTET_STRING: {
@@ -201,24 +208,25 @@ namespace Core::Lib
 				for (int i=0;i<size;i++) {
 					tmp.push_back(QString::number(MmsValue_getOctetStringOctet(t_mmsValue, i), 16));
 				}
-				t_item->update(tmp);
+				t_vals->push(t_item, Core::ptrValue::create(tmp));
 				break;
 			}
 			case MMS_GENERALIZED_TIME: {
-				t_item->update("Unsupported");
+				t_vals->push(t_item, Core::ptrValue::create("Unsupported"));
 				break;
 			}
 			case MMS_BINARY_TIME: {
 				uint64_t ms = MmsValue_getBinaryTimeAsUtcMs(t_mmsValue);
-				t_item->update(convertTimestampMsToUserString(ms));
+				QString v = convertTimestampMsToUserString(ms);
+				t_vals->push(t_item, Core::ptrValue::create(v));
 				break;
 			}
 			case MMS_BCD: {
-				t_item->update("? BCD");
+				t_vals->push(t_item, Core::ptrValue::create("? BCD"));
 				break;
 			}
 			case MMS_OBJ_ID: {
-				t_item->update("? OBJ_ID");
+				t_vals->push(t_item, Core::ptrValue::create("? OBJID"));
 				break;
 			}
 			case MMS_STRING:
@@ -226,39 +234,43 @@ namespace Core::Lib
 				char tmp[256] = { 0 };
 				strncpy(tmp, MmsValue_toString(t_mmsValue), 256);
 				tmp[255] = 0;
-				t_item->update(QString::fromLocal8Bit(tmp));
+				QString v = QString::fromLocal8Bit(tmp);
+				t_vals->push(t_item, Core::ptrValue::create(v));
 				break;
 			}
 			case MMS_UTC_TIME: {
-				t_item->update(convertTimestampMsToUserString(MmsValue_getUtcTimeInMs(t_mmsValue)));
+				QString v = convertTimestampMsToUserString(MmsValue_getUtcTimeInMs(t_mmsValue));
+				t_vals->push(t_item, Core::ptrValue::create(v));
 				break;
 			}
 			default: {
 				char tmp[1024] = { 0 };
 				MmsValue_printToBuffer(t_mmsValue, tmp, 1024);
-				t_item->update(QString::fromLocal8Bit(tmp));
+				QString v = QString::fromLocal8Bit(tmp);
+				t_vals->push(t_item, Core::ptrValue::create(v));
 			}
 			}
 		}
 
-		int 	updateItemByMMS(ptrItem t_item, sIedConnection *t_con, FunctionalConstraint t_fc)
+		int 	getValuesForDataAttribute(ptrItem t_item, ptrValuesUpdater t_vals, sIedConnection *t_con, FunctionalConstraint t_fc)
 		{
 			IedClientError retval = IED_ERROR_OK;
-			auto ref = t_item->ref().toStdString();
+			auto ref = t_item->getReference().toStdString();
 
-			MmsValue *value = IedConnection_readObject(t_con, &retval, ref.data(), t_fc);
+			MmsValue *rawValue = IedConnection_readObject(t_con, &retval, ref.data(), t_fc);
 			if (retval != IED_ERROR_OK) {
 				return -1;
 			}
 
-			updateItemValueByMmsValue(t_item, value);
-			MmsValue_delete(value);
+			getValuesForItemByMmsValue(t_item, t_vals, rawValue);
+
+			MmsValue_delete(rawValue);
 			return 0;
 		}
 
-		int 	updateDataObjectItem(Core::ptrDO t_do, sIedConnection *t_con)
+		int 	getValuesForDataObject(Core::ptrDO t_do, Core::ptrValuesUpdater t_vals, sIedConnection *t_con)
 		{
-			if (t_do == nullptr || t_con == nullptr) {
+			if (t_do == nullptr || t_vals == nullptr || t_con == nullptr) {
 				return -1;
 			}
 
@@ -266,7 +278,7 @@ namespace Core::Lib
 				auto daNode = t_do->getItem< Core::DataAttribute >(j);
 				auto fcNum = (FunctionalConstraint)daNode->fcNum();
 
-				updateItemByMMS(daNode, t_con, fcNum);
+				getValuesForDataAttribute(daNode, t_vals, t_con, fcNum);
 			}
 			return 0;
 		}
@@ -376,7 +388,7 @@ namespace Core::Lib
 				while (node != nullptr) {
 					t_builder.createLN(QString::fromLocal8Bit((char *)node->data)); // New LN
 
-					emit sigFoundNode(t_builder.lastLN()->ref());
+					emit sigFoundNode(t_builder.lastLN()->getReference());
 
 					fetchLN_DO(t_builder);
 
@@ -388,7 +400,7 @@ namespace Core::Lib
 
 					fetchLN_SVCB(t_builder);
 
-					updateLN_Signals(t_builder.lastLN());
+					getValuesForLN(t_builder.lastLN());
 
 					node = LinkedList_getNext(node); // next LN
 				}
@@ -404,7 +416,7 @@ namespace Core::Lib
 	int Lib61850_Adapter::fetchLN_DO(Core::DataModelBuilder &t_builder)
 	{
 		IedClientError retval = IED_ERROR_OK;
-		QString ref = t_builder.lastLN()->ref();
+		QString ref = t_builder.lastLN()->getReference();
 
 		LinkedList doList = IedConnection_getLogicalNodeDirectory(m_libConn, &retval, ref.toStdString().data(),
 																ACSI_CLASS_DATA_OBJECT);
@@ -444,7 +456,7 @@ namespace Core::Lib
 	int Lib61850_Adapter::fetchLN_DS(Core::DataModelBuilder &t_builder)
 	{
 		IedClientError retval = IED_ERROR_OK;
-		QString lnRef = t_builder.lastLN()->ref();
+		QString lnRef = t_builder.lastLN()->getReference();
 
 		LinkedList dsList = IedConnection_getLogicalNodeDirectory(m_libConn, &retval, lnRef.toStdString().data(),
 																ACSI_CLASS_DATA_SET);
@@ -480,7 +492,7 @@ namespace Core::Lib
 	int Lib61850_Adapter::fetchLN_RCB(Core::DataModelBuilder &t_builder)
 	{
 		IedClientError retval = IED_ERROR_OK;
-		QString ref = t_builder.lastLN()->ref();
+		QString ref = t_builder.lastLN()->getReference();
 
 		// Unbuffered RCB
 		LinkedList rcbList = IedConnection_getLogicalNodeDirectory(m_libConn, &retval, ref.toStdString().data(),
@@ -516,7 +528,7 @@ namespace Core::Lib
 	{
 		// Goose CB
 		IedClientError retval = IED_ERROR_OK;
-		QString ref = t_builder.lastLN()->ref();
+		QString ref = t_builder.lastLN()->getReference();
 		LinkedList rcbList = IedConnection_getLogicalNodeDirectory(m_libConn, &retval, ref.toStdString().data(),
 																	ACSI_CLASS_GoCB);
 
@@ -542,63 +554,64 @@ namespace Core::Lib
 		emit sigConClosed();
 	}
 
-	int Lib61850_Adapter::updateLDs_Status(Core::ptrDataModel t_model)
+	Core::ptrValuesUpdater Lib61850_Adapter::getValuesForLN(Core::ptrLN t_ln)
 	{
 		if (!isConnected()) {
-			return -1;
+			return nullptr;
 		}
 
-		for (size_t i=0;i<t_model->getItemCount();i++) {
-			auto ld = t_model->getItem<Core::LogicalDevice>(i);
-			if (ld->lln0()) {
-				updateDataObjectItem(ld->lln0()->mod(), m_libConn);
-				updateDataObjectItem(ld->lln0()->beh(), m_libConn);
-				updateDataObjectItem(ld->lln0()->health(), m_libConn);
-			}
-		}
-		return 0;
-	}
-
-	int Lib61850_Adapter::updateLNs_Status(Core::ptrLD t_ld)
-	{
-		if (!isConnected()) {
-			return -1;
-		}
-
-		for (size_t i=0;i<t_ld->getItemCount();i++) {
-			auto ln = t_ld->getItem< Core::LogicalNode >(i);
-
-			for (size_t j=0;j<ln->getItemCount();j++) {
-				updateDataObjectItem(ln->mod(), m_libConn);
-				updateDataObjectItem(ln->beh(), m_libConn);
-				updateDataObjectItem(ln->health(), m_libConn);
-			}
-		}
-		return 0;
-	}
-
-	int Lib61850_Adapter::updateLN_Signals(Core::ptrLN t_ln)
-	{
-		if (!isConnected()) {
-			return -1;
-		}
-
+		ptrValuesUpdater vals = ptrValuesUpdater::create();
 		for (size_t i=0;i<t_ln->getItemCount();i++) {
-			auto doNode = t_ln->getItem< Core::DataObject >(i);
+			auto item = t_ln->getItem< Core::DataObject >(i);
 
-			updateDataObjectItem(doNode, m_libConn);
+			getValuesForDataObject(item, vals, m_libConn);
 		}
-		return 0;
+		return vals;
 	}
 
-	int Lib61850_Adapter::updateDS_Signals(Core::ptrDataSet t_ds)
+	Core::ptrValuesUpdater Lib61850_Adapter::getValuesForDS(Core::ptrDataSet t_ds)
 	{
 		if (!isConnected()) {
-			return -1;
+			return nullptr;
 		}
 
 		//ClientDataSet clientDataSet = IedConnection_readDataSetValues(con, &error, "simpleIOGenericIO/LLN0.AnalogueValues", NULL);
 		return 0;
+	}
+
+	Core::ptrValuesUpdater Lib61850_Adapter::getStatusValuesForLN(Core::ptrLN t_ln) 
+	{
+		if (!isConnected()) {
+			return nullptr;
+		}
+
+		/*
+		for (size_t i=0;i<t_ld->getItemCount();i++) {
+			auto ln = t_ld->getItem< Core::LogicalNode >(i);
+
+			for (size_t j=0;j<ln->getItemCount();j++) {
+				// getValuesForDataObject(ln->getModItem(), m_libConn);
+				// getValuesForDataObject(ln->getBehItem(), m_libConn);
+				// getValuesForDataObject(ln->getHealthItem(), m_libConn);
+			}
+		}
+		*/
+		return 0;
+	}
+
+	Core::ptrValuesUpdater Lib61850_Adapter::getStatusValuesForLD(Core::ptrLD t_ld)
+	{
+		if (!isConnected()) {
+			return nullptr;
+		}
+
+		ptrValuesUpdater vals = ptrValuesUpdater::create();
+		if (t_ld->lln0()) {
+			getValuesForDataObject(t_ld->lln0()->getModItem(), vals, m_libConn);
+			getValuesForDataObject(t_ld->lln0()->getBehItem(), vals, m_libConn);
+			getValuesForDataObject(t_ld->lln0()->getHealthItem(), vals, m_libConn);
+		}
+		return vals;
 	}
 
 	int Lib61850_Adapter::getFileList(Core::DirOn &t_dir)

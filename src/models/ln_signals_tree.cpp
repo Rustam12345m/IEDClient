@@ -32,6 +32,7 @@ namespace App::Models
 	{
 		beginResetModel();
 		m_ied = t_ied;
+		m_lnode.reset();
 		endResetModel();
 	}
 
@@ -59,7 +60,7 @@ namespace App::Models
 
 		Core::Item *item = nullptr;
 		if (!t_parent.isValid()) {
-			item = m_ied->model().getLogicalNode(m_currentLD, m_currentLN).get();
+			item = m_lnode.get();
 		} else {
 			item = static_cast<Core::Item*>(t_parent.internalPointer());
 		}
@@ -83,7 +84,7 @@ namespace App::Models
 
 		Core::Item *item = nullptr;
 		if (!t_parent.isValid()) {
-			item = m_ied->model().getLogicalNode(m_currentLD, m_currentLN).get();
+			item = m_lnode.get();
 		} else {
 			item = static_cast<Core::Item*>(t_parent.internalPointer());
 		}
@@ -106,10 +107,10 @@ namespace App::Models
 		Core::Item *parent = nullptr;
 		Core::Item *item = static_cast<Core::Item*>(t_index.internalPointer());
 		if (item != nullptr) {
-			parent = item->parent();
+			parent = item->getParent();
 		}
 
-		if (parent == m_ied->model().getLogicalNode(m_currentLD, m_currentLN).get()) {
+		if (parent == m_lnode.get()) {
 			return QModelIndex();
 		}
 		return createIndex(parent->getItemCount(), 0, parent);
@@ -117,11 +118,7 @@ namespace App::Models
 
 	QVariant LN_SignalTree::data(const QModelIndex &t_index, int t_role) const
 	{
-		if (!t_index.isValid()) {
-			return QVariant();
-		}
-
-		if (t_role != Qt::DisplayRole) {
+		if (!t_index.isValid() || (t_role != Qt::DisplayRole)) {
 			return QVariant();
 		}
 
@@ -129,38 +126,45 @@ namespace App::Models
 		if (item != nullptr) {
 			switch (t_index.column()) {
 			case NAME_COLUMN: {
-				return QVariant(item->name());
+				return QVariant(item->getName());
 			}
 			case FC_COLUMN: {
-				return QVariant(" FC ");
+				auto *da = dynamic_cast<Core::DataAttribute*>(item);
+				if (da) {
+					return QVariant(da->fc());
+				}
+				return QVariant("");
 			}
 			case VALUE_COLUMN: {
-				return QVariant(item->value());
+				return QVariant(item->getValue());
 			}
 			}
 		}
 		return QVariant(" ? ");
 	}
 
-	void LN_SignalTree::getSelectedLN(int &t_ld, int &t_ln)
-	{
-		t_ld = m_currentLD;
-		t_ln = m_currentLN;
-	}
-
-	void LN_SignalTree::slotDataUpdated(bool t_done)
+	void LN_SignalTree::slotDataUpdated(QSharedPointer<QList<Core::Item*>> t_nodes)
 	{
 		//qDebug() << "LN_SignalTree: slotDataUpdated";
-		emit dataChanged(index(0, 0), index(rowCount() - 1, VALUE_COLUMN));
+		// emit dataChanged(index(0, 0), index(rowCount() - 1, VALUE_COLUMN));
 	}
 
 	void LN_SignalTree::slotLNSelected(int t_ld, int t_ln)
 	{
-		//qDebug() << "LN_SignalTree: ld = " << t_ld << " ln = " << t_ln;
-		if ((m_currentLD != t_ld) || (m_currentLN != t_ln)) {
+		// qDebug() << "LN_SignalTree: ld = " << t_ld << " ln = " << t_ln;
+
+		Core::ptrLN ln = m_ied->model().getLogicalNode(t_ld, t_ln);
+		if (ln != m_lnode) {
+			if (m_lnode) {
+				disconnect(m_updConnection);
+			}
+
 			beginResetModel();
-			m_currentLD = t_ld;
-			m_currentLN = t_ln;
+			m_lnode = ln;
+			if (m_lnode) {
+				m_updConnection = connect(m_lnode.get(), &Core::LogicalNode::sigDataObjectUpdated,
+										this, &LN_SignalTree::slotDataUpdated);
+			}
 			endResetModel();
 		}
 	}

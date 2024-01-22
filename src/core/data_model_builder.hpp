@@ -55,7 +55,7 @@ namespace Core
 		auto 	lastGOCB() const { return m_lastGOCB; }
 		auto 	lastSVCB() const { return m_lastSVCB; }
 
-		ptrDataModel	build();
+		ptrDataModel	build(QThread *t_guiThread);
 
 	private:
 		ptrDataModel	m_model;

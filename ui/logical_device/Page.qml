@@ -22,10 +22,10 @@
 import QtQuick
 import QtQuick.Controls
 
-import "qrc:/common/"
-
 import GlobalVarsModule
 import AppStylesModule
+
+import "qrc:/common/"
 
 // LD page
 FocusScope {
@@ -55,10 +55,6 @@ FocusScope {
 		model: devBackend.getLD_GridModel()
 
 		delegate: LD_GridItem {
-			// blkWidth: rootID.blkWidth
-			// blkHeight: rootID.blkHeight
-			// blkBorder: rootID.blkBorder
-
 			selected: (gridView.currentIndex == index)
 
 			onSigLeftClicked: {

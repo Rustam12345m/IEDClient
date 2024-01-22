@@ -19,36 +19,36 @@
  *  See COPYING file for the complete license text.
  * */
 
-#pragma once
+#include "app_presenter.hpp"
+#include "builder_information.hpp"
 
-#include "basic_command.hpp"
-#include "core/ied_object.hpp"
+#include <QVersionNumber>
 
-namespace Core::Cmd
+namespace App
 {
-	/*
-	 * 
-	 * */
-	class UpdateDataSet_Cmd : public BasicCommand
+	AppBackend::AppBackend(AppConContainer &t_con) : BackendBase(t_con)
 	{
-		Q_OBJECT
-	public:
-		UpdateDataSet_Cmd(ptrIED_Object t_ied, ptrDataSet t_ds)
-			: m_ied{t_ied}, m_dataset{t_ds}
-		{
-		}
+		m_eventsModel = new Models::AppEventsTable(this);
+		m_lastConnModel = new Models::HistConTable(this, m_settings);
+	}
 
-		void 	execute(LibInterface &t_con) override;
+	QString AppBackend::getAppVersion()
+	{
+		return QString("%1").arg(PROJECT_VERSION);
+	}
 
-		static auto create(ptrIED_Object t_ied, ptrDataSet t_ds) {
-			return QSharedPointer<UpdateDataSet_Cmd>::create(t_ied, t_ds);
-		}
+	QString AppBackend::getQtVersion()
+	{
+		return QString("%1").arg(qVersion());
+	}
 
-	signals:
-		void 	sigNewValues(ptrValuesUpdater t_vals);
+	QString AppBackend::getLibVersion()
+	{
+		return m_con.m_lib->getLibVersion();
+	}
 
-	private:
-		ptrIED_Object 	m_ied;
-		ptrDataSet		m_dataset;
-	};
+	void AppBackend::newConnection(const Core::Cmd::ConCredentials &t_cred)
+	{
+		m_settings.putConnectionToConfig(t_cred, m_con.m_iedObj->model().getName());
+	}
 }

@@ -19,29 +19,29 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "rcb_common_table.hpp"
+#include "rcb_overview_table.hpp"
 
 namespace App::Models
 {
-	RCB_CommonTable::RCB_CommonTable(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied)
+	RCB_OverviewTable::RCB_OverviewTable(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied)
 		: QAbstractTableModel(t_parent), m_ied(t_ied)
 	{
 	}
 
-	void RCB_CommonTable::setSelectedRCB(int t_inx)
+	void RCB_OverviewTable::setSelectedRCB(int t_inx)
 	{
 		m_currentRCB = t_inx;
 		emit sigRCBSelected(m_currentRCB);
 	}
 
-	void RCB_CommonTable::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
+	void RCB_OverviewTable::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
 	{
 		beginResetModel();
 		m_ied = t_ied;
 		endResetModel();
 	}
 
-	QVariant RCB_CommonTable::headerData(int t_column, Qt::Orientation t_orientation, int t_role) const
+	QVariant RCB_OverviewTable::headerData(int t_column, Qt::Orientation t_orientation, int t_role) const
 	{
 		if (t_orientation != Qt::Horizontal) {
 			return QVariant();
@@ -79,24 +79,24 @@ namespace App::Models
 		return QVariant("");
 	}
 
-	QHash<int, QByteArray> RCB_CommonTable::roleNames() const
+	QHash<int, QByteArray> RCB_OverviewTable::roleNames() const
 	{
 		return { { Qt::DisplayRole, "display" } };
 	}
 
-	int RCB_CommonTable::rowCount(const QModelIndex &t_parent) const
+	int RCB_OverviewTable::rowCount(const QModelIndex &t_parent) const
 	{
 		return 7;
 	}
 
-	int RCB_CommonTable::columnCount(const QModelIndex &t_parent) const
+	int RCB_OverviewTable::columnCount(const QModelIndex &t_parent) const
 	{
 		return ColumnsCount;
 	}
 
-	QVariant RCB_CommonTable::data(const QModelIndex &t_index, int t_role) const
+	QVariant RCB_OverviewTable::data(const QModelIndex &t_index, int t_role) const
 	{
-		//qDebug() << "RCB_CommonTable: " << QString("index = %1 %2, role = %3").arg(t_index.row()).arg(t_index.column()).arg(t_role);
+		//qDebug() << "RCB_OverviewTable: " << QString("index = %1 %2, role = %3").arg(t_index.row()).arg(t_index.column()).arg(t_role);
 		int row = t_index.row(), column = t_index.column();
 
 		switch (column) {
@@ -140,7 +140,7 @@ namespace App::Models
 		return QVariant(" ? ");
 	}
 
-	void RCB_CommonTable::slotDataUpdated(bool t_done)
+	void RCB_OverviewTable::slotDataUpdated(bool t_done)
 	{
 		emit dataChanged(index(0, RCB_ENA_COLUMN), index(rowCount() - 1, ColumnsCount));
 	}

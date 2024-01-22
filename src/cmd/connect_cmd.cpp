@@ -23,6 +23,7 @@
 #include "core/data_model_builder.hpp"
 
 #include <QThread>
+#include <QCoreApplication>
 #include <QDebug>
 
 namespace Core::Cmd
@@ -42,7 +43,7 @@ namespace Core::Cmd
 				// New Data Model
 				Core::DataModelBuilder builder;
 				t_lib.fetchDataModel(builder);
-				m_ied->setModel(builder.build());
+				m_ied->setModel(builder.build(QCoreApplication::instance()->thread()));
 
 				auto ident = t_lib.getServIdentity();
 				m_ied->setIdentify(ident);

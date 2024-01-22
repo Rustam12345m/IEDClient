@@ -19,36 +19,8 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "app_backend.hpp"
-#include "builder_information.hpp"
+#include "dataset.hpp"
 
-#include <QVersionNumber>
-
-namespace App
+namespace Core
 {
-	AppBackend::AppBackend(AppConContainer &t_con) : BackendBase(t_con)
-	{
-		m_eventsModel = new Models::AppEventsTable(this);
-		m_lastConnModel = new Models::HistConTable(this, m_settings);
-	}
-
-	QString AppBackend::getAppVersion()
-	{
-		return QString("%1").arg(PROJECT_VERSION);
-	}
-
-	QString AppBackend::getQtVersion()
-	{
-		return QString("%1").arg(qVersion());
-	}
-
-	QString AppBackend::getLibVersion()
-	{
-		return m_con.m_lib->getLibVersion();
-	}
-
-	void AppBackend::newConnection(const Core::Cmd::ConCredentials &t_cred)
-	{
-		m_settings.putConnectionToConfig(t_cred, m_con.m_iedObj->model().name());
-	}
 }

@@ -32,44 +32,44 @@ namespace Core
 	class DataObject : public Item
 	{
 	public:
-		QString		getValue() const {
+		QString		getValue() const override {
 			if (m_value) {
-				return m_value->value();
+				return m_value->getValue();
 			}
 			return " - ";
 		}
 		QString		getQuality() const {
 			if (m_quality) {
-				return m_quality->value();
+				return m_quality->getValue();
 			}
 			return " - ";
 		}
 		QString		getTimestamp() const {
 			if (m_timestamp) {
-				return m_timestamp->value();
+				return m_timestamp->getValue();
 			}
 			return " - ";
 		}
 		QString		getDesc() const {
 			if (m_description) {
-				return m_description->value();
+				return m_description->getValue();
 			}
 			return " - ";
 		}
 
-		void		push(QSharedPointer< Item > t_node) {
+		void		addSubItem(QSharedPointer< Item > t_node) override {
 			m_items.push_back(t_node);
 
-			if (t_node->name() == "stVal" || t_node->name() == "mag") {
+			if (t_node->getName() == "stVal" || t_node->getName() == "mag") {
 				m_value =  t_node.staticCast<DataAttribute>();
 			}
-			else if (t_node->name() == "q") {
+			else if (t_node->getName() == "q") {
 				m_quality = t_node.staticCast<DataAttribute>();;
 			}
-			else if (t_node->name() == "t") {
+			else if (t_node->getName() == "t") {
 				m_timestamp = t_node.staticCast<DataAttribute>();;
 			}
-			else if (t_node->name() == "d") {
+			else if (t_node->getName() == "d") {
 				m_description = t_node.staticCast<DataAttribute>();;
 			}
 		}

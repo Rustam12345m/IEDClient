@@ -43,21 +43,6 @@ namespace Core
 		{
 			m_delimetr = "."; // Between DAName and SAName
 		}
-
-		QString		value() override {
-			return m_value;
-		}
-		void 		update(const QString &t_value) override {
-			m_value = t_value;
-		}
-	
-	protected:
-		void 	debug(QDebug &t_debug) const {
-			t_debug << m_name << " = " << m_value;
-		}
-
-	private:
-		QString		m_value;
 	};
 	typedef QSharedPointer<SubAttribute>	ptrSDA;
 }

@@ -29,7 +29,7 @@ import AppStylesModule
 import "qrc:/common/"
 
 // Filesystem page
-FocusScope
+Item
 {
 	id: rootID
 

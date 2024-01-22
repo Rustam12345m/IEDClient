@@ -64,18 +64,13 @@ FocusScope
 			color: ColorPalette.backgroundColor2
 
 			// Table
-			LN_CommonTable {
+			LN_OverviewTable {
 				id: tableLN
 
 				anchors {
 					fill: parent
 				}
 
-				onSigLeftOrRightKey: function() {
-					console.log("LN_Page: Activate DO_Table")
-					tableLN.focus = false
-					tableDO.focus = true
-				}
 				onSigSelectedNewLN: function() {
 					// devBackend.updateLN_TreeValues(tableDO.currentLDevice, tableDO.currentLNode)
 				}
@@ -100,21 +95,25 @@ FocusScope
 				id: lnSignalsStack
 
 				anchors {
-					left: parent.left
-					right: parent.right
 					top: parent.top
-					bottom: rectLnViewTabBar.top
+					bottom: parent.bottom
+					left: parent.left
+					// right: parent.right
+					// bottom: rectLnViewTabBar.top
+					right: rectLnViewTabBar.left
 				}
 
 				// Table DO signals
 				LN_StateView {
 					id: tableDO
+				}
 
-					onSigLeftOrRightKey: function() {
-						console.log("LN_Page: Activate LN_Table")
-						tableLN.focus = true
-						tableDO.focus = false
-					}
+				LN_ControlsView {
+					id: lnControlsView
+				}
+
+				LN_SettingsView {
+					id: lnSettingsView
 				}
 
 				// Tree DO signals
@@ -125,16 +124,6 @@ FocusScope
 						diaChangeValue.open(t_ref, t_msg, t_value)
 					}
 				}
-
-				LN_ControlsView {
-					id: lnControlsView
-					
-				}
-
-				LN_SettingsView {
-					id: lnSettingsView
-
-				}
 			}
 
 			// TabBar for lnSignalsStack
@@ -142,26 +131,28 @@ FocusScope
 				id: rectLnViewTabBar
 
 				anchors {
-					left: parent.left
-					right: parent.right
-					// top: parent.top
+					top: parent.top
 					bottom: parent.bottom
+					right: parent.right
 				}
-				height: 25//lnTabBar.implicitHeight
+				width: 30
 
 				CustomTabBar {
 					id: lnTabBar
 
 					anchors.fill: parent
 
-					horizontalBar: true
-					cellWidth: 80
+					cellWidth: 30
+					color: ColorPalette.toolBarColor
+
+					selectedColor: "white"
+					unselectedColor: ColorPalette.toolBarColor
 
 					model: ListModel {
 						ListElement { title: "State" }
-						ListElement { title: "Tree" }
 						ListElement { title: "Controls" }
 						ListElement { title: "Settings" }
+						ListElement { title: "Tree" }
 					}
 
 					onSigTabSelected: function(index) {
@@ -195,23 +186,6 @@ FocusScope
 			tableDO.focus = false
 
 			lnPageTimer.stop()
-		}
-	}
-
-	Keys.onPressed: function(event) {
-		console.log("LN_Page: Key pressed " + event.key)
-
-		if (event.key == Qt.Key_Left) {
-			console.log("LN_Page: Activate LN_Table")
-			tableLN.focus = true
-			tableDO.focus = false
-			event.accepted = true
-		}
-		if (event.key == Qt.Key_Right) {
-			console.log("LN_Page: Activate DO_Table")
-			tableLN.focus = false
-			tableDO.focus = true
-			event.accepted = true
 		}
 	}
 }

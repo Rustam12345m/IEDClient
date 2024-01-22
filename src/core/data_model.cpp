@@ -31,7 +31,7 @@ namespace Core
 		{
 			auto &nodeList = t_item->getItemList();
 			for (auto node : nodeList) {
-				qDebug().noquote() << t_prefix << *node;
+				qDebug().noquote() << t_prefix << node->getName();
 
 				printTree(t_prefix + "  ", node);
 			}
@@ -44,13 +44,13 @@ namespace Core
 			m_name = "Undefined";
 		} else if (m_items.size() == 1) {
 			// We have only one LD
-			m_name = m_items[0]->name().first(m_items[0]->name().size() / 2);
+			m_name = m_items[0]->getName().first(m_items[0]->getName().size() / 2);
 		} else {
 			// We have more than one LD
 			QList<QString> ldNames;
 			size_t minSize = 0;
 			for (auto ld : m_items) {
-				QString name = ld->name();
+				QString name = ld->getName();
 				if (name.size() > minSize) {
 					minSize = name.size();
 				}
@@ -73,7 +73,7 @@ namespace Core
 		// Change LDs' names
 		for (size_t i=0;i<m_items.size();i++) {
 			ptrLD ld = getLogicalDevice(i);
-			QString name = ld->name();
+			QString name = ld->getName();
 			ld->setName(name.right(name.size() - m_name.size()));
 		}
 	}
@@ -98,7 +98,7 @@ namespace Core
 
 		auto &ldList = m_items;
 		for (auto ld : ldList) {
-			qDebug() << "  LD: " << *ld;
+			qDebug() << "  LD: " << ld->getName();
 			printTree("    ", ld);
 		}
 	}

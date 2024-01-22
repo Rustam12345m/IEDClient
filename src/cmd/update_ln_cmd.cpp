@@ -20,20 +20,20 @@
  * */
 
 #include "update_ln_cmd.hpp"
-#include <QDebug>
+#include <QThread>
 
 namespace Core::Cmd
 {
 	void UpdateLNode_Cmd::execute(LibInterface &t_con)
 	{
-		//qDebug() << "UpdateLNode_Cmd: ldInx = " << m_ldIndex << ", lnInx " << m_lnIndex;
+		ptrValuesUpdater vals = t_con.getValuesForLN(m_lnode);
+		if (vals) {
+			// Update process must to be finished in the GUI thread
+			emit sigNewValues(vals);
 
-		if (t_con.isConnected()) {
-			auto ln = m_ied->model().getLogicalNode(m_ldIndex, m_lnIndex);
-			if (ln) {
-				t_con.updateLN_Signals(ln);
-			}
+			emit sigFinished(true);
+		} else {
+			emit sigFinished(false);
 		}
-		emit sigFinished(true);
 	}
 }

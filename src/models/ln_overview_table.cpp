@@ -19,29 +19,31 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "ln_common_table.hpp"
+#include "ln_overview_table.hpp"
 
 namespace App::Models
 {
-	LN_CommonTable::LN_CommonTable(QObject *t_parent, Core::ptrIED_Object t_ied)
+	LN_OverviewTable::LN_OverviewTable(QObject *t_parent, Core::ptrIED_Object t_ied)
 		: QAbstractTableModel(t_parent), m_ied(t_ied)
 	{
 	}
 
-	void LN_CommonTable::setNewIED(Core::ptrIED_Object t_ied)
+	void LN_OverviewTable::setNewIED(Core::ptrIED_Object t_ied)
 	{
 		beginResetModel();
 		m_ied = t_ied;
+		m_ldev.reset();
+		m_ldevIndex = -1;
 		endResetModel();
 	}
 
-	void LN_CommonTable::setSelectedLN(int t_ln)
+	void LN_OverviewTable::setSelectedLN(int t_ln)
 	{
 		//qDebug() << "LNs_Table: Selected LN = " << t_ln;
-		emit sigLNSelected(m_currentLD, t_ln);
+		emit sigLNSelected(m_ldevIndex, t_ln);
 	}
 
-	QVariant LN_CommonTable::headerData(int t_section, Qt::Orientation t_orientation, int t_role) const
+	QVariant LN_OverviewTable::headerData(int t_section, Qt::Orientation t_orientation, int t_role) const
 	{
 		switch (t_orientation) {
 		case Qt::Horizontal: {
@@ -56,32 +58,31 @@ namespace App::Models
 		return QVariant();
 	}
 
-	QHash<int, QByteArray> LN_CommonTable::roleNames() const
+	QHash<int, QByteArray> LN_OverviewTable::roleNames() const
 	{
 		return { { Qt::DisplayRole, "value" } };
 	}
 
-	int LN_CommonTable::rowCount(const QModelIndex &t_parent) const
+	int LN_OverviewTable::rowCount(const QModelIndex &t_parent) const
 	{
-		auto ld = m_ied->model().getItem<Core::LogicalDevice>(m_currentLD);
-		if (ld) {
-			return ld->getItemCount();
+		if (m_ldev) {
+			return m_ldev->getItemCount();
 		}
 		return 0;
 	}
 
-	int LN_CommonTable::columnCount(const QModelIndex &t_parent) const
+	int LN_OverviewTable::columnCount(const QModelIndex &t_parent) const
 	{
 		return ColumnsCount;
 	}
 
-	QVariant LN_CommonTable::data(const QModelIndex &t_index, int t_role) const
+	QVariant LN_OverviewTable::data(const QModelIndex &t_index, int t_role) const
 	{
-		auto ln = m_ied->model().getLogicalNode(m_currentLD, t_index.row());
+		auto ln = m_ldev->getItem<Core::LogicalNode>(t_index.row());
 		if (ln) {
 			switch (t_index.column()) {
 			case NameColumn: {
-				return QVariant(ln->name());
+				return QVariant(ln->getName());
 			}
 			case ModeColumn: {
 				// return QVariant("M");
@@ -100,16 +101,17 @@ namespace App::Models
 		return QVariant(" ? ");
 	}
 
-	void LN_CommonTable::slotDataUpdated(bool t_status)
+	void LN_OverviewTable::slotDataUpdated(bool t_status)
 	{
 		emit dataChanged(index(0, ModeColumn), index(rowCount() - 1, HealthColumn));
 	}
 
-	void LN_CommonTable::slotLDSelected(int t_ld)
+	void LN_OverviewTable::slotLDSelected(int t_ld)
 	{
-		if (m_currentLD != t_ld) {
+		if (m_ldevIndex != t_ld) {
 			beginResetModel();
-			m_currentLD = t_ld;
+			m_ldevIndex = t_ld;
+			m_ldev = m_ied->model().getLogicalDevice(m_ldevIndex);
 			endResetModel();
 		}
 	}

@@ -19,7 +19,7 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "ln_state_table.hpp"
+#include "ln_signals_table.hpp"
 
 namespace
 {
@@ -40,19 +40,20 @@ namespace
 
 namespace App::Models
 {
-	LN_StateTable::LN_StateTable(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied)
+	LN_SignalTable::LN_SignalTable(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied)
 		: QAbstractTableModel(t_parent), m_ied(t_ied)
 	{
 	}
 
-	void LN_StateTable::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
+	void LN_SignalTable::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
 	{
 		beginResetModel();
 		m_ied = t_ied;
+		m_lnode.reset();
 		endResetModel();
 	}
 
-	QVariant LN_StateTable::headerData(int t_column, Qt::Orientation t_orientation, int t_role) const
+	QVariant LN_SignalTable::headerData(int t_column, Qt::Orientation t_orientation, int t_role) const
 	{
 		if (t_orientation != Qt::Horizontal) {
 			return QVariant();
@@ -81,33 +82,31 @@ namespace App::Models
 		return QVariant("");
 	}
 
-	QHash<int, QByteArray> LN_StateTable::roleNames() const
+	QHash<int, QByteArray> LN_SignalTable::roleNames() const
 	{
 		return { { Qt::DisplayRole, "display" }, { Qt::UserRole + 1, "sort_value" } };
 	}
 
-	int LN_StateTable::rowCount(const QModelIndex &t_parent) const
+	int LN_SignalTable::rowCount(const QModelIndex &t_parent) const
 	{
-		auto ln = m_ied->model().getLogicalNode(m_currentLD, m_currentLN);
-		if (ln) {
-			return ln->getSignalsTable()->size();
+		if (m_lnode) {
+			return m_lnode->getSignalMatrix()->size();
 		}
 		return 0;
 	}
 
-	int LN_StateTable::columnCount(const QModelIndex &t_parent) const
+	int LN_SignalTable::columnCount(const QModelIndex &t_parent) const
 	{
 		return 6;
 	}
 
-	QVariant LN_StateTable::data(const QModelIndex &t_index, int t_role) const
+	QVariant LN_SignalTable::data(const QModelIndex &t_index, int t_role) const
 	{
-		//qDebug() << "LN_StateTable: " << QString("index = %1 %2, role = %3").arg(t_index.row()).arg(t_index.column()).arg(t_role);
+		//qDebug() << "LN_SignalTable: " << QString("index = %1 %2, role = %3").arg(t_index.row()).arg(t_index.column()).arg(t_role);
 		int row = t_index.row(), column = t_index.column();
 
-		auto ln = m_ied->model().getLogicalNode(m_currentLD, m_currentLN);
-		if (ln) {
-			auto doTable = ln->getSignalsTable();
+		if (m_lnode) {
+			auto doTable = m_lnode->getSignalMatrix();
 			if (t_role == ComRoles::ROLE_SORT_VALUE) {
 				// for sorting process
 				switch (column) {
@@ -157,25 +156,38 @@ namespace App::Models
 		return QVariant(" ? ");
 	}
 
-	void LN_StateTable::getSelectedLN(int &t_ld, int &t_ln)
+	void LN_SignalTable::slotDataUpdated(QSharedPointer<QList<Core::Item*>> t_nodes)
 	{
-		t_ld = m_currentLD;
-		t_ln = m_currentLN;
+		if (t_nodes->empty()) {
+			return;
+		}
+
+		Core::Item *doItem = t_nodes->front();
+		qDebug() << "LN_SignalTable: slotDataUpdated, do =" << doItem->getName();
+
+		auto matrix = m_lnode->getSignalMatrix()->getRows();
+		for (size_t i=0;i<matrix.size();i++) {
+			if (matrix[i].base().get() == doItem) {
+				emit dataChanged(index(i, DO_VALUE_COLUMN), index(i, DO_TS_COLUMN));
+			}
+		}
 	}
 
-	void LN_StateTable::slotDataUpdated(bool t_done)
+	void LN_SignalTable::slotLNSelected(int t_ld, int t_ln)
 	{
-		//qDebug() << "LN_StateTable: slotDataUpdated";
-		emit dataChanged(index(0, DO_VALUE_COLUMN), index(rowCount() - 1, DO_TS_COLUMN));
-	}
+		// qDebug() << "LN_SignalTable: ld = " << t_ld << " ln = " << t_ln;
+		Core::ptrLN ln = m_ied->model().getLogicalNode(t_ld, t_ln);
+		if (ln != m_lnode) {
+			if (m_lnode) {
+				disconnect(m_updConnection);
+			}
 
-	void LN_StateTable::slotLNSelected(int t_ld, int t_ln)
-	{
-		//qDebug() << "LN_StateTable: ld = " << t_ld << " ln = " << t_ln;
-		if ((m_currentLD != t_ld) || (m_currentLN != t_ln)) {
 			beginResetModel();
-			m_currentLD = t_ld;
-			m_currentLN = t_ln;
+			m_lnode = ln;
+			if (m_lnode) {
+				m_updConnection = connect(m_lnode.get(), &Core::LogicalNode::sigDataObjectUpdated,
+										this, &LN_SignalTable::slotDataUpdated);
+			}
 			endResetModel();
 		}
 	}

@@ -31,15 +31,17 @@ import "qrc:/common/"
 Item {
 	id: rootID
 
-	required property string 	name
 	required property int 		index
 	required property bool 		selected
+	required property var 		ld_object
+
+	property ListModel ldValsModel: ListModel {}
 
 	// Geometry
 	property int cellEdge: 28
 	property int borderWidth: 2
-	width: 200 //6 * rootID.cellEdge
-	height: (5 / 6 * width) // rootID.cellEdge
+	width: 200
+	height: (5 / 6 * width)
 
 	signal sigLeftClicked()
 	signal sigDLeftClicked()
@@ -86,7 +88,7 @@ Item {
 				font.pointSize: 12
 				color: "black"
 
-				text: "LD: " + rootID.name
+				text: "LD: " + ld_object.name
 			}
 		}
 		// Values
@@ -105,14 +107,7 @@ Item {
 			ListView {
 				anchors.fill: parent
 
-				model: ListModel {
-					ListElement { param: "Mod"; value: "On-blocked" }
-					ListElement { param: "Beh"; value: "On-blocked" }
-					ListElement { param: "Health"; value: "Alarm" }
-					ListElement { param: ""; value: "" }
-					ListElement { param: "Sim"; value: "False" }
-					ListElement { param: "Blk"; value: "False" }
-				}
+				model: rootID.ldValsModel
 
 				delegate: Rectangle {
 					height: 20
@@ -124,18 +119,27 @@ Item {
 							Layout.preferredWidth: 50
 							padding: 6
 
-							text: param
+							text: model.param
 
 							font.pointSize: 10
 						}
 						Text {
 							padding: 6
 
-							text: value
+							text: model.value
 
 							font.pointSize: 10
 						}
 					}
+				}
+
+				Component.onCompleted: {
+					rootID.ldValsModel.append({ param: "Mod:", 		value: ld_object.mod })
+					rootID.ldValsModel.append({ param: "Beh:", 		value: ld_object.beh })
+					rootID.ldValsModel.append({ param: "Health:", 	value: ld_object.health })
+					rootID.ldValsModel.append({ param: "", 			value: "" })
+					rootID.ldValsModel.append({ param: "Sim:", 		value: ld_object.sim })
+					rootID.ldValsModel.append({ param: "Blk:", 		value: ld_object.blk })
 				}
 			}
 		}

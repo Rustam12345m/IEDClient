@@ -54,7 +54,7 @@ FocusScope
 			color: "white"
 
 			// Table
-			DS_CommonTable {
+			DS_OverviewTable {
 				id: tableDS_Info
 
 				anchors.fill: parent

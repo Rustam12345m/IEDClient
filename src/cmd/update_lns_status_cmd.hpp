@@ -33,16 +33,16 @@ namespace Core::Cmd
 	{
 		Q_OBJECT
 	public:
-		UpdateLNs_StatusCmd(ptrIED_Object t_ied, int t_ldInx)
-				: m_ied(t_ied), m_ldIndex(t_ldInx)
+		UpdateLNs_StatusCmd(ptrIED_Object t_ied, Core::ptrLD t_ld)
+				: m_ied(t_ied), m_ld(t_ld)
 		{
 		}
 		~UpdateLNs_StatusCmd() override {}
 
 		void execute(LibInterface &t_con) override;
 
-		static auto create(ptrIED_Object t_ied, int t_ldInx) {
-			return QSharedPointer<UpdateLNs_StatusCmd>::create(t_ied, t_ldInx);
+		static auto create(ptrIED_Object t_ied, Core::ptrLD t_ld) {
+			return QSharedPointer<UpdateLNs_StatusCmd>::create(t_ied, t_ld);
 		}
 
 	private slots:
@@ -50,6 +50,6 @@ namespace Core::Cmd
 
 	private:
 		ptrIED_Object	m_ied;
-		int 			m_ldIndex = -1;
+		Core::ptrLD		m_ld;
 	};
 }

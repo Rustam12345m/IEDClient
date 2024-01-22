@@ -19,17 +19,17 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "presenter.hpp"
+#include "main_presenter.hpp"
 #include "tools/dump_model.hpp"
 
 namespace App
 {
-	Presenter::Presenter() : m_fsBackend(m_con), m_ldBackend(m_con), m_appBackend(m_con)
+	MainPresenter::MainPresenter() : m_fsBackend(m_con), m_ldBackend(m_con), m_appBackend(m_con)
 	{
-		connect(&m_con, &AppConContainer::sigConnected, this, &Presenter::slotConnected);
+		connect(&m_con, &AppConContainer::sigConnected, this, &MainPresenter::slotConnected);
 	}
 
-	void Presenter::setContextMembers(QQmlContext *t_context)
+	void MainPresenter::setContextMembers(QQmlContext *t_context)
 	{
 		t_context->setContextProperty("presenter", this);
 		t_context->setContextProperty("appBackend", &m_appBackend);
@@ -37,7 +37,7 @@ namespace App
 		t_context->setContextProperty("devBackend", &m_ldBackend);
 	}
 
-	void Presenter::connectTo(const QVariantMap &t_data)
+	void MainPresenter::connectTo(const QVariantMap &t_data)
 	{
 		Core::Cmd::ConCredentials cred(t_data);
 		// m_appBackend.newConnection(cred);
@@ -46,33 +46,33 @@ namespace App
 
 		auto cmd = Core::Cmd::ConnectCmd::create(cred, m_con.m_iedObj);
 
-		connect(cmd.get(), &Core::Cmd::ConnectCmd::sigFinished, this, &Presenter::slotConnected);
-		connect(cmd.get(), &Core::Cmd::ConnectCmd::sigProgress, this, &Presenter::slotCmdProgress);
+		connect(cmd.get(), &Core::Cmd::ConnectCmd::sigFinished, this, &MainPresenter::slotConnected);
+		connect(cmd.get(), &Core::Cmd::ConnectCmd::sigProgress, this, &MainPresenter::slotCmdProgress);
 		connect(cmd.get(), &Core::Cmd::ConnectCmd::sigFinished, &m_ldBackend, &BackendBase::slotConnected);
 		connect(cmd.get(), &Core::Cmd::ConnectCmd::sigFinished, &m_fsBackend, &BackendBase::slotConnected);
 
 		m_con.m_cmdQueue->putCommand(cmd);
 	}
 
-	void Presenter::disconnectFrom()
+	void MainPresenter::disconnectFrom()
 	{
 	}
 
-	void Presenter::toolDumpModel(const QVariantMap &t_data)
+	void MainPresenter::toolDumpModel(const QVariantMap &t_data)
 	{
 		Core::Cmd::ConCredentials con(t_data);
 		QString dir = t_data.value("path").toString();
 
 		Tools::DumpModel *dump = new Tools::DumpModel(this);
 
-		connect(dump, &Tools::DumpModel::sigFinished, this, &Presenter::slotCmdFinished);
-		connect(dump, &Tools::DumpModel::sigProgress, this, &Presenter::slotCmdProgress);
+		connect(dump, &Tools::DumpModel::sigFinished, this, &MainPresenter::slotCmdFinished);
+		connect(dump, &Tools::DumpModel::sigProgress, this, &MainPresenter::slotCmdProgress);
 
 		// dump->init(t_dir, t_ip, t_port, t_tls, t_name, t_pass);
 		// dump->start();
 	}
 
-	void Presenter::slotConnected(bool t_done)
+	void MainPresenter::slotConnected(bool t_done)
 	{
 		emit sigConnected(t_done);
 
