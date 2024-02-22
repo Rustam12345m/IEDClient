@@ -26,7 +26,7 @@
 
 namespace App
 {
-	AppBackend::AppBackend(AppConContainer &t_con) : BackendBase(t_con)
+	AppBackend::AppBackend(IEDConContainer &t_con) : BackendBase(t_con)
 	{
 		m_eventsModel = new Models::AppEventsTable(this);
 		m_lastConnModel = new Models::HistConTable(this, m_settings);
@@ -44,11 +44,11 @@ namespace App
 
 	QString AppBackend::getLibVersion()
 	{
-		return m_con.m_lib->getLibVersion();
+		return m_con.m_api->getVersion();
 	}
 
-	void AppBackend::newConnection(const Core::Cmd::ConCredentials &t_cred)
+	void AppBackend::saveConToHistory(const Cmd::IEDCredentials &t_cred)
 	{
-		m_settings.putConnectionToConfig(t_cred, m_con.m_iedObj->model().getName());
+		m_settings.putConnectionToConfig(t_cred, m_con.m_ied->model().getName());
 	}
 }

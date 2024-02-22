@@ -51,7 +51,7 @@ FocusScope
 		keyNavigationEnabled: true
 		boundsBehavior: Flickable.StopAtBounds
 
-		model: devBackend.getDS_ComModel()
+		model: iedBackend.getDS_ComModel()
 
 		property int selectedIndex: -1
 		onSelectedIndexChanged: {

@@ -23,12 +23,12 @@
 
 namespace App::Models
 {
-	DS_OverviewTable::DS_OverviewTable(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied)
+	DS_OverviewTable::DS_OverviewTable(QObject *t_parent, QSharedPointer<Core::IED> t_ied)
 		: QAbstractListModel(t_parent), m_ied(t_ied)
 	{
 	}
 
-	void DS_OverviewTable::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
+	void DS_OverviewTable::setActiveIED(QSharedPointer<Core::IED> t_ied)
 	{
 		beginResetModel();
 		m_ied = t_ied;

@@ -32,7 +32,7 @@ HorizontalHeaderView
 	required property int defDelegateWidth
 	required property int defDelegateHeight
 
-	property bool rightTextAlign: true
+	property bool rightTextAlign: false
 
 	boundsBehavior: Flickable.StopAtBounds
 

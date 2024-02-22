@@ -43,7 +43,7 @@ Item
 
 		property int selectedIndex: -1
 
-		model: devBackend.getLD_PropModel()
+		model: iedBackend.getLD_PropModel()
 
 		section.property: "section"
 		section.delegate: Rectangle {

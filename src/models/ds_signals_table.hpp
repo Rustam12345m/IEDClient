@@ -22,7 +22,7 @@
 #pragma once
 
 #include "models_stub.hpp"
-#include "core/ied_object.hpp"
+#include "core/ied.hpp"
 
 namespace App::Models
 {
@@ -38,9 +38,9 @@ namespace App::Models
 		};
 
 	public:
-		DS_SignalsTable(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied);
+		DS_SignalsTable(QObject *t_parent, QSharedPointer<Core::IED> t_ied);
 
-		void 	setNewIED(QSharedPointer<Core::IED_Object> t_ied);
+		void 	setActiveIED(QSharedPointer<Core::IED> t_ied);
 		auto 	getDataSet() {
 			return m_dataSet;
 		}
@@ -58,7 +58,7 @@ namespace App::Models
 		void 	slotDataUpdated(QList<Core::ptrItem> t_items);
 
 	private:
-		QSharedPointer<Core::IED_Object> m_ied;
+		QSharedPointer<Core::IED> m_ied;
 		Core::ptrDataSet 				 m_dataSet;
 		QMetaObject::Connection 		 m_updConnection; // signal from LogicalNode
 	};

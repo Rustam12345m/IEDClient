@@ -23,21 +23,22 @@
 
 #include <QThread>
 
-#include "basic_command.hpp"
+#include "cmd_interface.hpp"
 #include "command_queue.hpp"
 #include "lib_interface.hpp"
+#include "interface/iec61850_api.hpp"
 
-namespace Core::Cmd
+namespace Cmd
 {
 	class CmdThread : public QThread
 	{
 		Q_OBJECT
 	private:
 		CommandQueue<ptrCMD>			m_queue;
-		QSharedPointer<LibInterface>	m_con;
+		Cmd::Interface::ptrIEC61850_API m_api;
 
 	public:
-		CmdThread(QSharedPointer<LibInterface> &t_lib);
+		CmdThread(Cmd::Interface::ptrIEC61850_API t_api);
 		~CmdThread();
 
 		void	putCommand(ptrCMD t_cmd);
@@ -45,4 +46,5 @@ namespace Core::Cmd
 	private:
 		void	run();
 	};
+    typedef QSharedPointer<CmdThread>   ptrCmdThread;
 }

@@ -67,7 +67,7 @@ FocusScope
 			right: parent.right
 		}
 
-		model: devBackend.getDS_ItemModel()
+		model: iedBackend.getDS_ItemModel()
 
 		focus: true
 		clip: true

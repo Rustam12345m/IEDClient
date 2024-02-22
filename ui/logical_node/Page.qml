@@ -72,7 +72,7 @@ FocusScope
 				}
 
 				onSigSelectedNewLN: function() {
-					// devBackend.updateLN_TreeValues(tableDO.currentLDevice, tableDO.currentLNode)
+					// iedBackend.updateLN_TreeValues(tableDO.currentLDevice, tableDO.currentLNode)
 				}
 			}
 

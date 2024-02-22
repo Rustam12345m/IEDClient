@@ -21,12 +21,12 @@
 
 #pragma once
 
-#include "basic_command.hpp"
+#include "cmd_interface.hpp"
 #include "core/fs_model.hpp"
 
-namespace Core::Cmd
+namespace Cmd
 {
-	class GetFileList : public BasicCommand
+	class GetFileList : public CmdInterface
 	{
 		Q_OBJECT
 	public:
@@ -34,7 +34,7 @@ namespace Core::Cmd
 			: m_fsModel(t_tree), m_path{t_path} {}
 		~GetFileList() {}
 
-		void		execute(LibInterface &t_con) override;
+		void		execute(Cmd::Interface::ptrIEC61850_API t_api) override;
 
 		static auto create(Core::FS_Model &t_tree, const QString &t_path) {
 			return QSharedPointer<GetFileList>::create(t_tree, t_path);

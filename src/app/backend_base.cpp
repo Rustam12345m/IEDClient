@@ -23,12 +23,12 @@
 
 namespace App
 {
-	void BackendBase::putCmdToQueue(Core::Cmd::ptrCMD t_cmd)
+	void BackendBase::putCmdToQueue(Cmd::ptrCMD t_cmd)
 	{
-		connect(t_cmd.get(), &Core::Cmd::BasicCommand::sigProgress, this, &BackendBase::slotCmdProcess);
-		connect(t_cmd.get(), &Core::Cmd::BasicCommand::sigFinished, this, &BackendBase::slotCmdFinished);
+		connect(t_cmd.get(), &Cmd::CmdInterface::sigProgress, this, &BackendBase::slotCmdProcess);
+		connect(t_cmd.get(), &Cmd::CmdInterface::sigFinished, this, &BackendBase::slotCmdFinished);
 
-		m_con.m_cmdQueue->putCommand(t_cmd);
+		m_con.m_cmdThread->putCommand(t_cmd);
 	}
 
 	void BackendBase::slotCmdProcess(int t_proc, QString t_msg)

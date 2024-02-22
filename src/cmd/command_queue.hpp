@@ -25,7 +25,7 @@
 #include <queue>
 #include <condition_variable>
 
-namespace Core::Cmd
+namespace Cmd
 {
 	template<typename T>
 	class CommandQueue

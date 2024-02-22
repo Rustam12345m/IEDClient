@@ -22,12 +22,12 @@
 #include "download_file_cmd.hpp"
 #include <QDebug>
 
-namespace Core::Cmd
+namespace Cmd
 {
-	void DownloadFileCmd::execute(LibInterface &t_con)
+	void DownloadFileCmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
 	{
 		qDebug() << "CMD: DownloadFileCmd " << m_filename;
 
-		t_con.downloadFile(m_filename);
+		t_api->fs().download(m_filename);
 	}
 }

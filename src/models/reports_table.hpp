@@ -23,7 +23,7 @@
 
 #include <QAbstractTableModel>
 
-#include "core/ied_object.hpp"
+#include "core/ied.hpp"
 
 namespace App::Models
 {
@@ -39,9 +39,9 @@ namespace App::Models
 			ColumnsCount
 		};
 	public:
-		ReportsTable(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied);
+		ReportsTable(QObject *t_parent, QSharedPointer<Core::IED> t_ied);
 
-		void 	setNewIED(QSharedPointer<Core::IED_Object> t_ied);
+		void 	setActiveIED(QSharedPointer<Core::IED> t_ied);
 
 		QVariant headerData(int t_section, Qt::Orientation t_orientation,
 							int t_role = Qt::DisplayRole) const override;
@@ -56,7 +56,7 @@ namespace App::Models
 		void 	slotRCBSelected(int t_inx);
 
 	private:
-		QSharedPointer<Core::IED_Object> 	m_ied;
+		QSharedPointer<Core::IED> 	m_ied;
 		int		m_currentRCB = -1;
 	};
 }

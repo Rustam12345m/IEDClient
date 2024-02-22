@@ -87,7 +87,7 @@ FocusScope {
 			bottom: parent.bottom
 		}
 
-		model: devBackend.getLN_TreeModel()
+		model: iedBackend.getLN_TreeModel()
 
 		focus: true
 		clip: true

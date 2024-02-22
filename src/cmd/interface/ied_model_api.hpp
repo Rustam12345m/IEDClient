@@ -21,15 +21,15 @@
 
 #pragma once
 
-#include "basic_command.hpp"
+#include "core/data_model_builder.hpp"
 
-// All known commands
-#include "connect_cmd.hpp"
-#include "update_lds_status_cmd.hpp"
-#include "update_lns_status_cmd.hpp"
-#include "update_ln_cmd.hpp"
-#include "update_rcbs_cmd.hpp"
-#include "update_dataset_cmd.hpp"
-#include "get_filelist_cmd.hpp"
-#include "download_file_cmd.hpp"
-#include "remove_file_cmd.hpp"
+namespace Cmd::Interface
+{
+	class IED_ModelAPI
+	{
+	public:
+		virtual ~IED_ModelAPI() {}
+
+		virtual int fetchDataModel(Core::DataModelBuilder &t_builder) = 0;
+    };
+};

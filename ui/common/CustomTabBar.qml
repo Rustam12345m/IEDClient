@@ -66,6 +66,7 @@ Rectangle
 		orientation: rootID.horizontalBar ? ListView.Horizontal	: ListView.Vertical
 
 		delegate: Item {
+            id: btnItemID
 			required property int index
 			required property string title
 			property bool selected: (listViewID.currentIndex === index)
@@ -74,27 +75,46 @@ Rectangle
 			implicitWidth: rootID.horizontalBar ? rootID.cellWidth : rootID.width
 
 			Rectangle {
+                id: btnRectID
 				width: parent.width
 				height: parent.height
 
 				border.width: 1
-				// border.color: (listViewID.currentIndex === index) ? rootID.selectedColor : ColorPalette.borderColor
-				// border.color: selected ? rootID.selectedColor : "lightgray"
 				border.color: "lightgray"
-				color: selected ? rootID.selectedColor : rootID.unselectedColor
+				color: btnItemID.selected ? rootID.selectedColor : rootID.unselectedColor
+
+                Rectangle {
+                    id: hiddenRectID
+                    anchors.fill: parent
+
+                    border.width: 1
+				    border.color: "lightgray"
+                    color: rootID.selectedColor
+                    visible: false
+                }
 
 				Text {
-					rotation: rootID.horizontalBar ? 0 : (rootID.leftSide ? -90 : 90)
 					anchors {
 						centerIn: parent
 					}
+					rotation: rootID.horizontalBar ? 0 : (rootID.leftSide ? -90 : 90)
 
 					text: title
 					focus: false
+                    font.bold: selected
 				}
 				MouseArea {
 					anchors.fill: parent
 					acceptedButtons: Qt.LeftButton
+                    hoverEnabled: true
+
+                    onEntered: {
+                        hiddenRectID.visible = true
+                    }
+
+                    onExited: {
+                        hiddenRectID.visible = false
+                    }
 
 					onClicked: function(mouse) {
 						listViewID.currentIndex = index

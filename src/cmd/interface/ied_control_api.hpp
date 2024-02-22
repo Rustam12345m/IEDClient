@@ -19,13 +19,15 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "ied_object.hpp"
+#pragma once
 
-namespace Core
+#include "core/data_model.hpp"
+
+namespace Cmd::Interface
 {
-	IED_Object::IED_Object(QObject *t_parent) : QObject(t_parent)
+	class IED_ControlAPI
 	{
-		setModel(QSharedPointer<Core::DataModel>::create(""));
-		setFSModel(QSharedPointer<Core::FS_Model>::create());
-	}
+	public:
+		virtual ~IED_ControlAPI() {}
+	};
 }

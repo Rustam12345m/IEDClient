@@ -21,10 +21,18 @@
 
 #pragma once
 
-#include "app_con_container.hpp"
+#include "iedcon_container.hpp"
 
 // All known commands
-#include "cmd/all_cmd_header.hpp"
+#include "connect_cmd.hpp"
+#include "update_lds_status_cmd.hpp"
+#include "update_lns_status_cmd.hpp"
+#include "update_ln_cmd.hpp"
+#include "update_rcbs_cmd.hpp"
+#include "update_dataset_cmd.hpp"
+#include "get_filelist_cmd.hpp"
+#include "download_file_cmd.hpp"
+#include "remove_file_cmd.hpp"
 
 namespace App
 {
@@ -37,11 +45,11 @@ namespace App
 
 		BackendBase() = delete;
 	public:
-		BackendBase(AppConContainer &t_con) : m_con(t_con) {};
+		BackendBase(IEDConContainer &t_con) : m_con(t_con) {};
 		virtual ~BackendBase() {}
 
 	protected:
-		void	putCmdToQueue(Core::Cmd::ptrCMD t_cmd);
+		void	putCmdToQueue(Cmd::ptrCMD t_cmd);
 
 	signals:
 		void	sigCmdProgress(int t_perc, QString t_msg);
@@ -53,6 +61,6 @@ namespace App
 		virtual void 	slotConnected(bool t_done);
 
 	protected:
-		AppConContainer& 	m_con;
+		IEDConContainer& 	m_con;
 	};
 }

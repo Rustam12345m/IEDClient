@@ -21,7 +21,7 @@
 
 #include "dump_model.hpp"
 #include "dump_writer.hpp"
-#include "lib61850_adapter/lib61850_tools.hpp"
+#include "libiec61850_stub/libiec61850_tools.hpp"
 
 #include <QDebug>
 

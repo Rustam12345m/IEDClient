@@ -23,41 +23,42 @@
 
 #include <QObject>
 
-#include "core/ied_object.hpp"
+#include "core/ied.hpp"
 #include "cmd/cmd_thread.hpp"
-#include "cmd/con_credentials.hpp"
-#include "lib61850_adapter/lib61850.hpp"
+#include "cmd/ied_credentials.hpp"
+#include "libiec61850_stub/libiec61850_adapter.hpp"
 
 namespace App
 {
 	/*
-	 * 
+	 * This object holds all stuff associated with IED that was connected to
 	 * */
-	class AppConContainer : public QObject
+	class IEDConContainer : public QObject
 	{
 		Q_OBJECT
 	public:
-		AppConContainer() {
-			newConnection(Core::Cmd::ConCredentials());
-		}
-
-		void 	newConnection(const Core::Cmd::ConCredentials &t_cred) {
-			m_cmdQueue.clear();
-			m_lib.clear();
-			m_iedObj.clear();
-
-			m_cred = t_cred;
-
-			auto lib = QSharedPointer<Core::Lib::Lib61850_Adapter>::create();
-			connect(lib.get(), &Core::Lib::Lib61850_Adapter::sigConClosed, this, &AppConContainer::slotDisconnected);
-			m_lib = lib;
-
-			m_iedObj = QSharedPointer<Core::IED_Object>::create();
-			m_cmdQueue = QSharedPointer<Core::Cmd::CmdThread>::create(m_lib);
+		IEDConContainer() {
+			allocateNewConnection(Cmd::IEDCredentials());
 		}
 
 		bool 	isConnected() const {
-			return m_lib->isConnected();
+			return m_api->isConnected();
+		}
+
+		void 	allocateNewConnection(const Cmd::IEDCredentials &t_cred) {
+			m_cmdThread.clear();
+			m_api.clear();
+			m_ied.clear();
+
+			m_cred = t_cred;
+			m_ied = QSharedPointer<Core::IED>::create();
+
+			auto apiImpl =  Libiec61850::ptrAdapter::create();
+			connect(apiImpl.get(), &Cmd::Interface::IEC61850_API::sigConClosed,
+                    this, &IEDConContainer::slotDisconnected);
+			m_api = apiImpl;
+
+			m_cmdThread = QSharedPointer<Cmd::CmdThread>::create(m_api);
 		}
 
 	public slots:
@@ -69,9 +70,9 @@ namespace App
 		void 	sigConnected(bool t_status);
 
 	public:
-		Core::Cmd::ConCredentials				m_cred; // Information about ip/port/etc
-		QSharedPointer<Core::IED_Object>		m_iedObj;
-		QSharedPointer<Core::Cmd::LibInterface>	m_lib;
-		QSharedPointer<Core::Cmd::CmdThread>	m_cmdQueue;
+		Core::ptrIED                m_ied;
+		Cmd::IEDCredentials			m_cred; // Information about ip/port/etc
+		Cmd::ptrCmdThread	        m_cmdThread;
+        Libiec61850::ptrAdapter     m_api; // Connection & API
 	};
 }

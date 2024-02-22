@@ -23,9 +23,9 @@
 
 #include <QDebug>
 
-namespace Core::Cmd
+namespace Cmd
 {
-	void UpdateLDs_StatusCmd::execute(LibInterface &t_con)
+	void UpdateLDs_StatusCmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
 	{
 		// ptrValuesUpdater vals = t_con.getStatusValuesForLDs(m_ied->getDataModel());
 	}

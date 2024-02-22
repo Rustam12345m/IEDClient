@@ -22,7 +22,7 @@
 #pragma once
 
 #include "models_stub.hpp"
-#include "core/ied_object.hpp"
+#include "core/ied.hpp"
 
 namespace App::Models
 {
@@ -45,13 +45,13 @@ namespace App::Models
 		};
 
 	private:
-		QSharedPointer<Core::IED_Object> m_ied;
+		QSharedPointer<Core::IED> m_ied;
 
 	public:
-		DevFS_Table(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied);
+		DevFS_Table(QObject *t_parent, QSharedPointer<Core::IED> t_ied);
 		~DevFS_Table() = default;
 
-		void 		setNewIED(QSharedPointer<Core::IED_Object> t_ied);
+		void 		setActiveIED(QSharedPointer<Core::IED> t_ied);
 
 		int			rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
 		int			columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
@@ -60,7 +60,7 @@ namespace App::Models
 		Qt::ItemFlags			flags(const QModelIndex &t_index) const override;
 
 		QVariant	headerData(int t_section, Qt::Orientation t_orientation,
-								int t_role = Qt::DisplayRole) const;
+								int t_role = Qt::DisplayRole) const override;
 		QVariant	data(const QModelIndex &t_index, int role = Qt::DisplayRole) const override;
 
 	signals:

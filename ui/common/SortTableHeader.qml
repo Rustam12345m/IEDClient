@@ -31,7 +31,7 @@ HorizontalHeaderView
 
 	property int sortOrder: 0
 	property int sortedColumn: 0
-	property bool rightTextAlign: true
+	property bool rightTextAlign: false
 
 	boundsBehavior: Flickable.StopAtBounds
 	resizableColumns: true

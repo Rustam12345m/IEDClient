@@ -58,7 +58,7 @@ FocusScope
 			bottom: parent.bottom
 		}
 
-		model: devBackend.getReportsModel()
+		model: iedBackend.getReportsModel()
 
 		focus: true
 		keyNavigationEnabled: true

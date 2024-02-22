@@ -19,7 +19,7 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "lib61850_tools.hpp"
+#include "libiec61850_tools.hpp"
 
 extern "C" {
 	#include <iec61850_common.h>

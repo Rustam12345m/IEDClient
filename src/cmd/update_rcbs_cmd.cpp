@@ -22,9 +22,9 @@
 #include "update_rcbs_cmd.hpp"
 #include <QDebug>
 
-namespace Core::Cmd
+namespace Cmd
 {
-	void UpdateRCBs_Cmd::execute(LibInterface &t_con)
+	void UpdateRCBs_Cmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
 	{
 		emit sigFinished(false);
 	}

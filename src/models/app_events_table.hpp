@@ -45,7 +45,7 @@ namespace App::Models
 		Qt::ItemFlags flags(const QModelIndex &t_index) const override;
 
 		Q_INVOKABLE QVariant headerData(int t_section, Qt::Orientation t_orientation,
-										int t_role = Qt::DisplayRole) const;
+										int t_role = Qt::DisplayRole) const override;
 
 		QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 	};

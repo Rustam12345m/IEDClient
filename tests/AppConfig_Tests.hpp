@@ -26,7 +26,7 @@
 namespace AppConfigTests
 {
 	TEST(AppConfig_ConCredentials, CheckSaveParameters) {
-		Core::Cmd::ConCredentials con("ip", 123, false, "name", "pass");
+		Cmd::IEDCredentials con("ip", 123, false, "name", "pass");
 
 		ASSERT_EQ(con.login(), "name");
 		ASSERT_EQ(con.ip(), "ip");

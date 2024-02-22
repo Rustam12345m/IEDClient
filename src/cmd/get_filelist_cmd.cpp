@@ -21,11 +21,11 @@
 
 #include "get_filelist_cmd.hpp"
 
-namespace Core::Cmd
+namespace Cmd
 {
-	void GetFileList::execute(LibInterface &t_con)
+	void GetFileList::execute(Cmd::Interface::ptrIEC61850_API t_api)
 	{
-		if (!t_con.isConnected()) {
+		if (!t_api->isConnected()) {
 			emit sigFinished(false);
 			return;
 		}
@@ -33,7 +33,7 @@ namespace Core::Cmd
 		emit sigProgress(0, "Send query to device: GetDirectory " + m_path);
 
 		Core::DirOn dir(m_path);
-		int retval = t_con.getFileList(dir);
+		int retval = t_api->fs().getFileList(dir);
 		if (retval == 0) {
 		}
 

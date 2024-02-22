@@ -21,34 +21,34 @@
 
 #pragma once
 
-#include "basic_command.hpp"
-#include "core/ied_object.hpp"
+#include "cmd_interface.hpp"
+#include "core/ied.hpp"
 
-namespace Core::Cmd
+namespace Cmd
 {
 	/*
 	 * 
 	 * */
-	class UpdateDataSet_Cmd : public BasicCommand
+	class UpdateDataSet_Cmd : public CmdInterface
 	{
 		Q_OBJECT
 	public:
-		UpdateDataSet_Cmd(ptrIED_Object t_ied, ptrDataSet t_ds)
+		UpdateDataSet_Cmd(Core::ptrIED t_ied, Core::ptrDataSet t_ds)
 			: m_ied{t_ied}, m_dataset{t_ds}
 		{
 		}
 
-		void 	execute(LibInterface &t_con) override;
+		void 	execute(Cmd::Interface::ptrIEC61850_API t_api) override;
 
-		static auto create(ptrIED_Object t_ied, ptrDataSet t_ds) {
+		static auto create(Core::ptrIED t_ied, Core::ptrDataSet t_ds) {
 			return QSharedPointer<UpdateDataSet_Cmd>::create(t_ied, t_ds);
 		}
 
 	signals:
-		void 	sigNewValues(ptrValuesUpdater t_vals);
+		void 	sigNewValues(Core::ptrValuesUpdater t_vals);
 
 	private:
-		ptrIED_Object 	m_ied;
-		ptrDataSet		m_dataset;
+		Core::ptrIED 	    m_ied;
+		Core::ptrDataSet    m_dataset;
 	};
 }

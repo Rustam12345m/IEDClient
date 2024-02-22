@@ -399,7 +399,7 @@ ApplicationWindow
 									focus = true
 
 									setActivePanel(Globals.Panel.LD_INFO)
-									setStatusText(devBackend.ldsPageStatus())
+									setStatusText(iedBackend.ldsPageStatus())
 								} else {
 									focus = false
 								}
@@ -417,7 +417,7 @@ ApplicationWindow
 									focus = true
 
 									setActivePanel(Globals.Panel.HIDE)
-									setStatusText(devBackend.lnsPageStatus())
+									setStatusText(iedBackend.lnsPageStatus())
 								} else {
 									focus = false
 								}
@@ -432,7 +432,7 @@ ApplicationWindow
 									focus = true
 
 									setActivePanel(Globals.Panel.HIDE)
-									setStatusText(devBackend.dsPageStatus())
+									setStatusText(iedBackend.dsPageStatus())
 								} else {
 									focus = false
 								}
@@ -446,7 +446,7 @@ ApplicationWindow
 								if (visible) {
 									focus = true
 									setActivePanel(Globals.Panel.RCB_PROPERTIES)
-									setStatusText(devBackend.rcbPageStatus())
+									setStatusText(iedBackend.rcbPageStatus())
 								} else {
 									focus = false
 								}
@@ -682,14 +682,14 @@ ApplicationWindow
 			break;
 		}
 		case Globals.Page.LD: {
-			devBackend.updateLDs_Status()
-			setStatusText(devBackend.ldsPageStatus())
+			iedBackend.updateLDs_Status()
+			setStatusText(iedBackend.ldsPageStatus())
 			break;
 		}
 		case Globals.Page.LN: {
-			devBackend.updateLNs_Status()
-			devBackend.updateLN_TreeValues()
-			setStatusText(devBackend.lnsPageStatus())
+			iedBackend.updateLNs_Status()
+			iedBackend.updateLN_TreeValues()
+			setStatusText(iedBackend.lnsPageStatus())
 			break;
 		}
 		case Globals.Page.FS: {
@@ -698,13 +698,13 @@ ApplicationWindow
 			break;
 		}
 		case Globals.Page.DS: {
-			devBackend.updateDS_Values()
-			setStatusText(devBackend.dsPageStatus())
+			iedBackend.updateDS_Values()
+			setStatusText(iedBackend.dsPageStatus())
 			break;
 		}
 		case Globals.Page.RCB: {
-			devBackend.updateRCBs_Status()
-			setStatusText(devBackend.rcbPageStatus())
+			iedBackend.updateRCBs_Status()
+			setStatusText(iedBackend.rcbPageStatus())
 			break;
 		}
 		}
@@ -736,8 +736,8 @@ ApplicationWindow
 		presenter.sigCmdFinished.connect(slotOnFinished)
 
 		// Backends to GUI
-		devBackend.sigCmdProgress.connect(slotOnProgress)
-		devBackend.sigCmdFinished.connect(slotOnFinished)
+		iedBackend.sigCmdProgress.connect(slotOnProgress)
+		iedBackend.sigCmdFinished.connect(slotOnFinished)
 
 		fsBackend.sigCmdProgress.connect(slotOnProgress)
 		fsBackend.sigCmdFinished.connect(slotOnFinished)

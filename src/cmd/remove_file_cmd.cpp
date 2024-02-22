@@ -21,11 +21,11 @@
 
 #include "remove_file_cmd.hpp"
 
-namespace Core::Cmd
+namespace Cmd
 {
-	void RemoveFile::execute(LibInterface &t_con)
+	void RemoveFileCMD::execute(Cmd::Interface::ptrIEC61850_API t_api)
 	{
-		t_con.removeFile(m_filename);
+		t_api->fs().remove(m_filename);
 
 		emit sigFileRemoved(m_fileIndex);
 	}

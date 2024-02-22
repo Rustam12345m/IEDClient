@@ -1,15 +1,20 @@
 # Building cmd's classes to a static library
 
 set(SOURCES
-	basic_command.hpp
+    interface/ied_model_api.hpp
+    interface/ied_state_api.hpp
+    interface/ied_fs_api.hpp
+    interface/ied_control_api.hpp
+    interface/iec61850_api.hpp
+
+	cmd_interface.hpp
 	command_queue.hpp
 	lib_interface.hpp
-	all_cmd_header.hpp
 
 	cmd_thread.hpp
 	cmd_thread.cpp
 
-	con_credentials.hpp
+	ied_credentials.hpp
 	connect_cmd.hpp
 	connect_cmd.cpp
 

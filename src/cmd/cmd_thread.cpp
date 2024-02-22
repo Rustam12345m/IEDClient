@@ -21,9 +21,9 @@
 
 #include "cmd_thread.hpp"
 
-namespace Core::Cmd
+namespace Cmd
 {
-	CmdThread::CmdThread(QSharedPointer<LibInterface> &t_con) : m_con(t_con)
+	CmdThread::CmdThread(Cmd::Interface::ptrIEC61850_API t_api) : m_api(t_api)
 	{
 		setObjectName("CmdThread");
 		start();
@@ -48,7 +48,7 @@ namespace Core::Cmd
 		while (m_queue.isRunning()) {
 			ptrCMD cmd = m_queue.pop();
 			if (cmd) {
-				cmd->execute(*m_con);
+				cmd->execute(m_api);
 			}
 		}
 	}

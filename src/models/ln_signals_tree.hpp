@@ -22,7 +22,7 @@
 #pragma once
 
 #include "models_stub.hpp"
-#include "core/ied_object.hpp"
+#include "core/ied.hpp"
 
 namespace App::Models
 {
@@ -38,11 +38,12 @@ namespace App::Models
 		};
 
 	public:
-		LN_SignalTree(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied);
+		LN_SignalTree(QObject *t_parent, QSharedPointer<Core::IED> t_ied);
 
-		void 	setNewIED(QSharedPointer<Core::IED_Object> t_ied);
+		void 	setActiveIED(QSharedPointer<Core::IED> t_ied);
 
-		QVariant 	headerData(int t_sect, Qt::Orientation t_orient, int t_role = Qt::DisplayRole) const;
+		QVariant 	headerData(int t_sect, Qt::Orientation t_orient,
+								int t_role = Qt::DisplayRole) const override;
 
 		int 		rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
 		int 		columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
@@ -55,7 +56,7 @@ namespace App::Models
 		void 	slotDataUpdated(QSharedPointer<QList<Core::Item*>> t_nodes);
 
 	private:
-		QSharedPointer<Core::IED_Object> m_ied;
+		QSharedPointer<Core::IED> m_ied;
 		Core::ptrLN	 					 m_lnode;
 		QMetaObject::Connection 		 m_updConnection; // signal from LogicalNode
 	};

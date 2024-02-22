@@ -23,12 +23,12 @@
 
 namespace App::Models
 {
-	LN_SignalTree::LN_SignalTree(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied)
+	LN_SignalTree::LN_SignalTree(QObject *t_parent, QSharedPointer<Core::IED> t_ied)
 		: QAbstractItemModel(t_parent), m_ied(t_ied)
 	{
 	}
 
-	void LN_SignalTree::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
+	void LN_SignalTree::setActiveIED(QSharedPointer<Core::IED> t_ied)
 	{
 		beginResetModel();
 		m_ied = t_ied;

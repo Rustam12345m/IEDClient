@@ -40,12 +40,12 @@ namespace
 
 namespace App::Models
 {
-	LN_SignalTable::LN_SignalTable(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied)
+	LN_SignalTable::LN_SignalTable(QObject *t_parent, QSharedPointer<Core::IED> t_ied)
 		: QAbstractTableModel(t_parent), m_ied(t_ied)
 	{
 	}
 
-	void LN_SignalTable::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
+	void LN_SignalTable::setActiveIED(QSharedPointer<Core::IED> t_ied)
 	{
 		beginResetModel();
 		m_ied = t_ied;

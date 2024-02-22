@@ -62,7 +62,7 @@ Item
 			top: headerID.bottom
 			bottom: parent.bottom
 		}
-		model: devBackend.getLN_ComModel()
+		model: iedBackend.getLN_ComModel()
 
 		focus: true
 		clip: true

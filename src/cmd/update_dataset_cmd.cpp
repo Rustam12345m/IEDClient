@@ -21,14 +21,14 @@
 
 #include "update_dataset_cmd.hpp"
 
-namespace Core::Cmd
+namespace Cmd
 {
-	void UpdateDataSet_Cmd::execute(LibInterface &t_con)
+	void UpdateDataSet_Cmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
 	{
 		/*
 		ptrValuesUpdater vals = t_con.getValuesForLN(m_lnode);
 		if (vals) {
-			connect(this, &Core::Cmd::UpdateLNode_Cmd::sigNewValues,
+			connect(this, &Cmd::UpdateLNode_Cmd::sigNewValues,
 					m_lnode.get(), &Core::LogicalNode::slotUpdateValues,
 					Qt::QueuedConnection); // Qt::BlockingQueuedConnection
 

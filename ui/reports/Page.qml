@@ -96,7 +96,7 @@ FocusScope
 			bottom: parent.bottom
 		}
 
-		model: devBackend.getRCB_ComModel()
+		model: iedBackend.getRCB_ComModel()
 
 		focus: true
 		reuseItems: true
