@@ -52,7 +52,7 @@ FocusScope {
 		keyNavigationEnabled: true
 		boundsBehavior: Flickable.StopAtBounds
 
-		model: devBackend.getLD_GridModel()
+		model: iedBackend.getLD_GridModel()
 
 		delegate: LD_GridItem {
 			selected: (gridView.currentIndex == index)

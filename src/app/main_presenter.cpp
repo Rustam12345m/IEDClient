@@ -24,34 +24,32 @@
 
 namespace App
 {
-	MainPresenter::MainPresenter() : m_fsBackend(m_con), m_ldBackend(m_con), m_appBackend(m_con)
+	MainPresenter::MainPresenter() : m_appBackend(m_con), m_iedBackend(m_con), m_fsBackend(m_con)
 	{
-		connect(&m_con, &AppConContainer::sigConnected, this, &MainPresenter::slotConnected);
+		connect(&m_con, &IEDConContainer::sigConnected, this, &MainPresenter::slotConnected);
 	}
 
 	void MainPresenter::setContextMembers(QQmlContext *t_context)
 	{
 		t_context->setContextProperty("presenter", this);
 		t_context->setContextProperty("appBackend", &m_appBackend);
+		t_context->setContextProperty("iedBackend", &m_iedBackend);
 		t_context->setContextProperty("fsBackend", &m_fsBackend);
-		t_context->setContextProperty("devBackend", &m_ldBackend);
 	}
 
 	void MainPresenter::connectTo(const QVariantMap &t_data)
 	{
-		Core::Cmd::ConCredentials cred(t_data);
-		// m_appBackend.newConnection(cred);
+		Cmd::IEDCredentials cred(t_data);
+		m_con.allocateNewConnection(cred);
 
-		m_con.newConnection(cred);
+		auto cmd = Cmd::ConnectCmd::create(m_con.m_cred, m_con.m_ied);
 
-		auto cmd = Core::Cmd::ConnectCmd::create(cred, m_con.m_iedObj);
+		connect(cmd.get(), &Cmd::ConnectCmd::sigProgress, this, &MainPresenter::slotCmdProgress);
+		connect(cmd.get(), &Cmd::ConnectCmd::sigFinished, this, &MainPresenter::slotConnected);
+		connect(cmd.get(), &Cmd::ConnectCmd::sigFinished, &m_iedBackend, &BackendBase::slotConnected);
+		connect(cmd.get(), &Cmd::ConnectCmd::sigFinished, &m_fsBackend, &BackendBase::slotConnected);
 
-		connect(cmd.get(), &Core::Cmd::ConnectCmd::sigFinished, this, &MainPresenter::slotConnected);
-		connect(cmd.get(), &Core::Cmd::ConnectCmd::sigProgress, this, &MainPresenter::slotCmdProgress);
-		connect(cmd.get(), &Core::Cmd::ConnectCmd::sigFinished, &m_ldBackend, &BackendBase::slotConnected);
-		connect(cmd.get(), &Core::Cmd::ConnectCmd::sigFinished, &m_fsBackend, &BackendBase::slotConnected);
-
-		m_con.m_cmdQueue->putCommand(cmd);
+		m_con.m_cmdThread->putCommand(cmd);
 	}
 
 	void MainPresenter::disconnectFrom()
@@ -60,7 +58,7 @@ namespace App
 
 	void MainPresenter::toolDumpModel(const QVariantMap &t_data)
 	{
-		Core::Cmd::ConCredentials con(t_data);
+		Cmd::IEDCredentials con(t_data);
 		QString dir = t_data.value("path").toString();
 
 		Tools::DumpModel *dump = new Tools::DumpModel(this);
@@ -76,6 +74,6 @@ namespace App
 	{
 		emit sigConnected(t_done);
 
-		m_appBackend.newConnection(m_con.m_cred);
+		m_appBackend.saveConToHistory(m_con.m_cred);
 	}
 }

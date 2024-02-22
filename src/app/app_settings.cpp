@@ -60,7 +60,7 @@ namespace App
 		return devs;
 	}
 
-	void AppSettings::putConnectionToConfig(const Core::Cmd::ConCredentials &t_dev, const QString &t_ied)
+	void AppSettings::putConnectionToConfig(const Cmd::IEDCredentials &t_dev, const QString &t_ied)
 	{
 		App::ConfConnectionInfo newCon(t_dev.ip(), t_dev.port(), t_dev.tls(), t_ied, App::GetCurrentDateTime());
 

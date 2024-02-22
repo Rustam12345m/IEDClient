@@ -23,9 +23,9 @@
 
 namespace App
 {
-	FS_Backend::FS_Backend(AppConContainer &t_con) : BackendBase(t_con)
+	FS_Backend::FS_Backend(IEDConContainer &t_con) : BackendBase(t_con)
 	{
-		m_fsModel = new Models::DevFS_Table(this, m_con.m_iedObj);
+		m_fsModel = new Models::DevFS_Table(this, m_con.m_ied);
 
 		m_sortedModel = new Models::SortProxyModel(this);
 		m_sortedModel->setSourceModel(m_fsModel);
@@ -33,7 +33,7 @@ namespace App
 
 	Q_INVOKABLE QString FS_Backend::fsPageStatus()
 	{
-		auto [count, size] = m_con.m_iedObj->fs().getFS_StatInfo();
+		auto [count, size] = m_con.m_ied->fs().getFS_StatInfo();
 		if (size < 1024 * 1024) {
 			return QString("Total %1 files. %2 KB").arg(count).arg(size / 1024);
 		}
@@ -42,28 +42,28 @@ namespace App
 
 	void FS_Backend::updateFilesDirectory(const QString &t_path)
 	{
-		auto cmd = Core::Cmd::GetFileList::create(m_con.m_iedObj->fs(), t_path);
+		auto cmd = Cmd::GetFileList::create(m_con.m_ied->fs(), t_path);
 		putCmdToQueue(cmd);
 	}
 
 	void FS_Backend::downloadFile(const QString &t_filename)
 	{
 		qDebug() << "FS_Backend: Download file " << t_filename;
-		auto cmd = Core::Cmd::DownloadFileCmd::create(t_filename);
+		auto cmd = Cmd::DownloadFileCmd::create(t_filename);
 		putCmdToQueue(cmd);
 	}
 
 	void FS_Backend::removeFile(const QString &t_filename, int t_row)
 	{
 		qDebug() << "FS_Backend: Remove file " << t_filename;
-		auto cmd = Core::Cmd::RemoveFile::create(t_filename, t_row);
+		auto cmd = Cmd::RemoveFileCMD::create(t_filename, t_row);
 
-		connect(cmd.get(), &Core::Cmd::RemoveFile::sigFileRemoved, m_fsModel, &Models::DevFS_Table::slotRemoveFile);
+		connect(cmd.get(), &Cmd::RemoveFileCMD::sigFileRemoved, m_fsModel, &Models::DevFS_Table::slotRemoveFile);
 		putCmdToQueue(cmd);
 	}
 
 	void FS_Backend::slotConnected(bool t_done)
 	{
-		m_fsModel->setNewIED(m_con.m_iedObj);
+		m_fsModel->setActiveIED(m_con.m_ied);
 	}
 }

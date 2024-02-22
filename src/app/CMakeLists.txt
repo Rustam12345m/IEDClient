@@ -13,7 +13,7 @@ set(APP_SOURCES
 	app_settings.hpp
 	app_settings.cpp
 
-	app_con_container.hpp
+	iedcon_container.hpp
 
 	backend_base.hpp
 	backend_base.cpp

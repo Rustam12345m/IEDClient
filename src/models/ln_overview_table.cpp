@@ -23,12 +23,12 @@
 
 namespace App::Models
 {
-	LN_OverviewTable::LN_OverviewTable(QObject *t_parent, Core::ptrIED_Object t_ied)
+	LN_OverviewTable::LN_OverviewTable(QObject *t_parent, Core::ptrIED t_ied)
 		: QAbstractTableModel(t_parent), m_ied(t_ied)
 	{
 	}
 
-	void LN_OverviewTable::setNewIED(Core::ptrIED_Object t_ied)
+	void LN_OverviewTable::setActiveIED(Core::ptrIED t_ied)
 	{
 		beginResetModel();
 		m_ied = t_ied;

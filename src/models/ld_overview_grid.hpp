@@ -23,7 +23,7 @@
 
 #include <QAbstractListModel>
 
-#include "core/ied_object.hpp"
+#include "core/ied.hpp"
 
 namespace App::Models
 {
@@ -35,9 +35,9 @@ namespace App::Models
 		};
 
 	public:
-		LD_OverviewGrid(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied);
+		LD_OverviewGrid(QObject *t_parent, QSharedPointer<Core::IED> t_ied);
 
-		void 		setNewIED(QSharedPointer<Core::IED_Object> t_ied);
+		void 		setActiveIED(QSharedPointer<Core::IED> t_ied);
 
 		QHash<int, QByteArray> roleNames() const override;
 		int			rowCount(const QModelIndex &t_index = QModelIndex()) const override;
@@ -52,6 +52,6 @@ namespace App::Models
 		void		slotDataUpdated(bool t_status);
 
 	private:
-		QSharedPointer<Core::IED_Object>	m_ied;
+		QSharedPointer<Core::IED>	m_ied;
 	};
 }

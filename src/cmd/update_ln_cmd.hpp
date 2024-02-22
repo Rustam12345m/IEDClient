@@ -21,34 +21,34 @@
 
 #pragma once
 
-#include "basic_command.hpp"
-#include "core/ied_object.hpp"
+#include "cmd_interface.hpp"
+#include "core/ied.hpp"
 
-namespace Core::Cmd
+namespace Cmd
 {
 	/*
 	 * 
 	 * */
-	class UpdateLNode_Cmd : public BasicCommand
+	class UpdateLNode_Cmd : public CmdInterface
 	{
 		Q_OBJECT
 	public:
-		UpdateLNode_Cmd(ptrIED_Object t_ied, ptrLN t_lnode)
+		UpdateLNode_Cmd(Core::ptrIED t_ied, Core::ptrLN t_lnode)
 			: m_ied{t_ied}, m_lnode{t_lnode}
 		{
 		}
 
-		void 	execute(LibInterface &t_con) override;
+		void 	execute(Cmd::Interface::ptrIEC61850_API t_api) override;
 
-		static auto create(ptrIED_Object t_ied, ptrLN t_lnode) {
+		static auto create(Core::ptrIED t_ied, Core::ptrLN t_lnode) {
 			return QSharedPointer<UpdateLNode_Cmd>::create(t_ied, t_lnode);
 		}
 
 	signals:
-		void 	sigNewValues(ptrValuesUpdater t_vals);
+		void 	sigNewValues(Core::ptrValuesUpdater t_vals);
 
 	private:
-		ptrIED_Object 	m_ied;
-		ptrLN			m_lnode;
+		Core::ptrIED    m_ied;
+		Core::ptrLN     m_lnode;
 	};
 }

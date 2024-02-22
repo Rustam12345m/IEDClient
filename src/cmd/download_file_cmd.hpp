@@ -21,14 +21,14 @@
 
 #pragma once
 
-#include "basic_command.hpp"
+#include "cmd_interface.hpp"
 
-namespace Core::Cmd
+namespace Cmd
 {
 	/*
 	 * This class realizes downloading file from the IED
 	 * */
-	class DownloadFileCmd : public BasicCommand
+	class DownloadFileCmd : public CmdInterface
 	{
 		Q_OBJECT
 	public:
@@ -38,7 +38,7 @@ namespace Core::Cmd
 		}
 		~DownloadFileCmd() {}
 
-		void	execute(LibInterface &t_con) override;
+		void	execute(Cmd::Interface::ptrIEC61850_API t_api) override;
 
 		// Create new command like Builder pattern
 		static auto create(const QString &t_name) {

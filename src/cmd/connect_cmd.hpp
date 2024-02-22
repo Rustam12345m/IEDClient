@@ -21,26 +21,26 @@
 
 #pragma once
 
-#include "basic_command.hpp"
-#include "core/ied_object.hpp"
-#include "cmd/con_credentials.hpp"
+#include "cmd_interface.hpp"
+#include "core/ied.hpp"
+#include "cmd/ied_credentials.hpp"
 
-namespace Core::Cmd
+namespace Cmd
 {
 	/*
 	 * This class realizes connecting to IED through pure TCP or TLS
 	 * */
-	class ConnectCmd : public BasicCommand
+	class ConnectCmd : public CmdInterface
 	{
 		Q_OBJECT
 	public:
-		ConnectCmd(const ConCredentials &t_cred, ptrIED_Object t_ied)
+		ConnectCmd(const IEDCredentials &t_cred, Core::ptrIED t_ied)
 				: m_cred(t_cred), m_ied(t_ied) {}
 		~ConnectCmd() {}
 
-		void	execute(LibInterface &t_con) override;
+		void	execute(Cmd::Interface::ptrIEC61850_API t_api) override;
 
-		static auto create(const ConCredentials &t_cred, ptrIED_Object t_ied) {
+		static auto create(const IEDCredentials &t_cred, Core::ptrIED t_ied) {
 			return QSharedPointer<ConnectCmd>::create(t_cred, t_ied);
 		}
 
@@ -48,7 +48,7 @@ namespace Core::Cmd
 		void 	slotMsgProgress(const QString &t_msg);
 
 	private:
-		ConCredentials	m_cred;
-		ptrIED_Object	m_ied;
+		IEDCredentials	m_cred;
+		Core::ptrIED    m_ied;
 	};
 }

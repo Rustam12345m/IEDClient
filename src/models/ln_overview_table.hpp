@@ -23,7 +23,7 @@
 
 #include <QAbstractTableModel>
 
-#include "core/ied_object.hpp"
+#include "core/ied.hpp"
 
 namespace App::Models
 {
@@ -40,11 +40,11 @@ namespace App::Models
 		};
 
 	public:
-		LN_OverviewTable(QObject *t_parent, Core::ptrIED_Object t_ied);
+		LN_OverviewTable(QObject *t_parent, Core::ptrIED t_ied);
 
 		Q_INVOKABLE void setSelectedLN(int t_inx);
 
-		void 	setNewIED(Core::ptrIED_Object t_ied);
+		void 	setActiveIED(Core::ptrIED t_ied);
 		auto 	getLogicalDevice() const { return m_ldev; }
 
 		QVariant headerData(int t_section, Qt::Orientation t_orientation,
@@ -65,7 +65,7 @@ namespace App::Models
 		void 	slotLDSelected(int t_ld);
 
 	private:
-		Core::ptrIED_Object 	m_ied;
+		Core::ptrIED 	m_ied;
 		Core::ptrLD	 			m_ldev; // selected Logical Device by user
 		int 					m_ldevIndex = 0; //
 	};

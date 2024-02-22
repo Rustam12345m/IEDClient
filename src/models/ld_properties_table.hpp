@@ -23,7 +23,7 @@
 
 #include <QAbstractListModel>
 
-#include "core/ied_object.hpp"
+#include "core/ied.hpp"
 
 namespace App::Models
 {
@@ -50,9 +50,9 @@ namespace App::Models
 		};
 
 	public:
-		LD_PropertiesTable(QObject *t_parent, Core::ptrIED_Object t_ied);
+		LD_PropertiesTable(QObject *t_parent, Core::ptrIED t_ied);
 
-		void 	setNewIED(Core::ptrIED_Object t_ied);
+		void 	setActiveIED(Core::ptrIED t_ied);
 
 		QHash<int, QByteArray> roleNames() const override;
 		int rowCount(const QModelIndex &t_index = QModelIndex()) const override;
@@ -66,7 +66,7 @@ namespace App::Models
 		void 	slotLDSelected(int t_ld);
 
 	private:
-		Core::ptrIED_Object		m_ied;
+		Core::ptrIED		m_ied;
 		QList<PropertyItem> 	m_ldProp;
 		QList<PropertyItem> 	m_devProp;
 		int 					m_currentLD = -1;

@@ -21,27 +21,27 @@
 
 #pragma once
 
-#include "basic_command.hpp"
-#include "core/ied_object.hpp"
+#include "cmd_interface.hpp"
+#include "core/ied.hpp"
 
-namespace Core::Cmd
+namespace Cmd
 {
 	/*
 	 * This class ...
 	 * */
-	class UpdateLNs_StatusCmd : public BasicCommand
+	class UpdateLNs_StatusCmd : public CmdInterface
 	{
 		Q_OBJECT
 	public:
-		UpdateLNs_StatusCmd(ptrIED_Object t_ied, Core::ptrLD t_ld)
-				: m_ied(t_ied), m_ld(t_ld)
+		UpdateLNs_StatusCmd(Core::ptrIED t_ied, Core::ptrLD t_ld)
+			: m_ied(t_ied), m_ld(t_ld)
 		{
 		}
 		~UpdateLNs_StatusCmd() override {}
 
-		void execute(LibInterface &t_con) override;
+		void execute(Cmd::Interface::ptrIEC61850_API t_api) override;
 
-		static auto create(ptrIED_Object t_ied, Core::ptrLD t_ld) {
+		static auto create(Core::ptrIED t_ied, Core::ptrLD t_ld) {
 			return QSharedPointer<UpdateLNs_StatusCmd>::create(t_ied, t_ld);
 		}
 
@@ -49,7 +49,7 @@ namespace Core::Cmd
 		void slotMsgProgress(const QString &t_msg);
 
 	private:
-		ptrIED_Object	m_ied;
-		Core::ptrLD		m_ld;
+		Core::ptrIED    m_ied;
+		Core::ptrLD     m_ld;
 	};
 }

@@ -23,12 +23,12 @@
 
 namespace App::Models
 {
-	LD_OverviewGrid::LD_OverviewGrid(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied)
+	LD_OverviewGrid::LD_OverviewGrid(QObject *t_parent, QSharedPointer<Core::IED> t_ied)
 		: QAbstractListModel(t_parent), m_ied(t_ied)
 	{
 	}
 
-	void LD_OverviewGrid::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
+	void LD_OverviewGrid::setActiveIED(QSharedPointer<Core::IED> t_ied)
 	{
 		beginResetModel();
 		m_ied = t_ied;

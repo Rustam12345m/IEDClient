@@ -36,7 +36,7 @@ namespace App
 	{
 		Q_OBJECT
 	public:
-		AppBackend(AppConContainer &t_con);
+		AppBackend(IEDConContainer &t_con);
 		~AppBackend() = default;
 
 		Q_PROPERTY(QAbstractTableModel* appLogsModel 	READ getEventsModel 	CONSTANT)
@@ -49,7 +49,7 @@ namespace App
 		Q_INVOKABLE QString 	getQtVersion();
 		Q_INVOKABLE QString 	getLibVersion();
 
-		void 	newConnection(const Core::Cmd::ConCredentials &t_cred);
+		void 	saveConToHistory(const Cmd::IEDCredentials &t_cred);
 
 	protected:
 		AppSettings		m_settings;

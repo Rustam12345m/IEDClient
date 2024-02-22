@@ -39,12 +39,12 @@ namespace App
 	/*
 	 * Presenter for LD, LN, DO table in QML
 	 * */
-	class IED_Presenter : public BackendBase
+	class IEDBackend : public BackendBase
 	{
 		Q_OBJECT
 	public:
-		IED_Presenter(AppConContainer &t_con);
-		~IED_Presenter() = default;
+		IEDBackend(IEDConContainer &t_con);
+		~IEDBackend() = default;
 
 		Q_INVOKABLE QAbstractListModel*		getLD_GridModel() const { return m_ldsModel; }
 		Q_INVOKABLE QAbstractListModel*		getLD_PropModel() const { return m_ldPropModel; }
@@ -75,9 +75,9 @@ namespace App
 
 	protected:
 		// Models for Tables in GUI
-		Models::LD_OverviewGrid*		m_ldsModel = nullptr;
-		Models::LD_PropertiesTable*		m_ldPropModel = nullptr;
-		Models::LN_OverviewTable*		m_lnsModel = nullptr;
+		Models::LD_OverviewGrid*	m_ldsModel = nullptr;
+		Models::LD_PropertiesTable*	m_ldPropModel = nullptr;
+		Models::LN_OverviewTable*	m_lnsModel = nullptr;
 		Models::LN_SignalTable*		m_lnStateModel = nullptr;
 		Models::LN_SignalTree* 		m_lnTreeModel = nullptr;
 		Models::SortProxyModel* 	m_sortDOModel = nullptr;

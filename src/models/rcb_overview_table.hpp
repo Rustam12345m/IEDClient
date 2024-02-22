@@ -22,7 +22,7 @@
 #pragma once
 
 #include "models_stub.hpp"
-#include "core/ied_object.hpp"
+#include "core/ied.hpp"
 
 namespace App::Models
 {
@@ -44,10 +44,10 @@ namespace App::Models
 		};
 
 	public:
-		RCB_OverviewTable(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied);
+		RCB_OverviewTable(QObject *t_parent, QSharedPointer<Core::IED> t_ied);
 
 		Q_INVOKABLE void setSelectedRCB(int t_inx);
-		void 		setNewIED(QSharedPointer<Core::IED_Object> t_ied);
+		void 		setActiveIED(QSharedPointer<Core::IED> t_ied);
 
 		QVariant 	headerData(int t_section, Qt::Orientation t_orientation,
 							int t_role = Qt::DisplayRole) const override;
@@ -64,7 +64,7 @@ namespace App::Models
 		void 	slotDataUpdated(bool t_done);
 
 	private:
-		QSharedPointer<Core::IED_Object> m_ied;
+		QSharedPointer<Core::IED> m_ied;
 		int 	m_currentRCB = -1;
 	};
 }

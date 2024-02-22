@@ -24,7 +24,7 @@
 #include <QObject>
 #include <QSettings>
 
-#include "cmd/con_credentials.hpp"
+#include "cmd/ied_credentials.hpp"
 #include "config/conf_connection_info.hpp"
 
 namespace App
@@ -46,7 +46,7 @@ namespace App
 		~AppSettings() = default;
 
 		listConfConectInfo	getConnectionList();
-		void 	putConnectionToConfig(const Core::Cmd::ConCredentials &t_cred, const QString &t_ied);
+		void 	putConnectionToConfig(const Cmd::IEDCredentials &t_cred, const QString &t_ied);
 
 	signals:
 		void 	sigConfUpdated();

@@ -21,35 +21,17 @@
 
 #pragma once
 
-#include <QObject>
+#include "core/fs_model.hpp"
 
-#include "lib_interface.hpp"
-
-namespace Core::Cmd
+namespace Cmd::Interface
 {
-	/*
-	 * This is a basic class for all requests to IED through Lib61850_Adapter
-	 * */
-	class BasicCommand : public QObject
+	class IED_FS_API
 	{
-		Q_OBJECT
 	public:
-		BasicCommand() = default;
-		virtual ~BasicCommand() {}
+		virtual ~IED_FS_API() {}
 
-		virtual void	execute(LibInterface &t_con) {
-		}
-
-	signals:
-		void	sigProgress(int t_perc, QString t_msg);
-		void	sigFinished(bool t_done);
-
-		/*
-		template<typename... Args>
-		static QSharedPointer<ConnectCmd> create(Args&&... args) {
-			return QSharedPointer<ConnectCmd>::create(std::forward<Args>(args)...);
-		}
-		*/
+		virtual int		getFileList(Core::DirOn &t_dir) = 0;
+		virtual void 	download(const QString &t_filename) = 0;
+		virtual int 	remove(const QString &t_filename) = 0;
 	};
-	typedef QSharedPointer< BasicCommand >	ptrCMD;
 }

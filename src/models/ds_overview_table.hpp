@@ -23,7 +23,7 @@
 
 #include <QAbstractListModel>
 
-#include "core/ied_object.hpp"
+#include "core/ied.hpp"
 
 namespace App::Models
 {
@@ -38,12 +38,12 @@ namespace App::Models
 		};
 
 	public:
-		DS_OverviewTable(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied);
+		DS_OverviewTable(QObject *t_parent, QSharedPointer<Core::IED> t_ied);
 
 		Q_INVOKABLE void setSelectedDS(int t_ds);
 		int 	getCurrentDS() const { return m_currentDS; }
 
-		void 	setNewIED(QSharedPointer<Core::IED_Object> t_ied);
+		void 	setActiveIED(QSharedPointer<Core::IED> t_ied);
 
 		QHash<int, QByteArray> roleNames() const override;
 		int 	 rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
@@ -56,7 +56,7 @@ namespace App::Models
 		void 	slotDataUpdated();
 
 	private:
-		QSharedPointer<Core::IED_Object> 	m_ied;
+		QSharedPointer<Core::IED> 	m_ied;
 		int		m_currentDS = -1; // selected DataSet
 	};
 }

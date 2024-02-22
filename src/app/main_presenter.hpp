@@ -71,11 +71,11 @@ namespace App
 		void 		sigConnected(bool t_done);
 
 	protected:
-		AppConContainer	m_con; // Complex component of IED's stub
+		IEDConContainer	m_con; // Complex component of IED's stub
 
 		// Backends for QML
-		AppBackend		m_appBackend;
-		IED_Presenter	m_ldBackend;
-		FS_Backend		m_fsBackend;
+		AppBackend  m_appBackend;
+		IEDBackend  m_iedBackend;
+		FS_Backend  m_fsBackend;
 	};
 }

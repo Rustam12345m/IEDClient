@@ -26,7 +26,7 @@
 #include "core/server_identify.hpp"
 #include "core/data_model_builder.hpp"
 
-namespace Core::Cmd
+namespace Cmd
 {
 	class LibInterface
 	{

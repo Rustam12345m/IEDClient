@@ -34,7 +34,7 @@ namespace App
 	{
 		Q_OBJECT
 	public:
-		FS_Backend(AppConContainer &t_con);
+		FS_Backend(IEDConContainer &t_con);
 		~FS_Backend() = default;
 
 		// Properties for QML

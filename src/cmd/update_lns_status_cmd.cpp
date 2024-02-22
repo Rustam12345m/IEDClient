@@ -22,9 +22,9 @@
 #include "update_lns_status_cmd.hpp"
 #include <QDebug>
 
-namespace Core::Cmd
+namespace Cmd
 {
-	void UpdateLNs_StatusCmd::execute(LibInterface &t_con)
+	void UpdateLNs_StatusCmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
 	{
 		/*
 		ptrLD ld = m_ied->model().getLogicalDevice(m_ldIndex);

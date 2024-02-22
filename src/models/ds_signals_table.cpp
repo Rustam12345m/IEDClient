@@ -23,12 +23,12 @@
 
 namespace App::Models
 {
-	DS_SignalsTable::DS_SignalsTable(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied)
+	DS_SignalsTable::DS_SignalsTable(QObject *t_parent, QSharedPointer<Core::IED> t_ied)
 		: QAbstractTableModel(t_parent), m_ied(t_ied)
 	{
 	}
 
-	void DS_SignalsTable::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
+	void DS_SignalsTable::setActiveIED(QSharedPointer<Core::IED> t_ied)
 	{
 		beginResetModel();
 		m_ied = t_ied;

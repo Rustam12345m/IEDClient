@@ -22,11 +22,11 @@
 #include "update_ln_cmd.hpp"
 #include <QThread>
 
-namespace Core::Cmd
+namespace Cmd
 {
-	void UpdateLNode_Cmd::execute(LibInterface &t_con)
+	void UpdateLNode_Cmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
 	{
-		ptrValuesUpdater vals = t_con.getValuesForLN(m_lnode);
+		Core::ptrValuesUpdater vals = t_api->state().getValsForLN(m_lnode);
 		if (vals) {
 			// Update process must to be finished in the GUI thread
 			emit sigNewValues(vals);

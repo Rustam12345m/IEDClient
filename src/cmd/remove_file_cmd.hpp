@@ -21,28 +21,28 @@
 
 #pragma once
 
-#include "basic_command.hpp"
+#include "cmd_interface.hpp"
 
-namespace Core::Cmd
+namespace Cmd
 {
 	/*
 	 * This class realizes downloading file from the IED
 	 * */
-	class RemoveFile : public BasicCommand
+	class RemoveFileCMD : public CmdInterface
 	{
 		Q_OBJECT
 	public:
-		RemoveFile(const QString &t_name, int t_fileIndex)
+		RemoveFileCMD(const QString &t_name, int t_fileIndex)
 			: m_filename(t_name), m_fileIndex(t_fileIndex)
 		{
 		}
-		~RemoveFile() {}
+		~RemoveFileCMD() {}
 
-		void	execute(LibInterface &t_con) override;
+		void	execute(Cmd::Interface::ptrIEC61850_API t_api) override;
 
 		// Create new command like Builder pattern
 		static auto create(const QString &t_name, int t_row) {
-			return QSharedPointer<RemoveFile>::create(t_name, t_row);
+			return QSharedPointer<RemoveFileCMD>::create(t_name, t_row);
 		}
 
 	signals:

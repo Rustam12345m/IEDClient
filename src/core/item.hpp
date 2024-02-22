@@ -108,10 +108,10 @@ namespace Core
 		virtual void 			notifyFromChild(QSharedPointer<QList<Item*>> t_nodes);
 
 	protected:
-		Item*		m_parent = nullptr;
-		QString		m_name;
-		QString 	m_delimetr = "/"; // Current node and its children
-		ptrValue	m_value;
+		Item*		                m_parent = nullptr;
+		QString		                m_name;
+		QString 	                m_delimetr = "/"; // Current node and its children
+		ptrValue	                m_value;
 		QList<QSharedPointer<Item>>	m_items; // List of children
 	};
 	typedef QSharedPointer< Item > 	ptrItem;

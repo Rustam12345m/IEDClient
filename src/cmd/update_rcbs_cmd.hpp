@@ -21,31 +21,31 @@
 
 #pragma once
 
-#include "basic_command.hpp"
-#include "core/ied_object.hpp"
+#include "cmd_interface.hpp"
+#include "core/ied.hpp"
 
-namespace Core::Cmd
+namespace Cmd
 {
 	/*
 	 * This class realizes downloading file from the IED
 	 * */
-	class UpdateRCBs_Cmd : public BasicCommand
+	class UpdateRCBs_Cmd : public CmdInterface
 	{
 		Q_OBJECT
 	public:
-		UpdateRCBs_Cmd(ptrIED_Object t_ied) : m_ied{t_ied}
+		UpdateRCBs_Cmd(Core::ptrIED t_ied) : m_ied{t_ied}
 		{
 		}
 		~UpdateRCBs_Cmd() = default;
 
-		void	execute(LibInterface &t_con) override;
+		void	execute(Cmd::Interface::ptrIEC61850_API t_api) override;
 
 		// Create new command like Builder pattern
-		static auto create(ptrIED_Object t_ied) {
+		static auto create(Core::ptrIED t_ied) {
 			return QSharedPointer<UpdateRCBs_Cmd>::create(t_ied);
 		}
 
 	private:
-		ptrIED_Object	m_ied;
+		Core::ptrIED	m_ied;
 	};
 }

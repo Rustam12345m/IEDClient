@@ -61,7 +61,7 @@ Item
 			bottom: parent.bottom
 		}
 
-		model: devBackend.getLN_StateModel()
+		model: iedBackend.getLN_StateModel()
 
 		focus: true
 		keyNavigationEnabled: true
@@ -116,7 +116,7 @@ Item
 		}
 
 		Connections {
-			target: devBackend.getLN_StateModel()
+			target: iedBackend.getLN_StateModel()
 
 			function onDataChanged() {
 				Qt.callLater(rootID.resizeColumnsToContent)

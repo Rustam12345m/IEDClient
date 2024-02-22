@@ -37,13 +37,13 @@ namespace
 
 namespace App::Models
 {
-	DevFS_Table::DevFS_Table(QObject *t_parent, QSharedPointer<Core::IED_Object> t_ied)
+	DevFS_Table::DevFS_Table(QObject *t_parent, QSharedPointer<Core::IED> t_ied)
 		: QAbstractTableModel(t_parent), m_ied(t_ied)
 	{
 		connect(&m_ied->fs(), SIGNAL(sigFS_Updated()), this, SLOT(slotDataUpdated()));
 	}
 
-	void DevFS_Table::setNewIED(QSharedPointer<Core::IED_Object> t_ied)
+	void DevFS_Table::setActiveIED(QSharedPointer<Core::IED> t_ied)
 	{
 		beginResetModel();
 		m_ied = t_ied;

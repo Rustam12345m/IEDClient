@@ -48,7 +48,6 @@ FocusScope
 
 		defDelegateWidth: rootID.defDelegateWidth
 		defDelegateHeight: rootID.defDelegateHeight
-		rightTextAlign: true
 
 		anchors {
 			left: parent.left

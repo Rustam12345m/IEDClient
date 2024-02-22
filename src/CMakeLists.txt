@@ -1,5 +1,5 @@
 # Source code
-add_subdirectory(lib61850_adapter/)
+add_subdirectory(libiec61850_stub/)
 add_subdirectory(core/)
 add_subdirectory(cmd/)
 add_subdirectory(tools/)

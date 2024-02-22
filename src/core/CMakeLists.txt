@@ -36,9 +36,7 @@ set(CORE_SOURCES
 	ln_signal_matrix.hpp
 	ln_signal_matrix.cpp
 
-	ied_object.hpp
-	ied_object.cpp
-
+	ied.hpp
 	server_identify.hpp
 )
 

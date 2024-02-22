@@ -34,8 +34,8 @@ int main(int argc, char *argv[])
 	QGuiApplication app(argc, argv);
 
 	QCoreApplication::setOrganizationName("OSI");
-    QCoreApplication::setOrganizationDomain("opensource.org");
-    QCoreApplication::setApplicationName("IEDClient");
+	QCoreApplication::setOrganizationDomain("opensource.org");
+	QCoreApplication::setApplicationName("IEDClient");
 
 	// Singletons
 	qmlRegisterSingletonType(QUrl("qrc:/singletons/Globals.qml"), "GlobalVarsModule", 1, 0, "Globals");
