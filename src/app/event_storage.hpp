@@ -19,36 +19,31 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "app_presenter.hpp"
-#include "builder_information.hpp"
+#pragma once
 
-#include <QVersionNumber>
+#include <QObject>
+#include <QMutex>
+
+#include "cmd/cmd_event_msg.hpp"
 
 namespace App
 {
-	AppBackend::AppBackend(IEDConContainer &t_con) : BackendBase(t_con)
+	class EventStorage : public QObject
 	{
-		m_eventsModel = new Models::AppEventsTable(this);
-		m_lastConnModel = new Models::HistConTable(this, m_settings);
-	}
+		Q_OBJECT
+	public:
+		EventStorage() {}
 
-	QString AppBackend::getAppVersion()
-	{
-		return QString("%1").arg(PROJECT_VERSION);
-	}
+        QString getLastMessage();
 
-	QString AppBackend::getQtVersion()
-	{
-		return QString("%1").arg(qVersion());
-	}
+	signals:
+		void	sigNewLogEvent();
 
-	QString AppBackend::getLibVersion()
-	{
-		return m_con.m_api->getVersion();
-	}
+	public slots:
+        void    slotEventToLog(Cmd::CmdEventInfo t_event);
 
-	void AppBackend::saveConToHistory(const Cmd::IEDCredentials &t_cred)
-	{
-		m_settings.putConnectionToConfig(t_cred, m_con.m_ied->model().getName());
-	}
+	private:
+        QMutex      m_lock;
+        QString     m_message;
+	};
 }

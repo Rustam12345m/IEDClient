@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include "backend_base.hpp"
+#include "backend_interface.hpp"
 #include "models/sort_proxy_model.hpp"
 #include "models/dev_fs_table.hpp"
 
@@ -30,12 +30,12 @@ namespace App
 	/*
 	* Presenter of Filesystem on IED for QML page
 	* */
-	class FS_Backend : public BackendBase
+	class IED_FS_Backend : public BackendInterface
 	{
 		Q_OBJECT
 	public:
-		FS_Backend(IEDConContainer &t_con);
-		~FS_Backend() = default;
+		IED_FS_Backend(IEDConContainer &t_con, EventStorage &t_ev);
+		~IED_FS_Backend() = default;
 
 		// Properties for QML
 		Q_PROPERTY(QAbstractTableModel* 	filesModel 	READ getModel 		CONSTANT)

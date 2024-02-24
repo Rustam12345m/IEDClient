@@ -45,7 +45,7 @@ namespace Cmd
 		}
 
 	private slots:
-		void 	slotMsgProgress(const QString &t_msg);
+		void 	slotFoundNewLN(const QString &t_ref);
 
 	private:
 		IEDCredentials	m_cred;

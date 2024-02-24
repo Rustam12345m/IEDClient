@@ -206,7 +206,7 @@ namespace CoreTests
 
 			EXPECT_EQ(item->getValue(), "");
 
-			item->updateValue(Core::ItemValue::create("3.1415"));
+			item->updateValue(Core::ModelItemValue::create("3.1415"));
 			EXPECT_EQ(item->getValue(), "3.1415") << "DA = " << item->getValue().toStdString();
 		}
 
@@ -215,10 +215,10 @@ namespace CoreTests
 			auto item = m_model->findSubItem("A_LD_1", "GGIO1", "Ind1", "stVal");
 			ASSERT_NE(item, nullptr);
 
-			item->updateValue(Core::ItemValue::create("1"));
+			item->updateValue(Core::ModelItemValue::create("1"));
 			EXPECT_EQ(item->getValue(), "1");
 
-			item->updateValue(Core::ItemValue::create("0"));
+			item->updateValue(Core::ModelItemValue::create("0"));
 			EXPECT_EQ(item->getValue(), "0");
 		}
 	}
@@ -232,7 +232,7 @@ namespace CoreTests
 			auto vendor = namPlt->findSubItem("vendor");
 			ASSERT_NE(vendor, nullptr);
 
-			vendor->updateValue(Core::ItemValue::create("Test_Company_Name"));
+			vendor->updateValue(Core::ModelItemValue::create("Test_Company_Name"));
 			ASSERT_EQ(vendor->getValue(), "Test_Company_Name");
 		}
 
@@ -244,7 +244,7 @@ namespace CoreTests
 			auto vendor = phyNam->findSubItem("vendor");
 			ASSERT_NE(vendor, nullptr);
 
-			vendor->updateValue(Core::ItemValue::create("Test_Company_Name"));
+			vendor->updateValue(Core::ModelItemValue::create("Test_Company_Name"));
 			ASSERT_EQ(vendor->getValue(), "Test_Company_Name");
 		}
 	}

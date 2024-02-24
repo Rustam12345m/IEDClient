@@ -55,19 +55,19 @@ namespace App
 
 			auto apiImpl =  Libiec61850::ptrAdapter::create();
 			connect(apiImpl.get(), &Cmd::Interface::IEC61850_API::sigConClosed,
-                    this, &IEDConContainer::slotDisconnected);
+                    this, &IEDConContainer::slotConClosed);
 			m_api = apiImpl;
 
 			m_cmdThread = QSharedPointer<Cmd::CmdThread>::create(m_api);
 		}
 
-	public slots:
-		void 	slotDisconnected() {
-			emit sigConnected(false);
-		}
-
 	signals:
-		void 	sigConnected(bool t_status);
+		void 	sigConClosed();
+
+	public slots:
+		void 	slotConClosed() {
+			emit sigConClosed();
+		}
 
 	public:
 		Core::ptrIED                m_ied;

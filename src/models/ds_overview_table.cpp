@@ -61,7 +61,7 @@ namespace App::Models
 
 		switch (t_role) {
 		case SECTION_ROLE: {
-			return QVariant(dsList[row]->Core::Item::getParent()->getReference());
+			return QVariant(dsList[row]->Core::ModelItem::getParent()->getReference());
 		}
 		case NAME_ROLE: {
 			return QVariant(dsList[row]->getName());

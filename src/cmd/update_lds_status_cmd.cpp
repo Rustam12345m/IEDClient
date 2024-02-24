@@ -27,7 +27,19 @@ namespace Cmd
 {
 	void UpdateLDs_StatusCmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
 	{
-		// ptrValuesUpdater vals = t_con.getStatusValuesForLDs(m_ied->getDataModel());
+		Core::ptrModelValuesUpd vals = t_api->state().getStatusForAllLD(m_ied->getDataModel());
+        if (vals) {
+            // Update process must to be finished in the GUI thread
+            emit sigNewModelValues(vals);
+
+            emit sigFinishedEvent(CmdEventInfo::FinishEvent("IP?",
+                    QString("Received values for %1 signals for { LD }").arg(vals->count()),
+                    true));
+        } else {
+            emit sigFinishedEvent(CmdEventInfo::FinishEvent("IP?",
+                    QString("Can't get values for { LD }"),
+                    false));
+        }
 	}
 
 	void UpdateLDs_StatusCmd::slotMsgProgress(const QString &t_msg)

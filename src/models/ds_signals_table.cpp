@@ -101,7 +101,7 @@ namespace App::Models
 		return QVariant(" ? ");
 	}
 
-	void DS_SignalsTable::slotDataUpdated(QList<Core::ptrItem> t_items)
+	void DS_SignalsTable::slotDataUpdated(QList<Core::ptrModelItem> t_items)
 	{
 		emit dataChanged(index(0, DS_VALUE_COLUMN), index(rowCount() - 1, ColumnsCount));
 	}

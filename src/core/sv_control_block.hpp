@@ -30,11 +30,11 @@ namespace Core
 	/*
 	 * Representation a ReportControlBlock of LD
 	 * */
-	class SV_ControlBlock : public QObject, public Item
+	class SV_ControlBlock : public QObject, public ModelItem
 	{
 		Q_OBJECT
 	public:
-		SV_ControlBlock() : Item(nullptr, "")
+		SV_ControlBlock() : ModelItem(nullptr, "")
 		{
 		}
 

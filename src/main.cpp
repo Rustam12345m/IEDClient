@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 	App::MainPresenter presenter; // have to be created befor engine
 	QQmlApplicationEngine engine;
 
-	presenter.setContextMembers(engine.rootContext());
+	presenter.setQmlContextMembers(engine.rootContext());
 
 	engine.load(QStringLiteral("qrc:/main.qml"));
 

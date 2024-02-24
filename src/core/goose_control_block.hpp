@@ -30,11 +30,11 @@ namespace Core
 	/*
 	 * Representation a ReportControlBlock of LD
 	 * */
-	class GooseControlBlock : public QObject, public Item
+	class GooseControlBlock : public QObject, public ModelItem
 	{
 		Q_OBJECT
 	public:
-		GooseControlBlock() : Item(nullptr, "")
+		GooseControlBlock() : ModelItem(nullptr, "")
 		{
 		}
 

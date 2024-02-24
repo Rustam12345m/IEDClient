@@ -55,7 +55,7 @@ namespace
         return { ref, fc };
     }
 
-    void	recursiveReadAttributes(IedConnection t_con, QSharedPointer<Core::Item> t_parent,
+    void	recursiveReadAttributes(IedConnection t_con, QSharedPointer<Core::ModelItem> t_parent,
                                     Core::DataModelBuilder &t_builder)
     {
         IedClientError retval = IED_ERROR_OK;
@@ -108,7 +108,7 @@ namespace Libiec61850
 				while (node != nullptr) {
 					t_builder.createLN(QString::fromLocal8Bit((char *)node->data)); // New LN
 
-					//emit sigFoundNode(t_builder.lastLN()->getReference());
+					emit sigFoundNode(t_builder.lastLN()->getReference());
 
 					fetchLN_DO(t_builder);
 

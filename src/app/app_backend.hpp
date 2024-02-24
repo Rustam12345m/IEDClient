@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include "backend_base.hpp"
+#include "backend_interface.hpp"
 #include "app_settings.hpp"
 
 #include "models/app_events_table.hpp"
@@ -32,28 +32,33 @@ namespace App
 	/*
 	* Presenter of other application related data and tables
 	* */
-	class AppBackend : public BackendBase
+	class AppBackend : public BackendInterface
 	{
 		Q_OBJECT
 	public:
-		AppBackend(IEDConContainer &t_con);
+		AppBackend(IEDConContainer &t_con, EventStorage &t_ev);
 		~AppBackend() = default;
 
 		Q_PROPERTY(QAbstractTableModel* appLogsModel 	READ getEventsModel 	CONSTANT)
 		Q_PROPERTY(QAbstractItemModel* 	lastConnList 	READ getLastConn_Model 	CONSTANT)
 
-		Models::AppEventsTable*	getEventsModel() const { return m_eventsModel; }
-		Models::HistConTable* 	getLastConn_Model() const { return m_lastConnModel; }
-
 		Q_INVOKABLE QString 	getAppVersion();
 		Q_INVOKABLE QString 	getQtVersion();
 		Q_INVOKABLE QString 	getLibVersion();
+        Q_INVOKABLE QString     getLastStatusMsg();
 
-		void 	saveConToHistory(const Cmd::IEDCredentials &t_cred);
+		Models::AppEventsTable*	getEventsModel() const { return m_eventsModel; }
+		Models::HistConTable* 	getLastConn_Model() const { return m_lastConnModel; }
+
+		void 	saveCredsToHistory(const Cmd::IEDCredentials &t_cred);
+
+    signals:
+        void    sigNewStatusMsg();
+    public slots:
+        void    slotNewStatusMessage();
 
 	protected:
-		AppSettings		m_settings;
-
+		AppSettings		        m_settings;
 		Models::AppEventsTable*	m_eventsModel = nullptr;
 		Models::HistConTable*	m_lastConnModel = nullptr;
 	};

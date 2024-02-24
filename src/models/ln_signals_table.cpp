@@ -156,13 +156,13 @@ namespace App::Models
 		return QVariant(" ? ");
 	}
 
-	void LN_SignalTable::slotDataUpdated(QSharedPointer<QList<Core::Item*>> t_nodes)
+	void LN_SignalTable::slotDataUpdated(QSharedPointer<QList<Core::ModelItem*>> t_nodes)
 	{
 		if (t_nodes->empty()) {
 			return;
 		}
 
-		Core::Item *doItem = t_nodes->front();
+		Core::ModelItem *doItem = t_nodes->front();
 		qDebug() << "LN_SignalTable: slotDataUpdated, do =" << doItem->getName();
 
 		auto matrix = m_lnode->getSignalMatrix()->getRows();

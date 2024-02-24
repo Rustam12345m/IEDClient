@@ -19,11 +19,12 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "fs_presenter.hpp"
+#include "ied_fs_backend.hpp"
 
 namespace App
 {
-	FS_Backend::FS_Backend(IEDConContainer &t_con) : BackendBase(t_con)
+	IED_FS_Backend::IED_FS_Backend(IEDConContainer &t_con, EventStorage &t_ev)
+        : BackendInterface(t_con, t_ev)
 	{
 		m_fsModel = new Models::DevFS_Table(this, m_con.m_ied);
 
@@ -31,7 +32,7 @@ namespace App
 		m_sortedModel->setSourceModel(m_fsModel);
 	}
 
-	Q_INVOKABLE QString FS_Backend::fsPageStatus()
+	Q_INVOKABLE QString IED_FS_Backend::fsPageStatus()
 	{
 		auto [count, size] = m_con.m_ied->fs().getFS_StatInfo();
 		if (size < 1024 * 1024) {
@@ -40,29 +41,29 @@ namespace App
 		return QString("Total %1 files. %2 MB").arg(count).arg(size / (1024 * 1024));
 	}
 
-	void FS_Backend::updateFilesDirectory(const QString &t_path)
+	void IED_FS_Backend::updateFilesDirectory(const QString &t_path)
 	{
 		auto cmd = Cmd::GetFileList::create(m_con.m_ied->fs(), t_path);
 		putCmdToQueue(cmd);
 	}
 
-	void FS_Backend::downloadFile(const QString &t_filename)
+	void IED_FS_Backend::downloadFile(const QString &t_filename)
 	{
-		qDebug() << "FS_Backend: Download file " << t_filename;
+		qDebug() << "IED_FS_Backend: Download file " << t_filename;
 		auto cmd = Cmd::DownloadFileCmd::create(t_filename);
 		putCmdToQueue(cmd);
 	}
 
-	void FS_Backend::removeFile(const QString &t_filename, int t_row)
+	void IED_FS_Backend::removeFile(const QString &t_filename, int t_row)
 	{
-		qDebug() << "FS_Backend: Remove file " << t_filename;
+		qDebug() << "IED_FS_Backend: Remove file " << t_filename;
 		auto cmd = Cmd::RemoveFileCMD::create(t_filename, t_row);
 
 		connect(cmd.get(), &Cmd::RemoveFileCMD::sigFileRemoved, m_fsModel, &Models::DevFS_Table::slotRemoveFile);
 		putCmdToQueue(cmd);
 	}
 
-	void FS_Backend::slotConnected(bool t_done)
+	void IED_FS_Backend::slotConnected(bool t_done)
 	{
 		m_fsModel->setActiveIED(m_con.m_ied);
 	}

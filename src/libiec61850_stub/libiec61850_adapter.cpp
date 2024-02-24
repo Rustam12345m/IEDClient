@@ -94,7 +94,23 @@ namespace Libiec61850
 
     Core::DevServIdentity Libiec61850_Adapter::getServIdentity() const
     {
-        return Core::DevServIdentity();
+        Core::DevServIdentity ident;
+		MmsConnection mmsCon = IedConnection_getMmsConnection(m_libConn);
+
+		MmsError error = MMS_ERROR_NONE;
+		MmsServerIdentity *identity = MmsConnection_identify(mmsCon, &error);
+		if ((error == MMS_ERROR_NONE) && (identity != nullptr)) {
+			ident.m_vendor = QString::fromLocal8Bit(identity->vendorName);
+			ident.m_model = QString::fromLocal8Bit(identity->modelName);
+			ident.m_revision = QString::fromLocal8Bit(identity->revision);
+		}
+
+		MmsConnectionParameters param = MmsConnection_getMmsConnectionParameters(mmsCon);
+		ident.m_maxPduSize = param.maxPduSize;
+		ident.m_dataStructureNestingLevel = param.dataStructureNestingLevel;
+		ident.m_maxServOutstandingCalled = param.maxServOutstandingCalled;
+		ident.m_maxServOutstandingCalling = param.maxServOutstandingCalling;
+		return ident;
     }
 
     void Libiec61850_Adapter::callbackOnCloseEvent()

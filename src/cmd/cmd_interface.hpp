@@ -21,12 +21,13 @@
 
 #pragma once
 
+#include "cmd_event_msg.hpp"
 #include "interface/iec61850_api.hpp"
 
 namespace Cmd
 {
 	/*
-	 * This is a basic class for all requests to IED through Lib61850_Adapter
+	 * This is a basic class for all requests to IED through libiec61850
 	 * */
 	class CmdInterface : public QObject
 	{
@@ -39,15 +40,9 @@ namespace Cmd
 		}
 
 	signals:
-		void	sigProgress(int t_perc, QString t_msg);
-		void	sigFinished(bool t_done);
-
-		/*
-		template<typename... Args>
-		static QSharedPointer<ConnectCmd> create(Args&&... args) {
-			return QSharedPointer<ConnectCmd>::create(std::forward<Args>(args)...);
-		}
-		*/
+        void    sigStartEvent(CmdEventInfo t_event);
+        void    sigProcessEvent(CmdEventInfo t_event);
+        void    sigFinishedEvent(CmdEventInfo t_event);
 	};
 	typedef QSharedPointer< CmdInterface >	ptrCMD;
 }

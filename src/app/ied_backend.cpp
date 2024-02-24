@@ -19,13 +19,14 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "ied_presenter.hpp"
+#include "ied_backend.hpp"
 
 #include <QCoreApplication>
 
 namespace App
 {
-	IEDBackend::IEDBackend(IEDConContainer &t_con) : BackendBase(t_con)
+	IED_Backend::IED_Backend(IEDConContainer &t_con, EventStorage &t_ev)
+        : BackendInterface(t_con, t_ev)
 	{
 		m_ldsModel = new Models::LD_OverviewGrid(this, m_con.m_ied);
 		m_ldPropModel = new Models::LD_PropertiesTable(this, m_con.m_ied);
@@ -50,62 +51,72 @@ namespace App
 		connect(m_rcbComModel, &Models::RCB_OverviewTable::sigRCBSelected, m_reportsModel, &Models::ReportsTable::slotRCBSelected);
 	}
 
-	void IEDBackend::updateLDs_Status()
+	void IED_Backend::updateLDs_Status()
 	{
-		qDebug() << "IEDBackend: Update LDs";
+		qDebug() << "IED_Backend: Update LDs";
 
 		auto cmd = Cmd::UpdateLDs_StatusCmd::create(m_con.m_ied);
-		// connect(cmd.get(), &Cmd::UpdateLDs_StatusCmd::sigFinished, m_ldsModel, &Models::LD_OverviewGrid::slotDataUpdated);
+        connect(cmd.get(), &Cmd::UpdateLDs_StatusCmd::sigNewModelValues,
+                this, &IED_Backend::slotUpdateItems, Qt::QueuedConnection);
+
 		putCmdToQueue(cmd);
 	}
 
-	void IEDBackend::updateLNs_Status()
+	void IED_Backend::updateLNs_Status()
 	{
-		qDebug() << "IEDBackend: Update LNs";
+		qDebug() << "IED_Backend: Update LNs";
 
 		auto cmd = Cmd::UpdateLNs_StatusCmd::create(m_con.m_ied, m_lnsModel->getLogicalDevice());
-		// connect(cmd.get(), &Cmd::UpdateLNs_StatusCmd::sigFinished, m_lnsModel, &Models::LN_OverviewTable::slotDataUpdated);
+        connect(cmd.get(), &Cmd::UpdateLNs_StatusCmd::sigNewModelValues,
+                this, &IED_Backend::slotUpdateItems, Qt::QueuedConnection);
+
 		putCmdToQueue(cmd);
 	}
 
-	void IEDBackend::updateRCBs_Status()
+	void IED_Backend::updateRCBs_Status()
 	{
-		qDebug() << "IEDBackend: Update RCBs";
+		qDebug() << "IED_Backend: Update RCBs";
 
 		auto cmd = Cmd::UpdateRCBs_Cmd::create(m_con.m_ied);
-		// connect(cmd.get(), &Cmd::UpdateRCBs_Cmd::sigFinished, m_rcbComModel, &Models::RCB_OverviewTable::slotDataUpdated);
+
 		putCmdToQueue(cmd);
 	}
 
-	void IEDBackend::updateLN_TreeValues()
+	void IED_Backend::updateLN_TreeValues()
 	{
-		qDebug() << "IEDBackend: Update LN command";
+		qDebug() << "IED_Backend: Update LN command";
 
 		auto lnode = m_lnStateModel->getCurrectLN();
+        if (lnode == nullptr) {
+            qDebug() << "IED_Backend: LNode not found!";
+            return;
+        }
+
 		auto cmd = Cmd::UpdateLNode_Cmd::create(m_con.m_ied, lnode);
-		connect(cmd.get(), &Cmd::UpdateLNode_Cmd::sigNewValues,
-                this, &IEDBackend::slotUpdateItems,
-                Qt::QueuedConnection);
+		connect(cmd.get(), &Cmd::UpdateLNode_Cmd::sigNewModelValues,
+                this, &IED_Backend::slotUpdateItems, Qt::QueuedConnection);
+
 		putCmdToQueue(cmd);
 	}
 
-	void IEDBackend::updateDS_Values()
+	void IED_Backend::updateDS_Values()
 	{
-		qDebug() << "IEDBackend: Update DataSet";
+		qDebug() << "IED_Backend: Update DataSet";
 
 		Core::ptrDataSet ds = m_dsSigModel->getDataSet();
 		auto cmd = Cmd::UpdateDataSet_Cmd::create(m_con.m_ied, ds);
-		connect(cmd.get(), &Cmd::UpdateDataSet_Cmd::sigNewValues, this, &IEDBackend::slotUpdateItems, Qt::QueuedConnection);
-		// connect(cmd.get(), &Cmd::UpdateDataSet_Cmd::sigFinished, m_dsComModel, &Models::DS_OverviewTable::slotDataUpdated);
+		connect(cmd.get(), &Cmd::UpdateDataSet_Cmd::sigNewModelValues, this,
+                &IED_Backend::slotUpdateItems, Qt::QueuedConnection);
+
 		putCmdToQueue(cmd);
 	}
 
-	QString IEDBackend::ldsPageStatus()
+	QString IED_Backend::ldsPageStatus()
 	{
 		return "IED: " + m_con.m_ied->model().getName();
 	}
 
-	QString IEDBackend::lnsPageStatus()
+	QString IED_Backend::lnsPageStatus()
 	{
 		auto ld = m_lnsModel->getLogicalDevice();
 		if (ld) {
@@ -114,17 +125,17 @@ namespace App
 		return " - ";
 	}
 
-	QString IEDBackend::dsPageStatus()
+	QString IED_Backend::dsPageStatus()
 	{
 		return "All found DataSets";
 	}
 
-	QString IEDBackend::rcbPageStatus()
+	QString IED_Backend::rcbPageStatus()
 	{
 		return "All found RCB";
 	}
 
-	void IEDBackend::slotConnected(bool t_done)
+	void IED_Backend::slotConnected(bool t_done)
 	{
 		m_ldsModel->setActiveIED(m_con.m_ied);
 		m_ldPropModel->setActiveIED(m_con.m_ied);
@@ -137,7 +148,7 @@ namespace App
 		m_reportsModel->setActiveIED(m_con.m_ied);
 	}
 
-	void IEDBackend::slotUpdateItems(Core::ptrValuesUpdater t_vals)
+	void IED_Backend::slotUpdateItems(Core::ptrModelValuesUpd t_vals)
 	{
 		if (t_vals) {
 			t_vals->update();

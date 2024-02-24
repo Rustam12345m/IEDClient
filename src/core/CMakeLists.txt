@@ -1,11 +1,11 @@
 # Building core's classes to a static library
 
 set(CORE_SOURCES
-	item.hpp
-	item.cpp
+	model_item.hpp
+	model_item.cpp
 
 	item_value.hpp
-	item_value_updater.hpp
+	model_values_updater.hpp
 
 	item_factory.hpp
 	item_factory.cpp

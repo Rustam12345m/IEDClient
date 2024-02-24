@@ -35,7 +35,6 @@ namespace Cmd
 			}
 		}
 		*/
-		emit sigFinished(false);
 	}
 
 	void UpdateLNs_StatusCmd::slotMsgProgress(const QString &t_msg)

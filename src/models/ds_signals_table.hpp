@@ -55,7 +55,7 @@ namespace App::Models
 
 	public slots:
 		void 	slotDataSetSelected(int t_ds);
-		void 	slotDataUpdated(QList<Core::ptrItem> t_items);
+		void 	slotDataUpdated(QList<Core::ptrModelItem> t_items);
 
 	private:
 		QSharedPointer<Core::IED> m_ied;

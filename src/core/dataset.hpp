@@ -24,44 +24,45 @@
 #include <QObject>
 
 #include "data_object.hpp"
-#include "item_value_updater.hpp"
+#include "model_values_updater.hpp"
 
 namespace Core
 {
 	/*
 	 * 
 	 * */
-	class DataSetEntity : public Item
+	class DataSetEntity : public ModelItem
 	{
 	public:
-		DataSetEntity(Item *t_parent, const QString &t_ref, const QString &t_fc)
-			: Item(t_parent, t_ref), m_fc{t_fc}
+		DataSetEntity(ModelItem *t_parent, const QString &t_ref, const QString &t_fc)
+			: ModelItem(t_parent, t_ref), m_fc{t_fc}
 		{}
 
 		const QString 	ref() const { return m_name; }
 		const QString 	fc() const { return m_fc; }
-		ptrItem 		item() { return m_item; }
+		ptrModelItem 	item() { return m_item; }
 
 	private:
-		QString 	m_fc;
-		ptrItem		m_item;
+		QString 	    m_fc;
+		ptrModelItem	m_item;
 	};
 
 	/*
 	 * Representation of a DataSet of IED
 	 * */
-	class DataSet : public QObject, public Item
+	class DataSet : public QObject, public ModelItem
 	{
 		Q_OBJECT
 	public:
-		DataSet(Item *t_parent, const QString &t_name, const QString &t_lnRef, bool t_del)
-			: QObject(nullptr), Item(t_parent, t_name), m_lnReference{t_lnRef}, m_isDeletable{t_del}
+		DataSet(ModelItem *t_parent, const QString &t_name, const QString &t_lnRef, bool t_del)
+			: QObject(nullptr), ModelItem(t_parent, t_name),
+            m_lnReference{t_lnRef}, m_isDeletable{t_del}
 		{}
 
 		const QString ref() const { return m_lnReference; }
 
 	signals:
-		void 	sigItemUpdated(QList<ptrItem> t_items);
+		void 	sigItemUpdated(QList<ptrModelItem> t_items);
 
 	private:
 		QString	m_lnReference;

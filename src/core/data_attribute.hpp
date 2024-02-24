@@ -29,7 +29,7 @@ namespace Core
 	 * Representation of a Data Attribute of Data Object
 	 * Has important FunctionConstrain = FC
 	 * */
-	class DataAttribute : public Item
+	class DataAttribute : public ModelItem
 	{
 	public:
 		QString		fc() const {
@@ -40,8 +40,8 @@ namespace Core
 		}
 
 	public:
-		DataAttribute(Item *t_parent, const QString &t_name, const QString &t_fc, int t_fcNum)
-			: Item(t_parent, t_name)
+		DataAttribute(ModelItem *t_parent, const QString &t_name, const QString &t_fc, int t_fcNum)
+			: ModelItem(t_parent, t_name)
 		{
 			m_fc = t_fc;
 			m_fcNum = t_fcNum;

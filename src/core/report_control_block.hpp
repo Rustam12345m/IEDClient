@@ -28,10 +28,10 @@ namespace Core
 	/*
 	 * Representation a ReportControlBlock of LD
 	 * */
-	class ReportBlock : public Item
+	class ReportBlock : public ModelItem
 	{
 	public:
-		ReportBlock() : Item(nullptr, "")
+		ReportBlock() : ModelItem(nullptr, "")
 		{
 		}
 

@@ -29,7 +29,7 @@ namespace Core
 	 * Representation a Data Object of Logical Node
 	 * DO have several DA in different FC
 	 * */
-	class DataObject : public Item
+	class DataObject : public ModelItem
 	{
 	public:
 		QString		getValue() const override {
@@ -57,7 +57,7 @@ namespace Core
 			return " - ";
 		}
 
-		void		addSubItem(QSharedPointer< Item > t_node) override {
+		void		addSubItem(QSharedPointer< ModelItem > t_node) override {
 			m_items.push_back(t_node);
 
 			if (t_node->getName() == "stVal" || t_node->getName() == "mag") {
@@ -75,8 +75,8 @@ namespace Core
 		}
 
 	public:
-		DataObject(Item *t_parent, const QString &t_name)
-			: Item(t_parent, t_name)
+		DataObject(ModelItem *t_parent, const QString &t_name)
+			: ModelItem(t_parent, t_name)
 		{
 			m_delimetr = "."; // Between LNName and DOName
 		}

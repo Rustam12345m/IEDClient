@@ -19,44 +19,40 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "item.hpp"
-#include "item_value_updater.hpp"
+#pragma once
+
+#include "model_item.hpp"
 
 namespace Core
 {
-	void Item::addSubItem(QSharedPointer<Item> t_child)
+	/*
+	 * This class holds pointers to current Items and new values for them.
+	 * To prevent race conditions, the values of ModelItem must be updated in the GUI thread.
+	 * */
+	class ModelItemValuesUpd
 	{
-		m_items.push_back(t_child);
-	}
+	public:
+		ModelItemValuesUpd() {}
 
-	QString Item::getValue() const
-	{
-		if (m_value) {
-			return m_value->str();
-		}
-		return "";
-	}
-
-	bool Item::updateValue(ptrValue t_newValue)
-	{
-		if (m_value && (*m_value == *t_newValue)) {
-			return false;
+		void 	push(ptrModelItem t_item, ptrModelValue t_value) {
+			m_values.emplace_back(t_item, t_value);
 		}
 
-		m_value = t_newValue;
-
-		if (m_parent != nullptr) {
-			auto nodes = QSharedPointer<QList<Item*>>::create();
-			m_parent->notifyFromChild(nodes);
+		auto 	update() {
+			QList<ptrModelItem> result; // updated items (new value)
+			for (const auto&[item, value] : m_values) {
+				if (item->updateValue(value)) {
+					result.push_back(item);
+				}
+			}
+			m_values.clear();
+			return result;
 		}
-		return true;
-	}
 
-	void Item::notifyFromChild(QSharedPointer<QList<Item*>> t_nodes)
-	{
-		if (m_parent != nullptr) {
-			t_nodes->push_front(this);
-			m_parent->notifyFromChild(t_nodes);
-		}
-	}
+        size_t  count() const { return m_values.size(); }
+
+	private:
+		QList< QPair<ptrModelItem, ptrModelValue> > 	m_values;
+	};
+	typedef QSharedPointer< ModelItemValuesUpd >	ptrModelValuesUpd;
 }
