@@ -25,7 +25,6 @@
 
 #include "cmd_interface.hpp"
 #include "command_queue.hpp"
-#include "lib_interface.hpp"
 #include "interface/iec61850_api.hpp"
 
 namespace Cmd

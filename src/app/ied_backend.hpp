@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include "backend_base.hpp"
+#include "backend_interface.hpp"
 
 #include "models/sort_proxy_model.hpp"
 #include "models/ld_overview_grid.hpp"
@@ -39,12 +39,12 @@ namespace App
 	/*
 	 * Presenter for LD, LN, DO table in QML
 	 * */
-	class IEDBackend : public BackendBase
+	class IED_Backend : public BackendInterface
 	{
 		Q_OBJECT
 	public:
-		IEDBackend(IEDConContainer &t_con);
-		~IEDBackend() = default;
+		IED_Backend(IEDConContainer &t_con, EventStorage &t_ev);
+		~IED_Backend() = default;
 
 		Q_INVOKABLE QAbstractListModel*		getLD_GridModel() const { return m_ldsModel; }
 		Q_INVOKABLE QAbstractListModel*		getLD_PropModel() const { return m_ldPropModel; }
@@ -71,7 +71,7 @@ namespace App
 
 	public slots:
 		void 	slotConnected(bool t_done) override;
-		void 	slotUpdateItems(Core::ptrValuesUpdater t_vals);
+		void 	slotUpdateItems(Core::ptrModelValuesUpd t_vals);
 
 	protected:
 		// Models for Tables in GUI

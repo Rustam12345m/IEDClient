@@ -38,7 +38,7 @@ namespace
         return dt.toString("HH:mm:ss dd.MM.yyyy"); // ms isn't important
     }
 
-    void 	getValuesForItemByMmsValue(Core::ptrItem t_item, Core::ptrValuesUpdater t_vals,
+    void 	getValuesForItemByMmsValue(Core::ptrModelItem t_item, Core::ptrModelValuesUpd t_vals,
                                        MmsValue *t_mmsValue)
     {
         if (t_item == nullptr || t_vals == nullptr || t_mmsValue == nullptr) {
@@ -51,13 +51,13 @@ namespace
             int count = MmsValue_getArraySize(t_mmsValue);
             int items = t_item->getItemCount();
             if (count != items) {
-                t_vals->push(t_item, Core::ptrValue::create("Mismatch number of elements"));
+                t_vals->push(t_item, Core::ptrModelValue::create("Mismatch number of elements"));
                 break;
             }
 
             for (int i=0;i<count;i++) {
                 MmsValue *subMmsValue = (MmsValue *)MmsValue_getElement(t_mmsValue, i);
-                Core::ptrItem subItem = t_item->getItem(i);
+                Core::ptrModelItem subItem = t_item->getItem(i);
 
                 getValuesForItemByMmsValue(subItem, t_vals, subMmsValue);
             }
@@ -65,7 +65,7 @@ namespace
         }
         case MMS_BOOLEAN: {
             QString v = MmsValue_getBoolean(t_mmsValue) ? "True" : "False";
-            t_vals->push(t_item, Core::ptrValue::create(v));
+            t_vals->push(t_item, Core::ptrModelValue::create(v));
             break;
         }
         case MMS_BIT_STRING: {
@@ -78,22 +78,22 @@ namespace
             }
 
             QString v = QString::number((qulonglong)value, 2);
-            t_vals->push(t_item, Core::ptrValue::create(v));
+            t_vals->push(t_item, Core::ptrModelValue::create(v));
             break;
         }
         case MMS_INTEGER: {
             QString v = QString::number((long long)MmsValue_toInt64(t_mmsValue));
-            t_vals->push(t_item, Core::ptrValue::create(v));
+            t_vals->push(t_item, Core::ptrModelValue::create(v));
             break;
         }
         case MMS_UNSIGNED: {
             QString v = QString::number(MmsValue_toUint32(t_mmsValue));
-            t_vals->push(t_item, Core::ptrValue::create(v));
+            t_vals->push(t_item, Core::ptrModelValue::create(v));
             break;
         }
         case MMS_FLOAT: {
             QString v = QString::number(MmsValue_toFloat(t_mmsValue));
-            t_vals->push(t_item, Core::ptrValue::create(v));
+            t_vals->push(t_item, Core::ptrModelValue::create(v));
             break;
         }
         case MMS_OCTET_STRING: {
@@ -104,25 +104,25 @@ namespace
             for (int i=0;i<size;i++) {
                 tmp.push_back(QString::number(MmsValue_getOctetStringOctet(t_mmsValue, i), 16));
             }
-            t_vals->push(t_item, Core::ptrValue::create(tmp));
+            t_vals->push(t_item, Core::ptrModelValue::create(tmp));
             break;
         }
         case MMS_GENERALIZED_TIME: {
-            t_vals->push(t_item, Core::ptrValue::create("Unsupported"));
+            t_vals->push(t_item, Core::ptrModelValue::create("Unsupported"));
             break;
         }
         case MMS_BINARY_TIME: {
             uint64_t ms = MmsValue_getBinaryTimeAsUtcMs(t_mmsValue);
             QString v = convertTimestampMsToUserString(ms);
-            t_vals->push(t_item, Core::ptrValue::create(v));
+            t_vals->push(t_item, Core::ptrModelValue::create(v));
             break;
         }
         case MMS_BCD: {
-            t_vals->push(t_item, Core::ptrValue::create("? BCD"));
+            t_vals->push(t_item, Core::ptrModelValue::create("? BCD"));
             break;
         }
         case MMS_OBJ_ID: {
-            t_vals->push(t_item, Core::ptrValue::create("? OBJID"));
+            t_vals->push(t_item, Core::ptrModelValue::create("? OBJID"));
             break;
         }
         case MMS_STRING:
@@ -131,24 +131,24 @@ namespace
             strncpy(tmp, MmsValue_toString(t_mmsValue), 256);
             tmp[255] = 0;
             QString v = QString::fromLocal8Bit(tmp);
-            t_vals->push(t_item, Core::ptrValue::create(v));
+            t_vals->push(t_item, Core::ptrModelValue::create(v));
             break;
         }
         case MMS_UTC_TIME: {
             QString v = convertTimestampMsToUserString(MmsValue_getUtcTimeInMs(t_mmsValue));
-            t_vals->push(t_item, Core::ptrValue::create(v));
+            t_vals->push(t_item, Core::ptrModelValue::create(v));
             break;
         }
         default: {
             char tmp[1024] = { 0 };
             MmsValue_printToBuffer(t_mmsValue, tmp, 1024);
             QString v = QString::fromLocal8Bit(tmp);
-            t_vals->push(t_item, Core::ptrValue::create(v));
+            t_vals->push(t_item, Core::ptrModelValue::create(v));
         }
         }
     }
 
-    int 	getValuesForDataAttribute(Core::ptrItem t_item, Core::ptrValuesUpdater t_vals,
+    int 	getValuesForDataAttribute(Core::ptrModelItem t_item, Core::ptrModelValuesUpd t_vals,
                                       sIedConnection *t_con, FunctionalConstraint t_fc)
     {
         IedClientError retval = IED_ERROR_OK;
@@ -165,7 +165,7 @@ namespace
         return 0;
     }
 
-    int 	getValuesForDataObject(Core::ptrDO t_do, Core::ptrValuesUpdater t_vals,
+    int 	getValuesForDataObject(Core::ptrDO t_do, Core::ptrModelValuesUpd t_vals,
                                    sIedConnection *t_con)
     {
         if (t_do == nullptr || t_vals == nullptr || t_con == nullptr) {
@@ -184,49 +184,52 @@ namespace
 
 namespace Libiec61850
 {
-    Core::ptrValuesUpdater IED_StateAPI_Impl::getStatusForAllLD(Core::ptrDataModel t_model)
+    Core::ptrModelValuesUpd IED_StateAPI_Impl::getStatusForAllLD(Core::ptrDataModel t_model)
     {
         if (!m_api.isConnected()) {
 			return nullptr;
 		}
 
-        /*
-		auto vals = Core::ptrValuesUpdater::create();
-		if (t_ld->lln0()) {
-			getValuesForDataObject(t_ld->lln0()->getModItem(), vals, m_api.m_libConn);
-			getValuesForDataObject(t_ld->lln0()->getBehItem(), vals, m_api.m_libConn);
-			getValuesForDataObject(t_ld->lln0()->getHealthItem(), vals, m_api.m_libConn);
-		}
+		auto vals = Core::ptrModelValuesUpd::create();
+
+        for (size_t i=0;i<t_model->getItemCount();i++) {
+			auto ld = t_model->getItem< Core::LogicalDevice >(i);
+
+            if (ld->lln0()) {
+                getValuesForDataObject(ld->lln0()->getModItem(), vals, m_api.m_libConn);
+                getValuesForDataObject(ld->lln0()->getBehItem(), vals, m_api.m_libConn);
+                getValuesForDataObject(ld->lln0()->getHealthItem(), vals, m_api.m_libConn);
+            }
+        }
 		return vals;
-        */
-        return nullptr;
     }
 
-    Core::ptrValuesUpdater IED_StateAPI_Impl::getStatusForAllLN(Core::ptrLD t_ld)
+    Core::ptrModelValuesUpd IED_StateAPI_Impl::getStatusForAllLN(Core::ptrLD t_ld)
     {
         if (!m_api.isConnected()) {
 			return nullptr;
 		}
 
+        auto vals = Core::ptrModelValuesUpd::create();
 		for (size_t i=0;i<t_ld->getItemCount();i++) {
 			auto ln = t_ld->getItem< Core::LogicalNode >(i);
 
 			for (size_t j=0;j<ln->getItemCount();j++) {
-				// getValuesForDataObject(ln->getModItem(), m_libConn);
-				// getValuesForDataObject(ln->getBehItem(), m_libConn);
-				// getValuesForDataObject(ln->getHealthItem(), m_libConn);
+				getValuesForDataObject(ln->getModItem(), vals, m_api.m_libConn);
+				getValuesForDataObject(ln->getBehItem(), vals, m_api.m_libConn);
+				getValuesForDataObject(ln->getHealthItem(), vals, m_api.m_libConn);
 			}
 		}
-        return nullptr;
+        return vals;
     }
 
-    Core::ptrValuesUpdater IED_StateAPI_Impl::getValsForLN(Core::ptrLN t_ln)
+    Core::ptrModelValuesUpd IED_StateAPI_Impl::getValsForLN(Core::ptrLN t_ln)
     {
         if (!m_api.isConnected()) {
 			return nullptr;
 		}
 
-		auto vals = Core::ptrValuesUpdater::create();
+		auto vals = Core::ptrModelValuesUpd::create();
 		for (size_t i=0;i<t_ln->getItemCount();i++) {
 			auto item = t_ln->getItem< Core::DataObject >(i);
 
@@ -235,7 +238,7 @@ namespace Libiec61850
 		return vals;
     }
 
-    Core::ptrValuesUpdater IED_StateAPI_Impl::getValsForDS(Core::ptrDataSet t_ds)
+    Core::ptrModelValuesUpd IED_StateAPI_Impl::getValsForDS(Core::ptrDataSet t_ds)
     {
         if (!m_api.isConnected()) {
 			return nullptr;

@@ -58,11 +58,11 @@ namespace App::Models
 			return 0;
 		}
 
-		Core::Item *item = nullptr;
+		Core::ModelItem *item = nullptr;
 		if (!t_parent.isValid()) {
 			item = m_lnode.get();
 		} else {
-			item = static_cast<Core::Item*>(t_parent.internalPointer());
+			item = static_cast<Core::ModelItem*>(t_parent.internalPointer());
 		}
 
 		if (item != nullptr) {
@@ -82,11 +82,11 @@ namespace App::Models
 			return QModelIndex();
 		}
 
-		Core::Item *item = nullptr;
+		Core::ModelItem *item = nullptr;
 		if (!t_parent.isValid()) {
 			item = m_lnode.get();
 		} else {
-			item = static_cast<Core::Item*>(t_parent.internalPointer());
+			item = static_cast<Core::ModelItem*>(t_parent.internalPointer());
 		}
 
 		if (item != nullptr) {
@@ -104,8 +104,8 @@ namespace App::Models
 			return QModelIndex();
 		}
 
-		Core::Item *parent = nullptr;
-		Core::Item *item = static_cast<Core::Item*>(t_index.internalPointer());
+		Core::ModelItem *parent = nullptr;
+		Core::ModelItem *item = static_cast<Core::ModelItem*>(t_index.internalPointer());
 		if (item != nullptr) {
 			parent = item->getParent();
 		}
@@ -122,7 +122,7 @@ namespace App::Models
 			return QVariant();
 		}
 
-		Core::Item *item = static_cast<Core::Item*>(t_index.internalPointer());
+		Core::ModelItem *item = static_cast<Core::ModelItem*>(t_index.internalPointer());
 		if (item != nullptr) {
 			switch (t_index.column()) {
 			case NAME_COLUMN: {
@@ -143,7 +143,7 @@ namespace App::Models
 		return QVariant(" ? ");
 	}
 
-	void LN_SignalTree::slotDataUpdated(QSharedPointer<QList<Core::Item*>> t_nodes)
+	void LN_SignalTree::slotDataUpdated(QSharedPointer<QList<Core::ModelItem*>> t_nodes)
 	{
 		//qDebug() << "LN_SignalTree: slotDataUpdated";
 		// emit dataChanged(index(0, 0), index(rowCount() - 1, VALUE_COLUMN));

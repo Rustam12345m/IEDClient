@@ -22,31 +22,35 @@
 #pragma once
 
 #include "iedcon_container.hpp"
+#include "event_storage.hpp"
 
 // All known commands
-#include "connect_cmd.hpp"
-#include "update_lds_status_cmd.hpp"
-#include "update_lns_status_cmd.hpp"
-#include "update_ln_cmd.hpp"
-#include "update_rcbs_cmd.hpp"
-#include "update_dataset_cmd.hpp"
-#include "get_filelist_cmd.hpp"
-#include "download_file_cmd.hpp"
-#include "remove_file_cmd.hpp"
+#include "cmd/connect_cmd.hpp"
+#include "cmd/disconnect_cmd.hpp"
+#include "cmd/update_lds_status_cmd.hpp"
+#include "cmd/update_lns_status_cmd.hpp"
+#include "cmd/update_ln_cmd.hpp"
+#include "cmd/update_rcbs_cmd.hpp"
+#include "cmd/update_dataset_cmd.hpp"
+#include "cmd/get_filelist_cmd.hpp"
+#include "cmd/download_file_cmd.hpp"
+#include "cmd/remove_file_cmd.hpp"
 
 namespace App
 {
 	/*
 	 * Interface for all Backends
 	 * */
-	class BackendBase : public QObject
+	class BackendInterface : public QObject
 	{
 		Q_OBJECT
-
-		BackendBase() = delete;
 	public:
-		BackendBase(IEDConContainer &t_con) : m_con(t_con) {};
-		virtual ~BackendBase() {}
+		BackendInterface(IEDConContainer &t_con, EventStorage &t_ev)
+            : m_con(t_con), m_events(t_ev)
+        {
+        }
+		BackendInterface() = delete;
+		virtual ~BackendInterface() {}
 
 	protected:
 		void	putCmdToQueue(Cmd::ptrCMD t_cmd);
@@ -56,11 +60,14 @@ namespace App
 		void	sigCmdFinished(bool t_done);
 
 	public slots:
-		void			slotCmdProcess(int t_proc, QString t_msg);
-		void			slotCmdFinished(bool t_done);
+		void			slotCmdStart(Cmd::CmdEventInfo t_ev);
+		void			slotCmdProcess(Cmd::CmdEventInfo t_ev);
+		void			slotCmdFinished(Cmd::CmdEventInfo t_ev);
+
 		virtual void 	slotConnected(bool t_done);
 
 	protected:
 		IEDConContainer& 	m_con;
+        EventStorage&       m_events;
 	};
 }

@@ -60,7 +60,7 @@ namespace App::Models
 		QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
 	public slots:
-		void 	slotDataUpdated(QSharedPointer<QList<Core::Item*>> t_nodes);
+		void 	slotDataUpdated(QSharedPointer<QList<Core::ModelItem*>> t_nodes);
 		void 	slotLNSelected(int t_ld, int t_ln);
 
 	private:

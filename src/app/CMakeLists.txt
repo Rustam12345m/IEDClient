@@ -4,28 +4,28 @@ set(APP_SOURCES
 	config/config_adapter.cpp
 	config/conf_connection_info.hpp
 
-	app_helpers.hpp
-	app_helpers.cpp
-
-	app_status.hpp
-	app_status.cpp
+	app_utils.hpp
+	app_utils.cpp
 
 	app_settings.hpp
 	app_settings.cpp
 
 	iedcon_container.hpp
 
-	backend_base.hpp
-	backend_base.cpp
+    event_storage.hpp
+    event_storage.cpp
 
-	app_presenter.hpp
-	app_presenter.cpp
+	backend_interface.hpp
+	backend_interface.cpp
 
-	fs_presenter.hpp
-	fs_presenter.cpp
+	app_backend.hpp
+	app_backend.cpp
 
-	ied_presenter.hpp
-	ied_presenter.cpp
+	ied_fs_backend.hpp
+	ied_fs_backend.cpp
+
+	ied_backend.hpp
+	ied_backend.cpp
 
 	main_presenter.hpp
 	main_presenter.cpp

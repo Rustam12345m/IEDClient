@@ -19,4 +19,12 @@
  *  See COPYING file for the complete license text.
  * */
 
-#pragma once
+#include "disconnect_cmd.hpp"
+
+namespace Cmd
+{
+	void DisConnectCmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
+	{
+        t_api->disconnect();
+	}
+}

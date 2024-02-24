@@ -26,21 +26,19 @@ namespace Cmd
 	void GetFileList::execute(Cmd::Interface::ptrIEC61850_API t_api)
 	{
 		if (!t_api->isConnected()) {
-			emit sigFinished(false);
+            emit sigFinishedEvent(Cmd::CmdEventInfo::FinishEvent("IP?", "Connection is closed", true));
 			return;
 		}
 
-		emit sigProgress(0, "Send query to device: GetDirectory " + m_path);
+        emit sigProcessEvent(Cmd::CmdEventInfo::ProcessEvent("IP?", QString("Send query to IED: GetDirectory %1").arg(m_path), 50));
 
 		Core::DirOn dir(m_path);
 		int retval = t_api->fs().getFileList(dir);
 		if (retval == 0) {
 		}
 
-		emit sigProgress(80, "Save received information");
-
 		m_fsModel.put(dir);
 
-		emit sigFinished(true);
+        emit sigFinishedEvent(Cmd::CmdEventInfo::FinishEvent("IP?", "File list was received", true));
 	}
 }

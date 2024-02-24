@@ -8,8 +8,8 @@ set(SOURCES
     interface/iec61850_api.hpp
 
 	cmd_interface.hpp
+    cmd_event_msg.hpp
 	command_queue.hpp
-	lib_interface.hpp
 
 	cmd_thread.hpp
 	cmd_thread.cpp
@@ -17,6 +17,8 @@ set(SOURCES
 	ied_credentials.hpp
 	connect_cmd.hpp
 	connect_cmd.cpp
+	disconnect_cmd.hpp
+	disconnect_cmd.cpp
 
 	update_lds_status_cmd.hpp
 	update_lds_status_cmd.cpp

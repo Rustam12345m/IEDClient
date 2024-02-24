@@ -28,10 +28,10 @@ namespace Core
 	/*
 	 * Representation of a model available by MMS of an IED
 	 * */
-	class DataModel : public Item
+	class DataModel : public ModelItem
 	{
 	public:
-		DataModel(const QString &t_name) : Item(nullptr, t_name)
+		DataModel(const QString &t_name) : ModelItem(nullptr, t_name)
 		{
 			m_delimetr = ""; // There isn't a delimetr because it is a top node
 		}

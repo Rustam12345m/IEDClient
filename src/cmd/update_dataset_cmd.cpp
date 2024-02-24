@@ -26,14 +26,14 @@ namespace Cmd
 	void UpdateDataSet_Cmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
 	{
 		/*
-		ptrValuesUpdater vals = t_con.getValuesForLN(m_lnode);
+		ptrModelValuesUpd vals = t_con.getValuesForLN(m_lnode);
 		if (vals) {
-			connect(this, &Cmd::UpdateLNode_Cmd::sigNewValues,
+			connect(this, &Cmd::UpdateLNode_Cmd::sigNewModelValues,
 					m_lnode.get(), &Core::LogicalNode::slotUpdateValues,
 					Qt::QueuedConnection); // Qt::BlockingQueuedConnection
 
 			// Update process must to be finished in the GUI thread
-			emit sigNewValues(vals);
+			emit sigNewModelValues(vals);
 
 			emit sigFinished(true);
 		} else {

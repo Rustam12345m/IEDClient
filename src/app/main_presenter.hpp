@@ -24,12 +24,9 @@
 #include <QObject>
 #include <QQmlContext>
 
-#include "app/app_status.hpp"
-
-// other specific presenters for GUI
-#include "app/app_presenter.hpp"
-#include "app/fs_presenter.hpp"
-#include "app/ied_presenter.hpp"
+#include "app/app_backend.hpp"
+#include "app/ied_backend.hpp"
+#include "app/ied_fs_backend.hpp"
 
 namespace App
 {
@@ -43,7 +40,7 @@ namespace App
 		MainPresenter();
 		~MainPresenter() = default;
 
-		void 		setContextMembers(QQmlContext *t_context);
+		void 		setQmlContextMembers(QQmlContext *t_context);
 
 		Q_PROPERTY(bool isConnected READ isConnected NOTIFY sigConnected)
 		bool 		isConnected() {
@@ -57,13 +54,14 @@ namespace App
 		Q_INVOKABLE void 	toolDumpModel(const QVariantMap &t_data);
 
 	public slots:
-		void		slotCmdProgress(int t_proc, QString t_msg) {
-			emit sigCmdProgress(t_proc, t_msg);
+		void		slotCmdProcess(Cmd::CmdEventInfo t_ev) {
+			emit sigCmdProgress(t_ev.m_perc, t_ev.m_msg);
 		}
-		void		slotCmdFinished(bool t_done) {
-			emit sigCmdFinished(t_done);
+		void		slotCmdFinished(Cmd::CmdEventInfo t_ev) {
+			emit sigCmdFinished(t_ev.m_result);
 		}
-		void 		slotConnected(bool t_done);
+		void 		slotConnected(Cmd::CmdEventInfo t_ev);
+        void        slotConClosed();
 
 	signals:
 		void		sigCmdProgress(int t_perc, QString t_msg);
@@ -72,10 +70,11 @@ namespace App
 
 	protected:
 		IEDConContainer	m_con; // Complex component of IED's stub
+        EventStorage    m_events;
 
 		// Backends for QML
-		AppBackend  m_appBackend;
-		IEDBackend  m_iedBackend;
-		FS_Backend  m_fsBackend;
+		AppBackend      m_appBackend;
+		IED_Backend     m_iedBackend;
+		IED_FS_Backend  m_fsBackend;
 	};
 }

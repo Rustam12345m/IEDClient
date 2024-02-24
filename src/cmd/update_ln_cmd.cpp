@@ -20,20 +20,23 @@
  * */
 
 #include "update_ln_cmd.hpp"
-#include <QThread>
 
 namespace Cmd
 {
 	void UpdateLNode_Cmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
 	{
-		Core::ptrValuesUpdater vals = t_api->state().getValsForLN(m_lnode);
-		if (vals) {
-			// Update process must to be finished in the GUI thread
-			emit sigNewValues(vals);
+        Core::ptrModelValuesUpd vals = t_api->state().getValsForLN(m_lnode);
+        if (vals) {
+            // Update process must to be finished in the GUI thread
+            emit sigNewModelValues(vals);
 
-			emit sigFinished(true);
-		} else {
-			emit sigFinished(false);
-		}
+            emit sigFinishedEvent(CmdEventInfo::FinishEvent("IP?",
+                    QString("Values of %1 were received").arg(m_lnode->getName()),
+                    true));
+        } else {
+            emit sigFinishedEvent(CmdEventInfo::FinishEvent("IP?",
+                    QString("Can't get value of %1").arg(m_lnode->getName()),
+                    false));
+        }
 	}
 }

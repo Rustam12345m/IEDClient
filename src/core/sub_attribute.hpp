@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include "item.hpp"
+#include "model_item.hpp"
 
 namespace Core
 {
@@ -35,11 +35,11 @@ namespace Core
 	 * DO: SPCSO1, AnIn1
 	 * LN: GGIO1
 	 * */
-	class SubAttribute: public Item
+	class SubAttribute: public ModelItem
 	{
 	public:
-		SubAttribute(Item *t_parent, const QString &t_name)
-			: Item(t_parent, t_name)
+		SubAttribute(ModelItem *t_parent, const QString &t_name)
+			: ModelItem(t_parent, t_name)
 		{
 			m_delimetr = "."; // Between DAName and SAName
 		}

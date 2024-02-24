@@ -19,4 +19,27 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "app_status.hpp"
+#pragma once
+
+#include "cmd_interface.hpp"
+#include "core/ied.hpp"
+#include "cmd/ied_credentials.hpp"
+
+namespace Cmd
+{
+	class DisConnectCmd : public CmdInterface
+	{
+	public:
+		DisConnectCmd(Core::ptrIED t_ied) {}
+		~DisConnectCmd() {}
+
+		void	execute(Cmd::Interface::ptrIEC61850_API t_api) override;
+
+		static auto create(Core::ptrIED t_ied) {
+			return QSharedPointer<DisConnectCmd>::create(t_ied);
+		}
+
+	private:
+		Core::ptrIED    m_ied;
+	};
+}

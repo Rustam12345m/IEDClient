@@ -38,11 +38,12 @@ namespace Core
 	 * Representation of Logical Node
 	 * As a QObject this Item should live in GUI's thread
 	 * */
-	class LogicalNode : public QObject, public Item
+	class LogicalNode : public QObject, public ModelItem
 	{
 		Q_OBJECT
 	public:
-		LogicalNode(Item *t_parent, const QString &t_name) : QObject(nullptr), Item(t_parent, t_name)
+		LogicalNode(ModelItem *t_parent, const QString &t_name)
+            : QObject(nullptr), ModelItem(t_parent, t_name)
 		{
 			m_delimetr = "/"; // Between LDName and LNName
 		}
@@ -51,7 +52,7 @@ namespace Core
 		ptrDO	getBehItem() const { return m_beh; }
 		ptrDO	getHealthItem() const { return m_health; }
 
-		void	addSubItem(QSharedPointer< Item > t_child) override {
+		void	addSubItem(QSharedPointer< ModelItem > t_child) override {
 			if (t_child->getName() == "Mod") {
 				m_mod = t_child.dynamicCast<DataObject>();
 			} else if (t_child->getName() == "Beh") {
@@ -59,7 +60,7 @@ namespace Core
 			} else if (t_child->getName() == "Health") {
 				m_health = t_child.dynamicCast<DataObject>();
 			}
-			Item::addSubItem(t_child);
+			ModelItem::addSubItem(t_child);
 		}
 		void 	addSubItem(QSharedPointer< DataSet > t_ds) {
 			m_dataSets.push_back(t_ds);
@@ -85,10 +86,10 @@ namespace Core
 		}
 
 	signals:
-		void 	sigDataObjectUpdated(QSharedPointer<QList<Item*>> t_nodes);
+		void 	sigDataObjectUpdated(QSharedPointer<QList<ModelItem*>> t_nodes);
 
 	protected:
-	 	void 	notifyFromChild(QSharedPointer<QList<Item*>> t_nodes) override;
+	 	void 	notifyFromChild(QSharedPointer<QList<ModelItem*>> t_nodes) override;
 
 	protected:
 		QSharedPointer<DataObject>		m_mod;

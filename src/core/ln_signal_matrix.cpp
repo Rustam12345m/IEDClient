@@ -38,13 +38,13 @@ namespace Core
 	}
 
 	void LN_SignalMatrixBuilder::recursiveFillMatrix(QSharedPointer<LN_SignalMatrix> t_matrix,
-												 	QSharedPointer<Item> t_root,
-												 	QSharedPointer<Item> t_item,
+												 	QSharedPointer<ModelItem> t_root,
+												 	QSharedPointer<ModelItem> t_item,
 												 	SignalMatrixRow t_rowPrototype)
 	{
 		// Find Q, TS, Desc elements
 		for (size_t i=0;i<t_item->getItemCount();i++) {
-			ptrItem child = t_item->getItem(i);
+			ptrModelItem child = t_item->getItem(i);
 			if (child->getName() == "q") {
 				t_rowPrototype.m_quality = child;
 				continue;
@@ -64,7 +64,7 @@ namespace Core
 
 		// Create signals
 		for (size_t i=0;i<t_item->getItemCount();i++) {
-			ptrItem child = t_item->getItem(i);
+			ptrModelItem child = t_item->getItem(i);
 
 			ptrDA da = child.dynamicCast<Core::DataAttribute>();
 			if (da) {

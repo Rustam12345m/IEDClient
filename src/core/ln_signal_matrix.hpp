@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include "item.hpp"
+#include "model_item.hpp"
 
 namespace Core
 {
@@ -36,11 +36,11 @@ namespace Core
 	{
 	public:
 		SignalMatrixRow() = default;
-		SignalMatrixRow(const QString &t_path, const QString &t_fc, ptrItem t_v, ptrItem t_q, ptrItem t_ts, ptrItem t_desc)
+		SignalMatrixRow(const QString &t_path, const QString &t_fc, ptrModelItem t_v, ptrModelItem t_q, ptrModelItem t_ts, ptrModelItem t_desc)
 			: m_path{t_path}, m_fc{t_fc}, m_value(t_v), m_quality(t_q), m_timestamp(t_ts), m_desc(t_desc)
 		{}
 
-		ptrItem 	base() const { return m_dataObject; }
+		ptrModelItem 	base() const { return m_dataObject; }
 		QString 	name() const { return m_path; }
 		QString 	fc() const { return m_fc; }
 		QString 	value() const {
@@ -69,13 +69,13 @@ namespace Core
 		}
 
 	private:
-		ptrItem 	m_dataObject;
+		ptrModelItem 	m_dataObject;
 		QString 	m_path;
 		QString 	m_fc; // Functional constraint of the Value
-		ptrItem		m_value;
-		ptrItem		m_quality;
-		ptrItem		m_timestamp;
-		ptrItem		m_desc;
+		ptrModelItem		m_value;
+		ptrModelItem		m_quality;
+		ptrModelItem		m_timestamp;
+		ptrModelItem		m_desc;
 
 		friend class LN_SignalMatrixBuilder;
 	};
@@ -166,8 +166,8 @@ namespace Core
 
 	private:
 		static void recursiveFillMatrix(QSharedPointer<LN_SignalMatrix> t_table,
-									  	QSharedPointer<Item> t_root,
-									  	QSharedPointer<Item> t_item,
+									  	QSharedPointer<ModelItem> t_root,
+									  	QSharedPointer<ModelItem> t_item,
 									  	SignalMatrixRow t_prototype);
 	};
 }

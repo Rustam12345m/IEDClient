@@ -43,6 +43,9 @@ namespace Cmd
 		static auto create(Core::ptrIED t_ied) {
 			return QSharedPointer<UpdateLDs_StatusCmd>::create(t_ied);
 		}
+    
+    signals:
+		void 	sigNewModelValues(Core::ptrModelValuesUpd t_vals);
 
 	private slots:
 		void 	slotMsgProgress(const QString &t_msg);

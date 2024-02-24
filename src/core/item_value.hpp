@@ -26,30 +26,27 @@
 
 namespace Core
 {
-	/*
-	 * 
-	 * */
-	class ItemValue
+	class ModelItemValue
 	{
 	public:
-		ItemValue() {}
-		ItemValue(const QString &t_value) : m_value(t_value) {}
+		ModelItemValue() {}
+		ModelItemValue(const QString &t_value) : m_value(t_value) {}
 
 		QString 	str() {
 			return m_value;
 		}
 
-		bool operator==(const ItemValue &t_other) {
+		bool operator==(const ModelItemValue &t_other) {
 			return (m_value == t_other.m_value);
 		}
 
 		static auto		create(const QString &t_value) {
-			return QSharedPointer<ItemValue>::create(t_value);
+			return QSharedPointer<ModelItemValue>::create(t_value);
 		}
 
 	private:
 		QString 	m_value;
 	};
 
-	typedef QSharedPointer<ItemValue> 	ptrValue;
+	typedef QSharedPointer<ModelItemValue> 	ptrModelValue;
 }

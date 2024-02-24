@@ -61,7 +61,7 @@ namespace Core
 		return *this;
 	}
 
-	DataModelBuilder& DataModelBuilder::createSDA(QSharedPointer<Item> t_parent, const QString &t_name)
+	DataModelBuilder& DataModelBuilder::createSDA(QSharedPointer<ModelItem> t_parent, const QString &t_name)
 	{
 		m_lastSDA = QSharedPointer<SubAttribute>::create(t_parent.get(), t_name);
 		t_parent->addSubItem(m_lastSDA);

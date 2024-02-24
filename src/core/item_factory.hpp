@@ -24,7 +24,7 @@
 
 namespace Core
 {
-	class Item; // forward
+	class ModelItem; // forward
 
 	/*
 	 * Factory for all classes inherit from Item
@@ -33,22 +33,22 @@ namespace Core
 	{
 	public:
 		// Object Tree <- base node for IED Data Object model
-		static QSharedPointer<Item>	createModel(const QString &t_name);
+		static QSharedPointer<ModelItem>	createModel(const QString &t_name);
 
 		// Logical Device
-		static QSharedPointer<Item>	createLD(Item *t_parent, const QString &t_name);
+		static QSharedPointer<ModelItem>	createLD(ModelItem *t_parent, const QString &t_name);
 
 		// Logical Node
-		static QSharedPointer<Item>	createLN(Item *t_parent, const QString &t_name);
+		static QSharedPointer<ModelItem>	createLN(ModelItem *t_parent, const QString &t_name);
 
 		// Data Object
-		static QSharedPointer<Item>	createDO(Item *t_parent, const QString &t_name);
+		static QSharedPointer<ModelItem>	createDO(ModelItem *t_parent, const QString &t_name);
 
 		// Data Attribute
-		static QSharedPointer<Item>	createDA(Item *t_parent, const QString &t_name,
+		static QSharedPointer<ModelItem>	createDA(ModelItem *t_parent, const QString &t_name,
 					  						const QString &t_fc, int t_fcNum);
 
 		// Sub Attribute
-		static QSharedPointer<Item>	createSA(Item *t_parent, const QString &t_name);
+		static QSharedPointer<ModelItem>	createSA(ModelItem *t_parent, const QString &t_name);
 	};
 }

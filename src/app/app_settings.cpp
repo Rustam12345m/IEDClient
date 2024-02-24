@@ -20,7 +20,7 @@
  * */
 
 #include "app_settings.hpp"
-#include "app_helpers.hpp"
+#include "app_utils.hpp"
 
 #include <QFile>
 #include <QXmlStreamReader>

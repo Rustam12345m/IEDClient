@@ -25,8 +25,9 @@
 
 namespace Cmd::Interface
 {
-	class IED_FS_API
+	class IED_FS_API : public QObject
 	{
+        Q_OBJECT
 	public:
 		virtual ~IED_FS_API() {}
 

@@ -28,11 +28,12 @@ namespace Core
 	/*
 	 * Representation a Logical Device of an IED
 	 * */
-	class LogicalDevice : public QObject, public Item
+	class LogicalDevice : public QObject, public ModelItem
 	{
 		Q_OBJECT
 	public:
-		LogicalDevice(Item *t_parent, const QString &t_name) : QObject(nullptr), Item(t_parent, t_name)
+		LogicalDevice(ModelItem *t_parent, const QString &t_name) 
+            : QObject(nullptr), ModelItem(t_parent, t_name)
 		{
 			m_delimetr = ""; // There isn't a delimetr between IEDName and LDName
 		}
@@ -40,7 +41,7 @@ namespace Core
 		ptrLN 		lln0() const { return m_lln0; }
 		ptrLN 		lphd1() const { return m_lphd1; }
 
-		void		addSubItem(QSharedPointer< Item > t_node) override {
+		void		addSubItem(QSharedPointer< ModelItem > t_node) override {
 			QString name = t_node->getName();
 			if (name.contains("LLN0")) {
 				m_lln0 = t_node.dynamicCast<LogicalNode>();
@@ -49,7 +50,7 @@ namespace Core
 				m_lphd1 = t_node.dynamicCast<LogicalNode>();
 			}
 
-			Item::addSubItem(t_node);
+			ModelItem::addSubItem(t_node);
 		}
 
 		void 		setName(const QString &t_name) {

@@ -27,7 +27,7 @@ namespace Core
 {
 	namespace
 	{
-		void 	printTree(QString t_prefix, QSharedPointer<Item> t_item)
+		void 	printTree(QString t_prefix, QSharedPointer<ModelItem> t_item)
 		{
 			auto &nodeList = t_item->getItemList();
 			for (auto node : nodeList) {

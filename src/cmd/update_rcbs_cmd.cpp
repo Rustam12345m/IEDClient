@@ -26,6 +26,5 @@ namespace Cmd
 {
 	void UpdateRCBs_Cmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
 	{
-		emit sigFinished(false);
 	}
 }

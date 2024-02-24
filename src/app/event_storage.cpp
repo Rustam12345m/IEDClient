@@ -19,29 +19,27 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "backend_base.hpp"
+#include "event_storage.hpp"
+
+#include <QDebug>
 
 namespace App
 {
-	void BackendBase::putCmdToQueue(Cmd::ptrCMD t_cmd)
-	{
-		connect(t_cmd.get(), &Cmd::CmdInterface::sigProgress, this, &BackendBase::slotCmdProcess);
-		connect(t_cmd.get(), &Cmd::CmdInterface::sigFinished, this, &BackendBase::slotCmdFinished);
+    QString EventStorage::getLastMessage()
+    {
+        QString retval;
+        m_lock.lock();
+        retval = m_message;
+        m_lock.unlock();
+        return retval;
+    }
 
-		m_con.m_cmdThread->putCommand(t_cmd);
-	}
+    void EventStorage::slotEventToLog(Cmd::CmdEventInfo t_event)
+    {
+        m_lock.lock();
+        m_message = t_event.m_msg;
+        m_lock.unlock();
 
-	void BackendBase::slotCmdProcess(int t_proc, QString t_msg)
-	{
-		emit sigCmdProgress(t_proc, t_msg);
-	}
-
-	void BackendBase::slotCmdFinished(bool t_done)
-	{
-		emit sigCmdFinished(t_done);
-	}
-
-	void BackendBase::slotConnected(bool t_done)
-	{
-	}
+        emit sigNewLogEvent();
+    }
 }

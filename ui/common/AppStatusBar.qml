@@ -33,7 +33,7 @@ Rectangle
 	color: ColorPalette.statusBarColor
 	clip: true
 
-	property alias mainStatusText: mainStatusTextID.text
+	property alias msgStatusText: msgStatusTextID.text
 	property alias pageStatusText: pageStatusTextID.text
 	property alias connStatusText: conStatusTextID.text
 
@@ -50,13 +50,19 @@ Rectangle
 			Layout.fillWidth: true
 			Layout.alignment: Qt.AlignVCenter
 
-			id: mainStatusTextID
+			id: msgStatusTextID
 			height: parent.height
 
-			horizontalAlignment: Text.AlignHCenter //Left
+			horizontalAlignment: Text.AlignHLeft // Center
 			verticalAlignment: Text.AlignVCenter
 
-			text: "Main text status"
+			text: ""
+
+            onTextChanged: {
+                if (msgStatusTextID.text != "") {
+                    timerStatusMsgID.restart()
+                }
+            }
 		}
 		Rectangle {
 			Layout.alignment: Qt.AlignVCenter
@@ -78,7 +84,7 @@ Rectangle
 
 			font.bold: false
 			color: ColorPalette.textColor
-			text: "Page status text"
+			text: ""
 		}
 		Rectangle {
 			Layout.alignment: Qt.AlignVCenter
@@ -114,11 +120,12 @@ Rectangle
 	Timer {
 		id: timerStatusMsgID
 
-		interval: 3000
+		interval: 5000
 		running: false
 		repeat: false
 
 		onTriggered: {
+            msgStatusTextID.text = "";
 		}
 	}
 }

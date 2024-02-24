@@ -375,7 +375,7 @@ ApplicationWindow
 								if (visible) {
 									focus = true
 
-									setStatusText(appBackend.getAppVersion())
+									setPageStatusText(appBackend.getAppVersion())
 									setActivePanel(Globals.Panel.HIDE)
 								} else {
 									focus = false
@@ -399,7 +399,7 @@ ApplicationWindow
 									focus = true
 
 									setActivePanel(Globals.Panel.LD_INFO)
-									setStatusText(iedBackend.ldsPageStatus())
+									setPageStatusText(iedBackend.ldsPageStatus())
 								} else {
 									focus = false
 								}
@@ -417,7 +417,7 @@ ApplicationWindow
 									focus = true
 
 									setActivePanel(Globals.Panel.HIDE)
-									setStatusText(iedBackend.lnsPageStatus())
+									setPageStatusText(iedBackend.lnsPageStatus())
 								} else {
 									focus = false
 								}
@@ -432,7 +432,7 @@ ApplicationWindow
 									focus = true
 
 									setActivePanel(Globals.Panel.HIDE)
-									setStatusText(iedBackend.dsPageStatus())
+									setPageStatusText(iedBackend.dsPageStatus())
 								} else {
 									focus = false
 								}
@@ -446,7 +446,7 @@ ApplicationWindow
 								if (visible) {
 									focus = true
 									setActivePanel(Globals.Panel.RCB_PROPERTIES)
-									setStatusText(iedBackend.rcbPageStatus())
+									setPageStatusText(iedBackend.rcbPageStatus())
 								} else {
 									focus = false
 								}
@@ -463,7 +463,7 @@ ApplicationWindow
 									fsBackend.updateFilesDirectory("/")
 									setActivePanel(Globals.Panel.HIDE)
 
-									setStatusText(fsBackend.fsPageStatus())
+									setPageStatusText(fsBackend.fsPageStatus())
 								} else {
 									focus = false
 								}
@@ -645,7 +645,7 @@ ApplicationWindow
 			}
 		}
 	}
-	function setStatusText(msg) {
+	function setPageStatusText(msg) {
 		statusBarID.pageStatusText = msg
 	}
 	function resizeColumnsOnPage() {
@@ -683,28 +683,28 @@ ApplicationWindow
 		}
 		case Globals.Page.LD: {
 			iedBackend.updateLDs_Status()
-			setStatusText(iedBackend.ldsPageStatus())
+			setPageStatusText(iedBackend.ldsPageStatus())
 			break;
 		}
 		case Globals.Page.LN: {
 			iedBackend.updateLNs_Status()
 			iedBackend.updateLN_TreeValues()
-			setStatusText(iedBackend.lnsPageStatus())
+			setPageStatusText(iedBackend.lnsPageStatus())
 			break;
 		}
 		case Globals.Page.FS: {
 			fsBackend.updateFilesDirectory("/")
-			setStatusText(fsBackend.fsPageStatus())
+			setPageStatusText(fsBackend.fsPageStatus())
 			break;
 		}
 		case Globals.Page.DS: {
 			iedBackend.updateDS_Values()
-			setStatusText(iedBackend.dsPageStatus())
+			setPageStatusText(iedBackend.dsPageStatus())
 			break;
 		}
 		case Globals.Page.RCB: {
 			iedBackend.updateRCBs_Status()
-			setStatusText(iedBackend.rcbPageStatus())
+			setPageStatusText(iedBackend.rcbPageStatus())
 			break;
 		}
 		}
@@ -728,12 +728,16 @@ ApplicationWindow
 			timerModalWindow.running = true
 		}
 	}
+    function slotStatusMessage() {
+        statusBarID.msgStatusText = appBackend.getLastStatusMsg()
+    }
 
 	Component.onCompleted: function() {
 		// App
 		presenter.sigConnected.connect(slotOnConnected)
 		presenter.sigCmdProgress.connect(slotOnProgress)
 		presenter.sigCmdFinished.connect(slotOnFinished)
+        appBackend.sigNewStatusMsg.connect(slotStatusMessage)
 
 		// Backends to GUI
 		iedBackend.sigCmdProgress.connect(slotOnProgress)
@@ -743,7 +747,7 @@ ApplicationWindow
 		fsBackend.sigCmdFinished.connect(slotOnFinished)
 
 		// Start status
-		setStatusText(appBackend.getAppVersion())
+		setPageStatusText(appBackend.getAppVersion())
 		setActivePanel(Globals.Panel.HIDE)
 	}
 

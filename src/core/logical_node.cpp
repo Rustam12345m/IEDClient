@@ -23,7 +23,7 @@
 
 namespace Core
 {
-	void LogicalNode::notifyFromChild(QSharedPointer<QList<Item*>> t_nodes)
+	void LogicalNode::notifyFromChild(QSharedPointer<QList<ModelItem*>> t_nodes)
 	{
 		emit sigDataObjectUpdated(t_nodes);
 		// Item::notifyFromChild(t_nodes);

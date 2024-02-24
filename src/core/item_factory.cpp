@@ -32,33 +32,33 @@
 
 namespace Core
 {
-	QSharedPointer<Item> ItemFactory::createModel(const QString &t_name)
+	QSharedPointer<ModelItem> ItemFactory::createModel(const QString &t_name)
 	{
 		return QSharedPointer<DataModel>::create(t_name);
 	}
 
-	QSharedPointer<Item> ItemFactory::createLD(Item *t_parent, const QString &t_name)
+	QSharedPointer<ModelItem> ItemFactory::createLD(ModelItem *t_parent, const QString &t_name)
 	{
 		return QSharedPointer<LogicalDevice>::create(t_parent, t_name);
 	}
 
-	QSharedPointer<Item> ItemFactory::createLN(Item *t_parent, const QString &t_name)
+	QSharedPointer<ModelItem> ItemFactory::createLN(ModelItem *t_parent, const QString &t_name)
 	{
 		return QSharedPointer<LogicalNode>::create(t_parent, t_name);
 	}
 
-	QSharedPointer<Item> ItemFactory::createDO(Item *t_parent, const QString &t_name)
+	QSharedPointer<ModelItem> ItemFactory::createDO(ModelItem *t_parent, const QString &t_name)
 	{
 		return QSharedPointer<DataObject>::create(t_parent, t_name);
 	}
 
-	QSharedPointer<Item> ItemFactory::createDA(Item *t_parent, const QString &t_name,
+	QSharedPointer<ModelItem> ItemFactory::createDA(ModelItem *t_parent, const QString &t_name,
 												const QString &t_fc, int t_fcNum)
 	{
 		return QSharedPointer<DataAttribute>::create(t_parent, t_name, t_fc, t_fcNum);
 	}
 
-	QSharedPointer<Item> ItemFactory::createSA(Item *t_parent, const QString &t_name)
+	QSharedPointer<ModelItem> ItemFactory::createSA(ModelItem *t_parent, const QString &t_name)
 	{
 		return QSharedPointer<SubAttribute>::create(t_parent, t_name);
 	}

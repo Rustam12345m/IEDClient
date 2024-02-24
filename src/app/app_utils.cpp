@@ -19,38 +19,15 @@
  *  See COPYING file for the complete license text.
  * */
 
-#pragma once
+#include "app_utils.hpp"
 
-#include "item.hpp"
+#include <QDateTime>
 
-namespace Core
+namespace App
 {
-	/*
-	 * This class holds pointers to current Items and new values for them.
-	 * To prevent race conditions, the values of Item must be updated in the GUI thread.
-	 * */
-	class ItemValuesUpdater
+	QString GetCurrentDateTime()
 	{
-	public:
-		ItemValuesUpdater() {}
-
-		void 	push(ptrItem t_item, ptrValue t_value) {
-			m_values.emplace_back(t_item, t_value);
-		}
-
-		auto 	update() {
-			QList<ptrItem> result; // updated items (new value)
-			for (const auto&[item, value] : m_values) {
-				if (item->updateValue(value)) {
-					result.push_back(item);
-				}
-			}
-			m_values.clear();
-			return result;
-		}
-
-	private:
-		QList< QPair<ptrItem, ptrValue> > 	m_values;
-	};
-	typedef QSharedPointer< ItemValuesUpdater >	ptrValuesUpdater;
+		QDateTime current = QDateTime::currentDateTime();
+		return current.toString("dd.MM.yyyy HH:mm:ss"); // Custom format: "2023-12-31 23:59:59"
+	}
 }
