@@ -19,20 +19,8 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "update_lns_status_cmd.hpp"
-#include <QDebug>
+#include <gtest/gtest.h>
 
-namespace Cmd
+namespace AppConfigTests
 {
-	void UpdateLNs_StatusCmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
-	{
-        Core::ptrModelStateUpd vals = t_api->state().getStatusForAllLN(m_ld);
-        if (vals) {
-            emit sigModelValues(vals);
-
-            emit sigCmdEvent(Cmd::CmdEvent::FinishEvent("", "All status of LNs were updated", true));
-        } else {
-            emit sigCmdEvent(Cmd::CmdEvent::FinishEvent("", "Can't get status for LNs", false));
-        }
-	}
 }

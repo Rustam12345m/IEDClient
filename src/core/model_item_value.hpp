@@ -19,28 +19,33 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include <gtest/gtest.h>
-#include "core/data_model.hpp"
+#pragma once
 
-namespace TestsCMD
+#include <QString>
+#include <QSharedPointer>
+
+namespace Core
 {
-	class ModelTest : public ::testing::Test
+	class ModelItemValue
 	{
-	protected:
-		ModelTest() {
-		}
-		~ModelTest() override {
+	public:
+		ModelItemValue() {}
+		ModelItemValue(const QString &t_value) : m_value(t_value) {}
+
+		QString 	str() {
+			return m_value;
 		}
 
-		void SetUp() override {
+		bool operator==(const ModelItemValue &t_other) {
+			return (m_value == t_other.m_value);
 		}
-		void TearDown() override {
+
+		static auto	create(const QString &t_value) {
+			return QSharedPointer<ModelItemValue>::create(t_value);
 		}
+
+	private:
+		QString 	m_value;
 	};
-
-	TEST_F(ModelTest, SubTest1) {
-	}
-
-	TEST_F(ModelTest, SubTest2) {
-	}
+	typedef QSharedPointer<ModelItemValue> 	ptrModelValue;
 }

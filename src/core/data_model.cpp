@@ -38,7 +38,7 @@ namespace Core
 		}
 	}
 
-	void DataModel::calcIEDNameFromLD()
+	void DataModel::resolveIEDName()
 	{
 		if (m_items.isEmpty()) {
 			m_name = "Undefined";
@@ -74,8 +74,13 @@ namespace Core
 		for (size_t i=0;i<m_items.size();i++) {
 			ptrLD ld = getLogicalDevice(i);
 			QString name = ld->getName();
-			ld->setName(name.right(name.size() - m_name.size()));
+            ld->m_name = name.right(name.size() - m_name.size());
 		}
+	}
+
+	ptrLD DataModel::getLogicalDevice(int t_ld)
+	{
+		return getItem<Core::LogicalDevice>(t_ld);
 	}
 
 	ptrLN DataModel::getLogicalNode(int t_ld, int t_ln)
@@ -87,12 +92,31 @@ namespace Core
 		return nullptr;
 	}
 
-	ptrLD DataModel::getLogicalDevice(int t_ld)
-	{
-		return getItem<Core::LogicalDevice>(t_ld);
-	}
+    ptrModelItem DataModel::getItemByReference(const QString &t_ref)
+    {
+        // MMS_REF: "HugeModelIEDMain/GGIO1.Mod[CO]"
+        // MMS_REF: "HugeModelIEDMain/GGIO1.Mod.stVal[ST]"
+        int inx = t_ref.indexOf('/'), nextInx = -1;
+        if (inx == -1) {
+            return nullptr;
+        }
+        QString ldName = t_ref.mid(m_name.size(), inx - m_name.size());
+        inx++;
 
-	void DataModel::print()
+        QStringList names;
+        while ((nextInx = t_ref.indexOf('.', inx)) != -1) {
+            names.push_back(t_ref.mid(inx, nextInx - inx));
+            inx = nextInx + 1;
+        }
+        if (inx < t_ref.size()) {
+            names.push_back(t_ref.mid(inx, t_ref.size() - inx));
+        }
+
+        // qDebug() << "GetItemByRef: ref = " << t_ref << ", ldName = " << ldName << ", nameList = " << names;
+        return recFindModelItem(names, 0, findSubItem(ldName));
+    }
+
+    void DataModel::print()
 	{
 		qDebug() << "IED: " << m_name;
 
@@ -122,4 +146,16 @@ namespace Core
 	{
 		m_svcb.push_back(t_cb);
 	}
+
+    ptrModelItem DataModel::recFindModelItem(QStringList &t_names, int t_inx, ptrModelItem t_item)
+    {
+        if (t_item == nullptr) {
+            return nullptr;
+        }
+        if (t_inx == (t_names.size() - 1)) {
+            // End
+            return t_item->findSubItem(t_names[t_inx]);
+        }
+        return recFindModelItem(t_names, t_inx + 1, t_item->findSubItem(t_names[t_inx]));
+    }
 }

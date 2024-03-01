@@ -20,9 +20,18 @@
  * */
 
 #include "ln_overview_table.hpp"
+#include "iec61850_enums.hpp"
 
 namespace App::Models
 {
+    namespace
+    {
+        inline int getInt(Core::ptrModelItem t_item)
+        {
+            return t_item ? t_item->getValue().toInt() : -1;
+        }
+    }
+
 	LN_OverviewTable::LN_OverviewTable(QObject *t_parent, Core::ptrIED t_ied)
 		: QAbstractTableModel(t_parent), m_ied(t_ied)
 	{
@@ -49,7 +58,7 @@ namespace App::Models
 		case Qt::Horizontal: {
 			const char* labels[] = { "Name", "Mode", "Beh", "Health" };
 
-			return QVariant(labels[t_section % ColumnsCount]);
+			return QVariant(labels[t_section % COLUMN_COUNT]);
 		}
 		case Qt::Vertical: {
 			break;
@@ -73,7 +82,7 @@ namespace App::Models
 
 	int LN_OverviewTable::columnCount(const QModelIndex &t_parent) const
 	{
-		return ColumnsCount;
+		return COLUMN_COUNT;
 	}
 
 	QVariant LN_OverviewTable::data(const QModelIndex &t_index, int t_role) const
@@ -81,37 +90,42 @@ namespace App::Models
 		auto ln = m_ldev->getItem<Core::LogicalNode>(t_index.row());
 		if (ln) {
 			switch (t_index.column()) {
-			case NameColumn: {
+			case NAME_COLUMN: {
 				return QVariant(ln->getName());
 			}
-			case ModeColumn: {
-				// return QVariant("M");
-				return 1;
+			case MOD_COLUMN: {
+                return IEC_EnumUserInfo::mod(getInt(ln->getModItem()));
 			}
-			case BehColumn: {
-				// return QVariant("B");
-				return 2;
+			case BEH_COLUMN: {
+                return IEC_EnumUserInfo::beh(getInt(ln->getBehItem()));
 			}
-			case HealthColumn: {
-				// return QVariant("H");
-				return 3;
+			case HEALTH_COLUMN: {
+                return IEC_EnumUserInfo::health(getInt(ln->getHealthItem()));
 			}
 			}
 		}
 		return QVariant(" ? ");
 	}
 
-	void LN_OverviewTable::slotDataUpdated(bool t_status)
-	{
-		emit dataChanged(index(0, ModeColumn), index(rowCount() - 1, HealthColumn));
-	}
+    void LN_OverviewTable::slotDataUpdated(QSharedPointer<QList<Core::ModelItem*>> t_nodes)
+    {
+		emit dataChanged(index(0, MOD_COLUMN), index(rowCount() - 1, HEALTH_COLUMN));
+    }
 
 	void LN_OverviewTable::slotLDSelected(int t_ld)
 	{
 		if (m_ldevIndex != t_ld) {
+			if (m_ldev) {
+				disconnect(m_updConnection);
+			}
+
 			beginResetModel();
 			m_ldevIndex = t_ld;
 			m_ldev = m_ied->model().getLogicalDevice(m_ldevIndex);
+            if (m_ldev) {
+				m_updConnection = connect(m_ldev.get(), &Core::LogicalDevice::sigDataObjectUpdated,
+										  this, &LN_OverviewTable::slotDataUpdated);
+			}
 			endResetModel();
 		}
 	}

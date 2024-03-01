@@ -45,7 +45,7 @@ namespace Cmd
 		}
     
     signals:
-		void 	sigNewModelValues(Core::ptrModelValuesUpd t_vals);
+		void 	sigModelValues(Core::ptrModelStateUpd t_vals);
 
 	private slots:
 		void 	slotMsgProgress(const QString &t_msg);

@@ -102,7 +102,7 @@ FocusScope
 							id: textName
 							anchors.fill: parent
 
-							horizontalAlignment: Text.AlignHCenter
+							horizontalAlignment: Text.AlignLeft //HCenter
 							verticalAlignment: Text.AlignVCenter
 
 							elide: Text.ElideRight

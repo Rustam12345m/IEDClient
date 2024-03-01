@@ -54,6 +54,8 @@ FocusScope
 			left: parent.left
 			right: parent.right
 		}
+
+        resizableColumns: false
 	}
 
 	// Table of DO for a selected DS
@@ -81,12 +83,15 @@ FocusScope
 			// onCurrentChanged: {
 			// }
 		}
+        columnWidthProvider: function(t_column) {
+			return Globals.columnWidthCalculator(headerID, tableID, t_column)
+		}
 
 		delegate: TextDelegate {
 			delegateHeight: defDelegateHeight
 			selected: (tableID.currentRow == row)
 
-			textAlign: Text.AlignHCenter
+			textAlign: (column == 0) ? Text.AlignLeft : Text.AlignHCenter
 			text: model.display
 
 			onSigClick: function(row, col) {

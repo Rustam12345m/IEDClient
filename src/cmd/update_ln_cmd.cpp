@@ -25,16 +25,16 @@ namespace Cmd
 {
 	void UpdateLNode_Cmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
 	{
-        Core::ptrModelValuesUpd vals = t_api->state().getValsForLN(m_lnode);
+        Core::ptrModelStateUpd vals = t_api->state().getValsForLN(m_lnode);
         if (vals) {
             // Update process must to be finished in the GUI thread
-            emit sigNewModelValues(vals);
+            emit sigModelValues(vals);
 
-            emit sigFinishedEvent(CmdEventInfo::FinishEvent("IP?",
+            emit sigCmdEvent(CmdEvent::FinishEvent("IP?",
                     QString("Values of %1 were received").arg(m_lnode->getName()),
                     true));
         } else {
-            emit sigFinishedEvent(CmdEventInfo::FinishEvent("IP?",
+            emit sigCmdEvent(CmdEvent::FinishEvent("IP?",
                     QString("Can't get value of %1").arg(m_lnode->getName()),
                     false));
         }

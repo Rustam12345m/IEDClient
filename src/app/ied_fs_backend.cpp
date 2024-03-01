@@ -26,13 +26,13 @@ namespace App
 	IED_FS_Backend::IED_FS_Backend(IEDConContainer &t_con, EventStorage &t_ev)
         : BackendInterface(t_con, t_ev)
 	{
-		m_fsModel = new Models::DevFS_Table(this, m_con.m_ied);
+		m_fsModel = new Models::IED_FileTable(this, m_con.m_ied);
 
 		m_sortedModel = new Models::SortProxyModel(this);
 		m_sortedModel->setSourceModel(m_fsModel);
 	}
 
-	Q_INVOKABLE QString IED_FS_Backend::fsPageStatus()
+	QString IED_FS_Backend::fsPageStatus()
 	{
 		auto [count, size] = m_con.m_ied->fs().getFS_StatInfo();
 		if (size < 1024 * 1024) {
@@ -59,7 +59,7 @@ namespace App
 		qDebug() << "IED_FS_Backend: Remove file " << t_filename;
 		auto cmd = Cmd::RemoveFileCMD::create(t_filename, t_row);
 
-		connect(cmd.get(), &Cmd::RemoveFileCMD::sigFileRemoved, m_fsModel, &Models::DevFS_Table::slotRemoveFile);
+		connect(cmd.get(), &Cmd::RemoveFileCMD::sigFileRemoved, m_fsModel, &Models::IED_FileTable::slotRemoveFile);
 		putCmdToQueue(cmd);
 	}
 

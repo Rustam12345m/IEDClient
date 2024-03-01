@@ -60,10 +60,7 @@ namespace App
 		void	sigCmdFinished(bool t_done);
 
 	public slots:
-		void			slotCmdStart(Cmd::CmdEventInfo t_ev);
-		void			slotCmdProcess(Cmd::CmdEventInfo t_ev);
-		void			slotCmdFinished(Cmd::CmdEventInfo t_ev);
-
+		void			slotCmdEvent(Cmd::CmdEvent t_ev);
 		virtual void 	slotConnected(bool t_done);
 
 	protected:

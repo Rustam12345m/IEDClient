@@ -32,7 +32,7 @@ namespace App
 		m_eventsModel = new Models::AppEventsTable(this);
 		m_lastConnModel = new Models::HistConTable(this, m_settings);
 
-        connect(&m_events, &EventStorage::sigNewLogEvent, this, &AppBackend::slotNewStatusMessage);
+        connect(&m_events, &EventStorage::sigNewEvent, this, &AppBackend::slotNewStatusMessage);
 	}
 
 	QString AppBackend::getAppVersion()

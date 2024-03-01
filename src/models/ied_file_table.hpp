@@ -30,10 +30,10 @@ namespace App::Models
 	* This class represents the model for TableView which contains information
 	* about files on the IED
 	* */
-	class DevFS_Table : public QAbstractTableModel
+	class IED_FileTable : public QAbstractTableModel
 	{
 		Q_OBJECT
-		enum Columns
+		enum ColumnType
 		{
 			FS_INDEX_COLUMN = 0,
 			FS_DATE_COLUMN,
@@ -48,8 +48,8 @@ namespace App::Models
 		QSharedPointer<Core::IED> m_ied;
 
 	public:
-		DevFS_Table(QObject *t_parent, QSharedPointer<Core::IED> t_ied);
-		~DevFS_Table() = default;
+		IED_FileTable(QObject *t_parent, QSharedPointer<Core::IED> t_ied);
+		~IED_FileTable() = default;
 
 		void 		setActiveIED(QSharedPointer<Core::IED> t_ied);
 

@@ -19,7 +19,7 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "dev_fs_table.hpp"
+#include "ied_file_table.hpp"
 
 #include <QDateTime>
 #include <QDebug>
@@ -37,13 +37,13 @@ namespace
 
 namespace App::Models
 {
-	DevFS_Table::DevFS_Table(QObject *t_parent, QSharedPointer<Core::IED> t_ied)
+	IED_FileTable::IED_FileTable(QObject *t_parent, QSharedPointer<Core::IED> t_ied)
 		: QAbstractTableModel(t_parent), m_ied(t_ied)
 	{
 		connect(&m_ied->fs(), SIGNAL(sigFS_Updated()), this, SLOT(slotDataUpdated()));
 	}
 
-	void DevFS_Table::setActiveIED(QSharedPointer<Core::IED> t_ied)
+	void IED_FileTable::setActiveIED(QSharedPointer<Core::IED> t_ied)
 	{
 		beginResetModel();
 		m_ied = t_ied;
@@ -51,27 +51,27 @@ namespace App::Models
 		endResetModel();
 	}
 
-	int DevFS_Table::rowCount(const QModelIndex &t_parent) const
+	int IED_FileTable::rowCount(const QModelIndex &t_parent) const
 	{
 		return m_ied->fs().m_dir.m_file.size();
 	}
 
-	int DevFS_Table::columnCount(const QModelIndex &t_parent) const
+	int IED_FileTable::columnCount(const QModelIndex &t_parent) const
 	{
 		return FS_COLUMN_COUNT;
 	}
 
-	QHash<int, QByteArray> DevFS_Table::roleNames() const
+	QHash<int, QByteArray> IED_FileTable::roleNames() const
 	{
 		return { { Qt::DisplayRole, "display"}, { ROLE_SORT_VALUE, "sort_value" } };
 	}
 
-	Qt::ItemFlags DevFS_Table::flags(const QModelIndex &t_index) const
+	Qt::ItemFlags IED_FileTable::flags(const QModelIndex &t_index) const
 	{
 		return QAbstractTableModel::flags(t_index) | Qt::ItemIsSelectable;
 	}
 
-	QVariant DevFS_Table::headerData(int t_column, Qt::Orientation t_orientation, int t_role) const
+	QVariant IED_FileTable::headerData(int t_column, Qt::Orientation t_orientation, int t_role) const
 	{
 		if (t_orientation != Qt::Horizontal) {
 			return QVariant();
@@ -97,7 +97,7 @@ namespace App::Models
 		return QVariant("");
 	}
 
-	QVariant DevFS_Table::data(const QModelIndex &t_index, int t_role) const
+	QVariant IED_FileTable::data(const QModelIndex &t_index, int t_role) const
 	{
 		//qDebug() << "FS: Data " << t_index.column() << " role = " << t_role;
 
@@ -146,7 +146,7 @@ namespace App::Models
 		return QVariant(" - ");
 	}
 
-	void DevFS_Table::slotRemoveFile(int t_row)
+	void IED_FileTable::slotRemoveFile(int t_row)
 	{
 		if (t_row < 0 || t_row >= m_ied->fs().getCount()) {
 			return;
@@ -160,7 +160,7 @@ namespace App::Models
 		endRemoveRows();
 	}
 
-	void DevFS_Table::slotDataUpdated()
+	void IED_FileTable::slotDataUpdated()
 	{
 		beginResetModel();
 		endResetModel();

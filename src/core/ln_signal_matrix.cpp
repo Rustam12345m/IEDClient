@@ -68,11 +68,11 @@ namespace Core
 
 			ptrDA da = child.dynamicCast<Core::DataAttribute>();
 			if (da) {
-				auto fc = da->fc();
-				if (!FC.contains(da->fc())) {
+				auto fc = da->fcStr();
+				if (!FC.contains(da->fcStr())) {
 					continue;
 				}
-				t_rowPrototype.m_fc = da->fc();
+				t_rowPrototype.m_fc = da->fcStr();
 			}
 
 			if (ATTR.contains(child->getName())) {

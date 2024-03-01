@@ -25,28 +25,29 @@
 
 namespace App::Models
 {
-	class AppEventsTable : public QAbstractTableModel
-	{
-		Q_OBJECT
-		enum Columns {
-			DATE_COLUMN = 0,
-			SOURCE_COLUMN,
-			DESC_COLUMN
-		};
+    class AppEventsTable : public QAbstractTableModel
+    {
+        Q_OBJECT
+        enum ColumnType {
+            DATE_COLUMN = 0,
+            SOURCE_COLUMN,
+            DESC_COLUMN,
+            COLUMN_COUNT
+        };
 
-	public:
-		explicit AppEventsTable(QObject *parent = nullptr);
-		~AppEventsTable() = default;
+    public:
+        explicit AppEventsTable(QObject *parent = nullptr);
+        ~AppEventsTable() = default;
 
-		int rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
-		int columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
+        int rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
+        int columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
 
-		QHash<int, QByteArray> roleNames() const override;
-		Qt::ItemFlags flags(const QModelIndex &t_index) const override;
+        QHash<int, QByteArray> roleNames() const override;
+        Qt::ItemFlags flags(const QModelIndex &t_index) const override;
 
-		Q_INVOKABLE QVariant headerData(int t_section, Qt::Orientation t_orientation,
-										int t_role = Qt::DisplayRole) const override;
+        Q_INVOKABLE QVariant headerData(int t_section, Qt::Orientation t_orientation,
+                                        int t_role = Qt::DisplayRole) const override;
 
-		QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
-	};
+        QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
+    };
 }

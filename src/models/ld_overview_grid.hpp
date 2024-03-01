@@ -35,9 +35,9 @@ namespace App::Models
 		};
 
 	public:
-		LD_OverviewGrid(QObject *t_parent, QSharedPointer<Core::IED> t_ied);
+		LD_OverviewGrid(QObject *t_parent, Core::ptrIED t_ied);
 
-		void 		setActiveIED(QSharedPointer<Core::IED> t_ied);
+		void 		setActiveIED(Core::ptrIED t_ied);
 
 		QHash<int, QByteArray> roleNames() const override;
 		int			rowCount(const QModelIndex &t_index = QModelIndex()) const override;
@@ -49,9 +49,12 @@ namespace App::Models
 		void 		sigLDSelected(int t_ld);
 
 	public slots:
-		void		slotDataUpdated(bool t_status);
+		void		slotDataUpdated(Core::ptrModelItemList t_nodes);
+    
+    private:
+        void        connectToUpdates(Core::DataModel &t_model, bool t_con);
 
 	private:
-		QSharedPointer<Core::IED>	m_ied;
+		Core::ptrIED	m_ied;
 	};
 }

@@ -84,7 +84,7 @@ FocusScope
 		}
 
 		columnWidthProvider: function(t_column) {
-			return Globals.calcColumnsWidth(headerID, tableID, t_column)
+			return Globals.columnWidthFillSpace(headerID, tableID, t_column)
 		}
 
 		delegate: TextDelegate {

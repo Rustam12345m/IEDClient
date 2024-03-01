@@ -26,11 +26,11 @@ namespace Cmd
 	void GetFileList::execute(Cmd::Interface::ptrIEC61850_API t_api)
 	{
 		if (!t_api->isConnected()) {
-            emit sigFinishedEvent(Cmd::CmdEventInfo::FinishEvent("IP?", "Connection is closed", true));
+            emit sigCmdEvent(Cmd::CmdEvent::FinishEvent("IP?", "Connection is closed", true));
 			return;
 		}
 
-        emit sigProcessEvent(Cmd::CmdEventInfo::ProcessEvent("IP?", QString("Send query to IED: GetDirectory %1").arg(m_path), 50));
+        emit sigCmdEvent(Cmd::CmdEvent::ProcessEvent("IP?", QString("Send query to IED: GetDirectory %1").arg(m_path), 50));
 
 		Core::DirOn dir(m_path);
 		int retval = t_api->fs().getFileList(dir);
@@ -39,6 +39,6 @@ namespace Cmd
 
 		m_fsModel.put(dir);
 
-        emit sigFinishedEvent(Cmd::CmdEventInfo::FinishEvent("IP?", "File list was received", true));
+        emit sigCmdEvent(Cmd::CmdEvent::FinishEvent("IP?", "File list was received", true));
 	}
 }

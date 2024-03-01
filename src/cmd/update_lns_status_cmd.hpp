@@ -26,9 +26,6 @@
 
 namespace Cmd
 {
-	/*
-	 * This class ...
-	 * */
 	class UpdateLNs_StatusCmd : public CmdInterface
 	{
 		Q_OBJECT
@@ -39,17 +36,14 @@ namespace Cmd
 		}
 		~UpdateLNs_StatusCmd() override {}
 
-		void execute(Cmd::Interface::ptrIEC61850_API t_api) override;
+		void    execute(Cmd::Interface::ptrIEC61850_API t_api) override;
 
 		static auto create(Core::ptrIED t_ied, Core::ptrLD t_ld) {
 			return QSharedPointer<UpdateLNs_StatusCmd>::create(t_ied, t_ld);
 		}
     
     signals:
-		void 	sigNewModelValues(Core::ptrModelValuesUpd t_vals);
-
-	private slots:
-		void slotMsgProgress(const QString &t_msg);
+		void 	sigModelValues(Core::ptrModelStateUpd t_vals);
 
 	private:
 		Core::ptrIED    m_ied;

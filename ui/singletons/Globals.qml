@@ -96,7 +96,7 @@ QtObject
 		}
 	}
 
-	function calcColumnsWidth(t_headerID, t_tableID, t_column)
+	function columnWidthFillSpace(t_headerID, t_tableID, t_column)
 	{
 		var iw = []
 		let sum = 0, i = 0
@@ -116,4 +116,16 @@ QtObject
 		}
 		return w;
 	}
+
+    function columnWidthCalculator(t_headerID, t_tableID, t_column)
+    {
+        let lw = t_tableID.columnWidth(t_column)
+        let  nw = Math.max(t_headerID.implicitColumnWidth(t_column),
+                          t_tableID.implicitColumnWidth(t_column))
+        nw = Math.round(nw)
+        if ((nw != lw) && (lw != -1)) {
+            Qt.callLater(t_tableID.forceLayout) // this is cause to call again
+        }
+        return nw
+    }
 }

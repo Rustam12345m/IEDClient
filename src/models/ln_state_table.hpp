@@ -34,7 +34,7 @@ namespace App::Models
 	class LN_SignalTable : public QAbstractTableModel
 	{
 		Q_OBJECT
-		enum Columns {
+		enum ColumnType {
 			DO_NAME_COLUMN = 0,
 			DO_FC_COLUMN,
 			DO_VALUE_COLUMN,
@@ -44,9 +44,9 @@ namespace App::Models
 		};
 
 	public:
-		LN_SignalTable(QObject *t_parent, QSharedPointer<Core::IED> t_ied);
+		LN_SignalTable(QObject *t_parent, Core::ptrIED t_ied);
 
-		void 	setActiveIED(QSharedPointer<Core::IED> t_ied);
+		void 	setActiveIED(Core::ptrIED t_ied);
 		auto 	getCurrectLN() const {
 			return m_lnode;
 		}
@@ -64,8 +64,8 @@ namespace App::Models
 		void 	slotLNSelected(int t_ld, int t_ln);
 
 	private:
-		QSharedPointer<Core::IED> m_ied;
-		Core::ptrLN 					 m_lnode; // currect logical node of this model
-		QMetaObject::Connection 		 m_updConnection; // signal from LogicalNode
+		Core::ptrIED            m_ied;
+		Core::ptrLN 			m_lnode; // currect logical node of this model
+		QMetaObject::Connection m_updConnection; // signal from LogicalNode
 	};
 }

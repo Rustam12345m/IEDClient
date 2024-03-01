@@ -30,13 +30,13 @@ namespace App::Models
 	class ReportsTable : public QAbstractTableModel
 	{
 		Q_OBJECT
-		enum Columns {
+		enum ColumnType {
 			NameColumn = 0,
 			ModeColumn,
 			BehColumn,
 			HealthColumn,
 
-			ColumnsCount
+			COLUMN_COUNT
 		};
 	public:
 		ReportsTable(QObject *t_parent, QSharedPointer<Core::IED> t_ied);

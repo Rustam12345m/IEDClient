@@ -37,36 +37,41 @@ namespace Core
 		}
 		~DataModel() = default;
 
-		void 	calcIEDNameFromLD();
-
-		ptrLN 	getLogicalNode(int t_ld, int t_ln);
+        ptrModelItem getItemByReference(const QString &t_ref);
 		ptrLD 	getLogicalDevice(int t_ld);
+		ptrLN 	getLogicalNode(int t_ld, int t_ln);
 
-		void	print();
+		const QList<ptrDataSet>	getDataSetList() {
+			return m_ds;
+		}
+		const QList<ptrRCB>		getReportCBList() {
+			return m_rcb;
+		}
+		const QList<ptrGOCB>	getGO_CBList() {
+			return m_gocb;
+		}
+		const QList<ptrSVCB>	getSV_CBList() {
+			return m_svcb;
+		}
 
 		void 	pushDataSet(ptrDataSet t_ds);
 		void 	pushReportCB(ptrRCB t_cb);
 		void 	pushGooseCB(ptrGOCB t_cb);
 		void 	pushSV_CB(ptrSVCB t_cb);
 
-		const QList<ptrDataSet>	dsList() {
-			return m_ds;
-		}
-		const QList<ptrRCB>		rcbList() {
-			return m_rcb;
-		}
-		const QList<ptrGOCB>	gocbList() {
-			return m_gocb;
-		}
-		const QList<ptrSVCB>	svcbList() {
-			return m_svcb;
-		}
+		void	print();
+
+    private:
+        ptrModelItem recFindModelItem(QStringList &t_names, int t_inx, ptrModelItem t_item);
+        void 	     resolveIEDName(); // TODO: Move to DataModelBuilder
 
 	private:
 		QList<ptrDataSet>	m_ds;
 		QList<ptrRCB>		m_rcb;
 		QList<ptrGOCB>		m_gocb;
 		QList<ptrSVCB>	 	m_svcb;
+    
+    friend class DataModelBuilder;
 	};
 	typedef QSharedPointer<DataModel>	ptrDataModel;
 }

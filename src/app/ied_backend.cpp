@@ -32,7 +32,7 @@ namespace App
 		m_ldPropModel = new Models::LD_PropertiesTable(this, m_con.m_ied);
 		m_lnsModel = new Models::LN_OverviewTable(this, m_con.m_ied);
 		m_lnStateModel = new Models::LN_SignalTable(this, m_con.m_ied);
-		m_lnTreeModel = new Models::LN_SignalTree(this, m_con.m_ied);
+		m_lnTreeModel = new Models::LN_CommonTree(this, m_con.m_ied);
 		m_dsComModel = new Models::DS_OverviewTable(this, m_con.m_ied);
 		m_dsSigModel = new Models::DS_SignalsTable(this, m_con.m_ied);
 		m_rcbComModel = new Models::RCB_OverviewTable(this, m_con.m_ied);
@@ -45,7 +45,7 @@ namespace App
 		connect(m_ldsModel, &Models::LD_OverviewGrid::sigLDSelected, m_ldPropModel, &Models::LD_PropertiesTable::slotLDSelected);		
 		connect(m_ldsModel, &Models::LD_OverviewGrid::sigLDSelected, m_lnsModel, &Models::LN_OverviewTable::slotLDSelected);
 		connect(m_lnsModel, &Models::LN_OverviewTable::sigLNSelected, m_lnStateModel, &Models::LN_SignalTable::slotLNSelected);
-		connect(m_lnsModel, &Models::LN_OverviewTable::sigLNSelected, m_lnTreeModel, &Models::LN_SignalTree::slotLNSelected);
+		connect(m_lnsModel, &Models::LN_OverviewTable::sigLNSelected, m_lnTreeModel, &Models::LN_CommonTree::slotLNSelected);
 
 		connect(m_dsComModel, &Models::DS_OverviewTable::sigDSSelected, m_dsSigModel, &Models::DS_SignalsTable::slotDataSetSelected);
 		connect(m_rcbComModel, &Models::RCB_OverviewTable::sigRCBSelected, m_reportsModel, &Models::ReportsTable::slotRCBSelected);
@@ -56,7 +56,7 @@ namespace App
 		qDebug() << "IED_Backend: Update LDs";
 
 		auto cmd = Cmd::UpdateLDs_StatusCmd::create(m_con.m_ied);
-        connect(cmd.get(), &Cmd::UpdateLDs_StatusCmd::sigNewModelValues,
+        connect(cmd.get(), &Cmd::UpdateLDs_StatusCmd::sigModelValues,
                 this, &IED_Backend::slotUpdateItems, Qt::QueuedConnection);
 
 		putCmdToQueue(cmd);
@@ -67,7 +67,7 @@ namespace App
 		qDebug() << "IED_Backend: Update LNs";
 
 		auto cmd = Cmd::UpdateLNs_StatusCmd::create(m_con.m_ied, m_lnsModel->getLogicalDevice());
-        connect(cmd.get(), &Cmd::UpdateLNs_StatusCmd::sigNewModelValues,
+        connect(cmd.get(), &Cmd::UpdateLNs_StatusCmd::sigModelValues,
                 this, &IED_Backend::slotUpdateItems, Qt::QueuedConnection);
 
 		putCmdToQueue(cmd);
@@ -93,7 +93,7 @@ namespace App
         }
 
 		auto cmd = Cmd::UpdateLNode_Cmd::create(m_con.m_ied, lnode);
-		connect(cmd.get(), &Cmd::UpdateLNode_Cmd::sigNewModelValues,
+		connect(cmd.get(), &Cmd::UpdateLNode_Cmd::sigModelValues,
                 this, &IED_Backend::slotUpdateItems, Qt::QueuedConnection);
 
 		putCmdToQueue(cmd);
@@ -105,7 +105,7 @@ namespace App
 
 		Core::ptrDataSet ds = m_dsSigModel->getDataSet();
 		auto cmd = Cmd::UpdateDataSet_Cmd::create(m_con.m_ied, ds);
-		connect(cmd.get(), &Cmd::UpdateDataSet_Cmd::sigNewModelValues, this,
+		connect(cmd.get(), &Cmd::UpdateDataSet_Cmd::sigModelValues, this,
                 &IED_Backend::slotUpdateItems, Qt::QueuedConnection);
 
 		putCmdToQueue(cmd);
@@ -148,7 +148,7 @@ namespace App
 		m_reportsModel->setActiveIED(m_con.m_ied);
 	}
 
-	void IED_Backend::slotUpdateItems(Core::ptrModelValuesUpd t_vals)
+	void IED_Backend::slotUpdateItems(Core::ptrModelStateUpd t_vals)
 	{
 		if (t_vals) {
 			t_vals->update();

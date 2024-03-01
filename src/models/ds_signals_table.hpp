@@ -29,18 +29,18 @@ namespace App::Models
 	class DS_SignalsTable : public QAbstractTableModel
 	{
 		Q_OBJECT
-		enum Columns {
+		enum ColumnType {
 			DS_REF_COLUMN = 0,
 			DS_FC_COLUMN,
 			DS_VALUE_COLUMN,
 
-			ColumnsCount
+			COLUMN_COUNT
 		};
 
 	public:
-		DS_SignalsTable(QObject *t_parent, QSharedPointer<Core::IED> t_ied);
+		DS_SignalsTable(QObject *t_parent, Core::ptrIED t_ied);
 
-		void 	setActiveIED(QSharedPointer<Core::IED> t_ied);
+		void 	setActiveIED(Core::ptrIED t_ied);
 		auto 	getDataSet() {
 			return m_dataSet;
 		}
@@ -58,8 +58,8 @@ namespace App::Models
 		void 	slotDataUpdated(QList<Core::ptrModelItem> t_items);
 
 	private:
-		QSharedPointer<Core::IED> m_ied;
-		Core::ptrDataSet 				 m_dataSet;
-		QMetaObject::Connection 		 m_updConnection; // signal from LogicalNode
+		Core::ptrIED            m_ied;
+		Core::ptrDataSet 		m_dataSet;
+		QMetaObject::Connection m_updConnection; // signal from LogicalNode
 	};
 }

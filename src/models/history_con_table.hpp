@@ -30,7 +30,7 @@ namespace App::Models
 	class HistConTable : public QAbstractTableModel
 	{
 		Q_OBJECT
-		enum Columns {
+		enum ColumnType {
 			NUMBER = 0,
 			IED_NAME,
 			IP_ADDR,

@@ -29,10 +29,10 @@ namespace Core
 	 * This class holds pointers to current Items and new values for them.
 	 * To prevent race conditions, the values of ModelItem must be updated in the GUI thread.
 	 * */
-	class ModelItemValuesUpd
+	class ModelStateUpdater
 	{
 	public:
-		ModelItemValuesUpd() {}
+		ModelStateUpdater() {}
 
 		void 	push(ptrModelItem t_item, ptrModelValue t_value) {
 			m_values.emplace_back(t_item, t_value);
@@ -52,7 +52,7 @@ namespace Core
         size_t  count() const { return m_values.size(); }
 
 	private:
-		QList< QPair<ptrModelItem, ptrModelValue> > 	m_values;
+		QList< QPair<ptrModelItem, ptrModelValue> >     m_values;
 	};
-	typedef QSharedPointer< ModelItemValuesUpd >	ptrModelValuesUpd;
+	typedef QSharedPointer< ModelStateUpdater > 	    ptrModelStateUpd;
 }

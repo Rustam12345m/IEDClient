@@ -48,26 +48,26 @@ namespace App::Models
 
 	int DS_OverviewTable::rowCount(const QModelIndex &t_parent) const
 	{
-		return m_ied->model().dsList().count();
+		return m_ied->model().getDataSetList().count();
 	}
 
 	QVariant DS_OverviewTable::data(const QModelIndex &t_index, int t_role) const
 	{
 		int row = t_index.row();
-		auto dsList = m_ied->model().dsList();
-		if (row >= dsList.count()) {
+		auto getDataSetList = m_ied->model().getDataSetList();
+		if (row >= getDataSetList.count()) {
 			return QVariant(" ? ");
 		}
 
 		switch (t_role) {
 		case SECTION_ROLE: {
-			return QVariant(dsList[row]->Core::ModelItem::getParent()->getReference());
+			return QVariant(getDataSetList[row]->Core::ModelItem::getParent()->getReference());
 		}
 		case NAME_ROLE: {
-			return QVariant(dsList[row]->getName());
+			return QVariant(getDataSetList[row]->getName());
 		}
 		case VALUE_ROLE: {
-			return QVariant(QString::number(dsList[row]->getItemCount()));
+			return QVariant(QString::number(getDataSetList[row]->getItemCount()));
 		}
 		}
 		return QVariant("??");
@@ -75,6 +75,6 @@ namespace App::Models
 
 	void DS_OverviewTable::slotDataUpdated()
 	{
-		//emit dataChanged(index(0, DS_LD_Column), index(rowCount() - 1, ColumnsCount));
+		//emit dataChanged(index(0, DS_LD_Column), index(rowCount() - 1, COLUMN_COUNT));
 	}
 }

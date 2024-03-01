@@ -83,6 +83,8 @@ FocusScope
 			right: parent.right
 			top: parent.top
 		}
+
+        resizableColumns: false
 	}
 
 	// Table of RCB on the IED
@@ -114,6 +116,9 @@ FocusScope
 				console.log(currentIndex)
 			}
 			*/
+		}
+        columnWidthProvider: function(t_column) {
+			return Globals.columnWidthCalculator(headerID, tableID, t_column)
 		}
 
 		delegate: TextDelegate {
@@ -151,11 +156,6 @@ FocusScope
 		}
 
 		Keys.onPressed: function(event) {
-			console.log("CB: Key pressed")
-			if (event.key == Qt.Key_H) {
-				console.log("CB: Resize columns")
-				Globals.resizeColumnsToContent(headerID, tableID)
-			}
 		}
 	}
 

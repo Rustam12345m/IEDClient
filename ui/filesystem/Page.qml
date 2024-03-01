@@ -57,6 +57,7 @@ Item
 		id: headerID
 
 		focus: false
+        resizableColumns: false
 
 		anchors {
 			top: parent.top
@@ -94,6 +95,10 @@ Item
 				console.log(currentIndex)
 			}
 			*/
+		}
+
+        columnWidthProvider: function(t_column) {
+            return Globals.columnWidthCalculator(headerID, tableID, t_column)
 		}
 
 		delegate: TextDelegate {

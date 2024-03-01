@@ -34,6 +34,7 @@ FocusScope
 	id: rootID
 
 	function resizeColumnsOnPage() {
+        console.log("LN_Page: resizeColumnsOnPage")
 		tableDO.resizeColumnsToContent()
 	}
 
@@ -72,7 +73,8 @@ FocusScope
 				}
 
 				onSigSelectedNewLN: function() {
-					// iedBackend.updateLN_TreeValues(tableDO.currentLDevice, tableDO.currentLNode)
+                    // console.log("LN_Page: Resize columns")
+                    // Qt.callLater(rootID.resizeColumnsOnPage)
 				}
 			}
 
@@ -117,7 +119,7 @@ FocusScope
 				}
 
 				// Tree DO signals
-				LN_SignalsTree {
+				LN_CommonTree {
 					id: treeDO
 
 					onSigValueClicked: function(t_ref, t_msg, t_value) {

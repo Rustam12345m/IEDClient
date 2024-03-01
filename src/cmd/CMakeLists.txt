@@ -8,7 +8,7 @@ set(SOURCES
     interface/iec61850_api.hpp
 
 	cmd_interface.hpp
-    cmd_event_msg.hpp
+    cmd_event.hpp
 	command_queue.hpp
 
 	cmd_thread.hpp

@@ -28,10 +28,10 @@ namespace Cmd
 {
     enum EventMsgType
     {
-        CMD_EVENT_UNDEF_EV = 0,
-        CMD_EVENT_START_EV,
-        CMD_EVENT_PROCESS_EV,
-        CMD_EVENT_FINISH_EV
+        UNDEFINED_EVENT = 0,
+        START_EVENT,
+        PROCESS_EVENT,
+        FINISH_EVENT
     };
 
     /*
@@ -40,24 +40,24 @@ namespace Cmd
      * - Process message
      * - Result message
      * */
-    class CmdEventInfo
+    class CmdEvent
     {
     public:
-        static CmdEventInfo  StartEvent(const QString &t_ip, const QString &t_msg) {
-            return { .m_type = CMD_EVENT_START_EV, .m_time = QDateTime::currentDateTime(),
+        static CmdEvent  StartEvent(const QString &t_ip, const QString &t_msg) {
+            return { .m_type = START_EVENT, .m_time = QDateTime::currentDateTime(),
                      .m_ip = t_ip, .m_msg = t_msg };
         }
-        static CmdEventInfo  ProcessEvent(const QString &t_ip, const QString &t_msg, int t_perc) {
-            return { .m_type = CMD_EVENT_PROCESS_EV, .m_time = QDateTime::currentDateTime(),
+        static CmdEvent  ProcessEvent(const QString &t_ip, const QString &t_msg, int t_perc) {
+            return { .m_type = PROCESS_EVENT, .m_time = QDateTime::currentDateTime(),
                      .m_ip = t_ip, .m_msg = t_msg, .m_perc = t_perc };
         }
-        static CmdEventInfo  FinishEvent(const QString &t_ip, const QString &t_msg, bool t_result) {
-            return { .m_type = CMD_EVENT_FINISH_EV, .m_time = QDateTime::currentDateTime(),
+        static CmdEvent  FinishEvent(const QString &t_ip, const QString &t_msg, bool t_result) {
+            return { .m_type = FINISH_EVENT, .m_time = QDateTime::currentDateTime(),
                      .m_ip = t_ip, .m_msg = t_msg, .m_result = t_result };
         }
 
     public:
-        EventMsgType    m_type = CMD_EVENT_UNDEF_EV;
+        EventMsgType    m_type = UNDEFINED_EVENT;
         QDateTime       m_time; // start, process or finish
         QString         m_ip;
         QString         m_msg;

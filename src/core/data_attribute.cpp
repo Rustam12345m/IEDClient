@@ -19,29 +19,39 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "event_storage.hpp"
+#include "data_attribute.hpp"
 
-#include <QDebug>
-
-namespace App
+namespace Core
 {
-    QString EventStorage::getLastMessage()
+    const char* DataAttribute::fcNumToString(FC_ENUM t_num)
     {
-        QString retval;
-        m_lock.lock();
-        if (!m_events.empty()) {
-            retval = m_events.back().m_msg;
+        switch (t_num) {
+        #define _(name, num, desc) case name: return #name;
+            FC_STUFF(_)
+        #undef _
+        default: {
+            return "";
         }
-        m_lock.unlock();
-        return retval;
+        }
     }
 
-    void EventStorage::putEventToStorage(Cmd::CmdEvent t_event)
+    const char* DataAttribute::fcNumToDescription(FC_ENUM t_num)
     {
-        m_lock.lock();
-        m_events.push_back(t_event);
-        m_lock.unlock();
+        switch (t_num) {
+        #define _(name, num, desc) case name: return desc;
+            FC_STUFF(_)
+        #undef _
+        default: {
+            return "";
+        }
+        }
+    }
 
-        emit sigNewEvent();
+    FC_ENUM DataAttribute::fcStringToNum(const QString &t_num)
+    {
+        #define X(name, num, desc) if (t_num == #name) return FC_ENUM::name;
+            FC_STUFF(X)
+        #undef X
+        return FC_ENUM::UNDEFINED;
     }
 }

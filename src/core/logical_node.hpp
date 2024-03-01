@@ -86,10 +86,10 @@ namespace Core
 		}
 
 	signals:
-		void 	sigDataObjectUpdated(QSharedPointer<QList<ModelItem*>> t_nodes);
+		void 	sigDataObjectUpdated(ptrModelItemList t_nodes);
 
 	protected:
-	 	void 	notifyFromChild(QSharedPointer<QList<ModelItem*>> t_nodes) override;
+	 	void 	notifyFromChild(ptrModelItemList t_nodes) override;
 
 	protected:
 		QSharedPointer<DataObject>		m_mod;

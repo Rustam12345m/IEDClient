@@ -21,31 +21,21 @@
 
 #include <gtest/gtest.h>
 
-#include "core/data_model_builder.hpp"
-#include "core/item_factory.hpp"
+#include "core/data_model.hpp"
 
-namespace CoreTests
+namespace TestsCMD
 {
-	TEST(DataModel, DataModel) {
-		auto model = Core::ItemFactory::createModel("NoName").staticCast<Core::DataModel>();
+	class ModelTest : public ::testing::Test
+	{
+	protected:
+		ModelTest() {
+		}
+		~ModelTest() override {
+		}
 
-		auto ld1 = Core::ItemFactory::createLD(model.get(), "IEDNameLD1");
-		auto ld2 = Core::ItemFactory::createLD(model.get(), "IEDNameLD2");
-	}
-
-	TEST(DataModel, LogicalDevices) {
-
-	}
-
-	TEST(DataModel, LogicalNodes) {
-		
-	}
-
-	TEST(DataModel, DataObjects) {
-		
-	}
-
-	TEST(DataModel, DataSets) {
-		
-	}
+		void SetUp() override {
+		}
+		void TearDown() override {
+		}
+	};
 }

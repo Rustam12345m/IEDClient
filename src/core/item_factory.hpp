@@ -46,7 +46,7 @@ namespace Core
 
 		// Data Attribute
 		static QSharedPointer<ModelItem>	createDA(ModelItem *t_parent, const QString &t_name,
-					  						const QString &t_fc, int t_fcNum);
+					  						        const QString &t_fc);
 
 		// Sub Attribute
 		static QSharedPointer<ModelItem>	createSA(ModelItem *t_parent, const QString &t_name);

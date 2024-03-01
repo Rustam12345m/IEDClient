@@ -42,31 +42,24 @@ namespace App
 
 		void 		setQmlContextMembers(QQmlContext *t_context);
 
-		Q_PROPERTY(bool isConnected READ isConnected NOTIFY sigConnected)
-		bool 		isConnected() {
-			return m_con.isConnected();
-		}
+		Q_PROPERTY(QVariant iedConStatus READ getIEDConStatus NOTIFY sigIEDConChanged)
+        Q_INVOKABLE QVariant getIEDConStatus();
 
 		// API for QML
 		Q_INVOKABLE void 	connectTo(const QVariantMap &t_data);
 		Q_INVOKABLE void 	disconnectFrom();
-
 		Q_INVOKABLE void 	toolDumpModel(const QVariantMap &t_data);
 
+		Q_INVOKABLE bool 	isConnected() { return m_con.isConnected(); }
+
 	public slots:
-		void		slotCmdProcess(Cmd::CmdEventInfo t_ev) {
-			emit sigCmdProgress(t_ev.m_perc, t_ev.m_msg);
-		}
-		void		slotCmdFinished(Cmd::CmdEventInfo t_ev) {
-			emit sigCmdFinished(t_ev.m_result);
-		}
-		void 		slotConnected(Cmd::CmdEventInfo t_ev);
+		void		slotCmdEvent(Cmd::CmdEvent t_ev);
         void        slotConClosed();
 
 	signals:
 		void		sigCmdProgress(int t_perc, QString t_msg);
 		void		sigCmdFinished(bool t_done);
-		void 		sigConnected(bool t_done);
+		void 		sigIEDConChanged(bool t_done);
 
 	protected:
 		IEDConContainer	m_con; // Complex component of IED's stub

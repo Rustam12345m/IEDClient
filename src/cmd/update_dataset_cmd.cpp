@@ -25,20 +25,13 @@ namespace Cmd
 {
 	void UpdateDataSet_Cmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
 	{
-		/*
-		ptrModelValuesUpd vals = t_con.getValuesForLN(m_lnode);
+		Core::ptrModelStateUpd vals = t_api->state().getValsForDS(m_dataset);
 		if (vals) {
-			connect(this, &Cmd::UpdateLNode_Cmd::sigNewModelValues,
-					m_lnode.get(), &Core::LogicalNode::slotUpdateValues,
-					Qt::QueuedConnection); // Qt::BlockingQueuedConnection
+            emit sigModelValues(vals);
 
-			// Update process must to be finished in the GUI thread
-			emit sigNewModelValues(vals);
-
-			emit sigFinished(true);
+            emit sigCmdEvent(Cmd::CmdEvent::FinishEvent("", "Dataset's values have been updated", true));
 		} else {
-			emit sigFinished(false);
+			emit sigCmdEvent(Cmd::CmdEvent::FinishEvent("", "Can't get informatio about this dataset", false));
 		}
-		*/
 	}
 }

@@ -111,6 +111,8 @@ namespace Libiec61850
 					emit sigFoundNode(t_builder.lastLN()->getReference());
 
 					fetchLN_DO(t_builder);
+                    auto updVals = m_api.state().getValsForLN(t_builder.lastLN());
+                    updVals->update();
 
 					fetchLN_DS(t_builder);
 
@@ -138,8 +140,8 @@ namespace Libiec61850
         IedClientError retval = IED_ERROR_OK;
 		QString ref = t_builder.lastLN()->getReference();
 
-		LinkedList doList = IedConnection_getLogicalNodeDirectory(m_api.m_libConn, &retval, ref.toStdString().data(),
-																ACSI_CLASS_DATA_OBJECT);
+		LinkedList doList = IedConnection_getLogicalNodeDirectory(m_api.m_libConn, &retval,
+                                        ref.toStdString().data(), ACSI_CLASS_DATA_OBJECT);
 		if ((retval == IED_ERROR_OK) && (doList != nullptr)) {
 
 			LinkedList dObj = LinkedList_getNext(doList);
@@ -149,14 +151,15 @@ namespace Libiec61850
 
 				t_builder.createDO(doName);
 
-				LinkedList daListFC = IedConnection_getDataDirectoryFC(m_api.m_libConn, &retval, refDO.toLocal8Bit().data());
+				LinkedList daListFC = IedConnection_getDataDirectoryFC(m_api.m_libConn,
+                                                    &retval, refDO.toLocal8Bit().data());
 				if ((retval == IED_ERROR_OK) && (daListFC != nullptr)) {
-					
+
 					LinkedList attrFC = LinkedList_getNext(daListFC);
 					while (attrFC != nullptr) {
 						auto [name, fc, fcNum] = getFX_fromName((char *)attrFC->data);
 
-						t_builder.createDA(name, fc, fcNum);
+						t_builder.createDA(name, fc);
 
 						// Recursive search SubAttr for DA
 						recursiveReadAttributes(m_api.m_libConn, t_builder.lastDA(), t_builder);
@@ -178,8 +181,8 @@ namespace Libiec61850
         IedClientError retval = IED_ERROR_OK;
 		QString lnRef = t_builder.lastLN()->getReference();
 
-		LinkedList dsList = IedConnection_getLogicalNodeDirectory(m_api.m_libConn, &retval, lnRef.toStdString().data(),
-																ACSI_CLASS_DATA_SET);
+		LinkedList dsList = IedConnection_getLogicalNodeDirectory(m_api.m_libConn, &retval,
+                                    lnRef.toStdString().data(), ACSI_CLASS_DATA_SET);
 		LinkedList dataSet = LinkedList_getNext(dsList);
 		while (dataSet != nullptr) {
 			char *dsName = (char *)dataSet->data;
@@ -190,8 +193,8 @@ namespace Libiec61850
 
 			t_builder.createDataSet(QString::fromLocal8Bit(dsName), lnRef, isDeletable);
 
-			LinkedList dsEntityList = IedConnection_getDataSetDirectory(m_api.m_libConn, &retval, dataSetRef,
-																		&isDeletable);
+			LinkedList dsEntityList = IedConnection_getDataSetDirectory(m_api.m_libConn, &retval,
+                                                                        dataSetRef, &isDeletable);
 			LinkedList dsEntity = LinkedList_getNext(dsEntityList);
 			while (dsEntity != nullptr) {
 				QString dsElemRef = QString::fromLocal8Bit((char *)dsEntity->data);
@@ -208,17 +211,17 @@ namespace Libiec61850
 		LinkedList_destroy(dsList);
 		return 0;
     }
-    
+
     int IED_ModelAPI_Impl::fetchLN_RCB(Core::DataModelBuilder & t_builder)
     {
         IedClientError retval = IED_ERROR_OK;
 		QString ref = t_builder.lastLN()->getReference();
 
 		// Unbuffered RCB
-		LinkedList rcbList = IedConnection_getLogicalNodeDirectory(m_api.m_libConn, &retval, ref.toStdString().data(),
-																ACSI_CLASS_URCB);
+		LinkedList getReportCBList = IedConnection_getLogicalNodeDirectory(m_api.m_libConn, &retval,
+                                        ref.toStdString().data(), ACSI_CLASS_URCB);
 
-		LinkedList rcb = LinkedList_getNext(rcbList);
+		LinkedList rcb = LinkedList_getNext(getReportCBList);
 		while (rcb != nullptr) {
 			char* reportName = (char *) rcb->data;
 
@@ -226,13 +229,13 @@ namespace Libiec61850
 
 			rcb = LinkedList_getNext(rcb);
 		}
-		LinkedList_destroy(rcbList);
+		LinkedList_destroy(getReportCBList);
 
 		// Buffered RCB
-		rcbList = IedConnection_getLogicalNodeDirectory(m_api.m_libConn, &retval, ref.toStdString().data(),
-														ACSI_CLASS_BRCB);
+		getReportCBList = IedConnection_getLogicalNodeDirectory(m_api.m_libConn, &retval,
+                                        ref.toStdString().data(), ACSI_CLASS_BRCB);
 
-		rcb = LinkedList_getNext(rcbList);
+		rcb = LinkedList_getNext(getReportCBList);
 		while (rcb != nullptr) {
 			char* reportName = (char *) rcb->data;
 
@@ -240,19 +243,19 @@ namespace Libiec61850
 
 			rcb = LinkedList_getNext(rcb);
 		}
-		LinkedList_destroy(rcbList);
+		LinkedList_destroy(getReportCBList);
 		return 0;
     }
-    
+
     int IED_ModelAPI_Impl::fetchLN_GOCB(Core::DataModelBuilder &t_builder)
     {
         // Goose CB
 		IedClientError retval = IED_ERROR_OK;
 		QString ref = t_builder.lastLN()->getReference();
-		LinkedList rcbList = IedConnection_getLogicalNodeDirectory(m_api.m_libConn, &retval, ref.toStdString().data(),
-																	ACSI_CLASS_GoCB);
+		LinkedList getReportCBList = IedConnection_getLogicalNodeDirectory(m_api.m_libConn, &retval,
+                                            ref.toStdString().data(), ACSI_CLASS_GoCB);
 
-		LinkedList rcb = LinkedList_getNext(rcbList);
+		LinkedList rcb = LinkedList_getNext(getReportCBList);
 		while (rcb != nullptr) {
 			char* reportName = (char *) rcb->data;
 
@@ -260,7 +263,7 @@ namespace Libiec61850
 
 			rcb = LinkedList_getNext(rcb);
 		}
-		LinkedList_destroy(rcbList);
+		LinkedList_destroy(getReportCBList);
 		return 0;
     }
 

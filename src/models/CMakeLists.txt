@@ -2,14 +2,17 @@
 set(SOURCES
 	models_stub.hpp
 
+    iec61850_enums.hpp
+    iec61850_enums.cpp
+
 	app_events_table.hpp
 	app_events_table.cpp
 	
-	dev_fs_table.hpp
-	dev_fs_table.cpp
+	ied_file_table.hpp
+	ied_file_table.cpp
 
-	ln_signals_table.cpp
-	ln_signals_table.hpp
+	ln_state_table.cpp
+	ln_state_table.hpp
 
 	ld_overview_grid.hpp
 	ld_overview_grid.cpp
@@ -20,9 +23,9 @@ set(SOURCES
 	ln_overview_table.hpp
 	ln_overview_table.cpp
 
-	ln_signals_tree.hpp
-	ln_signals_tree.cpp
-	
+	ln_common_tree.hpp
+	ln_common_tree.cpp
+
 	sort_proxy_model.hpp
 	sort_proxy_model.cpp
 

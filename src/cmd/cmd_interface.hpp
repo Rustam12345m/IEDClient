@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include "cmd_event_msg.hpp"
+#include "cmd_event.hpp"
 #include "interface/iec61850_api.hpp"
 
 namespace Cmd
@@ -40,9 +40,7 @@ namespace Cmd
 		}
 
 	signals:
-        void    sigStartEvent(CmdEventInfo t_event);
-        void    sigProcessEvent(CmdEventInfo t_event);
-        void    sigFinishedEvent(CmdEventInfo t_event);
+        void    sigCmdEvent(CmdEvent t_event);
 	};
 	typedef QSharedPointer< CmdInterface >	ptrCMD;
 }

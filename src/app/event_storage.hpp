@@ -24,26 +24,25 @@
 #include <QObject>
 #include <QMutex>
 
-#include "cmd/cmd_event_msg.hpp"
+#include "cmd/cmd_event.hpp"
 
 namespace App
 {
-	class EventStorage : public QObject
-	{
-		Q_OBJECT
-	public:
-		EventStorage() {}
+    class EventStorage : public QObject
+    {
+        Q_OBJECT
+    public:
+        EventStorage() {}
 
         QString getLastMessage();
 
-	signals:
-		void	sigNewLogEvent();
+        void    putEventToStorage(Cmd::CmdEvent t_event);
 
-	public slots:
-        void    slotEventToLog(Cmd::CmdEventInfo t_event);
+    signals:
+        void    sigNewEvent();
 
-	private:
-        QMutex      m_lock;
-        QString     m_message;
-	};
+    private:
+        QMutex                  m_lock;
+        QList<Cmd::CmdEvent>    m_events;
+    };
 }

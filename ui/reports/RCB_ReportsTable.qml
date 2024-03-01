@@ -45,6 +45,8 @@ FocusScope
 			top: parent.top
 			right: parent.right
 		}
+
+        resizableColumns: false
 	}
 
 	// Table of files on the IED
@@ -69,7 +71,7 @@ FocusScope
 		boundsBehavior: Flickable.StopAtBounds
 
 		columnWidthProvider: function(t_column) {
-			return Globals.calcColumnsWidth(headerID, tableID, t_column)
+			return Globals.columnWidthCalculator(headerID, tableID, t_column)
 		}
 
 		selectionBehavior: TableView.SelectRows

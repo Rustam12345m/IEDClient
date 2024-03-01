@@ -29,7 +29,7 @@ namespace App::Models
 	class RCB_OverviewTable : public QAbstractTableModel
 	{
 		Q_OBJECT
-		enum Columns {
+		enum ColumnType {
 			RCB_ENA_COLUMN = 0,
 			RCB_RESV_COLUMN,
 			RCB_ID_COLUMN,
@@ -40,7 +40,7 @@ namespace App::Models
 			RCB_BUFF_COLUMN,
 			RCB_INTEGRITY_COLUMN,
 
-			ColumnsCount
+			COLUMN_COUNT
 		};
 
 	public:

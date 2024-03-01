@@ -35,6 +35,6 @@ FocusScope
 	Text {
 		anchors.centerIn: parent
 
-		text: "Controls"
+		text: "Controls page. Not support yet..."
 	}
 }

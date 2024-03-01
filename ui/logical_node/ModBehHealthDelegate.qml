@@ -35,7 +35,7 @@ Item
 	required property int delegateHeight
 	required property int delegateWidth
 	required property bool selected
-	required property int value
+	required property var value
 
 	property alias prompt: toolTip.text
 	property alias text: textFild.text
@@ -57,22 +57,14 @@ Item
 		Rectangle {
 			id: led
 
-			anchors.centerIn: parent
-
-			color: {
-				switch (rootID.value) {
-				case 0: return "red";
-				case 1: return "green";
-				case 2: return "yellow";
-				case 3: return "blue";
-				case 4: return "darkred";
-				}
-				return "lightgray";
-			}
+			anchors {
+                fill: parent
+                margins: 1
+            }
 
 			height: delegateHeight - 4
 			width: height
-			radius: height/2
+			color: rootID.value.color
 
 			Text {
 				id: textFild
@@ -81,12 +73,13 @@ Item
 				horizontalAlignment: Text.AlignHCenter
 				verticalAlignment: Text.AlignVCenter
 
-				text: rootID.value
+                font.bold: false
+				text: rootID.value.text
 			}
 		}
 		ToolTip {
 			id: toolTip
-			text: ""//Information isn't found"
+			text: rootID.value.tip
 			delay: 200
 			visible: mouseArea.containsMouse && (text != "")
 		}
