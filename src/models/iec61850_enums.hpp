@@ -19,20 +19,20 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "update_lns_status_cmd.hpp"
-#include <QDebug>
+#pragma once
 
-namespace Cmd
+#include <QString>
+#include <QVariant>
+
+namespace App::Models
 {
-	void UpdateLNs_StatusCmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
-	{
-        Core::ptrModelStateUpd vals = t_api->state().getStatusForAllLN(m_ld);
-        if (vals) {
-            emit sigModelValues(vals);
-
-            emit sigCmdEvent(Cmd::CmdEvent::FinishEvent("", "All status of LNs were updated", true));
-        } else {
-            emit sigCmdEvent(Cmd::CmdEvent::FinishEvent("", "Can't get status for LNs", false));
-        }
-	}
-}
+    class IEC_EnumUserInfo
+    {
+    public:
+        static QVariant mod(int t_mod);
+        static QVariant beh(int t_beh);
+        static QVariant health(int t_health);
+        static QVariant sim(int t_value);
+        static QVariant blk(int t_value);
+    };
+};

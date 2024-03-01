@@ -53,10 +53,9 @@ namespace Core
 		return *this;
 	}
 
-	DataModelBuilder& DataModelBuilder::createDA(const QString &t_name,
-												const QString &t_fc, int t_fcNum)
+	DataModelBuilder& DataModelBuilder::createDA(const QString &t_name, const QString &t_fc)
 	{
-		m_lastDA = QSharedPointer<DataAttribute>::create(m_lastDO.get(), t_name, t_fc, t_fcNum);
+		m_lastDA = QSharedPointer<DataAttribute>::create(m_lastDO.get(), t_name, t_fc);
 		m_lastDO->addSubItem(m_lastDA);
 		return *this;
 	}
@@ -78,14 +77,14 @@ namespace Core
 
 	DataModelBuilder& DataModelBuilder::createDataSet_Elem(const QString &t_ref, const QString &t_fc)
 	{
-		auto dsEnt = QSharedPointer<DataSetEntity>::create(lastDataSet().get(), t_ref, t_fc);
+		auto dsEnt = QSharedPointer<DataSetItem>::create(lastDataSet().get(), t_ref, t_fc);
 		lastDataSet()->addSubItem(dsEnt);
 		return *this;
 	}
 
 	QSharedPointer<DataModel> DataModelBuilder::build(QThread *t_guiThread)
 	{
-		m_model->calcIEDNameFromLD();
+		m_model->resolveIEDName();
 
 		for (size_t i=0;i<m_model->getItemCount();i++) {
 			auto ld = m_model->getLogicalDevice(i);
@@ -97,6 +96,16 @@ namespace Core
 				ln->m_sigMatrix = LN_SignalMatrixBuilder::create(ln);
 			}
 		}
+
+        // Resolve dsRefItem in the model
+        for (auto ds : m_model->getDataSetList()) {
+            for (size_t i=0;i<ds->getItemCount();i++) {
+                auto dsItem = ds->getItem<DataSetItem>(i);
+                if (dsItem) {
+                    dsItem->m_valItem = m_model->getItemByReference(dsItem->ref());
+                }
+            }
+        }
 		return m_model;
 	}
 }

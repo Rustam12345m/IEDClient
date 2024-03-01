@@ -38,7 +38,7 @@ namespace
         return dt.toString("HH:mm:ss dd.MM.yyyy"); // ms isn't important
     }
 
-    void 	getValuesForItemByMmsValue(Core::ptrModelItem t_item, Core::ptrModelValuesUpd t_vals,
+    void 	getValuesForItemByMmsValue(Core::ptrModelItem t_item, Core::ptrModelStateUpd t_vals,
                                        MmsValue *t_mmsValue)
     {
         if (t_item == nullptr || t_vals == nullptr || t_mmsValue == nullptr) {
@@ -148,7 +148,7 @@ namespace
         }
     }
 
-    int 	getValuesForDataAttribute(Core::ptrModelItem t_item, Core::ptrModelValuesUpd t_vals,
+    int 	getValuesForDataAttribute(Core::ptrModelItem t_item, Core::ptrModelStateUpd t_vals,
                                       sIedConnection *t_con, FunctionalConstraint t_fc)
     {
         IedClientError retval = IED_ERROR_OK;
@@ -165,7 +165,7 @@ namespace
         return 0;
     }
 
-    int 	getValuesForDataObject(Core::ptrDO t_do, Core::ptrModelValuesUpd t_vals,
+    int 	getValuesForDataObject(Core::ptrDO t_do, Core::ptrModelStateUpd t_vals,
                                    sIedConnection *t_con)
     {
         if (t_do == nullptr || t_vals == nullptr || t_con == nullptr) {
@@ -184,13 +184,13 @@ namespace
 
 namespace Libiec61850
 {
-    Core::ptrModelValuesUpd IED_StateAPI_Impl::getStatusForAllLD(Core::ptrDataModel t_model)
+    Core::ptrModelStateUpd IED_StateAPI_Impl::getStatusForAllLD(Core::ptrDataModel t_model)
     {
         if (!m_api.isConnected()) {
 			return nullptr;
 		}
 
-		auto vals = Core::ptrModelValuesUpd::create();
+		auto vals = Core::ptrModelStateUpd::create();
 
         for (size_t i=0;i<t_model->getItemCount();i++) {
 			auto ld = t_model->getItem< Core::LogicalDevice >(i);
@@ -204,13 +204,13 @@ namespace Libiec61850
 		return vals;
     }
 
-    Core::ptrModelValuesUpd IED_StateAPI_Impl::getStatusForAllLN(Core::ptrLD t_ld)
+    Core::ptrModelStateUpd IED_StateAPI_Impl::getStatusForAllLN(Core::ptrLD t_ld)
     {
         if (!m_api.isConnected()) {
 			return nullptr;
 		}
 
-        auto vals = Core::ptrModelValuesUpd::create();
+        auto vals = Core::ptrModelStateUpd::create();
 		for (size_t i=0;i<t_ld->getItemCount();i++) {
 			auto ln = t_ld->getItem< Core::LogicalNode >(i);
 
@@ -223,13 +223,13 @@ namespace Libiec61850
         return vals;
     }
 
-    Core::ptrModelValuesUpd IED_StateAPI_Impl::getValsForLN(Core::ptrLN t_ln)
+    Core::ptrModelStateUpd IED_StateAPI_Impl::getValsForLN(Core::ptrLN t_ln)
     {
         if (!m_api.isConnected()) {
 			return nullptr;
 		}
 
-		auto vals = Core::ptrModelValuesUpd::create();
+		auto vals = Core::ptrModelStateUpd::create();
 		for (size_t i=0;i<t_ln->getItemCount();i++) {
 			auto item = t_ln->getItem< Core::DataObject >(i);
 
@@ -238,7 +238,7 @@ namespace Libiec61850
 		return vals;
     }
 
-    Core::ptrModelValuesUpd IED_StateAPI_Impl::getValsForDS(Core::ptrDataSet t_ds)
+    Core::ptrModelStateUpd IED_StateAPI_Impl::getValsForDS(Core::ptrDataSet t_ds)
     {
         if (!m_api.isConnected()) {
 			return nullptr;

@@ -41,7 +41,7 @@ namespace App::Models
 		case Qt::Horizontal: {
 			const char* labels[] = { "Name", "Mode", "Beh", "Health" };
 
-			return QVariant(labels[t_section % ColumnsCount]);
+			return QVariant(labels[t_section % COLUMN_COUNT]);
 		}
 		case Qt::Vertical: {
 			break;
@@ -62,7 +62,7 @@ namespace App::Models
 
 	int ReportsTable::columnCount(const QModelIndex &t_parent) const
 	{
-		return ColumnsCount;
+		return COLUMN_COUNT;
 	}
 
 	QVariant ReportsTable::data(const QModelIndex &t_index, int t_role) const

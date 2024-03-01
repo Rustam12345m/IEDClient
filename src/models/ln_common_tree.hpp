@@ -26,10 +26,10 @@
 
 namespace App::Models
 {
-	class LN_SignalTree : public QAbstractItemModel
+	class LN_CommonTree : public QAbstractItemModel
 	{
 		Q_OBJECT
-		enum Columns {
+		enum ColumnType {
 			NAME_COLUMN = 0,
 			VALUE_COLUMN,
 			FC_COLUMN,
@@ -38,9 +38,9 @@ namespace App::Models
 		};
 
 	public:
-		LN_SignalTree(QObject *t_parent, QSharedPointer<Core::IED> t_ied);
+		LN_CommonTree(QObject *t_parent, Core::ptrIED t_ied);
 
-		void 	setActiveIED(QSharedPointer<Core::IED> t_ied);
+		void 	    setActiveIED(Core::ptrIED t_ied);
 
 		QVariant 	headerData(int t_sect, Qt::Orientation t_orient,
 								int t_role = Qt::DisplayRole) const override;
@@ -56,8 +56,8 @@ namespace App::Models
 		void 	slotDataUpdated(QSharedPointer<QList<Core::ModelItem*>> t_nodes);
 
 	private:
-		QSharedPointer<Core::IED> m_ied;
-		Core::ptrLN	 					 m_lnode;
-		QMetaObject::Connection 		 m_updConnection; // signal from LogicalNode
+		Core::ptrIED             m_ied;
+		Core::ptrLN	 			 m_lnode;
+		QMetaObject::Connection  m_updConnection; // signal from LogicalNode
 	};
 }

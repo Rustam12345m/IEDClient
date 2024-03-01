@@ -41,14 +41,14 @@ FocusScope {
 		property int sortedColumn: 0
 
 		anchors {
-			left: treeView.left
+			left: treeViewID.left
 			top: parent.top
 			right: parent.right
 		}
 		boundsBehavior: Flickable.StopAtBounds
 		resizableColumns: false
 
-		syncView: treeView
+		syncView: treeViewID
 
 		delegate: Rectangle {
 			property int column: model.column
@@ -77,7 +77,7 @@ FocusScope {
 
 	// Tree of DO
 	TreeView {
-		id: treeView
+		id: treeViewID
 
 		anchors {
 			left: parent.left
@@ -95,12 +95,12 @@ FocusScope {
 		boundsBehavior: Flickable.StopAtBounds
 
 		columnWidthProvider: function(t_column) {
-			return Globals.calcColumnsWidth(treeView, treeView, t_column)
+			return Globals.columnWidthCalculator(headerID, treeViewID, t_column)
 		}
 
 		selectionBehavior: TableView.SelectRows
 		selectionModel: ItemSelectionModel {
-			model: treeView.model
+			model: treeViewID.model
 		}
 
 		delegate: TreeViewDelegate {
@@ -115,10 +115,10 @@ FocusScope {
 			TapHandler {
 				acceptedModifiers: Qt.ControlModifier
 				onTapped: {
-					if (treeView.isExpanded(row))
-						treeView.collapseRecursively(row)
+					if (treeViewID.isExpanded(row))
+						treeViewID.collapseRecursively(row)
 					else
-						treeView.expandRecursively(row)
+						treeViewID.expandRecursively(row)
 				}
 			}
 		}

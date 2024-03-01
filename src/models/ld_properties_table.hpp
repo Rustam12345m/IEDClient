@@ -67,8 +67,8 @@ namespace App::Models
 
 	private:
 		Core::ptrIED		m_ied;
-		QList<PropertyItem> 	m_ldProp;
-		QList<PropertyItem> 	m_devProp;
-		int 					m_currentLD = -1;
+		QList<PropertyItem> m_ldProp;
+		QList<PropertyItem> m_devProp;
+		int 				m_currentLD = -1;
 	};
 }

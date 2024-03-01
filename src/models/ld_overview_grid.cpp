@@ -20,18 +20,31 @@
  * */
 
 #include "ld_overview_grid.hpp"
+#include "iec61850_enums.hpp"
 
 namespace App::Models
 {
-	LD_OverviewGrid::LD_OverviewGrid(QObject *t_parent, QSharedPointer<Core::IED> t_ied)
+    namespace
+    {
+        inline int getInt(Core::ptrModelItem t_item)
+        {
+            return t_item ? t_item->getValue().toInt() : -1;
+        }
+    }
+
+	LD_OverviewGrid::LD_OverviewGrid(QObject *t_parent, Core::ptrIED t_ied)
 		: QAbstractListModel(t_parent), m_ied(t_ied)
 	{
 	}
 
-	void LD_OverviewGrid::setActiveIED(QSharedPointer<Core::IED> t_ied)
+	void LD_OverviewGrid::setActiveIED(Core::ptrIED t_ied)
 	{
 		beginResetModel();
+
+        connectToUpdates(m_ied->model(), false);
 		m_ied = t_ied;
+        connectToUpdates(m_ied->model(), true);
+
 		endResetModel();
 	}
 
@@ -49,23 +62,23 @@ namespace App::Models
 	{
 		auto ld = m_ied->model().getLogicalDevice(t_index.row());
 		if (ld) {
-			QVariantMap ldObj;
-			ldObj["name"] = ld->getName();
-
+            int mod = -1, beh = -1, health = -1, sim = -1, blk = -1;
 			auto ln0 = ld->lln0();
 			if (ln0) {
-				ldObj["mod"] = ln0->getModItem() ? ln0->getModItem()->getValue() : "?";
-				ldObj["beh"] = ln0->getBehItem() ? ln0->getBehItem()->getValue() : "?";
-				ldObj["health"] = ln0->getHealthItem() ? ln0->getHealthItem()->getValue() : "?";;
-				ldObj["sim"] = "?";
-				ldObj["blk"] = "?";
-			} else {
-				ldObj["mod"] = "?";
-				ldObj["beh"] = "?";
-				ldObj["health"] = "?";
-				ldObj["sim"] = "?";
-				ldObj["blk"] = "?";
-			}
+                mod = getInt(ln0->getModItem());
+                beh = getInt(ln0->getBehItem());
+                health = getInt(ln0->getHealthItem());
+                sim = -1;
+                blk = -1;
+            }
+
+			QVariantMap ldObj;
+			ldObj["name"] = ld->getName();
+            ldObj["mod"] = IEC_EnumUserInfo::mod(mod);
+            ldObj["beh"] = IEC_EnumUserInfo::beh(beh);
+            ldObj["health"] = IEC_EnumUserInfo::health(health);
+            ldObj["sim"] = IEC_EnumUserInfo::sim(sim);
+            ldObj["blk"] = IEC_EnumUserInfo::blk(blk);
 			return ldObj;
 		}
 		return QVariant(" - ");
@@ -75,12 +88,29 @@ namespace App::Models
 	{
 		//qDebug() << "LD_OverviewGrid: Selected LD = " << t_ld;
 		emit sigLDSelected(t_ld);
-		beginResetModel();
-		endResetModel();
 	}
 
-	void LD_OverviewGrid::slotDataUpdated(bool t_status)
+    void LD_OverviewGrid::connectToUpdates(Core::DataModel &t_model, bool t_con)
+    {
+        for (size_t i=0;i<t_model.getItemCount();i++) {
+            auto ld = t_model.getItem< Core::LogicalDevice >(i);
+
+            if (ld->lln0()) {
+                if (t_con) {
+                    connect(ld->lln0().get(), &Core::LogicalNode::sigDataObjectUpdated,
+                            this, &LD_OverviewGrid::slotDataUpdated);
+                } else {
+                    disconnect(ld->lln0().get(), &Core::LogicalNode::sigDataObjectUpdated,
+                            this, &LD_OverviewGrid::slotDataUpdated);
+                }
+            }
+        }
+    }
+
+    void LD_OverviewGrid::slotDataUpdated(Core::ptrModelItemList t_nodes)
 	{
+        // qDebug() << "LD_OverviewGrid: Data updated";
+
 		beginResetModel();
 		endResetModel();
 	}

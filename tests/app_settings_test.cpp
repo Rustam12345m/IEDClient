@@ -19,20 +19,24 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "update_lns_status_cmd.hpp"
-#include <QDebug>
+#include "app_settings_test.hpp"
 
-namespace Cmd
+#include "app/app_settings.hpp"
+
+namespace AppConfigTests
 {
-	void UpdateLNs_StatusCmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
-	{
-        Core::ptrModelStateUpd vals = t_api->state().getStatusForAllLN(m_ld);
-        if (vals) {
-            emit sigModelValues(vals);
+	TEST(AppConfig_ConCredentials, CheckSaveParameters) {
+		Cmd::IEDCredentials con("ip", 123, false, "name", "pass");
 
-            emit sigCmdEvent(Cmd::CmdEvent::FinishEvent("", "All status of LNs were updated", true));
-        } else {
-            emit sigCmdEvent(Cmd::CmdEvent::FinishEvent("", "Can't get status for LNs", false));
-        }
+		ASSERT_EQ(con.login(), "name");
+		ASSERT_EQ(con.ip(), "ip");
+		ASSERT_EQ(con.port(), 123);
+		ASSERT_EQ(con.tls(), false);
+	}
+
+	TEST(AppConfig_Parser, ParseBrokenFile_ExpectOK) {
+		App::AppSettings conf;
+
+		ASSERT_EQ(conf.getConnectionList().empty(), true);
 	}
 }

@@ -45,7 +45,7 @@ namespace Cmd
 		}
 
 	signals:
-		void 	sigNewModelValues(Core::ptrModelValuesUpd t_vals);
+		void 	sigModelValues(Core::ptrModelStateUpd t_vals);
 
 	private:
 		Core::ptrIED    m_ied;

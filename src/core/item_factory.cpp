@@ -53,9 +53,9 @@ namespace Core
 	}
 
 	QSharedPointer<ModelItem> ItemFactory::createDA(ModelItem *t_parent, const QString &t_name,
-												const QString &t_fc, int t_fcNum)
+												const QString &t_fc)
 	{
-		return QSharedPointer<DataAttribute>::create(t_parent, t_name, t_fc, t_fcNum);
+		return QSharedPointer<DataAttribute>::create(t_parent, t_name, t_fc);
 	}
 
 	QSharedPointer<ModelItem> ItemFactory::createSA(ModelItem *t_parent, const QString &t_name)

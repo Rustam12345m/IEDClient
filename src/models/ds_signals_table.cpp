@@ -23,12 +23,12 @@
 
 namespace App::Models
 {
-	DS_SignalsTable::DS_SignalsTable(QObject *t_parent, QSharedPointer<Core::IED> t_ied)
+	DS_SignalsTable::DS_SignalsTable(QObject *t_parent, Core::ptrIED t_ied)
 		: QAbstractTableModel(t_parent), m_ied(t_ied)
 	{
 	}
 
-	void DS_SignalsTable::setActiveIED(QSharedPointer<Core::IED> t_ied)
+	void DS_SignalsTable::setActiveIED(Core::ptrIED t_ied)
 	{
 		beginResetModel();
 		m_ied = t_ied;
@@ -71,7 +71,7 @@ namespace App::Models
 
 	int DS_SignalsTable::columnCount(const QModelIndex &t_parent) const
 	{
-		return ColumnsCount;
+		return COLUMN_COUNT;
 	}
 
 	QVariant DS_SignalsTable::data(const QModelIndex &t_index, int t_role) const
@@ -79,7 +79,7 @@ namespace App::Models
 		int row = t_index.row(), column = t_index.column();
 
 		if (m_dataSet) {
-			auto dsItem = m_dataSet->getItem<Core::DataSetEntity>(row);
+			auto dsItem = m_dataSet->getItem<Core::DataSetItem>(row);
 			if (dsItem) {
 				switch (column) {
 				case DS_REF_COLUMN: {
@@ -103,15 +103,15 @@ namespace App::Models
 
 	void DS_SignalsTable::slotDataUpdated(QList<Core::ptrModelItem> t_items)
 	{
-		emit dataChanged(index(0, DS_VALUE_COLUMN), index(rowCount() - 1, ColumnsCount));
+		emit dataChanged(index(0, DS_VALUE_COLUMN), index(rowCount() - 1, COLUMN_COUNT));
 	}
 
 	void DS_SignalsTable::slotDataSetSelected(int t_ds)
 	{
-		auto dsList = m_ied->model().dsList();
+		auto getDataSetList = m_ied->model().getDataSetList();
 		Core::ptrDataSet newDS;
-		if (t_ds >= 0 && t_ds < dsList.size()) {
-			newDS = dsList[t_ds];
+		if (t_ds >= 0 && t_ds < getDataSetList.size()) {
+			newDS = getDataSetList[t_ds];
 
 			if (m_dataSet != newDS) {
 				if (m_dataSet) {

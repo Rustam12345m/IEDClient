@@ -52,25 +52,25 @@ namespace App::Models
 
 	int HistConTable::columnCount(const QModelIndex &t_parent) const
 	{
-		return Columns::COLUMNS_COUNT;
+		return ColumnType::COLUMNS_COUNT;
 	}
 
 	QVariant HistConTable::data(const QModelIndex &t_index, int t_role) const
 	{
 		switch (t_index.column()) {
-		case Columns::NUMBER: {
+		case ColumnType::NUMBER: {
 			return QVariant(t_index.row() + 1);
 		}
-		case Columns::IED_NAME: {
+		case ColumnType::IED_NAME: {
 			return m_con[t_index.row()].ied();
 		}
-		case Columns::IP_ADDR : {
+		case ColumnType::IP_ADDR : {
 			return m_con[t_index.row()].ip();
 		}
-		case Columns::PORT_COLUMN : {
+		case ColumnType::PORT_COLUMN : {
 			return m_con[t_index.row()].port();
 		}
-		case Columns::LAST_CONNECT: {
+		case ColumnType::LAST_CONNECT: {
 			return m_con[t_index.row()].date();
 		}
 		}

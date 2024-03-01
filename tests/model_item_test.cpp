@@ -19,34 +19,33 @@
  *  See COPYING file for the complete license text.
  * */
 
-#pragma once
+#include "model_item_test.hpp"
 
-#include <QString>
-#include <QSharedPointer>
+#include "core/data_model_builder.hpp"
+#include "core/item_factory.hpp"
 
-namespace Core
+namespace CoreTests
 {
-	class ModelItemValue
-	{
-	public:
-		ModelItemValue() {}
-		ModelItemValue(const QString &t_value) : m_value(t_value) {}
+	TEST(DataModel, DataModel) {
+		auto model = Core::ItemFactory::createModel("NoName").staticCast<Core::DataModel>();
 
-		QString 	str() {
-			return m_value;
-		}
+		auto ld1 = Core::ItemFactory::createLD(model.get(), "IEDNameLD1");
+		auto ld2 = Core::ItemFactory::createLD(model.get(), "IEDNameLD2");
+	}
 
-		bool operator==(const ModelItemValue &t_other) {
-			return (m_value == t_other.m_value);
-		}
+	TEST(DataModel, LogicalDevices) {
 
-		static auto		create(const QString &t_value) {
-			return QSharedPointer<ModelItemValue>::create(t_value);
-		}
+	}
 
-	private:
-		QString 	m_value;
-	};
+	TEST(DataModel, LogicalNodes) {
+		
+	}
 
-	typedef QSharedPointer<ModelItemValue> 	ptrModelValue;
+	TEST(DataModel, DataObjects) {
+		
+	}
+
+	TEST(DataModel, DataSets) {
+		
+	}
 }

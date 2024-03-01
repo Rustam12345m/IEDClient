@@ -50,5 +50,6 @@ namespace Cmd
 	private:
 		IEDCredentials	m_cred;
 		Core::ptrIED    m_ied;
+        int             m_percProgress = 0;
 	};
 }

@@ -30,12 +30,12 @@ namespace Cmd
 {
 	void ConnectCmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
 	{
-        emit sigStartEvent(Cmd::CmdEventInfo::StartEvent(m_cred.ip(),
-                QString("Try to connect to %1:%2").arg(m_cred.ip()).arg(m_cred.port())));
+        emit sigCmdEvent(CmdEvent::StartEvent(m_cred.ip(),
+                QString(tr("Try to connect to %1:%2")).arg(m_cred.ip()).arg(m_cred.port())));
 
         if (!t_api->connect(m_cred)) {
-            emit sigFinishedEvent(Cmd::CmdEventInfo::FinishEvent(m_cred.ip(),
-                    QString("Can't connect to %1:%2").arg(m_cred.ip()).arg(m_cred.port()),
+            emit sigCmdEvent(CmdEvent::FinishEvent(m_cred.ip(),
+                    QString(tr("Can't connect to %1:%2")).arg(m_cred.ip()).arg(m_cred.port()),
                     false));
             return;
         }
@@ -43,9 +43,10 @@ namespace Cmd
         connect(&t_api->model(), &Cmd::Interface::IED_ModelAPI::sigFoundNode,
                 this, &ConnectCmd::slotFoundNewLN);
 
-        emit sigProcessEvent(Cmd::CmdEventInfo::ProcessEvent(m_cred.ip(),
-                QString("Successfully connected to %1:%2. Fetch the data model")
-                                    .arg(m_cred.ip()).arg(m_cred.port()), 50));
+        m_percProgress = 50;
+        emit sigCmdEvent(CmdEvent::ProcessEvent(m_cred.ip(),
+                QString(tr("Successfully connected to %1:%2. Fetch the data model"))
+                        .arg(m_cred.ip()).arg(m_cred.port()), m_percProgress));
 
         Core::DataModelBuilder builder;
         t_api->model().fetchDataModel(builder);
@@ -54,13 +55,18 @@ namespace Cmd
         auto ident = t_api->getServIdentity();
         m_ied->setIdentify(ident);
 
-        emit sigFinishedEvent(Cmd::CmdEventInfo::FinishEvent(m_cred.ip(), 
-                QString("IEDClient successfully connected to %1:%2").arg(m_cred.ip()).arg(m_cred.port()),
+        emit sigCmdEvent(CmdEvent::FinishEvent(m_cred.ip(), 
+                QString(tr("IEDClient successfully connected to %1:%2"))
+                        .arg(m_cred.ip()).arg(m_cred.port()),
                 true));
 	}
 
 	void ConnectCmd::slotFoundNewLN(const QString &t_msg)
 	{
-        emit sigProcessEvent(Cmd::CmdEventInfo::ProcessEvent(m_cred.ip(), t_msg, 77));
+        m_percProgress += 5;
+        if (m_percProgress >= 99) {
+            m_percProgress = 99;
+        }
+        emit sigCmdEvent(CmdEvent::ProcessEvent(m_cred.ip(), t_msg, m_percProgress));
 	}
 }

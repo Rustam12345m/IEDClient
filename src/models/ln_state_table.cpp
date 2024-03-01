@@ -19,7 +19,7 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "ln_signals_table.hpp"
+#include "ln_state_table.hpp"
 
 namespace
 {
@@ -40,12 +40,12 @@ namespace
 
 namespace App::Models
 {
-	LN_SignalTable::LN_SignalTable(QObject *t_parent, QSharedPointer<Core::IED> t_ied)
+	LN_SignalTable::LN_SignalTable(QObject *t_parent, Core::ptrIED t_ied)
 		: QAbstractTableModel(t_parent), m_ied(t_ied)
 	{
 	}
 
-	void LN_SignalTable::setActiveIED(QSharedPointer<Core::IED> t_ied)
+	void LN_SignalTable::setActiveIED(Core::ptrIED t_ied)
 	{
 		beginResetModel();
 		m_ied = t_ied;
@@ -171,7 +171,8 @@ namespace App::Models
 				emit dataChanged(index(i, DO_VALUE_COLUMN), index(i, DO_TS_COLUMN));
 			}
 		}
-	}
+        // emit dataChanged(index(0, DO_NAME_COLUMN), index(rowCount() - 1, DO_DESC_COLUMN));
+    }
 
 	void LN_SignalTable::slotLNSelected(int t_ld, int t_ln)
 	{

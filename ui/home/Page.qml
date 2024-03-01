@@ -322,8 +322,7 @@ FocusScope
 	}
 
 	Keys.onPressed: function(event) {
-		console.log("StartPage: Key pressed " + event.key)
-
+		// console.log("HomePage: Key pressed " + event.key)
 		if (event.key == Qt.Key_Return || event.key == Qt.Key_Enter) {
 			connButton.onClicked()
 		}

@@ -21,14 +21,16 @@
 
 #pragma once
 
-#include "item_value.hpp"
+#include "model_item_value.hpp"
 
 #include <QList>
 #include <QDebug>
 
 namespace Core
 {
-	class ModelItemValuesUpd;
+    class ModelItem;
+	class ModelStateUpdater;
+    typedef QSharedPointer<QList<ModelItem*>>   ptrModelItemList;
 
 	/*
 	 * This is a basic class for all elements in the data model of an IED.
@@ -110,8 +112,10 @@ namespace Core
 		ModelItem*		m_parent = nullptr;
 		QString		    m_name;
 		QString 	    m_delimetr = "/"; // Current node and its children
-		ptrModelValue	    m_value;
+		ptrModelValue	m_value;
 		QList<QSharedPointer<ModelItem>>	m_items; // List of children
+
+    friend class DataModelBuilder;
 	};
 	typedef QSharedPointer< ModelItem > 	ptrModelItem;
 }

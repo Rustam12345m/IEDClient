@@ -30,16 +30,16 @@ namespace App::Models
 	class LN_OverviewTable : public QAbstractTableModel
 	{
 		Q_OBJECT
-		enum Columns {
-			NameColumn = 0,
-			ModeColumn,
-			BehColumn,
-			HealthColumn,
+	public:
+		enum ColumnType {
+			NAME_COLUMN = 0,
+			MOD_COLUMN,
+			BEH_COLUMN,
+			HEALTH_COLUMN,
 
-			ColumnsCount
+			COLUMN_COUNT
 		};
 
-	public:
 		LN_OverviewTable(QObject *t_parent, Core::ptrIED t_ied);
 
 		Q_INVOKABLE void setSelectedLN(int t_inx);
@@ -61,12 +61,13 @@ namespace App::Models
 		void	sigLNSelected(int t_ld, int t_ln);
 
 	public slots:
-		void 	slotDataUpdated(bool t_status);
+        void 	slotDataUpdated(QSharedPointer<QList<Core::ModelItem*>> t_nodes);
 		void 	slotLDSelected(int t_ld);
 
 	private:
 		Core::ptrIED 	m_ied;
-		Core::ptrLD	 			m_ldev; // selected Logical Device by user
-		int 					m_ldevIndex = 0; //
+		Core::ptrLD	    m_ldev; // selected Logical Device by user
+		int 			m_ldevIndex = 0; //
+        QMetaObject::Connection m_updConnection; // signal from LD
 	};
 }

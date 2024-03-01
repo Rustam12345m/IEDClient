@@ -25,29 +25,29 @@ namespace App
 {
 	void BackendInterface::putCmdToQueue(Cmd::ptrCMD t_cmd)
 	{
-		connect(t_cmd.get(), &Cmd::CmdInterface::sigProcessEvent, this, &BackendInterface::slotCmdProcess);
-		connect(t_cmd.get(), &Cmd::CmdInterface::sigFinishedEvent, this, &BackendInterface::slotCmdFinished);
+		connect(t_cmd.get(), &Cmd::CmdInterface::sigCmdEvent, this, &BackendInterface::slotCmdEvent);
 
 		m_con.m_cmdThread->putCommand(t_cmd);
 	}
 
-	void BackendInterface::slotCmdStart(Cmd::CmdEventInfo t_ev)
+	void BackendInterface::slotCmdEvent(Cmd::CmdEvent t_ev)
 	{
-        m_events.slotEventToLog(t_ev);
-	}
+        m_events.putEventToStorage(t_ev);
 
-	void BackendInterface::slotCmdProcess(Cmd::CmdEventInfo t_ev)
-	{
-        m_events.slotEventToLog(t_ev);
-
-		emit sigCmdProgress(t_ev.m_perc, t_ev.m_msg);
-	}
-
-	void BackendInterface::slotCmdFinished(Cmd::CmdEventInfo t_ev)
-	{
-        m_events.slotEventToLog(t_ev);
-
-		emit sigCmdFinished(t_ev.m_result);
+        switch (t_ev.m_type) {
+        case Cmd::PROCESS_EVENT: {
+		    emit sigCmdProgress(t_ev.m_perc, t_ev.m_msg);
+            break;
+        }
+        case Cmd::FINISH_EVENT: {
+		    emit sigCmdFinished(t_ev.m_result);
+            break;
+        }
+        case Cmd::START_EVENT:
+        case Cmd::UNDEFINED_EVENT: {
+            break;
+        }
+        }
 	}
 
 	void BackendInterface::slotConnected(bool t_done)

@@ -3,11 +3,17 @@ set(TEST_TARGET_NAME tests)
 set(TEST_SOURCES
 	main.cpp
 
-	Cmd_Tests.hpp
-	DataModel_Tests.hpp
-	DumpModel_Tests.hpp
-	Items_Tests.hpp
-	AppConfig_Tests.hpp
+    model_item_test.hpp
+    model_item_test.cpp
+
+    data_model_test.hpp
+    data_model_test.cpp
+
+	app_settings_test.hpp
+	app_settings_test.cpp
+
+	cmd_test.hpp
+	cmd_test.cpp
 )
 
 # Unit tests

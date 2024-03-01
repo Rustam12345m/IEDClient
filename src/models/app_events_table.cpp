@@ -23,52 +23,52 @@
 
 namespace App::Models
 {
-	AppEventsTable::AppEventsTable(QObject *parent) : QAbstractTableModel{parent}
-	{
-	}
+    AppEventsTable::AppEventsTable(QObject *parent) : QAbstractTableModel{parent}
+    {
+    }
 
-	int AppEventsTable::rowCount(const QModelIndex &t_parent) const
-	{
-		return 50;
-	}
+    int AppEventsTable::rowCount(const QModelIndex &t_parent) const
+    {
+        return 50;
+    }
 
-	int AppEventsTable::columnCount(const QModelIndex &t_parent) const
-	{
-		return 3;
-	}
+    int AppEventsTable::columnCount(const QModelIndex &t_parent) const
+    {
+        return COLUMN_COUNT;
+    }
 
-	QHash<int, QByteArray> AppEventsTable::roleNames() const
-	{
-		return { {Qt::DisplayRole, "display"} };
-	}
+    QHash<int, QByteArray> AppEventsTable::roleNames() const
+    {
+        return { {Qt::DisplayRole, "display"} };
+    }
 
-	Qt::ItemFlags AppEventsTable::flags(const QModelIndex &t_index) const
-	{
-		return QAbstractTableModel::flags(t_index) | Qt::ItemIsSelectable;
-	}
+    Qt::ItemFlags AppEventsTable::flags(const QModelIndex &t_index) const
+    {
+        return QAbstractTableModel::flags(t_index) | Qt::ItemIsSelectable;
+    }
 
-	QVariant AppEventsTable::headerData(int t_section, Qt::Orientation t_orientation, int t_role) const
-	{
-		if (t_role != Qt::DisplayRole || t_orientation != Qt::Horizontal) {
-			return QVariant();
-		}
+    QVariant AppEventsTable::headerData(int t_section, Qt::Orientation t_orientation, int t_role) const
+    {
+        if (t_role != Qt::DisplayRole || t_orientation != Qt::Horizontal) {
+            return QVariant();
+        }
 
-		switch (t_section) {
-		case DATE_COLUMN: {
-			return "Date and Time";
-		}
-		case SOURCE_COLUMN: {
-			return "Source";
-		}
-		case DESC_COLUMN: {
-			return "Description";
-		}
-		}
-		return QVariant("");
-	}
+        switch (t_section) {
+        case DATE_COLUMN: {
+            return "Date and Time";
+        }
+        case SOURCE_COLUMN: {
+            return "Source";
+        }
+        case DESC_COLUMN: {
+            return "Description";
+        }
+        }
+        return QVariant("");
+    }
 
-	QVariant AppEventsTable::data(const QModelIndex &t_index, int t_role) const
-	{
-		return QString("Events (%1, %2)").arg(t_index.column()).arg(t_index.row());
-	}
+    QVariant AppEventsTable::data(const QModelIndex &t_index, int t_role) const
+    {
+        return QString("Events (%1, %2)").arg(t_index.column()).arg(t_index.row());
+    }
 }

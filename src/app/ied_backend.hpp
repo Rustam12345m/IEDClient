@@ -27,8 +27,8 @@
 #include "models/ld_overview_grid.hpp"
 #include "models/ld_properties_table.hpp"
 #include "models/ln_overview_table.hpp"
-#include "models/ln_signals_table.hpp"
-#include "models/ln_signals_tree.hpp"
+#include "models/ln_state_table.hpp"
+#include "models/ln_common_tree.hpp"
 #include "models/ds_overview_table.hpp"
 #include "models/ds_signals_table.hpp"
 #include "models/rcb_overview_table.hpp"
@@ -71,7 +71,7 @@ namespace App
 
 	public slots:
 		void 	slotConnected(bool t_done) override;
-		void 	slotUpdateItems(Core::ptrModelValuesUpd t_vals);
+		void 	slotUpdateItems(Core::ptrModelStateUpd t_vals);
 
 	protected:
 		// Models for Tables in GUI
@@ -79,7 +79,7 @@ namespace App
 		Models::LD_PropertiesTable*	m_ldPropModel = nullptr;
 		Models::LN_OverviewTable*	m_lnsModel = nullptr;
 		Models::LN_SignalTable*		m_lnStateModel = nullptr;
-		Models::LN_SignalTree* 		m_lnTreeModel = nullptr;
+		Models::LN_CommonTree* 		m_lnTreeModel = nullptr;
 		Models::SortProxyModel* 	m_sortDOModel = nullptr;
 		Models::DS_OverviewTable*	m_dsComModel = nullptr;
 		Models::DS_SignalsTable* 	m_dsSigModel = nullptr;

@@ -19,16 +19,16 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "ln_signals_tree.hpp"
+#include "ln_common_tree.hpp"
 
 namespace App::Models
 {
-	LN_SignalTree::LN_SignalTree(QObject *t_parent, QSharedPointer<Core::IED> t_ied)
+	LN_CommonTree::LN_CommonTree(QObject *t_parent, Core::ptrIED t_ied)
 		: QAbstractItemModel(t_parent), m_ied(t_ied)
 	{
 	}
 
-	void LN_SignalTree::setActiveIED(QSharedPointer<Core::IED> t_ied)
+	void LN_CommonTree::setActiveIED(Core::ptrIED t_ied)
 	{
 		beginResetModel();
 		m_ied = t_ied;
@@ -36,7 +36,7 @@ namespace App::Models
 		endResetModel();
 	}
 
-	QVariant LN_SignalTree::headerData(int t_sect, Qt::Orientation t_orient, int t_role) const
+	QVariant LN_CommonTree::headerData(int t_sect, Qt::Orientation t_orient, int t_role) const
 	{
 		switch (t_sect) {
 		case NAME_COLUMN: {
@@ -52,7 +52,7 @@ namespace App::Models
 		return QVariant("");
 	}
 
-	int LN_SignalTree::rowCount(const QModelIndex &t_parent) const
+	int LN_CommonTree::rowCount(const QModelIndex &t_parent) const
 	{
 		if (t_parent.column() > 0) {
 			return 0;
@@ -71,12 +71,12 @@ namespace App::Models
 		return 0;
 	}
 
-	int LN_SignalTree::columnCount(const QModelIndex &t_parent) const
+	int LN_CommonTree::columnCount(const QModelIndex &t_parent) const
 	{
 		return COLUMN_COUNT;
 	}
 
-	QModelIndex LN_SignalTree::index(int t_row, int t_column, const QModelIndex &t_parent) const
+	QModelIndex LN_CommonTree::index(int t_row, int t_column, const QModelIndex &t_parent) const
 	{
 		if (!hasIndex(t_row, t_column, t_parent)) {
 			return QModelIndex();
@@ -98,7 +98,7 @@ namespace App::Models
 		return QModelIndex();
 	}
 
-	QModelIndex LN_SignalTree::parent(const QModelIndex &t_index) const
+	QModelIndex LN_CommonTree::parent(const QModelIndex &t_index) const
 	{
 		if (!t_index.isValid()) {
 			return QModelIndex();
@@ -116,7 +116,7 @@ namespace App::Models
 		return createIndex(parent->getItemCount(), 0, parent);
 	}
 
-	QVariant LN_SignalTree::data(const QModelIndex &t_index, int t_role) const
+	QVariant LN_CommonTree::data(const QModelIndex &t_index, int t_role) const
 	{
 		if (!t_index.isValid() || (t_role != Qt::DisplayRole)) {
 			return QVariant();
@@ -131,7 +131,7 @@ namespace App::Models
 			case FC_COLUMN: {
 				auto *da = dynamic_cast<Core::DataAttribute*>(item);
 				if (da) {
-					return QVariant(da->fc());
+					return QVariant(da->fcStr());
 				}
 				return QVariant("");
 			}
@@ -143,15 +143,15 @@ namespace App::Models
 		return QVariant(" ? ");
 	}
 
-	void LN_SignalTree::slotDataUpdated(QSharedPointer<QList<Core::ModelItem*>> t_nodes)
+	void LN_CommonTree::slotDataUpdated(QSharedPointer<QList<Core::ModelItem*>> t_nodes)
 	{
-		//qDebug() << "LN_SignalTree: slotDataUpdated";
+		//qDebug() << "LN_CommonTree: slotDataUpdated";
 		// emit dataChanged(index(0, 0), index(rowCount() - 1, VALUE_COLUMN));
 	}
 
-	void LN_SignalTree::slotLNSelected(int t_ld, int t_ln)
+	void LN_CommonTree::slotLNSelected(int t_ld, int t_ln)
 	{
-		// qDebug() << "LN_SignalTree: ld = " << t_ld << " ln = " << t_ln;
+		// qDebug() << "LN_CommonTree: ld = " << t_ld << " ln = " << t_ln;
 
 		Core::ptrLN ln = m_ied->model().getLogicalNode(t_ld, t_ln);
 		if (ln != m_lnode) {
@@ -163,7 +163,7 @@ namespace App::Models
 			m_lnode = ln;
 			if (m_lnode) {
 				m_updConnection = connect(m_lnode.get(), &Core::LogicalNode::sigDataObjectUpdated,
-										this, &LN_SignalTree::slotDataUpdated);
+										this, &LN_CommonTree::slotDataUpdated);
 			}
 			endResetModel();
 		}

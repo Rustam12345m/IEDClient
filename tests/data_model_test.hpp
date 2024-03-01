@@ -19,20 +19,22 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "update_lns_status_cmd.hpp"
-#include <QDebug>
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
-namespace Cmd
+#include "core/data_model_builder.hpp"
+
+namespace CoreTests
 {
-	void UpdateLNs_StatusCmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
+	class DataModel_Fixt : public ::testing::Test
 	{
-        Core::ptrModelStateUpd vals = t_api->state().getStatusForAllLN(m_ld);
-        if (vals) {
-            emit sigModelValues(vals);
+	protected:
+		DataModel_Fixt() {}
+		~DataModel_Fixt() override {}
 
-            emit sigCmdEvent(Cmd::CmdEvent::FinishEvent("", "All status of LNs were updated", true));
-        } else {
-            emit sigCmdEvent(Cmd::CmdEvent::FinishEvent("", "Can't get status for LNs", false));
-        }
-	}
+		void SetUp() override;
+		void TearDown() override;
+
+		Core::ptrDataModel  m_model;
+	};
 }

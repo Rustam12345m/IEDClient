@@ -23,7 +23,7 @@
 
 #include "backend_interface.hpp"
 #include "models/sort_proxy_model.hpp"
-#include "models/dev_fs_table.hpp"
+#include "models/ied_file_table.hpp"
 
 namespace App
 {
@@ -53,7 +53,7 @@ namespace App
 		void 				slotConnected(bool t_done) override;
 
 	protected:
-		Models::DevFS_Table* 	m_fsModel = nullptr;
+		Models::IED_FileTable* 	m_fsModel = nullptr;
 		Models::SortProxyModel* m_sortedModel = nullptr;
 	};
 }

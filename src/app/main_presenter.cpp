@@ -38,22 +38,43 @@ namespace App
 		t_context->setContextProperty("fsBackend", &m_fsBackend);
 	}
 
-	void MainPresenter::connectTo(const QVariantMap &t_data)
+    QVariant MainPresenter::getIEDConStatus()
+    {
+        QVariantMap retval;
+        if (isConnected()) {
+            retval["isConnected"] = true;
+            retval["text"] = QString(tr("Connected to: %1:%2"))
+                                .arg(m_con.m_cred.ip())
+                                .arg(m_con.m_cred.port());
+        } else if (!m_con.m_cred.ip().isEmpty()) {
+            retval["isConnected"] = false;
+            retval["text"] = QString(tr("Disconnected from: %1:%2"))
+                                .arg(m_con.m_cred.ip())
+                                .arg(m_con.m_cred.port());
+        } else {
+            retval["isConnected"] = false;
+            retval["text"] = tr("Not connected");
+        }
+        return retval;
+    }
+
+    void MainPresenter::connectTo(const QVariantMap &t_data)
 	{
+        qDebug() << "MainPresenter: Connect cmd";
+
 		Cmd::IEDCredentials cred(t_data);
 		m_con.allocateNewConnection(cred);
 
 		auto cmd = Cmd::ConnectCmd::create(m_con.m_cred, m_con.m_ied);
 
-		connect(cmd.get(), &Cmd::ConnectCmd::sigProcessEvent, this, &MainPresenter::slotCmdProcess);
-		connect(cmd.get(), &Cmd::ConnectCmd::sigFinishedEvent, this, &MainPresenter::slotConnected);
+		connect(cmd.get(), &Cmd::ConnectCmd::sigCmdEvent, this, &MainPresenter::slotCmdEvent);
 
 		m_con.m_cmdThread->putCommand(cmd);
 	}
 
 	void MainPresenter::disconnectFrom()
 	{
-        qDebug() << "MainPresenter: Disconnect";
+        qDebug() << "MainPresenter: Disconnect cmd";
 
         auto cmd = Cmd::DisConnectCmd::create(m_con.m_ied);
         m_con.m_cmdThread->putCommand(cmd);
@@ -75,16 +96,29 @@ namespace App
 		// dump->start();
 	}
 
-	void MainPresenter::slotConnected(Cmd::CmdEventInfo t_ev)
+	void MainPresenter::slotCmdEvent(Cmd::CmdEvent t_ev)
 	{
-        qDebug() << "MainPresenter: Slot connected";
+        m_events.putEventToStorage(t_ev);
 
-        m_iedBackend.slotConnected(t_ev.m_result);
-        m_fsBackend.slotConnected(t_ev.m_result);
+        switch (t_ev.m_type) {
+        case Cmd::PROCESS_EVENT: {
+		    emit sigCmdProgress(t_ev.m_perc, t_ev.m_msg);
+            break;
+        }
+        case Cmd::FINISH_EVENT: {
+            m_iedBackend.slotConnected(t_ev.m_result);
+            m_fsBackend.slotConnected(t_ev.m_result);
+            m_appBackend.saveCredsToHistory(m_con.m_cred);
 
-		emit sigConnected(t_ev.m_result);
-
-		m_appBackend.saveCredsToHistory(m_con.m_cred);
+		    emit sigCmdFinished(t_ev.m_result);
+            emit sigIEDConChanged(t_ev.m_result);
+            break;
+        }
+        case Cmd::START_EVENT:
+        case Cmd::UNDEFINED_EVENT: {
+            break;
+        }
+        }
 	}
 
     void MainPresenter::slotConClosed()
@@ -92,6 +126,6 @@ namespace App
         m_iedBackend.slotConnected(false);
         m_fsBackend.slotConnected(false);
 
-		emit sigConnected(false);
+		emit sigIEDConChanged(false);
     }
 }

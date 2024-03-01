@@ -91,7 +91,7 @@ namespace App::Models
 
 	int RCB_OverviewTable::columnCount(const QModelIndex &t_parent) const
 	{
-		return ColumnsCount;
+		return COLUMN_COUNT;
 	}
 
 	QVariant RCB_OverviewTable::data(const QModelIndex &t_index, int t_role) const
@@ -142,6 +142,6 @@ namespace App::Models
 
 	void RCB_OverviewTable::slotDataUpdated(bool t_done)
 	{
-		emit dataChanged(index(0, RCB_ENA_COLUMN), index(rowCount() - 1, ColumnsCount));
+		emit dataChanged(index(0, RCB_ENA_COLUMN), index(rowCount() - 1, COLUMN_COUNT));
 	}
 }

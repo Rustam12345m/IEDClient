@@ -21,11 +21,10 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "Cmd_Tests.hpp"
-#include "DataModel_Tests.hpp"
-#include "DumpModel_Tests.hpp"
-#include "Items_Tests.hpp"
-#include "AppConfig_Tests.hpp"
+#include "model_item_test.hpp"
+#include "data_model_test.hpp"
+#include "app_settings_test.hpp"
+#include "cmd_test.hpp"
 
 int main(int argc, char **argv)
 {

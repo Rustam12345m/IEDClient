@@ -28,23 +28,29 @@
 
 namespace Core
 {
-	/*
-	 * 
-	 * */
-	class DataSetEntity : public ModelItem
+	class DataSetItem : public ModelItem
 	{
 	public:
-		DataSetEntity(ModelItem *t_parent, const QString &t_ref, const QString &t_fc)
+		DataSetItem(ModelItem *t_parent, const QString &t_ref, const QString &t_fc)
 			: ModelItem(t_parent, t_ref), m_fc{t_fc}
 		{}
 
 		const QString 	ref() const { return m_name; }
 		const QString 	fc() const { return m_fc; }
-		ptrModelItem 	item() { return m_item; }
+		ptrModelItem 	item() { return m_valItem; }
+
+        QString         getValue() const override {
+            if (m_valItem) {
+                return m_valItem->getValue();
+            }
+            return ModelItem::getValue();
+        }
 
 	private:
 		QString 	    m_fc;
-		ptrModelItem	m_item;
+		ptrModelItem	m_valItem;
+
+    friend class DataModelBuilder;
 	};
 
 	/*

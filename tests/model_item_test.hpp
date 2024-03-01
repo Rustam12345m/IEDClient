@@ -21,22 +21,6 @@
 
 #include <gtest/gtest.h>
 
-#include "app/app_settings.hpp"
-
-namespace AppConfigTests
+namespace CoreTests
 {
-	TEST(AppConfig_ConCredentials, CheckSaveParameters) {
-		Cmd::IEDCredentials con("ip", 123, false, "name", "pass");
-
-		ASSERT_EQ(con.login(), "name");
-		ASSERT_EQ(con.ip(), "ip");
-		ASSERT_EQ(con.port(), 123);
-		ASSERT_EQ(con.tls(), false);
-	}
-
-	TEST(AppConfig_Parser, ParseBrokenFile_ExpectOK) {
-		App::AppSettings conf;
-
-		ASSERT_EQ(conf.getConnectionList().empty(), true);
-	}
 }

@@ -35,7 +35,7 @@ namespace Core
 		DataModelBuilder& 	createLD(const QString &t_name);
 		DataModelBuilder& 	createLN(const QString &t_name);
 		DataModelBuilder& 	createDO(const QString &t_name);
-		DataModelBuilder& 	createDA(const QString &t_name, const QString &t_fc, int t_fcNum);
+		DataModelBuilder& 	createDA(const QString &t_name, const QString &t_fc);
 		DataModelBuilder& 	createSDA(QSharedPointer<ModelItem> t_parent, const QString &t_name);
 
 		DataModelBuilder& 	createDataSet(const QString &t_name, const QString &t_lnRef, bool t_del);

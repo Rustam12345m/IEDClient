@@ -48,6 +48,8 @@ Item
 			top: parent.top
 			right: parent.right
 		}
+
+        resizableColumns: false
 	}
 
 	// Table of DO for a selected LN
@@ -71,9 +73,9 @@ Item
 		interactive: true
 		boundsBehavior: Flickable.StopAtBounds
 
-		// columnWidthProvider: function(t_column) {
-		// 	return Globals.calcColumnsWidth(headerID, tableID, t_column)
-		// }
+		columnWidthProvider: function(t_column) {
+            return Globals.columnWidthCalculator(headerID, tableID, t_column)
+		}
 
 		selectionBehavior: TableView.SelectRows
 		selectionModel: ItemSelectionModel {
@@ -119,8 +121,10 @@ Item
 			target: iedBackend.getLN_StateModel()
 
 			function onDataChanged() {
-				Qt.callLater(rootID.resizeColumnsToContent)
 			}
+
+            function onModelReset() {
+            }
 		}
 	}
 }

@@ -4,24 +4,23 @@ set(CORE_SOURCES
 	model_item.hpp
 	model_item.cpp
 
-	item_value.hpp
+	model_item_value.hpp
 	model_values_updater.hpp
 
 	item_factory.hpp
 	item_factory.cpp
 
 	sub_attribute.hpp
+
+	data_attribute.cpp
 	data_attribute.hpp
 	data_object.hpp
 
 	logical_node.hpp
 	logical_node.cpp
-
 	logical_device.hpp
 
 	dataset.hpp
-	dataset.cpp
-
 	report_control_block.hpp
 	goose_control_block.hpp
 	sv_control_block.hpp

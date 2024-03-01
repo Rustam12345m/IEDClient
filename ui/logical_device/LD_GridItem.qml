@@ -127,19 +127,21 @@ Item {
 							padding: 6
 
 							text: model.value
+                            color: model.color
 
 							font.pointSize: 10
+                            font.bold: true
 						}
 					}
 				}
 
 				Component.onCompleted: {
-					rootID.ldValsModel.append({ param: "Mod:", 		value: ld_object.mod })
-					rootID.ldValsModel.append({ param: "Beh:", 		value: ld_object.beh })
-					rootID.ldValsModel.append({ param: "Health:", 	value: ld_object.health })
-					rootID.ldValsModel.append({ param: "", 			value: "" })
-					rootID.ldValsModel.append({ param: "Sim:", 		value: ld_object.sim })
-					rootID.ldValsModel.append({ param: "Blk:", 		value: ld_object.blk })
+					rootID.ldValsModel.append({ param: "Mod:", 		value: ld_object.mod.text, color: ld_object.mod.color })
+					rootID.ldValsModel.append({ param: "Beh:", 		value: ld_object.beh.text, color: ld_object.beh.color })
+					rootID.ldValsModel.append({ param: "Health:", 	value: ld_object.health.text, color: ld_object.health.color })
+					rootID.ldValsModel.append({ param: "", 			value: "", color: "" })
+					rootID.ldValsModel.append({ param: "Sim:", 		value: ld_object.sim.text, color: ld_object.sim.color })
+					rootID.ldValsModel.append({ param: "Blk:", 		value: ld_object.blk.text, color: ld_object.blk.color })
 				}
 			}
 		}

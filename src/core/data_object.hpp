@@ -60,17 +60,22 @@ namespace Core
 		void		addSubItem(QSharedPointer< ModelItem > t_node) override {
 			m_items.push_back(t_node);
 
+            ptrDA da = t_node.staticCast<DataAttribute>();
+            if (!da) {
+                return;
+            }
+
 			if (t_node->getName() == "stVal" || t_node->getName() == "mag") {
-				m_value =  t_node.staticCast<DataAttribute>();
+				m_value = da;
 			}
 			else if (t_node->getName() == "q") {
-				m_quality = t_node.staticCast<DataAttribute>();;
+				m_quality = da;
 			}
 			else if (t_node->getName() == "t") {
-				m_timestamp = t_node.staticCast<DataAttribute>();;
+				m_timestamp = da;
 			}
 			else if (t_node->getName() == "d") {
-				m_description = t_node.staticCast<DataAttribute>();;
+				m_description = da;
 			}
 		}
 
@@ -86,7 +91,7 @@ namespace Core
 		ptrDA		m_quality;
 		ptrDA		m_timestamp;
 		ptrDA		m_description;
+        ptrModelItem m_fc[Core::FC_ENUM::COUNT];
 	};
-
 	typedef QSharedPointer< DataObject > 	ptrDO;
 }

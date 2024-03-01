@@ -34,6 +34,6 @@ FocusScope {
 	Text {
 		anchors.centerIn: parent
 
-		text: "Settings (SGCB)"
+		text: "Settings (SGCB). Not support yet..."
 	}
 }

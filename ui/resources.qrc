@@ -37,7 +37,7 @@
         <file>logical_node/LN_OverviewTable.qml</file>
         <file>logical_node/ModBehHealthDelegate.qml</file>
         <file>logical_node/LN_StateView.qml</file>
-        <file>logical_node/LN_SignalsTree.qml</file>
+        <file>logical_node/LN_CommonTree.qml</file>
         <file>logical_node/LN_ControlsView.qml</file>
         <file>logical_node/LN_SettingsView.qml</file>
         <file>logical_node/DiaChangeValue.qml</file>

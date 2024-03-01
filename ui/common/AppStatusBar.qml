@@ -35,7 +35,7 @@ Rectangle
 
 	property alias msgStatusText: msgStatusTextID.text
 	property alias pageStatusText: pageStatusTextID.text
-	property alias connStatusText: conStatusTextID.text
+    property var appConnStatus
 
 	RowLayout {
 		anchors {
@@ -53,7 +53,7 @@ Rectangle
 			id: msgStatusTextID
 			height: parent.height
 
-			horizontalAlignment: Text.AlignHLeft // Center
+			horizontalAlignment: Text.AlignLeft // HCenter
 			verticalAlignment: Text.AlignVCenter
 
 			text: ""
@@ -104,15 +104,15 @@ Rectangle
 
 				horizontalAlignment: Text.AlignLeft
 				verticalAlignment: Text.AlignVCenter
-				
-				text: "Connection status"
+
+				text: appConnStatus.text
 			}
 			Led {
 				Layout.alignment: Qt.AlignVCenter
 
 				height: 20
 				width: 20
-				color: presenter.isConnected ? "green" : "gray"
+				color: appConnStatus.isConnected ? "green" : "gray"
 			}
 		}
 	}
