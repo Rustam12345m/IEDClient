@@ -29,108 +29,108 @@ import AppStylesModule
 
 // TreeView with DO/DA/SA for the selected Logical Node
 FocusScope {
-	id: rootID
+    id: rootID
 
-	signal sigValueClicked(string t_ref, string t_msg, string t_value)
+    signal sigValueClicked(string t_ref, string t_msg, string t_value)
 
-	// Header
-	HorizontalHeaderView {
-		id: headerID
+    // Header
+    HorizontalHeaderView {
+        id: headerID
 
-		property int sortOrder: 0
-		property int sortedColumn: 0
+        property int sortOrder: 0
+        property int sortedColumn: 0
 
-		anchors {
-			left: treeViewID.left
-			top: parent.top
-			right: parent.right
-		}
-		boundsBehavior: Flickable.StopAtBounds
-		resizableColumns: false
+        anchors {
+            left: treeViewID.left
+            top: parent.top
+            right: parent.right
+        }
+        boundsBehavior: Flickable.StopAtBounds
+        resizableColumns: false
 
-		syncView: treeViewID
+        syncView: treeViewID
 
-		delegate: Rectangle {
-			property int column: model.column
+        delegate: Rectangle {
+            property int column: model.column
 
-			implicitWidth: labelID.implicitWidth + 24 + 10
-			implicitHeight: 30
+            implicitWidth: labelID.implicitWidth + 24 + 10
+            implicitHeight: 30
 
-			color: "#f6f6f6"
-			border.color: "#e4e4e4"
+            color: "#f6f6f6"
+            border.color: "#e4e4e4"
 
-			Row {
-				id: rowID
+            Row {
+                id: rowID
 
-				anchors.centerIn: parent
-				spacing: 5
+                anchors.centerIn: parent
+                spacing: 5
 
-				Label {
-					id: labelID
+                Label {
+                    id: labelID
 
-					text: model.display
-					color: "#ff26282a"
-				}
-			}
-		}
-	}
+                    text: model.display
+                    color: "#ff26282a"
+                }
+            }
+        }
+    }
 
-	// Tree of DO
-	TreeView {
-		id: treeViewID
+    // Tree of DO
+    TreeView {
+        id: treeViewID
 
-		anchors {
-			left: parent.left
-			right: parent.right
-			// top: parent.top
-			top: headerID.bottom
-			bottom: parent.bottom
-		}
+        anchors {
+            left: parent.left
+            right: parent.right
+            // top: parent.top
+            top: headerID.bottom
+            bottom: parent.bottom
+        }
 
-		model: iedBackend.getLN_TreeModel()
+        model: iedBackend.getLN_TreeModel()
 
-		focus: true
-		clip: true
-		interactive: true
-		boundsBehavior: Flickable.StopAtBounds
+        focus: true
+        clip: true
+        interactive: true
+        boundsBehavior: Flickable.StopAtBounds
 
-		columnWidthProvider: function(t_column) {
-			return Globals.columnWidthCalculator(headerID, treeViewID, t_column)
-		}
+        columnWidthProvider: function(t_column) {
+            return Globals.columnWidthCalculator(headerID, treeViewID, t_column)
+        }
 
-		selectionBehavior: TableView.SelectRows
-		selectionModel: ItemSelectionModel {
-			model: treeViewID.model
-		}
+        selectionBehavior: TableView.SelectRows
+        selectionModel: ItemSelectionModel {
+            model: treeViewID.model
+        }
 
-		delegate: TreeViewDelegate {
-			TapHandler {
-				acceptedButtons: Qt.RightButton //Qt.LeftButton
+        delegate: TreeViewDelegate {
+            TapHandler {
+                acceptedButtons: Qt.RightButton //Qt.LeftButton
 
-				onTapped: function() {
-					sigValueClicked("DO_Reference", "DO_Name", "Value_123")
-				}
-			}
+                onTapped: function() {
+                    sigValueClicked("DO_Reference", "DO_Name", "Value_123")
+                }
+            }
 
-			TapHandler {
-				acceptedModifiers: Qt.ControlModifier
-				onTapped: {
-					if (treeViewID.isExpanded(row))
-						treeViewID.collapseRecursively(row)
-					else
-						treeViewID.expandRecursively(row)
-				}
-			}
-		}
+            TapHandler {
+                acceptedModifiers: Qt.ControlModifier
+                onTapped: {
+                    if (treeViewID.isExpanded(row))
+                        treeViewID.collapseRecursively(row)
+                    else
+                        treeViewID.expandRecursively(row)
+                }
+            }
+        }
 
-		ScrollBar.vertical: ScrollBar {
-			policy: ScrollBar.AsNeeded
-			active: true
-			onActiveChanged: {
-				if (!active) {
-					active = true;
-				}
-			}
-		}
-	}
+        ScrollBar.vertical: ScrollBar {
+            policy: ScrollBar.AsNeeded
+            active: true
+            onActiveChanged: {
+                if (!active) {
+                    active = true;
+                }
+            }
+        }
+    }
 }

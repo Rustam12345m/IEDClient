@@ -24,87 +24,87 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 Item {
-	id: rootID
+    id: rootID
 
-	property string doReference: "" 
-	property alias text: msgText.text
-	property alias value: valueBox.text
+    property string doReference: "" 
+    property alias text: msgText.text
+    property alias value: valueBox.text
 
-	signal sigResult(bool t_user, string t_ref, string t_value)
+    signal sigResult(bool t_user, string t_ref, string t_value)
 
-	Dialog {
-		id: diaID
+    Dialog {
+        id: diaID
 
-		anchors.centerIn: parent
+        anchors.centerIn: parent
 
-		width: Math.max(400, msgText.implicitWidth + 50)
-		height: 150
+        width: Math.max(400, msgText.implicitWidth + 50)
+        height: 150
 
-		modal: true
-		closePolicy: Dialog.NoAutoClose
-		visible: false
+        modal: true
+        closePolicy: Dialog.NoAutoClose
+        visible: false
 
-		ColumnLayout {
-			anchors.fill: parent
+        ColumnLayout {
+            anchors.fill: parent
 
-			Label {
-				Layout.alignment: Qt.AlignHCenter
+            Label {
+                Layout.alignment: Qt.AlignHCenter
 
-				id: msgText
+                id: msgText
 
-				text: ""
-			}
+                text: ""
+            }
 
-			TextField {
-				Layout.alignment: Qt.AlignHCenter
+            TextField {
+                Layout.alignment: Qt.AlignHCenter
 
-				id: valueBox
+                id: valueBox
 
-				width: 100
-				height: 30
+                width: 100
+                height: 30
 
-				verticalAlignment: Text.AlignVCenter
-				focus: true
+                verticalAlignment: Text.AlignVCenter
+                focus: true
 
-				font.pixelSize: 14
+                font.pixelSize: 14
 
-				text: qsTr("100500.100500")
-			}
-		}
+                text: qsTr("100500.100500")
+            }
+        }
 
-		footer: DialogButtonBox {
-			Button {
-				text: "Ok"
-				onClicked: {
-					console.log("Ok Button Clicked!")
-					diaID.close()
+        footer: DialogButtonBox {
+            Button {
+                text: "Ok"
+                onClicked: {
+                    console.log("Ok Button Clicked!")
+                    diaID.close()
 
-					sigResult(true)
-				}
-			}
+                    sigResult(true)
+                }
+            }
 
-			Button {
-				text: "Cancel"
-				onClicked: {
-					console.log("Cancel Button Clicked!")
-					diaID.close()
-				}
-			}
-		}
-	}
+            Button {
+                text: "Cancel"
+                onClicked: {
+                    console.log("Cancel Button Clicked!")
+                    diaID.close()
+                }
+            }
+        }
+    }
 
-	function isActive() {
-		return diaID.visible
-	}
+    function isActive() {
+        return diaID.visible
+    }
 
-	function open(t_ref, t_msg, t_value) {
-		rootID.doReference = t_ref
-		msgText.text = t_msg
-		valueBox.text = t_value
-		diaID.visible = true;
-	}
+    function open(t_ref, t_msg, t_value) {
+        rootID.doReference = t_ref
+        msgText.text = t_msg
+        valueBox.text = t_value
+        diaID.visible = true;
+    }
 
-	function close() {
-		diaID.visible = false;
-	}
+    function close() {
+        diaID.visible = false;
+    }
 }

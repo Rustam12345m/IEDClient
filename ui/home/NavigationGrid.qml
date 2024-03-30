@@ -26,112 +26,112 @@ import GlobalVarsModule
 
 Rectangle
 {
-	id: rootID
+    id: rootID
 
-	property alias currentIndex: gridID.currentIndex
+    property alias currentIndex: gridID.currentIndex
 
-	anchors.fill: parent
+    anchors.fill: parent
 
-	color: "gray" //"lightgray"
-	opacity: 0.8
-	z: 100500
-	visible: false
+    color: "gray" //"lightgray"
+    opacity: 0.8
+    z: 100500
+    visible: false
 
-	signal sigSelectedNextPage(int t_id)
+    signal sigSelectedNextPage(int t_id)
 
-	Dialog {
-		id: dialogID
+    Dialog {
+        id: dialogID
 
-		anchors.centerIn: parent
-		z: 100501
+        anchors.centerIn: parent
+        z: 100501
 
-		width: 635
-		height: 65
+        width: 635
+        height: 65
 
-		modal: true
-		closePolicy: Dialog.CloseOnEscape | Dialog.CloseOnPressOutside
-		visible: false
+        modal: true
+        closePolicy: Dialog.CloseOnEscape | Dialog.CloseOnPressOutside
+        visible: false
 
-		GridView {
-			id: gridID
+        GridView {
+            id: gridID
 
-			anchors {
-				fill: parent
-				margins: 5
-			}
+            anchors {
+                fill: parent
+                margins: 5
+            }
 
-			// clip: true
-			focus: true
-			keyNavigationEnabled: true
-			boundsBehavior: Flickable.StopAtBounds
+            // clip: true
+            focus: true
+            keyNavigationEnabled: true
+            boundsBehavior: Flickable.StopAtBounds
 
-			cellWidth: 100
-			cellHeight: 50
+            cellWidth: 100
+            cellHeight: 50
 
-			model: ListModel {
-				ListElement { name: "Home"; 	page: Globals.Page.START }
-				ListElement { name: "LD"; 		page: Globals.Page.LD }
-				ListElement { name: "LN"; 		page: Globals.Page.LN }
-				ListElement { name: "DS"; 		page: Globals.Page.DS }
-				ListElement { name: "RCB"; 		page: Globals.Page.RCB }
-				ListElement { name: "FS"; 		page: Globals.Page.FS }
-			}
+            model: ListModel {
+                ListElement { name: "Home";     page: Globals.Page.START }
+                ListElement { name: "LD";         page: Globals.Page.LD }
+                ListElement { name: "LN";         page: Globals.Page.LN }
+                ListElement { name: "DS";         page: Globals.Page.DS }
+                ListElement { name: "RCB";         page: Globals.Page.RCB }
+                ListElement { name: "FS";         page: Globals.Page.FS }
+            }
 
-			delegate: Rectangle {
-				property int page: model.page
+            delegate: Rectangle {
+                property int page: model.page
 
-				width: 90
-				height: 40
+                width: 90
+                height: 40
 
-				color: "lightgray"
-				border.width: 2
-				border.color: GridView.isCurrentItem ? "black" : "lightgray"
+                color: "lightgray"
+                border.width: 2
+                border.color: GridView.isCurrentItem ? "black" : "lightgray"
 
-				Label {
-					anchors.centerIn: parent
+                Label {
+                    anchors.centerIn: parent
 
-					text: model.name
-				}
-				MouseArea {
-					anchors.fill: parent
-					acceptedButtons: Qt.LeftButton | Qt.RightButton
+                    text: model.name
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.LeftButton | Qt.RightButton
 
-					onClicked: function(mouse) {
-						sigSelectedNextPage(parent.page)
-						rootID.closeNavigationGrid()
-					}
-				}
-			}
+                    onClicked: function(mouse) {
+                        sigSelectedNextPage(parent.page)
+                        rootID.closeNavigationGrid()
+                    }
+                }
+            }
 
-			Keys.onPressed: function(event) {
-				// console.log("NavigationGrid: Pressed key " + k)
-				if (event.key == Qt.Key_Escape) {
-					rootID.closeNavigationGrid()
-				}
-				if (event.key == Qt.Key_Return || event.key == Qt.Key_Enter) {
-					sigSelectedNextPage(gridID.currentItem.page)
-					rootID.closeNavigationGrid()
-				}
-			}
-		}
+            Keys.onPressed: function(event) {
+                // console.log("NavigationGrid: Pressed key " + k)
+                if (event.key == Qt.Key_Escape) {
+                    rootID.closeNavigationGrid()
+                }
+                if (event.key == Qt.Key_Return || event.key == Qt.Key_Enter) {
+                    sigSelectedNextPage(gridID.currentItem.page)
+                    rootID.closeNavigationGrid()
+                }
+            }
+        }
 
-		onClosed: function() {
-			rootID.closeNavigationGrid()
-		}
-	}
+        onClosed: function() {
+            rootID.closeNavigationGrid()
+        }
+    }
 
-	function showNavigationGrid() {
-		//console.log("NavigationGrid: startLoad")
-		parent.enabled = false
+    function showNavigationGrid() {
+        //console.log("NavigationGrid: startLoad")
+        parent.enabled = false
 
-		rootID.visible = true
-		dialogID.visible = true
-	}
-	function closeNavigationGrid() {
-		//console.log("NavigationGrid: finishLoad")
-		rootID.visible = false
-		dialogID.visible = false
+        rootID.visible = true
+        dialogID.visible = true
+    }
+    function closeNavigationGrid() {
+        //console.log("NavigationGrid: finishLoad")
+        rootID.visible = false
+        dialogID.visible = false
 
-		parent.enabled = true
-	}
+        parent.enabled = true
+    }
 }

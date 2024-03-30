@@ -25,24 +25,24 @@
 
 namespace Core
 {
-	/*
-	 * Representation of Sub-Attribute of Data Attribute
-	 * simpleIOGenericIO/GGIO1.SPCSO1.stVal
-	 * simpleIOGenericIO/GGIO1.AnIn1.mag.f
-	 *
-	 * SubAttr: f
-	 * DA: stVal, mag
-	 * DO: SPCSO1, AnIn1
-	 * LN: GGIO1
-	 * */
-	class SubAttribute: public ModelItem
-	{
-	public:
-		SubAttribute(ModelItem *t_parent, const QString &t_name)
-			: ModelItem(t_parent, t_name)
-		{
-			m_delimetr = "."; // Between DAName and SAName
-		}
-	};
-	typedef QSharedPointer<SubAttribute>	ptrSDA;
+    /*
+     * Representation of Sub-Attribute of Data Attribute
+     * simpleIOGenericIO/GGIO1.SPCSO1.stVal
+     * simpleIOGenericIO/GGIO1.AnIn1.mag.f
+     *
+     * SubAttr: f
+     * DA: stVal, mag
+     * DO: SPCSO1, AnIn1
+     * LN: GGIO1
+     * */
+    class SubAttribute: public ModelItem
+    {
+    public:
+        SubAttribute(ModelItem *t_parent, const QString &t_name)
+            : ModelItem(t_parent, t_name)
+        {
+            m_delimetr = "."; // Between DAName and SAName
+        }
+    };
+    typedef QSharedPointer<SubAttribute>    ptrSDA;
 }

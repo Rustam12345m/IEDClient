@@ -26,38 +26,38 @@
 
 namespace App::Models
 {
-	class LN_CommonTree : public QAbstractItemModel
-	{
-		Q_OBJECT
-		enum ColumnType {
-			NAME_COLUMN = 0,
-			VALUE_COLUMN,
-			FC_COLUMN,
+    class LN_CommonTree : public QAbstractItemModel
+    {
+        Q_OBJECT
+        enum ColumnType {
+            NAME_COLUMN = 0,
+            VALUE_COLUMN,
+            FC_COLUMN,
 
-			COLUMN_COUNT
-		};
+            COLUMN_COUNT
+        };
 
-	public:
-		LN_CommonTree(QObject *t_parent, Core::ptrIED t_ied);
+    public:
+        LN_CommonTree(QObject *t_parent, Core::ptrIED t_ied);
 
-		void 	    setActiveIED(Core::ptrIED t_ied);
+        void        setActiveIED(Core::ptrIED t_ied);
 
-		QVariant 	headerData(int t_sect, Qt::Orientation t_orient,
-								int t_role = Qt::DisplayRole) const override;
+        QVariant    headerData(int t_sect, Qt::Orientation t_orient,
+                               int t_role = Qt::DisplayRole) const override;
 
-		int 		rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
-		int 		columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
-		QModelIndex index(int t_row, int t_column, const QModelIndex &t_parent = QModelIndex()) const override;
-		QModelIndex parent(const QModelIndex &t_index) const override;
-		QVariant 	data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
+        int         rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
+        int         columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
+        QModelIndex index(int t_row, int t_column, const QModelIndex &t_parent = QModelIndex()) const override;
+        QModelIndex parent(const QModelIndex &t_index) const override;
+        QVariant    data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
-	public slots:
-		void 	slotLNSelected(int t_ld, int t_ln);
-		void 	slotDataUpdated(QSharedPointer<QList<Core::ModelItem*>> t_nodes);
+    public slots:
+        void     slotLNSelected(int t_ld, int t_ln);
+        void     slotDataUpdated(QSharedPointer<QList<Core::ModelItem*>> t_nodes);
 
-	private:
-		Core::ptrIED             m_ied;
-		Core::ptrLN	 			 m_lnode;
-		QMetaObject::Connection  m_updConnection; // signal from LogicalNode
-	};
+    private:
+        Core::ptrIED             m_ied;
+        Core::ptrLN              m_lnode;
+        QMetaObject::Connection  m_updConnection; // signal from LogicalNode
+    };
 }

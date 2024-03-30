@@ -1,6 +1,4 @@
 /*
- *  main.cpp
- *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -21,13 +19,11 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "model_item_test.hpp"
-#include "data_model_test.hpp"
-#include "app_settings_test.hpp"
-#include "cmd_test.hpp"
+#include <gtest/gtest.h>
 
-int main(int argc, char **argv)
+namespace TestsCMD
 {
-	::testing::InitGoogleTest(&argc, argv);
-	return RUN_ALL_TESTS();
+    TEST(ModelTest, SubTest1)
+    {
+    }
 }

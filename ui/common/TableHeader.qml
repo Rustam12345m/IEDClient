@@ -27,44 +27,44 @@ import AppStylesModule
 // Header for TableView
 HorizontalHeaderView
 {
-	id: headerID
+    id: headerID
 
-	required property int defDelegateWidth
-	required property int defDelegateHeight
+    required property int defDelegateWidth
+    required property int defDelegateHeight
 
-	property bool rightTextAlign: false
+    property bool rightTextAlign: false
 
-	boundsBehavior: Flickable.StopAtBounds
+    boundsBehavior: Flickable.StopAtBounds
 
-	syncView: tableID
-	clip: true
-	focus: false
+    syncView: tableID
+    clip: true
+    focus: false
 
-	delegate: Rectangle {
-		property var paramModel: model
+    delegate: Rectangle {
+        property var paramModel: model
 
-		implicitWidth: Math.max(labelID.implicitWidth + 10, defDelegateWidth)
-		implicitHeight: defDelegateHeight
+        implicitWidth: Math.max(labelID.implicitWidth + 10, defDelegateWidth)
+        implicitHeight: defDelegateHeight
 
-		border.color: ColorPalette.tableRowBorderColor2
-		color: ColorPalette.tableHeaderColor
-		clip: true
+        border.color: ColorPalette.tableRowBorderColor2
+        color: ColorPalette.tableHeaderColor
+        clip: true
 
-		Text {
-			id: labelID
+        Text {
+            id: labelID
 
-			anchors.fill: parent
+            anchors.fill: parent
 
-			horizontalAlignment: rightTextAlign ? Text.AlignRight : Text.AlignHCenter
-			verticalAlignment: Text.AlignVCenter
-			rightPadding: 8
-			leftPadding: 8
+            horizontalAlignment: rightTextAlign ? Text.AlignRight : Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            rightPadding: 8
+            leftPadding: 8
 
-			color: ColorPalette.tableTextColor
-			font.bold: true
-			focus: false
+            color: ColorPalette.tableTextColor
+            font.bold: true
+            focus: false
 
-			text: model[headerID.textRole]
-		}
-	}
+            text: model[headerID.textRole]
+        }
+    }
 }

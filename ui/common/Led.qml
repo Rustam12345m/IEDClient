@@ -24,41 +24,41 @@ import QtQuick.Controls
 
 Item
 {
-	property alias color: led.color
-	property alias prompt: toolTip.text
+    property alias color: led.color
+    property alias prompt: toolTip.text
 
-	function setStatus(color, prompt) {
-		led.color = color
-		toolTip.text = prompt
-	}
+    function setStatus(color, prompt) {
+        led.color = color
+        toolTip.text = prompt
+    }
 
-	width: 20
-	height: 20
+    width: 20
+    height: 20
 
-	Rectangle {
-		id: led
+    Rectangle {
+        id: led
 
-		anchors.centerIn: parent
+        anchors.centerIn: parent
 
-		height: 16
-		width: 16
-		radius: height/2
+        height: 16
+        width: 16
+        radius: height/2
 
-		border.width: 1
-		border.color: "black"
+        border.width: 1
+        border.color: "black"
 
-		color: "gray"
+        color: "gray"
 
-		MouseArea {
-			id: mouseArea
-			anchors.fill: parent
-			hoverEnabled: true
-		}
-	}
-	ToolTip {
-		id: toolTip
-		text: ""
-		delay: 200
-		visible: mouseArea.containsMouse && (text != "")
-	}
+        MouseArea {
+            id: mouseArea
+            anchors.fill: parent
+            hoverEnabled: true
+        }
+    }
+    ToolTip {
+        id: toolTip
+        text: ""
+        delay: 200
+        visible: mouseArea.containsMouse && (text != "")
+    }
 }

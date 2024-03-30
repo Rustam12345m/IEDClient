@@ -23,29 +23,29 @@ import QtQuick
 import QtQuick.Controls
 
 Item {
-	property alias icon: btn.icon.source
-	property alias prompt: toolTip.text
-	property alias text: btn.text
+    property alias icon: btn.icon.source
+    property alias prompt: toolTip.text
+    property alias text: btn.text
 
-	signal sigClicked()
+    signal sigClicked()
 
-	anchors.verticalCenter: parent.verticalCenter
+    anchors.verticalCenter: parent.verticalCenter
 
-	Button {
-		id: btn
-		anchors.fill: parent
-		focus: false
-		focusPolicy: Qt.NoFocus
+    Button {
+        id: btn
+        anchors.fill: parent
+        focus: false
+        focusPolicy: Qt.NoFocus
 
-		onClicked: function() {
-			sigClicked()
-		}
-	}
-	ToolTip {
-		id: toolTip
-		text: "Information isn't found"
-		delay: 150
-		timeout: 1500
-		visible: btn.hovered
-	}
+        onClicked: function() {
+            sigClicked()
+        }
+    }
+    ToolTip {
+        id: toolTip
+        text: "Information isn't found"
+        delay: 150
+        timeout: 1500
+        visible: btn.hovered
+    }
 }

@@ -25,18 +25,17 @@
 
 namespace Core
 {
-	/*
-	 * Representation a ReportControlBlock of LD
-	 * */
-	class ReportBlock : public ModelItem
-	{
-	public:
-		ReportBlock() : ModelItem(nullptr, "")
-		{
-		}
+    /*
+     * Representation a ReportControlBlock of LD
+     * */
+    class ReportBlock : public ModelItem
+    {
+    public:
+        ReportBlock() : ModelItem(nullptr, "")
+        {
+        }
 
-		void	print() {}
-	};
-
-	typedef QSharedPointer< ReportBlock > 	ptrRCB;
+        void print() {}
+    };
+    typedef QSharedPointer< ReportBlock >     ptrRCB;
 }

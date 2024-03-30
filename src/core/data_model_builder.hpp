@@ -26,48 +26,48 @@
 
 namespace Core
 {
-	class DataModelBuilder
-	{
-	public:
-		DataModelBuilder();
-		~DataModelBuilder();
+    class DataModelBuilder
+    {
+    public:
+        DataModelBuilder();
+        ~DataModelBuilder();
 
-		DataModelBuilder& 	createLD(const QString &t_name);
-		DataModelBuilder& 	createLN(const QString &t_name);
-		DataModelBuilder& 	createDO(const QString &t_name);
-		DataModelBuilder& 	createDA(const QString &t_name, const QString &t_fc);
-		DataModelBuilder& 	createSDA(QSharedPointer<ModelItem> t_parent, const QString &t_name);
+        DataModelBuilder& createLD(const QString &t_name);
+        DataModelBuilder& createLN(const QString &t_name);
+        DataModelBuilder& createDO(const QString &t_name);
+        DataModelBuilder& createDA(const QString &t_name, const QString &t_fc);
+        DataModelBuilder& createSDA(QSharedPointer<ModelItem> t_parent, const QString &t_name);
 
-		DataModelBuilder& 	createDataSet(const QString &t_name, const QString &t_lnRef, bool t_del);
-		DataModelBuilder& 	createDataSet_Elem(const QString &t_ref, const QString &t_fc);
-		DataModelBuilder& 	createRCB(const QString &t_name);
-		DataModelBuilder& 	createGOCB(const QString &t_name);
-		DataModelBuilder& 	createSVCB(const QString &t_name);
+        DataModelBuilder& createDataSet(const QString &t_name, const QString &t_lnRef, bool t_del);
+        DataModelBuilder& createDataSet_Elem(const QString &t_ref, const QString &t_fc);
+        DataModelBuilder& createRCB(const QString &t_name);
+        DataModelBuilder& createGOCB(const QString &t_name);
+        DataModelBuilder& createSVCB(const QString &t_name);
 
-		auto 	lastLD() const { return m_lastLD; }
-		auto 	lastLN() const { return m_lastLN; }
-		auto 	lastDO() const { return m_lastDO; }
-		auto 	lastDA() const { return m_lastDA; }
-		auto 	lastSDA() const { return m_lastSDA; }
+        auto     lastLD() const { return m_lastLD; }
+        auto     lastLN() const { return m_lastLN; }
+        auto     lastDO() const { return m_lastDO; }
+        auto     lastDA() const { return m_lastDA; }
+        auto     lastSDA() const { return m_lastSDA; }
 
-		auto 	lastDataSet() const { return m_lastDataSet; }
-		auto 	lastRCB() const { return m_lastRCB; }
-		auto 	lastGOCB() const { return m_lastGOCB; }
-		auto 	lastSVCB() const { return m_lastSVCB; }
+        auto     lastDataSet() const { return m_lastDataSet; }
+        auto     lastRCB() const { return m_lastRCB; }
+        auto     lastGOCB() const { return m_lastGOCB; }
+        auto     lastSVCB() const { return m_lastSVCB; }
 
-		ptrDataModel	build(QThread *t_guiThread);
+        ptrDataModel    build(QThread *t_guiThread);
 
-	private:
-		ptrDataModel	m_model;
-		ptrLD 			m_lastLD;
-		ptrLN 			m_lastLN;
-		ptrDO 			m_lastDO;
-		ptrDA 			m_lastDA;
-		ptrSDA 			m_lastSDA;
-		//
-		ptrDataSet		m_lastDataSet;
-		ptrRCB			m_lastRCB;
-		ptrGOCB			m_lastGOCB;
-		ptrSVCB			m_lastSVCB;
-	};
+    private:
+        ptrDataModel m_model;
+        ptrLD        m_lastLD;
+        ptrLN        m_lastLN;
+        ptrDO        m_lastDO;
+        ptrDA        m_lastDA;
+        ptrSDA       m_lastSDA;
+        //
+        ptrDataSet   m_lastDataSet;
+        ptrRCB       m_lastRCB;
+        ptrGOCB      m_lastGOCB;
+        ptrSVCB      m_lastSVCB;
+    };
 }

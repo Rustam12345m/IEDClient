@@ -23,15 +23,15 @@
 
 namespace Cmd
 {
-	void UpdateDataSet_Cmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
-	{
-		Core::ptrModelStateUpd vals = t_api->state().getValsForDS(m_dataset);
-		if (vals) {
+    void UpdateDataSet_Cmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
+    {
+        Core::ptrModelStateUpd vals = t_api->state().getValsForDS(m_dataset);
+        if (vals) {
             emit sigModelValues(vals);
 
             emit sigCmdEvent(Cmd::CmdEvent::FinishEvent("", "Dataset's values have been updated", true));
-		} else {
-			emit sigCmdEvent(Cmd::CmdEvent::FinishEvent("", "Can't get informatio about this dataset", false));
-		}
-	}
+        } else {
+            emit sigCmdEvent(Cmd::CmdEvent::FinishEvent("", "Can't get informatio about this dataset", false));
+        }
+    }
 }

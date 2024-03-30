@@ -29,137 +29,137 @@ import "qrc:/common/"
 
 FocusScope
 {
-	id: rootID
+    id: rootID
 
-	function resizeColumnsOnPage() {
-		Globals.resizeColumnsToContent(headerID, tableID)
-	}
+    function resizeColumnsOnPage() {
+        Globals.resizeColumnsToContent(headerID, tableID)
+    }
 
-	// TabBar: Different types of CB
-	Rectangle {
-		id: rectRcbViewTabBar
+    // TabBar: Different types of CB
+    Rectangle {
+        id: rectRcbViewTabBar
 
-		anchors {
-			top: parent.top
-			bottom: parent.bottom
-			left: parent.left
-		}
-		width: 30
+        anchors {
+            top: parent.top
+            bottom: parent.bottom
+            left: parent.left
+        }
+        width: 30
 
-		CustomTabBar {
-			id: rcbTabBarID
+        CustomTabBar {
+            id: rcbTabBarID
 
-			anchors.fill: parent
+            anchors.fill: parent
 
-			leftSide: true
-			cellWidth: 30
-			color: ColorPalette.toolBarColor
+            leftSide: true
+            cellWidth: 30
+            color: ColorPalette.toolBarColor
 
-			selectedColor: "white"
-			unselectedColor: ColorPalette.toolBarColor
+            selectedColor: "white"
+            unselectedColor: ColorPalette.toolBarColor
 
-			model: ListModel {
-				ListElement { title: "BRCB" }
-				ListElement { title: "URCB" }
-				ListElement { title: "GOOSE" }
-				ListElement { title: "SV" }
-			}
+            model: ListModel {
+                ListElement { title: "BRCB" }
+                ListElement { title: "URCB" }
+                ListElement { title: "GOOSE" }
+                ListElement { title: "SV" }
+            }
 
-			onSigTabSelected: function(index) {
-				// lnSignalsStack.currentIndex = index
-			}
-		}
-	}
+            onSigTabSelected: function(index) {
+                // lnSignalsStack.currentIndex = index
+            }
+        }
+    }
 
-	// Header for Table below
-	TableHeader {
-		id: headerID
+    // Header for Table below
+    TableHeader {
+        id: headerID
 
-		defDelegateWidth: 60
-		defDelegateHeight: 30
+        defDelegateWidth: 60
+        defDelegateHeight: 30
 
-		anchors {
-			left: rectRcbViewTabBar.right
-			right: parent.right
-			top: parent.top
-		}
+        anchors {
+            left: rectRcbViewTabBar.right
+            right: parent.right
+            top: parent.top
+        }
 
         resizableColumns: false
-	}
+    }
 
-	// Table of RCB on the IED
-	TableView {
-		id: tableID
+    // Table of RCB on the IED
+    TableView {
+        id: tableID
 
-		anchors {
-			left: rectRcbViewTabBar.right
-			right: parent.right
-			top: headerID.bottom
-			bottom: parent.bottom
-		}
+        anchors {
+            left: rectRcbViewTabBar.right
+            right: parent.right
+            top: headerID.bottom
+            bottom: parent.bottom
+        }
 
-		model: iedBackend.getRCB_ComModel()
+        model: iedBackend.getRCB_ComModel()
 
-		focus: true
-		reuseItems: true
-		keyNavigationEnabled: true
+        focus: true
+        reuseItems: true
+        keyNavigationEnabled: true
 
-		clip: true
-		interactive: true
-		boundsBehavior: Flickable.StopAtBounds
+        clip: true
+        interactive: true
+        boundsBehavior: Flickable.StopAtBounds
 
-		selectionBehavior: TableView.SelectRows
-		selectionModel: ItemSelectionModel {
-			model: tableID.model
-			/*
-			onCurrentChanged: {
-				console.log(currentIndex)
-			}
-			*/
-		}
+        selectionBehavior: TableView.SelectRows
+        selectionModel: ItemSelectionModel {
+            model: tableID.model
+            /*
+            onCurrentChanged: {
+                console.log(currentIndex)
+            }
+            */
+        }
         columnWidthProvider: function(t_column) {
-			return Globals.columnWidthCalculator(headerID, tableID, t_column)
-		}
+            return Globals.columnWidthCalculator(headerID, tableID, t_column)
+        }
 
-		delegate: TextDelegate {
-			delegateHeight: 30
-			selected: (tableID.currentRow == row)
+        delegate: TextDelegate {
+            delegateHeight: 30
+            selected: (tableID.currentRow == row)
 
-			textAlign: Text.AlignHCenter
-			text: model.display
+            textAlign: Text.AlignHCenter
+            text: model.display
 
-			onSigClick: function(row, col) {
-				tableID.focus = true
-				Globals.setSelectedRow(tableID, row)
-			}
-		}
+            onSigClick: function(row, col) {
+                tableID.focus = true
+                Globals.setSelectedRow(tableID, row)
+            }
+        }
 
-		ScrollBar.vertical: ScrollBar {
-			policy: ScrollBar.AsNeeded
-			active: true
+        ScrollBar.vertical: ScrollBar {
+            policy: ScrollBar.AsNeeded
+            active: true
 
-			onActiveChanged: {
-				if (!active) {
-					active = true;
-				}
-			}
-		}
-		ScrollBar.horizontal: ScrollBar {
-			policy: ScrollBar.AsNeeded
-			active: true
+            onActiveChanged: {
+                if (!active) {
+                    active = true;
+                }
+            }
+        }
+        ScrollBar.horizontal: ScrollBar {
+            policy: ScrollBar.AsNeeded
+            active: true
 
-			onActiveChanged: {
-				if (!active) {
-					active = true;
-				}
-			}
-		}
+            onActiveChanged: {
+                if (!active) {
+                    active = true;
+                }
+            }
+        }
 
-		Keys.onPressed: function(event) {
-		}
-	}
+        Keys.onPressed: function(event) {
+        }
+    }
 
-	onVisibleChanged: {
-		tableID.focus = visible
-	}
+    onVisibleChanged: {
+        tableID.focus = visible
+    }
 }

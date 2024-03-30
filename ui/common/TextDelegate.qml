@@ -23,47 +23,47 @@ import QtQuick
 import AppStylesModule
 
 Item {
-	required property int delegateHeight
-	required property bool selected
+    required property int delegateHeight
+    required property bool selected
 
-	property alias text: textFild.text
-	property alias textAlign: textFild.horizontalAlignment
+    property alias text: textFild.text
+    property alias textAlign: textFild.horizontalAlignment
 
-	implicitWidth: textFild.implicitWidth + 10
-	implicitHeight: delegateHeight
+    implicitWidth: textFild.implicitWidth + 10
+    implicitHeight: delegateHeight
 
-	signal sigClick(int row, int col)
-	signal sigDoubleClick(int row, int col)
+    signal sigClick(int row, int col)
+    signal sigDoubleClick(int row, int col)
 
-	Rectangle {
-		anchors.fill: parent
+    Rectangle {
+        anchors.fill: parent
 
-		border.color: ColorPalette.tableRowBorderColor2
-		color: (selected ? ColorPalette.tableRowColor1 : ColorPalette.tableRowColor2)
+        border.color: ColorPalette.tableRowBorderColor2
+        color: (selected ? ColorPalette.tableRowColor1 : ColorPalette.tableRowColor2)
 
-		Text {
-			id: textFild
+        Text {
+            id: textFild
 
-			anchors.fill: parent
+            anchors.fill: parent
 
-			horizontalAlignment: Text.AlignRight
-			verticalAlignment: Text.AlignVCenter
-			rightPadding: 8
-			leftPadding: 8
+            horizontalAlignment: Text.AlignRight
+            verticalAlignment: Text.AlignVCenter
+            rightPadding: 8
+            leftPadding: 8
 
-			elide: Text.ElideRight
-			text: " - "
-		}
-	}
-	MouseArea {
-		anchors.fill: parent
-		acceptedButtons: Qt.LeftButton | Qt.RightButton
+            elide: Text.ElideRight
+            text: " - "
+        }
+    }
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
 
-		onClicked: function(mouse) {
-			sigClick(row, 1)
-		}
-		onDoubleClicked: function(mouse) {
-			sigDoubleClick(row, 1)
-		}
-	}
+        onClicked: function(mouse) {
+            sigClick(row, 1)
+        }
+        onDoubleClicked: function(mouse) {
+            sigDoubleClick(row, 1)
+        }
+    }
 }

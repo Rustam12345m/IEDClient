@@ -26,48 +26,48 @@
 
 namespace App::Models
 {
-	/*
-	* This class represents the model for TableView which contains information
-	* about files on the IED
-	* */
-	class IED_FileTable : public QAbstractTableModel
-	{
-		Q_OBJECT
-		enum ColumnType
-		{
-			FS_INDEX_COLUMN = 0,
-			FS_DATE_COLUMN,
-			FS_NAME_COLUMN,
-			FS_SIZE_COLUMN,
-			FS_FILE_COLUMN,
+    /*
+    * This class represents the model for TableView which contains information
+    * about files on the IED
+    * */
+    class IED_FileTable : public QAbstractTableModel
+    {
+        Q_OBJECT
+        enum ColumnType
+        {
+            FS_INDEX_COLUMN = 0,
+            FS_DATE_COLUMN,
+            FS_NAME_COLUMN,
+            FS_SIZE_COLUMN,
+            FS_FILE_COLUMN,
 
-			FS_COLUMN_COUNT
-		};
+            FS_COLUMN_COUNT
+        };
 
-	private:
-		QSharedPointer<Core::IED> m_ied;
+    private:
+        QSharedPointer<Core::IED> m_ied;
 
-	public:
-		IED_FileTable(QObject *t_parent, QSharedPointer<Core::IED> t_ied);
-		~IED_FileTable() = default;
+    public:
+        IED_FileTable(QObject *t_parent, QSharedPointer<Core::IED> t_ied);
+        ~IED_FileTable() = default;
 
-		void 		setActiveIED(QSharedPointer<Core::IED> t_ied);
+        void        setActiveIED(QSharedPointer<Core::IED> t_ied);
 
-		int			rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
-		int			columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
+        int         rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
+        int         columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
 
-		QHash<int, QByteArray>	roleNames() const override;
-		Qt::ItemFlags			flags(const QModelIndex &t_index) const override;
+        QHash<int, QByteArray>   roleNames() const override;
+        Qt::ItemFlags            flags(const QModelIndex &t_index) const override;
 
-		QVariant	headerData(int t_section, Qt::Orientation t_orientation,
-								int t_role = Qt::DisplayRole) const override;
-		QVariant	data(const QModelIndex &t_index, int role = Qt::DisplayRole) const override;
+        QVariant    headerData(int t_section, Qt::Orientation t_orientation,
+                                int t_role = Qt::DisplayRole) const override;
+        QVariant    data(const QModelIndex &t_index, int role = Qt::DisplayRole) const override;
 
-	signals:
-		void 		sigFS_Updated();
+    signals:
+        void        sigFS_Updated();
 
-	public slots:
-		void		slotDataUpdated();
-		void 		slotRemoveFile(int t_row);
-	};
+    public slots:
+        void        slotDataUpdated();
+        void        slotRemoveFile(int t_row);
+    };
 }

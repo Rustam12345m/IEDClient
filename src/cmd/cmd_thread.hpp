@@ -29,21 +29,21 @@
 
 namespace Cmd
 {
-	class CmdThread : public QThread
-	{
-		Q_OBJECT
-	private:
-		CommandQueue<ptrCMD>			m_queue;
-		Cmd::Interface::ptrIEC61850_API m_api;
+    class CmdThread : public QThread
+    {
+        Q_OBJECT
+    private:
+        CommandQueue<ptrCMD>            m_queue;
+        Cmd::Interface::ptrIEC61850_API m_api;
 
-	public:
-		CmdThread(Cmd::Interface::ptrIEC61850_API t_api);
-		~CmdThread();
+    public:
+        CmdThread(Cmd::Interface::ptrIEC61850_API t_api);
+        ~CmdThread();
 
-		void	putCommand(ptrCMD t_cmd);
+        void    putCommand(ptrCMD t_cmd);
 
-	private:
-		void	run();
-	};
+    private:
+        void    run();
+    };
     typedef QSharedPointer<CmdThread>   ptrCmdThread;
 }

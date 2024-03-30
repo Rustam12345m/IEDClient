@@ -22,35 +22,33 @@
 #pragma once
 
 #include <QString>
+#include "cmd/ied_credentials.hpp"
 
 namespace App
 {
-	class ConfConnectionInfo
-	{
-	public:
-		ConfConnectionInfo() = default;
-		ConfConnectionInfo(const QString &t_ip, int t_port, bool t_tls, const QString &t_name, const QString &t_date)
-			: m_ip(t_ip), m_port(t_port), m_tls(t_tls), m_name(t_name), m_date(t_date) {}
+    class ConfConnectionInfo
+    {
+        ConfConnectionInfo() = default;
+    public:
+        ConfConnectionInfo(const Cmd::IEDCredentials &t_creds,
+                           const QString &t_iedName, const QString &t_date)
+            : m_creds(t_creds), m_iedName(t_iedName), m_date(t_date)
+        {
+        }
 
-		const auto 	ip() const { return m_ip; }
-		const auto 	port() const { return m_port; }
-		const auto	tls() const { return m_tls; }
-		const auto 	ied() const { return m_name; }
-		const auto 	date() const { return m_date; }
+        const auto     ip() const { return m_creds.ip(); }
+        const auto     port() const { return m_creds.port(); }
+        const auto     tls() const { return m_creds.tls(); }
+        const auto     ied() const { return m_iedName; }
+        const auto     date() const { return m_date; }
 
-		bool operator==(const ConfConnectionInfo &t_right) {
-			return (m_ip == t_right.m_ip)
-					&& (m_port == t_right.m_port)
-					&& (m_tls == t_right.m_tls)
-					/* && (m_name == t_right.m_name) */
-					/* && (m_date == t_right.m_date) */;
-		}
+        bool operator==(const ConfConnectionInfo &t_right) {
+            return m_creds == t_right.m_creds;
+        }
 
-	public:
-		QString 	m_ip;
-		int			m_port = 0;
-		bool 		m_tls = false;
-		QString 	m_name;
-		QString 	m_date;
-	};
+    public:
+        Cmd::IEDCredentials m_creds;
+        QString             m_iedName;
+        QString             m_date;
+    };
 }

@@ -40,22 +40,22 @@ namespace Cmd::Interface
     public:
         virtual ~IEC61850_API() {}
 
-        virtual bool    connect(const Cmd::IEDCredentials &t_creds) = 0;
-        virtual void    disconnect() = 0;
-        virtual bool    isConnected() const = 0;
+        virtual bool connect(const Cmd::IEDCredentials &t_creds) = 0;
+        virtual void disconnect() = 0;
+        virtual bool isConnected() const = 0;
 
         virtual QString getVersion() const = 0;
-        virtual Core::DevServIdentity  getServIdentity() const = 0;
+        virtual Core::DevServIdentity getServIdentity() const = 0;
 
         // API
-        virtual IED_ModelAPI&       model() = 0;
-        virtual IED_StateAPI&       state() = 0;
-        virtual IED_ControlAPI&     control() = 0;
-        virtual IED_FS_API&         fs() = 0;
+        virtual IED_ModelAPI&   model() = 0;
+        virtual IED_StateAPI&   state() = 0;
+        virtual IED_ControlAPI& control() = 0;
+        virtual IED_FS_API&     fs() = 0;
 
     signals:
-        void 	sigFoundNode(const QString t_path);
-		void 	sigConClosed();
+        void sigFoundNode(const QString t_path);
+        void sigConClosed();
     };
     typedef QSharedPointer<IEC61850_API>    ptrIEC61850_API;
 }

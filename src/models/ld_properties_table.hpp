@@ -27,48 +27,48 @@
 
 namespace App::Models
 {
-	/*
-	 * ListModel with properties for the selected LD
-	 * */
-	class LD_PropertiesTable : public QAbstractListModel
-	{
-		Q_OBJECT
-		enum Roles
-		{
-			SECTION_ROLE = Qt::UserRole + 1,
-			NAME_ROLE,
-			VALUE_ROLE
-		};
-		struct PropertyItem
-		{
-			QString		section;
-			QString 	name;
-			QString 	obj;
+    /*
+     * ListModel with properties for the selected LD
+     * */
+    class LD_PropertiesTable : public QAbstractListModel
+    {
+        Q_OBJECT
+        enum Roles
+        {
+            SECTION_ROLE = Qt::UserRole + 1,
+            NAME_ROLE,
+            VALUE_ROLE
+        };
+        struct PropertyItem
+        {
+            QString     section;
+            QString     name;
+            QString     obj;
 
-			PropertyItem(const QString &t_node, const QString &t_name, const QString &t_obj)
-				: section{t_node}, name{t_name}, obj{t_obj} {}
-		};
+            PropertyItem(const QString &t_node, const QString &t_name, const QString &t_obj)
+                : section{t_node}, name{t_name}, obj{t_obj} {}
+        };
 
-	public:
-		LD_PropertiesTable(QObject *t_parent, Core::ptrIED t_ied);
+    public:
+        LD_PropertiesTable(QObject *t_parent, Core::ptrIED t_ied);
 
-		void 	setActiveIED(Core::ptrIED t_ied);
+        void setActiveIED(Core::ptrIED t_ied);
 
-		QHash<int, QByteArray> roleNames() const override;
-		int rowCount(const QModelIndex &t_index = QModelIndex()) const override;
-		QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
+        QHash<int, QByteArray> roleNames() const override;
+        int rowCount(const QModelIndex &t_index = QModelIndex()) const override;
+        QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
-	private:
-		QVariant dataLD(const QModelIndex &t_index, int t_role) const;
-		QVariant dataIED(const QModelIndex &t_index, int t_role) const;
+    private:
+        QVariant dataLD(const QModelIndex &t_index, int t_role) const;
+        QVariant dataIED(const QModelIndex &t_index, int t_role) const;
 
-	public slots:
-		void 	slotLDSelected(int t_ld);
+    public slots:
+        void     slotLDSelected(int t_ld);
 
-	private:
-		Core::ptrIED		m_ied;
-		QList<PropertyItem> m_ldProp;
-		QList<PropertyItem> m_devProp;
-		int 				m_currentLD = -1;
-	};
+    private:
+        Core::ptrIED        m_ied;
+        QList<PropertyItem> m_ldProp;
+        QList<PropertyItem> m_devProp;
+        int                 m_currentLD = -1;
+    };
 }

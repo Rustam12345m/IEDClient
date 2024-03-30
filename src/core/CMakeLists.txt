@@ -1,42 +1,43 @@
 # Building core's classes to a static library
 
 set(CORE_SOURCES
-	model_item.hpp
-	model_item.cpp
+    model_item.hpp
+    model_item.cpp
 
-	model_item_value.hpp
-	model_values_updater.hpp
+    model_item_value.cpp
+    model_item_value.hpp
+    model_values_updater.hpp
 
-	item_factory.hpp
-	item_factory.cpp
+    item_factory.hpp
+    item_factory.cpp
 
-	sub_attribute.hpp
+    sub_attribute.hpp
 
-	data_attribute.cpp
-	data_attribute.hpp
-	data_object.hpp
+    data_attribute.cpp
+    data_attribute.hpp
+    data_object.hpp
 
-	logical_node.hpp
-	logical_node.cpp
-	logical_device.hpp
+    logical_node.hpp
+    logical_node.cpp
+    logical_device.hpp
 
-	dataset.hpp
-	report_control_block.hpp
-	goose_control_block.hpp
-	sv_control_block.hpp
+    dataset.hpp
+    report_control_block.hpp
+    goose_control_block.hpp
+    sv_control_block.hpp
 
-	fs_model.hpp
+    fs_model.hpp
 
-	data_model.hpp
-	data_model.cpp
-	data_model_builder.hpp
-	data_model_builder.cpp
+    data_model.hpp
+    data_model.cpp
+    data_model_builder.hpp
+    data_model_builder.cpp
 
-	ln_signal_matrix.hpp
-	ln_signal_matrix.cpp
+    ln_signal_matrix.hpp
+    ln_signal_matrix.cpp
 
-	ied.hpp
-	server_identify.hpp
+    ied.hpp
+    server_identify.hpp
 )
 
 qt_add_library(core_lib STATIC ${CORE_SOURCES})

@@ -52,8 +52,8 @@ namespace Cmd
             return (m_ip == t_right.m_ip)
                     && (m_port == t_right.m_port)
                     && (m_tls == t_right.m_tls)
-                    && (m_login == t_right.m_login)
-                    /*&& (m_password == t_right.m_password)*/;
+                    /* && (m_login == t_right.m_login) */
+                    /* && (m_password == t_right.m_password)*/;
         }
 
     protected:

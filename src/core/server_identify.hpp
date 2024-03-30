@@ -25,29 +25,29 @@
 
 namespace Core
 {
-	/*
-		Server identity:
-			vendor: 	MZ
-			model:  	basic io
-			revision: 	1.4.2
+    /*
+        Server identity:
+            vendor:     MZ
+            model:      basic io
+            revision:   1.4.2
 
-		Connection parameters:
-			maxServOutstandingCalling = 5 
-			maxServOutstandingCalled = 5 
-			dataStructureNestingLevel = 10 
-			maxPduSize = 65000 
-			servicesSupported = [3, EE, 1C, 0, 0, 0, 2, 0, 0, 0, ED]
-	*/
-	class DevServIdentity
-	{
-	public:
-		QString 	m_vendor;
-		QString 	m_model;
-		QString 	m_revision;
+        Connection parameters:
+            maxServOutstandingCalling = 5 
+            maxServOutstandingCalled = 5 
+            dataStructureNestingLevel = 10 
+            maxPduSize = 65000 
+            servicesSupported = [3, EE, 1C, 0, 0, 0, 2, 0, 0, 0, ED]
+    */
+    class DevServIdentity
+    {
+    public:
+        QString m_vendor;
+        QString m_model;
+        QString m_revision;
 
-		int 		m_maxServOutstandingCalling = 0;
-		int 		m_maxServOutstandingCalled = 0;
-		int 		m_dataStructureNestingLevel = 0;
-		int 		m_maxPduSize = 0;
-	};
+        int m_maxServOutstandingCalling = 0;
+        int m_maxServOutstandingCalled = 0;
+        int m_dataStructureNestingLevel = 0;
+        int m_maxPduSize = 0;
+    };
 }

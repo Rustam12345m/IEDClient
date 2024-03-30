@@ -29,152 +29,152 @@ import AppStylesModule
 // List of found DataSets in the IED
 FocusScope
 {
-	id: rootID
+    id: rootID
 
-	readonly property int defDelegateHeight: 30
-	readonly property int defDelegateWidth: 60
+    readonly property int defDelegateHeight: 30
+    readonly property int defDelegateWidth: 60
 
-	property int defRowHeight: 30
-	property int defTextPadding: 5
-	property int defCountWidth: 50
+    property int defRowHeight: 30
+    property int defTextPadding: 5
+    property int defCountWidth: 50
 
-	signal sigLeftOrRightKey()
-	signal sigSelectedNewDS()
+    signal sigLeftOrRightKey()
+    signal sigSelectedNewDS()
 
-	ListView {
-		id: listViewID
+    ListView {
+        id: listViewID
 
-		anchors.fill: parent
+        anchors.fill: parent
 
-		focus: true
-		interactive: true
-		keyNavigationEnabled: true
-		boundsBehavior: Flickable.StopAtBounds
+        focus: true
+        interactive: true
+        keyNavigationEnabled: true
+        boundsBehavior: Flickable.StopAtBounds
 
-		model: iedBackend.getDS_ComModel()
+        model: iedBackend.getDS_ComModel()
 
-		property int selectedIndex: -1
-		onSelectedIndexChanged: {
-			sigSelectedNewDS()
-			listViewID.model.setSelectedDS(listViewID.selectedIndex)
-		}
+        property int selectedIndex: -1
+        onSelectedIndexChanged: {
+            sigSelectedNewDS()
+            listViewID.model.setSelectedDS(listViewID.selectedIndex)
+        }
 
-		section.property: "section"
-		section.delegate: Rectangle {
-			width: listViewID.width
-			height: defRowHeight
-			color: ColorPalette.tableHeaderColor
-			border.color: ColorPalette.tableRowBorderColor2
+        section.property: "section"
+        section.delegate: Rectangle {
+            width: listViewID.width
+            height: defRowHeight
+            color: ColorPalette.tableHeaderColor
+            border.color: ColorPalette.tableRowBorderColor2
 
-			clip: true
+            clip: true
 
-			Text {
-				anchors.centerIn: parent
-				font.bold: true
+            Text {
+                anchors.centerIn: parent
+                font.bold: true
 
-				text: section
-			}
-		}
+                text: section
+            }
+        }
 
-		delegate: Item {
-			width: listViewID.width
-			height: defRowHeight
+        delegate: Item {
+            width: listViewID.width
+            height: defRowHeight
 
-			Rectangle {
-				anchors.fill: parent
+            Rectangle {
+                anchors.fill: parent
 
-				RowLayout {
-					anchors.fill: parent
-					spacing: 0
+                RowLayout {
+                    anchors.fill: parent
+                    spacing: 0
 
-					Rectangle {
-						Layout.fillWidth: true
-						height: defRowHeight
+                    Rectangle {
+                        Layout.fillWidth: true
+                        height: defRowHeight
 
-						border.width: 1
-						border.color: ColorPalette.tableRowBorderColor2
+                        border.width: 1
+                        border.color: ColorPalette.tableRowBorderColor2
 
-						clip: true
-						// color: (index === listViewID.selectedIndex) ? "lightgray" : "white"
-						color: (index === listViewID.selectedIndex) ? ColorPalette.tableRowColor1 : ColorPalette.tableRowColor2
+                        clip: true
+                        // color: (index === listViewID.selectedIndex) ? "lightgray" : "white"
+                        color: (index === listViewID.selectedIndex) ? ColorPalette.tableRowColor1 : ColorPalette.tableRowColor2
 
-						Text {
-							id: textName
-							anchors.fill: parent
+                        Text {
+                            id: textName
+                            anchors.fill: parent
 
-							horizontalAlignment: Text.AlignLeft //HCenter
-							verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignLeft //HCenter
+                            verticalAlignment: Text.AlignVCenter
 
-							elide: Text.ElideRight
-							leftPadding: defTextPadding
-							rightPadding: defTextPadding
+                            elide: Text.ElideRight
+                            leftPadding: defTextPadding
+                            rightPadding: defTextPadding
 
-							text: model.name
-						}
-					}
-					Rectangle {
-						Layout.preferredWidth: defCountWidth
-						height: defRowHeight
+                            text: model.name
+                        }
+                    }
+                    Rectangle {
+                        Layout.preferredWidth: defCountWidth
+                        height: defRowHeight
 
-						border.width: 1
-						border.color: ColorPalette.tableRowBorderColor2
+                        border.width: 1
+                        border.color: ColorPalette.tableRowBorderColor2
 
-						clip: true
-						// color: (index === listViewID.selectedIndex) ? "lightgray" : "white"
-						color: (index === listViewID.selectedIndex) ? ColorPalette.tableRowColor1 : ColorPalette.tableRowColor2
+                        clip: true
+                        // color: (index === listViewID.selectedIndex) ? "lightgray" : "white"
+                        color: (index === listViewID.selectedIndex) ? ColorPalette.tableRowColor1 : ColorPalette.tableRowColor2
 
-						Text {
-							id: textValue
-							anchors.fill: parent
+                        Text {
+                            id: textValue
+                            anchors.fill: parent
 
-							horizontalAlignment: Text.AlignHCenter
-							verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
 
-							elide: Text.ElideRight
-							leftPadding: defTextPadding
-							rightPadding: defTextPadding
+                            elide: Text.ElideRight
+                            leftPadding: defTextPadding
+                            rightPadding: defTextPadding
 
-							text: model.value
-						}
-					}
-				}
+                            text: model.value
+                        }
+                    }
+                }
 
-				MouseArea {
-					anchors.fill: parent
-					onClicked: {
-						listViewID.selectedIndex = index
-						listViewID.focus = true
-					}
-				}
-			}
-		}
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        listViewID.selectedIndex = index
+                        listViewID.focus = true
+                    }
+                }
+            }
+        }
 
-		Keys.onUpPressed: {
-			if (listViewID.selectedIndex > 0) {
-				listViewID.selectedIndex--;
-			}
-		}
-		Keys.onDownPressed: {
-			if (listViewID.selectedIndex < count - 1) {
-				listViewID.selectedIndex++;
-			}
-		}
+        Keys.onUpPressed: {
+            if (listViewID.selectedIndex > 0) {
+                listViewID.selectedIndex--;
+            }
+        }
+        Keys.onDownPressed: {
+            if (listViewID.selectedIndex < count - 1) {
+                listViewID.selectedIndex++;
+            }
+        }
 
-		ScrollBar.vertical: ScrollBar {
-			policy: ScrollBar.AsNeeded
-			active: true
+        ScrollBar.vertical: ScrollBar {
+            policy: ScrollBar.AsNeeded
+            active: true
 
-			onActiveChanged: {
-				if (!active) {
-					active = true;
-				}
-			}
-		}
+            onActiveChanged: {
+                if (!active) {
+                    active = true;
+                }
+            }
+        }
 
-		onVisibleChanged: {
-			if ((listViewID.selectedIndex < 0) && (listViewID.count > 0)) {
-				listViewID.selectedIndex = 0
-			}
-		}
-	}
+        onVisibleChanged: {
+            if ((listViewID.selectedIndex < 0) && (listViewID.count > 0)) {
+                listViewID.selectedIndex = 0
+            }
+        }
+    }
 }

@@ -25,27 +25,27 @@
 
 namespace Tools
 {
-	class DumpModel : public QThread
-	{
-		Q_OBJECT
-	public:
-		DumpModel(QObject *t_parent);
-		~DumpModel();
+    class DumpModel : public QThread
+    {
+        Q_OBJECT
+    public:
+        DumpModel(QObject *t_parent);
+        ~DumpModel();
 
-		void init(const QString &t_dir, const QString &t_ip, unsigned int t_port,
-				 bool t_tls, const QString &t_name, const QString &t_pass);
+        void init(const QString &t_dir, const QString &t_ip, unsigned int t_port,
+                 bool t_tls, const QString &t_name, const QString &t_pass);
 
-		void run() override;
+        void run() override;
 
-	signals:
-		void 	sigProgress(int t_perc, QString t_msg);
-		void 	sigFinished(bool t_done);
+    signals:
+        void    sigProgress(int t_perc, QString t_msg);
+        void    sigFinished(bool t_done);
 
-	private:
-		QString 	m_fileDirectory;
-		QString 	m_ip;
-		int 		m_port = 102;
-		bool 		m_tls = false;
-		QString 	m_user, m_password;
-	};
+    private:
+        QString m_fileDirectory;
+        QString m_ip;
+        int     m_port = 102;
+        bool    m_tls = false;
+        QString m_user, m_password;
+    };
 }

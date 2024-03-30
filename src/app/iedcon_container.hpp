@@ -30,49 +30,49 @@
 
 namespace App
 {
-	/*
-	 * This object holds all stuff associated with IED that was connected to
-	 * */
-	class IEDConContainer : public QObject
-	{
-		Q_OBJECT
-	public:
-		IEDConContainer() {
-			allocateNewConnection(Cmd::IEDCredentials());
-		}
+    /*
+     * This object holds all stuff associated with IED that was connected to
+     * */
+    class IEDConContainer : public QObject
+    {
+        Q_OBJECT
+    public:
+        IEDConContainer() {
+            allocateNewConnection(Cmd::IEDCredentials());
+        }
 
-		bool 	isConnected() const {
-			return m_api->isConnected();
-		}
+        bool     isConnected() const {
+            return m_api->isConnected();
+        }
 
-		void 	allocateNewConnection(const Cmd::IEDCredentials &t_cred) {
-			m_cmdThread.clear();
-			m_api.clear();
-			m_ied.clear();
+        void     allocateNewConnection(const Cmd::IEDCredentials &t_cred) {
+            m_cmdThread.clear();
+            m_api.clear();
+            m_ied.clear();
 
-			m_cred = t_cred;
-			m_ied = QSharedPointer<Core::IED>::create();
+            m_cred = t_cred;
+            m_ied = QSharedPointer<Core::IED>::create();
 
-			auto apiImpl =  Libiec61850::ptrAdapter::create();
-			connect(apiImpl.get(), &Cmd::Interface::IEC61850_API::sigConClosed,
+            auto apiImpl =  Libiec61850::ptrAdapter::create();
+            connect(apiImpl.get(), &Cmd::Interface::IEC61850_API::sigConClosed,
                     this, &IEDConContainer::slotConClosed);
-			m_api = apiImpl;
+            m_api = apiImpl;
 
-			m_cmdThread = QSharedPointer<Cmd::CmdThread>::create(m_api);
-		}
+            m_cmdThread = QSharedPointer<Cmd::CmdThread>::create(m_api);
+        }
 
-	signals:
-		void 	sigConClosed();
+    signals:
+        void     sigConClosed();
 
-	public slots:
-		void 	slotConClosed() {
-			emit sigConClosed();
-		}
+    public slots:
+        void     slotConClosed() {
+            emit sigConClosed();
+        }
 
-	public:
-		Core::ptrIED                m_ied;
-		Cmd::IEDCredentials			m_cred; // Information about ip/port/etc
-		Cmd::ptrCmdThread	        m_cmdThread;
-        Libiec61850::ptrAdapter     m_api; // Connection & API
-	};
+    public:
+        Core::ptrIED            m_ied;
+        Cmd::IEDCredentials     m_cred; // Information about ip/port/etc
+        Cmd::ptrCmdThread       m_cmdThread;
+        Libiec61850::ptrAdapter m_api; // Connection & API
+    };
 }

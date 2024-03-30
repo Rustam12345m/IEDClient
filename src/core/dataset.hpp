@@ -28,51 +28,51 @@
 
 namespace Core
 {
-	class DataSetItem : public ModelItem
-	{
-	public:
-		DataSetItem(ModelItem *t_parent, const QString &t_ref, const QString &t_fc)
-			: ModelItem(t_parent, t_ref), m_fc{t_fc}
-		{}
+    class DataSetItem : public ModelItem
+    {
+    public:
+        DataSetItem(ModelItem *t_parent, const QString &t_ref, const QString &t_fc)
+            : ModelItem(t_parent, t_ref), m_fc{t_fc}
+        {}
 
-		const QString 	ref() const { return m_name; }
-		const QString 	fc() const { return m_fc; }
-		ptrModelItem 	item() { return m_valItem; }
+        const QString    ref() const { return m_name; }
+        const QString    fc() const { return m_fc; }
+        ptrModelItem     item() { return m_valItem; }
 
-        QString         getValue() const override {
+        QString          getValue() const override {
             if (m_valItem) {
                 return m_valItem->getValue();
             }
             return ModelItem::getValue();
         }
 
-	private:
-		QString 	    m_fc;
-		ptrModelItem	m_valItem;
+    private:
+        QString         m_fc;
+        ptrModelItem    m_valItem;
 
     friend class DataModelBuilder;
-	};
+    };
 
-	/*
-	 * Representation of a DataSet of IED
-	 * */
-	class DataSet : public QObject, public ModelItem
-	{
-		Q_OBJECT
-	public:
-		DataSet(ModelItem *t_parent, const QString &t_name, const QString &t_lnRef, bool t_del)
-			: QObject(nullptr), ModelItem(t_parent, t_name),
+    /*
+     * Representation of a DataSet of IED
+     * */
+    class DataSet : public QObject, public ModelItem
+    {
+        Q_OBJECT
+    public:
+        DataSet(ModelItem *t_parent, const QString &t_name, const QString &t_lnRef, bool t_del)
+            : QObject(nullptr), ModelItem(t_parent, t_name),
             m_lnReference{t_lnRef}, m_isDeletable{t_del}
-		{}
+        {}
 
-		const QString ref() const { return m_lnReference; }
+        const QString ref() const { return m_lnReference; }
 
-	signals:
-		void 	sigItemUpdated(QList<ptrModelItem> t_items);
+    signals:
+        void     sigItemUpdated(QList<ptrModelItem> t_items);
 
-	private:
-		QString	m_lnReference;
-		bool 	m_isDeletable = false;
-	};
-	typedef QSharedPointer< DataSet > 	ptrDataSet;
+    private:
+        QString m_lnReference;
+        bool    m_isDeletable = false;
+    };
+    typedef QSharedPointer< DataSet >     ptrDataSet;
 }

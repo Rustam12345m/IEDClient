@@ -27,36 +27,36 @@
 
 namespace App::Models
 {
-	class DS_OverviewTable : public QAbstractListModel
-	{
-		Q_OBJECT
-		enum Roles
-		{
-			SECTION_ROLE = Qt::UserRole + 1,
-			NAME_ROLE,
-			VALUE_ROLE
-		};
+    class DS_OverviewTable : public QAbstractListModel
+    {
+        Q_OBJECT
+        enum Roles
+        {
+            SECTION_ROLE = Qt::UserRole + 1,
+            NAME_ROLE,
+            VALUE_ROLE
+        };
 
-	public:
-		DS_OverviewTable(QObject *t_parent, QSharedPointer<Core::IED> t_ied);
+    public:
+        DS_OverviewTable(QObject *t_parent, QSharedPointer<Core::IED> t_ied);
 
-		Q_INVOKABLE void setSelectedDS(int t_ds);
-		int 	getCurrentDS() const { return m_currentDS; }
+        Q_INVOKABLE void setSelectedDS(int t_ds);
+        int getCurrentDS() const { return m_currentDS; }
 
-		void 	setActiveIED(QSharedPointer<Core::IED> t_ied);
+        void setActiveIED(QSharedPointer<Core::IED> t_ied);
 
-		QHash<int, QByteArray> roleNames() const override;
-		int 	 rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
-		QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
+        QHash<int, QByteArray> roleNames() const override;
+        int rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
+        QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
-	signals:
-		void	sigDSSelected(int t_ds);
+    signals:
+        void sigDSSelected(int t_ds);
 
-	public slots:
-		void 	slotDataUpdated();
+    public slots:
+        void slotDataUpdated();
 
-	private:
-		QSharedPointer<Core::IED> 	m_ied;
-		int		m_currentDS = -1; // selected DataSet
-	};
+    private:
+        QSharedPointer<Core::IED> m_ied;
+        int m_currentDS = -1; // selected DataSet
+    };
 }

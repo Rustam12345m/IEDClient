@@ -30,11 +30,11 @@ import AppStylesModule
 // Page View for all Control elements of selected LN
 FocusScope
 {
-	id: rootID
+    id: rootID
 
-	Text {
-		anchors.centerIn: parent
+    Text {
+        anchors.centerIn: parent
 
-		text: "Controls page. Not support yet..."
-	}
+        text: "Controls page. Not support yet..."
+    }
 }

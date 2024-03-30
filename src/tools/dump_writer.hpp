@@ -23,9 +23,9 @@
 
 namespace Tools
 {
-	class DumpWriter
-	{
-	public:
-		DumpWriter();
-	};
+    class DumpWriter
+    {
+    public:
+        DumpWriter();
+    };
 }

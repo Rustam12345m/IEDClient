@@ -26,28 +26,28 @@ import AppStylesModule
 
 Rectangle
 {
-	id: rootID
+    id: rootID
 
-	required property bool pressed
+    required property bool pressed
 
-	implicitWidth: ColorPalette.delimeterWidth
-	width: ColorPalette.delimeterWidth
+    implicitWidth: ColorPalette.delimeterWidth
+    width: ColorPalette.delimeterWidth
 
-	color: rootID.pressed ? "#707070" : ColorPalette.borderColor
+    color: rootID.pressed ? "#707070" : ColorPalette.borderColor
 
-	Rectangle {
-		anchors.centerIn: parent
+    Rectangle {
+        anchors.centerIn: parent
 
-		width: 2
-		height: 40
-		radius: 1
+        width: 2
+        height: 40
+        radius: 1
 
-		// color: rootID.pressed ? "#202020" : "#707070"
-		color: rootID.pressed ? "white" : "#707070"
-	}
+        // color: rootID.pressed ? "#202020" : "#707070"
+        color: rootID.pressed ? "white" : "#707070"
+    }
 
-	containmentMask: Item {
-		width: ColorPalette.delimeterWidth
-		height: rootID.height
-	}
+    containmentMask: Item {
+        width: ColorPalette.delimeterWidth
+        height: rootID.height
+    }
 }

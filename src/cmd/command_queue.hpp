@@ -27,49 +27,49 @@
 
 namespace Cmd
 {
-	template<typename T>
-	class CommandQueue
-	{
-	protected:
-		std::queue< T >				m_queue;
-		std::mutex					m_lock;
-		std::condition_variable		m_condVar;
-		bool						m_running;
+    template<typename T>
+    class CommandQueue
+    {
+    protected:
+        std::queue< T >         m_queue;
+        std::mutex              m_lock;
+        std::condition_variable m_condVar;
+        bool                    m_running;
 
-	public:
-		CommandQueue() {
-			m_running = true;
-		}
+    public:
+        CommandQueue() {
+            m_running = true;
+        }
 
-		bool	isRunning() {
-			std::unique_lock<std::mutex> lock(m_lock);
-			return m_running;
-		}
-		void	stop() {
-			std::unique_lock<std::mutex> lock(m_lock);
-			m_running = false;
-			m_condVar.notify_all();
-		}
+        bool    isRunning() {
+            std::unique_lock<std::mutex> lock(m_lock);
+            return m_running;
+        }
+        void    stop() {
+            std::unique_lock<std::mutex> lock(m_lock);
+            m_running = false;
+            m_condVar.notify_all();
+        }
 
-		void	push(T cmd) {
-			std::unique_lock<std::mutex> lock(m_lock);
-			m_queue.push(cmd);
-			m_condVar.notify_one();
-		}
+        void    push(T cmd) {
+            std::unique_lock<std::mutex> lock(m_lock);
+            m_queue.push(cmd);
+            m_condVar.notify_one();
+        }
 
-		T		pop() {
-			std::unique_lock<std::mutex> lock(m_lock);
-			while (m_running && m_queue.empty()) {
-				m_condVar.wait_for(lock, std::chrono::milliseconds(100));
-			}
+        T        pop() {
+            std::unique_lock<std::mutex> lock(m_lock);
+            while (m_running && m_queue.empty()) {
+                m_condVar.wait_for(lock, std::chrono::milliseconds(100));
+            }
 
-			if (!m_running && m_queue.empty()) {
-				return T();
-			}
+            if (!m_running && m_queue.empty()) {
+                return T();
+            }
 
-			T val = m_queue.front();
-			m_queue.pop();
-			return val;
-		}
-	};
+            T val = m_queue.front();
+            m_queue.pop();
+            return val;
+        }
+    };
 }

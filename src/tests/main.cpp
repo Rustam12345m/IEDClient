@@ -1,4 +1,6 @@
 /*
+ *  main.cpp
+ *
  *  Copyright 2023 Rustam Mustafin
  *
  *  This file is part of IEDClient.
@@ -20,22 +22,10 @@
  * */
 
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
-#include "core/data_model.hpp"
-
-namespace TestsCMD
+int main(int argc, char **argv)
 {
-	class ModelTest : public ::testing::Test
-	{
-	protected:
-		ModelTest() {
-		}
-		~ModelTest() override {
-		}
-
-		void SetUp() override {
-		}
-		void TearDown() override {
-		}
-	};
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }

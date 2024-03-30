@@ -24,8 +24,8 @@
 
 namespace Cmd
 {
-	void UpdateLNs_StatusCmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
-	{
+    void UpdateLNs_StatusCmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
+    {
         Core::ptrModelStateUpd vals = t_api->state().getStatusForAllLN(m_ld);
         if (vals) {
             emit sigModelValues(vals);
@@ -34,5 +34,5 @@ namespace Cmd
         } else {
             emit sigCmdEvent(Cmd::CmdEvent::FinishEvent("", "Can't get status for LNs", false));
         }
-	}
+    }
 }

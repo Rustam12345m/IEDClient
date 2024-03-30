@@ -25,9 +25,9 @@
 
 namespace Cmd
 {
-	void UpdateLDs_StatusCmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
-	{
-		Core::ptrModelStateUpd vals = t_api->state().getStatusForAllLD(m_ied->getDataModel());
+    void UpdateLDs_StatusCmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
+    {
+        Core::ptrModelStateUpd vals = t_api->state().getStatusForAllLD(m_ied->getDataModel());
         if (vals) {
             // Update process must to be finished in the GUI thread
             emit sigModelValues(vals);
@@ -40,9 +40,9 @@ namespace Cmd
                     QString("Can't get values for { LD }"),
                     false));
         }
-	}
+    }
 
-	void UpdateLDs_StatusCmd::slotMsgProgress(const QString &t_msg)
-	{
-	}
+    void UpdateLDs_StatusCmd::slotMsgProgress(const QString &t_msg)
+    {
+    }
 }

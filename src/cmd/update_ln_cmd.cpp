@@ -23,8 +23,8 @@
 
 namespace Cmd
 {
-	void UpdateLNode_Cmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
-	{
+    void UpdateLNode_Cmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
+    {
         Core::ptrModelStateUpd vals = t_api->state().getValsForLN(m_lnode);
         if (vals) {
             // Update process must to be finished in the GUI thread
@@ -38,5 +38,5 @@ namespace Cmd
                     QString("Can't get value of %1").arg(m_lnode->getName()),
                     false));
         }
-	}
+    }
 }

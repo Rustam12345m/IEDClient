@@ -31,100 +31,100 @@ import "qrc:/common/"
 // Table with DataObjects for concrete Logical Node
 Item
 {
-	id: rootID
+    id: rootID
 
-	readonly property int defDelegateHeight: 30
+    readonly property int defDelegateHeight: 30
 
-	function resizeColumnsToContent() {
-		Globals.resizeColumnsToContent(headerID, tableID)
-	}
+    function resizeColumnsToContent() {
+        Globals.resizeColumnsToContent(headerID, tableID)
+    }
 
-	// Header for TableView below with DO
-	SortTableHeader {
-		id: headerID
+    // Header for TableView below with DO
+    SortTableHeader {
+        id: headerID
 
-		anchors {
-			left: tableID.left
-			top: parent.top
-			right: parent.right
-		}
+        anchors {
+            left: tableID.left
+            top: parent.top
+            right: parent.right
+        }
 
         resizableColumns: false
-	}
+    }
 
-	// Table of DO for a selected LN
-	TableView {
-		id: tableID
+    // Table of DO for a selected LN
+    TableView {
+        id: tableID
 
-		anchors {
-			left: parent.left
-			right: parent.right
-			top: headerID.bottom
-			bottom: parent.bottom
-		}
+        anchors {
+            left: parent.left
+            right: parent.right
+            top: headerID.bottom
+            bottom: parent.bottom
+        }
 
-		model: iedBackend.getLN_StateModel()
+        model: iedBackend.getLN_StateModel()
 
-		focus: true
-		keyNavigationEnabled: true
-		reuseItems: true
+        focus: true
+        keyNavigationEnabled: true
+        reuseItems: true
 
-		clip: true
-		interactive: true
-		boundsBehavior: Flickable.StopAtBounds
+        clip: true
+        interactive: true
+        boundsBehavior: Flickable.StopAtBounds
 
-		columnWidthProvider: function(t_column) {
+        columnWidthProvider: function(t_column) {
             return Globals.columnWidthCalculator(headerID, tableID, t_column)
-		}
+        }
 
-		selectionBehavior: TableView.SelectRows
-		selectionModel: ItemSelectionModel {
-			model: tableID.model
-		}
+        selectionBehavior: TableView.SelectRows
+        selectionModel: ItemSelectionModel {
+            model: tableID.model
+        }
 
-		delegate: TextDelegate {
-			delegateHeight: defDelegateHeight
-			selected: (tableID.currentRow == row)
+        delegate: TextDelegate {
+            delegateHeight: defDelegateHeight
+            selected: (tableID.currentRow == row)
 
-			textAlign: (column == 0) ? Text.AlignLeft : Text.AlignRight
-			text: model.display
+            textAlign: (column == 0) ? Text.AlignLeft : Text.AlignRight
+            text: model.display
 
-			onSigClick: function(row, col) {
-				Globals.setSelectedRow(tableID, row)
-			}
-		}
+            onSigClick: function(row, col) {
+                Globals.setSelectedRow(tableID, row)
+            }
+        }
 
-		ScrollBar.vertical: ScrollBar {
-			policy: ScrollBar.AsNeeded
-			active: true
-			stepSize: 0.25
+        ScrollBar.vertical: ScrollBar {
+            policy: ScrollBar.AsNeeded
+            active: true
+            stepSize: 0.25
 
-			onActiveChanged: {
-				if (!active) {
-					active = true;
-				}
-			}
-		}
-		ScrollBar.horizontal: ScrollBar {
-			policy: ScrollBar.AsNeeded
-			active: true
-			stepSize: 0.25
+            onActiveChanged: {
+                if (!active) {
+                    active = true;
+                }
+            }
+        }
+        ScrollBar.horizontal: ScrollBar {
+            policy: ScrollBar.AsNeeded
+            active: true
+            stepSize: 0.25
 
-			onActiveChanged: {
-				if (!active) {
-					active = true;
-				}
-			}
-		}
+            onActiveChanged: {
+                if (!active) {
+                    active = true;
+                }
+            }
+        }
 
-		Connections {
-			target: iedBackend.getLN_StateModel()
+        Connections {
+            target: iedBackend.getLN_StateModel()
 
-			function onDataChanged() {
-			}
+            function onDataChanged() {
+            }
 
             function onModelReset() {
             }
-		}
-	}
+        }
+    }
 }

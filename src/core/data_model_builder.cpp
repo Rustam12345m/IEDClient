@@ -23,79 +23,79 @@
 
 namespace Core
 {
-	DataModelBuilder::DataModelBuilder()
-	{
-		m_model = QSharedPointer<DataModel>::create("");
-	}
+    DataModelBuilder::DataModelBuilder()
+    {
+        m_model = QSharedPointer<DataModel>::create("");
+    }
 
-	DataModelBuilder::~DataModelBuilder()
-	{
-	}
+    DataModelBuilder::~DataModelBuilder()
+    {
+    }
 
-	DataModelBuilder& DataModelBuilder::createLD(const QString &t_name)
-	{
-		m_lastLD = QSharedPointer<LogicalDevice>::create(m_model.get(), t_name);
-		m_model->addSubItem(m_lastLD);
-		return *this;
-	}
+    DataModelBuilder& DataModelBuilder::createLD(const QString &t_name)
+    {
+        m_lastLD = QSharedPointer<LogicalDevice>::create(m_model.get(), t_name);
+        m_model->addSubItem(m_lastLD);
+        return *this;
+    }
 
-	DataModelBuilder& DataModelBuilder::createLN(const QString &t_name)
-	{
-		m_lastLN = QSharedPointer<LogicalNode>::create(m_lastLD.get(), t_name);
-		m_lastLD->addSubItem(m_lastLN);
-		return *this;
-	}
+    DataModelBuilder& DataModelBuilder::createLN(const QString &t_name)
+    {
+        m_lastLN = QSharedPointer<LogicalNode>::create(m_lastLD.get(), t_name);
+        m_lastLD->addSubItem(m_lastLN);
+        return *this;
+    }
 
-	DataModelBuilder& DataModelBuilder::createDO(const QString &t_name)
-	{
-		m_lastDO = QSharedPointer<DataObject>::create(m_lastLN.get(), t_name);
-		m_lastLN->addSubItem(m_lastDO);
-		return *this;
-	}
+    DataModelBuilder& DataModelBuilder::createDO(const QString &t_name)
+    {
+        m_lastDO = QSharedPointer<DataObject>::create(m_lastLN.get(), t_name);
+        m_lastLN->addSubItem(m_lastDO);
+        return *this;
+    }
 
-	DataModelBuilder& DataModelBuilder::createDA(const QString &t_name, const QString &t_fc)
-	{
-		m_lastDA = QSharedPointer<DataAttribute>::create(m_lastDO.get(), t_name, t_fc);
-		m_lastDO->addSubItem(m_lastDA);
-		return *this;
-	}
+    DataModelBuilder& DataModelBuilder::createDA(const QString &t_name, const QString &t_fc)
+    {
+        m_lastDA = QSharedPointer<DataAttribute>::create(m_lastDO.get(), t_name, t_fc);
+        m_lastDO->addSubItem(m_lastDA);
+        return *this;
+    }
 
-	DataModelBuilder& DataModelBuilder::createSDA(QSharedPointer<ModelItem> t_parent, const QString &t_name)
-	{
-		m_lastSDA = QSharedPointer<SubAttribute>::create(t_parent.get(), t_name);
-		t_parent->addSubItem(m_lastSDA);
-		return *this;
-	}
+    DataModelBuilder& DataModelBuilder::createSDA(QSharedPointer<ModelItem> t_parent, const QString &t_name)
+    {
+        m_lastSDA = QSharedPointer<SubAttribute>::create(t_parent.get(), t_name);
+        t_parent->addSubItem(m_lastSDA);
+        return *this;
+    }
 
-	DataModelBuilder& DataModelBuilder::createDataSet(const QString &t_name, const QString &t_lnRef, bool t_del)
-	{
-		m_lastDataSet = QSharedPointer<DataSet>::create(lastLN().get(), t_name, t_lnRef, t_del);
-		m_model->pushDataSet(m_lastDataSet);
-		// m_lastLN->
-		return *this;
-	}
+    DataModelBuilder& DataModelBuilder::createDataSet(const QString &t_name, const QString &t_lnRef, bool t_del)
+    {
+        m_lastDataSet = QSharedPointer<DataSet>::create(lastLN().get(), t_name, t_lnRef, t_del);
+        m_model->pushDataSet(m_lastDataSet);
+        // m_lastLN->
+        return *this;
+    }
 
-	DataModelBuilder& DataModelBuilder::createDataSet_Elem(const QString &t_ref, const QString &t_fc)
-	{
-		auto dsEnt = QSharedPointer<DataSetItem>::create(lastDataSet().get(), t_ref, t_fc);
-		lastDataSet()->addSubItem(dsEnt);
-		return *this;
-	}
+    DataModelBuilder& DataModelBuilder::createDataSet_Elem(const QString &t_ref, const QString &t_fc)
+    {
+        auto dsEnt = QSharedPointer<DataSetItem>::create(lastDataSet().get(), t_ref, t_fc);
+        lastDataSet()->addSubItem(dsEnt);
+        return *this;
+    }
 
-	QSharedPointer<DataModel> DataModelBuilder::build(QThread *t_guiThread)
-	{
-		m_model->resolveIEDName();
+    QSharedPointer<DataModel> DataModelBuilder::build(QThread *t_guiThread)
+    {
+        m_model->resolveIEDName();
 
-		for (size_t i=0;i<m_model->getItemCount();i++) {
-			auto ld = m_model->getLogicalDevice(i);
+        for (size_t i=0;i<m_model->getItemCount();i++) {
+            auto ld = m_model->getLogicalDevice(i);
 
-			for (size_t j=0;j<ld->getItemCount();j++) {
-				auto ln = ld->getItem<LogicalNode>(j);
-				ln->moveToThread(t_guiThread); // GUI thread
+            for (size_t j=0;j<ld->getItemCount();j++) {
+                auto ln = ld->getItem<LogicalNode>(j);
+                ln->moveToThread(t_guiThread); // GUI thread
 
-				ln->m_sigMatrix = LN_SignalMatrixBuilder::create(ln);
-			}
-		}
+                ln->m_sigMatrix = LN_SignalMatrixBuilder::create(ln);
+            }
+        }
 
         // Resolve dsRefItem in the model
         for (auto ds : m_model->getDataSetList()) {
@@ -106,6 +106,6 @@ namespace Core
                 }
             }
         }
-		return m_model;
-	}
+        return m_model;
+    }
 }

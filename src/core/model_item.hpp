@@ -29,93 +29,93 @@
 namespace Core
 {
     class ModelItem;
-	class ModelStateUpdater;
+    class ModelStateUpdater;
     typedef QSharedPointer<QList<ModelItem*>>   ptrModelItemList;
 
-	/*
-	 * This is a basic class for all elements in the data model of an IED.
-	 * The data model represents a graph with leaves as this Item. Each Item can hold other Items as leaves.
-	 * The Item's value must be updated either in the GUI thread using signals/slots or by locking a QMutex.
-	 * */
-	class ModelItem
-	{
-	public:
-		ModelItem(ModelItem *t_parent, const QString &t_name) : m_parent(t_parent), m_name(t_name) {}
-		ModelItem() = delete;
-		virtual ~ModelItem() {}
+    /*
+     * This is a basic class for all elements in the data model of an IED.
+     * The data model represents a graph with leaves as this Item. Each Item can hold other Items as leaves.
+     * The Item's value must be updated either in the GUI thread using signals/slots or by locking a QMutex.
+     * */
+    class ModelItem
+    {
+    public:
+        ModelItem(ModelItem *t_parent, const QString &t_name) : m_parent(t_parent), m_name(t_name) {}
+        ModelItem() = delete;
+        virtual ~ModelItem() {}
 
-		QString		getName() const {
-			return m_name;
-		}
-		QString		getParentName() const {
-			if (m_parent) {
-				return m_parent->getName();
-			}
-			return "";
-		}
-		ModelItem*	getParent() const {
-			return m_parent;
-		}
-		QString 	getReference(ModelItem *t_root=nullptr) {
-			// Make full reference to item in this model
-			QString path;
-			if (m_parent && (m_parent != t_root)) {
-				path = m_parent->getReference(t_root) + m_delimetr;
-			}
-			return path + m_name;
-		}
+        QString       getName() const {
+            return m_name;
+        }
+        QString       getParentName() const {
+            if (m_parent) {
+                return m_parent->getName();
+            }
+            return "";
+        }
+        ModelItem*    getParent() const {
+            return m_parent;
+        }
+        QString       getReference(ModelItem *t_root=nullptr) {
+            // Make full reference to item in this model
+            QString path;
+            if (m_parent && (m_parent != t_root)) {
+                path = m_parent->getReference(t_root) + m_delimetr;
+            }
+            return path + m_name;
+        }
 
-		auto&		getItemList() const {
-			return m_items;
-		}
-		size_t		getItemCount() const {
-			return m_items.size();
-		}
+        auto&         getItemList() const {
+            return m_items;
+        }
+        size_t        getItemCount() const {
+            return m_items.size();
+        }
 
-		template<typename T>
-		QSharedPointer< T >	getItem(int t_inx) {
-			if ((t_inx >= 0) && (t_inx < m_items.size())) {
-				return m_items[t_inx].staticCast<T>();
-			}
-			return nullptr;
-		}
-		QSharedPointer< ModelItem >	getItem(int t_inx) {
-			return ModelItem::getItem<ModelItem>(t_inx);
-		}
-		virtual QString 	getValue() const;
+        template<typename T>
+        QSharedPointer< T > getItem(int t_inx) {
+            if ((t_inx >= 0) && (t_inx < m_items.size())) {
+                return m_items[t_inx].staticCast<T>();
+            }
+            return nullptr;
+        }
+        QSharedPointer< ModelItem > getItem(int t_inx) {
+            return ModelItem::getItem<ModelItem>(t_inx);
+        }
+        virtual QString getValue() const;
 
-		QSharedPointer<ModelItem> 	findSubItem(const QString &t_name) {
-			for (auto it : m_items) {
-				if (it->getName() == t_name) {
-					return it;
-				}
-			}
-			return nullptr;
-		}
-		template <typename... Names>
-		QSharedPointer<ModelItem> 	findSubItem(const QString &t_first, Names... rest) {
-			for (auto it : m_items) {
-				if (it->getName() == t_first) {
-					return it->findSubItem(rest...);
-				}
-			}
-			return nullptr;
-		}
+        QSharedPointer<ModelItem> findSubItem(const QString &t_name) {
+            for (auto it : m_items) {
+                if (it->getName() == t_name) {
+                    return it;
+                }
+            }
+            return nullptr;
+        }
+        template <typename... Names>
+        QSharedPointer<ModelItem> findSubItem(const QString &t_first, Names... rest) {
+            for (auto it : m_items) {
+                if (it->getName() == t_first) {
+                    return it->findSubItem(rest...);
+                }
+            }
+            return nullptr;
+        }
 
-        virtual void	addSubItem(QSharedPointer< ModelItem > t_child);
-		virtual bool 	updateValue(ptrModelValue t_newValue);
+        virtual void   addSubItem(QSharedPointer< ModelItem > t_child);
+        virtual bool   updateValue(ptrModelValue t_newValue);
 
-	protected:
-		virtual void 	notifyFromChild(QSharedPointer<QList<ModelItem*>> t_nodes);
+    protected:
+        virtual void   notifyFromChild(QSharedPointer<QList<ModelItem*>> t_nodes);
 
-	protected:
-		ModelItem*		m_parent = nullptr;
-		QString		    m_name;
-		QString 	    m_delimetr = "/"; // Current node and its children
-		ptrModelValue	m_value;
-		QList<QSharedPointer<ModelItem>>	m_items; // List of children
+    protected:
+        ModelItem*     m_parent = nullptr;
+        QString        m_name;
+        QString        m_delimetr = "/"; // Current node and its children
+        ptrModelValue  m_value;
+        QList<QSharedPointer<ModelItem>> m_items; // List of children
 
     friend class DataModelBuilder;
-	};
-	typedef QSharedPointer< ModelItem > 	ptrModelItem;
+    };
+    typedef QSharedPointer< ModelItem >     ptrModelItem;
 }

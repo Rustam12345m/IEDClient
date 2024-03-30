@@ -26,22 +26,22 @@
 
 namespace Cmd
 {
-	class GetFileList : public CmdInterface
-	{
-		Q_OBJECT
-	public:
-		GetFileList(Core::FS_Model &t_tree, const QString &t_path)
-			: m_fsModel(t_tree), m_path{t_path} {}
-		~GetFileList() {}
+    class GetFileList : public CmdInterface
+    {
+        Q_OBJECT
+    public:
+        GetFileList(Core::FS_Model &t_tree, const QString &t_path)
+            : m_fsModel(t_tree), m_path{t_path} {}
+        ~GetFileList() {}
 
-		void		execute(Cmd::Interface::ptrIEC61850_API t_api) override;
+        void        execute(Cmd::Interface::ptrIEC61850_API t_api) override;
 
-		static auto create(Core::FS_Model &t_tree, const QString &t_path) {
-			return QSharedPointer<GetFileList>::create(t_tree, t_path);
-		}
+        static auto create(Core::FS_Model &t_tree, const QString &t_path) {
+            return QSharedPointer<GetFileList>::create(t_tree, t_path);
+        }
 
-	private:
-		QString			m_path;
-		Core::FS_Model&	m_fsModel;
-	};
+    private:
+        QString            m_path;
+        Core::FS_Model&    m_fsModel;
+    };
 }

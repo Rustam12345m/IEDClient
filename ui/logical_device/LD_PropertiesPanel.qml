@@ -31,112 +31,112 @@ import AppStylesModule
 // LLN0 & LPHD info for LD
 Item
 {
-	property int defRowHeight: 30
-	property int defTextPadding: 5
-	property int defNameWidth: 100
+    property int defRowHeight: 30
+    property int defTextPadding: 5
+    property int defNameWidth: 100
 
-	ListView {
-		id: ldPropertyList
+    ListView {
+        id: ldPropertyList
 
-		anchors.fill: parent
-		boundsBehavior: Flickable.StopAtBounds
+        anchors.fill: parent
+        boundsBehavior: Flickable.StopAtBounds
 
-		property int selectedIndex: -1
+        property int selectedIndex: -1
 
-		model: iedBackend.getLD_PropModel()
+        model: iedBackend.getLD_PropModel()
 
-		section.property: "section"
-		section.delegate: Rectangle {
-			width: ldPropertyList.width
-			height: defRowHeight
-			color: ColorPalette.tableHeaderColor
-			border.color: ColorPalette.tableRowBorderColor2
+        section.property: "section"
+        section.delegate: Rectangle {
+            width: ldPropertyList.width
+            height: defRowHeight
+            color: ColorPalette.tableHeaderColor
+            border.color: ColorPalette.tableRowBorderColor2
 
-			clip: true
+            clip: true
 
-			Text {
-				text: section
-				anchors.centerIn: parent
-				font.bold: true
-			}
-		}
+            Text {
+                text: section
+                anchors.centerIn: parent
+                font.bold: true
+            }
+        }
 
-		delegate: Item {
-			width: ldPropertyList.width
-			height: defRowHeight
+        delegate: Item {
+            width: ldPropertyList.width
+            height: defRowHeight
 
-			Rectangle {
-				anchors.fill: parent
-				clip: true
+            Rectangle {
+                anchors.fill: parent
+                clip: true
 
-				RowLayout {
-					anchors.fill: parent
-					spacing: 0
+                RowLayout {
+                    anchors.fill: parent
+                    spacing: 0
 
-					Rectangle {
-						Layout.preferredWidth: defNameWidth
-						width: defNameWidth
-						height: defRowHeight
+                    Rectangle {
+                        Layout.preferredWidth: defNameWidth
+                        width: defNameWidth
+                        height: defRowHeight
 
-						border.width: 1
-						border.color: ColorPalette.tableRowBorderColor2
-						color: (index === ldPropertyList.selectedIndex) ? ColorPalette.tableRowColor1 : ColorPalette.tableRowColor2
+                        border.width: 1
+                        border.color: ColorPalette.tableRowBorderColor2
+                        color: (index === ldPropertyList.selectedIndex) ? ColorPalette.tableRowColor1 : ColorPalette.tableRowColor2
 
-						Text {
-							id: textName
-							anchors.fill: parent
+                        Text {
+                            id: textName
+                            anchors.fill: parent
 
-							horizontalAlignment: Text.AlignLeft
-							verticalAlignment: Text.AlignVCenter
-							elide: Text.ElideRight
-							leftPadding: defTextPadding
-							rightPadding: defTextPadding
+                            horizontalAlignment: Text.AlignLeft
+                            verticalAlignment: Text.AlignVCenter
+                            elide: Text.ElideRight
+                            leftPadding: defTextPadding
+                            rightPadding: defTextPadding
 
-							text: model.name
-						}
-					}
-					Rectangle {
-						border.width: 1
-						border.color: ColorPalette.tableRowBorderColor2
+                            text: model.name
+                        }
+                    }
+                    Rectangle {
+                        border.width: 1
+                        border.color: ColorPalette.tableRowBorderColor2
 
-						color: (index === ldPropertyList.selectedIndex) ? ColorPalette.tableRowColor1 : ColorPalette.tableRowColor2
-						clip: true
+                        color: (index === ldPropertyList.selectedIndex) ? ColorPalette.tableRowColor1 : ColorPalette.tableRowColor2
+                        clip: true
 
-						Layout.fillWidth: true
-						height: defRowHeight
+                        Layout.fillWidth: true
+                        height: defRowHeight
 
-						Text {
-							id: textValue
-							anchors.fill: parent
+                        Text {
+                            id: textValue
+                            anchors.fill: parent
 
-							horizontalAlignment: Text.AlignLeft
-							verticalAlignment: Text.AlignVCenter
-							elide: Text.ElideRight
-							leftPadding: defTextPadding
-							rightPadding: defTextPadding
+                            horizontalAlignment: Text.AlignLeft
+                            verticalAlignment: Text.AlignVCenter
+                            elide: Text.ElideRight
+                            leftPadding: defTextPadding
+                            rightPadding: defTextPadding
 
-							text: model.value
-						}
-					}
-				}
+                            text: model.value
+                        }
+                    }
+                }
 
-				MouseArea {
-					anchors.fill: parent
-					onClicked: {
-						ldPropertyList.selectedIndex = index
-					}
-				}
-			}
-		}
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        ldPropertyList.selectedIndex = index
+                    }
+                }
+            }
+        }
 
-		focus: true
-		Keys.onUpPressed: {
-			if (selectedIndex > 0)
-				selectedIndex--;
-		}
-		Keys.onDownPressed: {
-			if (selectedIndex < count - 1)
-				selectedIndex++;
-		}
-	}
+        focus: true
+        Keys.onUpPressed: {
+            if (selectedIndex > 0)
+                selectedIndex--;
+        }
+        Keys.onDownPressed: {
+            if (selectedIndex < count - 1)
+                selectedIndex++;
+        }
+    }
 }

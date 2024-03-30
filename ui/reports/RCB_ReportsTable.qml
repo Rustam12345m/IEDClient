@@ -31,86 +31,86 @@ import "qrc:/common/"
 // Received reports for the particular RCB
 FocusScope
 {
-	id: rootID
+    id: rootID
 
-	// Header for Table below
-	TableHeader {
-		id: headerID
+    // Header for Table below
+    TableHeader {
+        id: headerID
 
-		defDelegateWidth: 60
-		defDelegateHeight: 30
+        defDelegateWidth: 60
+        defDelegateHeight: 30
 
-		anchors {
-			left: tableID.left
-			top: parent.top
-			right: parent.right
-		}
+        anchors {
+            left: tableID.left
+            top: parent.top
+            right: parent.right
+        }
 
         resizableColumns: false
-	}
+    }
 
-	// Table of files on the IED
-	TableView {
-		id: tableID
+    // Table of files on the IED
+    TableView {
+        id: tableID
 
-		anchors {
-			left: parent.left
-			top: headerID.bottom
-			right: parent.right
-			bottom: parent.bottom
-		}
+        anchors {
+            left: parent.left
+            top: headerID.bottom
+            right: parent.right
+            bottom: parent.bottom
+        }
 
-		model: iedBackend.getReportsModel()
+        model: iedBackend.getReportsModel()
 
-		focus: true
-		keyNavigationEnabled: true
-		reuseItems: true
+        focus: true
+        keyNavigationEnabled: true
+        reuseItems: true
 
-		interactive: true
-		clip: true
-		boundsBehavior: Flickable.StopAtBounds
+        interactive: true
+        clip: true
+        boundsBehavior: Flickable.StopAtBounds
 
-		columnWidthProvider: function(t_column) {
-			return Globals.columnWidthCalculator(headerID, tableID, t_column)
-		}
+        columnWidthProvider: function(t_column) {
+            return Globals.columnWidthCalculator(headerID, tableID, t_column)
+        }
 
-		selectionBehavior: TableView.SelectRows
-		selectionModel: ItemSelectionModel {
-			model: tableID.model
-			/*
-			onCurrentChanged: {
-				console.log(currentIndex)
-			}
-			*/
-		}
+        selectionBehavior: TableView.SelectRows
+        selectionModel: ItemSelectionModel {
+            model: tableID.model
+            /*
+            onCurrentChanged: {
+                console.log(currentIndex)
+            }
+            */
+        }
 
-		delegate: TextDelegate {
-			delegateHeight: 30
-			selected: (tableID.currentRow == row)
+        delegate: TextDelegate {
+            delegateHeight: 30
+            selected: (tableID.currentRow == row)
 
-			textAlign: Text.AlignHCenter
-			text: model.display
+            textAlign: Text.AlignHCenter
+            text: model.display
 
-			onSigClick: function(row, col) {
-				Globals.setSelectedRow(tableID, row)
-			}
-		}
+            onSigClick: function(row, col) {
+                Globals.setSelectedRow(tableID, row)
+            }
+        }
 
-		ScrollBar.vertical: ScrollBar {
-			policy: ScrollBar.AsNeeded
-			active: true
-			onActiveChanged: {
-				if (!active) {
-					active = true;
-				}
-			}
-		}
+        ScrollBar.vertical: ScrollBar {
+            policy: ScrollBar.AsNeeded
+            active: true
+            onActiveChanged: {
+                if (!active) {
+                    active = true;
+                }
+            }
+        }
 
-		Keys.onPressed: function(event) {
-		}
-	}
+        Keys.onPressed: function(event) {
+        }
+    }
 
-	onVisibleChanged: {
-		tableID.focus = visible
-	}
+    onVisibleChanged: {
+        tableID.focus = visible
+    }
 }

@@ -28,9 +28,9 @@ struct sIedConnection;
 
 namespace Tools
 {
-	class Lib61850_Tools : public QObject
-	{
-	public:
-		void 	getModelDump();
-	};
+    class Lib61850_Tools : public QObject
+    {
+    public:
+        void     getModelDump();
+    };
 }

@@ -27,19 +27,19 @@
 
 namespace Cmd
 {
-	class DisConnectCmd : public CmdInterface
-	{
-	public:
-		DisConnectCmd(Core::ptrIED t_ied) {}
-		~DisConnectCmd() {}
+    class DisConnectCmd : public CmdInterface
+    {
+    public:
+        DisConnectCmd(Core::ptrIED t_ied) {}
+        ~DisConnectCmd() {}
 
-		void	execute(Cmd::Interface::ptrIEC61850_API t_api) override;
+        void execute(Cmd::Interface::ptrIEC61850_API t_api) override;
 
-		static auto create(Core::ptrIED t_ied) {
-			return QSharedPointer<DisConnectCmd>::create(t_ied);
-		}
+        static auto create(Core::ptrIED t_ied) {
+            return QSharedPointer<DisConnectCmd>::create(t_ied);
+        }
 
-	private:
-		Core::ptrIED    m_ied;
-	};
+    private:
+        Core::ptrIED    m_ied;
+    };
 }

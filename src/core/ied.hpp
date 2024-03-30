@@ -37,7 +37,7 @@ namespace Core
     public:
         IED(QObject *t_parent=nullptr) {
             m_model = QSharedPointer<Core::DataModel>::create("");
-		    m_fsModel = QSharedPointer<Core::FS_Model>::create();
+            m_fsModel = QSharedPointer<Core::FS_Model>::create();
         }
         ~IED() = default;
 

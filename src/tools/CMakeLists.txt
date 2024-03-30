@@ -1,9 +1,9 @@
 # Building tools to a static library
 set(TOOL_SOURCES
-	dump_model.hpp
-	dump_model.cpp
-	dump_writer.hpp
-	dump_writer.cpp
+    dump_model.hpp
+    dump_model.cpp
+    dump_writer.hpp
+    dump_writer.cpp
 )
 
 qt_add_library(tools_lib STATIC ${TOOL_SOURCES})

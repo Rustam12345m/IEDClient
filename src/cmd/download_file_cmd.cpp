@@ -24,10 +24,10 @@
 
 namespace Cmd
 {
-	void DownloadFileCmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
-	{
-		qDebug() << "CMD: DownloadFileCmd " << m_filename;
+    void DownloadFileCmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
+    {
+        qDebug() << "CMD: DownloadFileCmd " << m_filename;
 
-		t_api->fs().download(m_filename);
-	}
+        t_api->fs().download(m_filename);
+    }
 }

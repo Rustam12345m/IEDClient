@@ -31,23 +31,23 @@
 
 int main(int argc, char *argv[])
 {
-	QGuiApplication app(argc, argv);
+    QGuiApplication app(argc, argv);
 
-	QCoreApplication::setOrganizationName("OSI");
-	QCoreApplication::setOrganizationDomain("opensource.org");
-	QCoreApplication::setApplicationName("IEDClient");
+    QCoreApplication::setOrganizationName("OSI");
+    QCoreApplication::setOrganizationDomain("opensource.org");
+    QCoreApplication::setApplicationName("IEDClient");
 
-	// Singletons
-	qmlRegisterSingletonType(QUrl("qrc:/singletons/Globals.qml"), "GlobalVarsModule", 1, 0, "Globals");
-	qmlRegisterSingletonType(QUrl("qrc:/singletons/ColorPalette.qml"), "AppStylesModule", 1, 0, "ColorPalette");
+    // Singletons
+    qmlRegisterSingletonType(QUrl("qrc:/singletons/Globals.qml"), "GlobalVarsModule", 1, 0, "Globals");
+    qmlRegisterSingletonType(QUrl("qrc:/singletons/ColorPalette.qml"), "AppStylesModule", 1, 0, "ColorPalette");
 
-	App::MainPresenter presenter; // have to be created befor engine
-	QQmlApplicationEngine engine;
+    App::MainPresenter presenter; // have to be created befor engine
+    QQmlApplicationEngine engine;
 
-	presenter.setQmlContextMembers(engine.rootContext());
+    presenter.setQmlContextMembers(engine.rootContext());
 
-	engine.load(QStringLiteral("qrc:/main.qml"));
+    engine.load(QStringLiteral("qrc:/main.qml"));
 
-	QThread::currentThread()->setObjectName("GUI");
-	return app.exec();
+    QThread::currentThread()->setObjectName("GUI");
+    return app.exec();
 }

@@ -24,98 +24,98 @@ import QtQuick
 
 QtObject
 {
-	enum Page
-	{
-		START = 0,
-		LD,
-		LN,
-		DS,
-		RCB,
-		FS
-	}
+    enum Page
+    {
+        START = 0,
+        LD,
+        LN,
+        DS,
+        RCB,
+        FS
+    }
 
-	enum Panel
-	{
-		HIDE = 0,
-		LD_INFO,
-		RCB_PROPERTIES
-	}
+    enum Panel
+    {
+        HIDE = 0,
+        LD_INFO,
+        RCB_PROPERTIES
+    }
 
-	function printObjectToConsole(item)
-	{
-		for (var p in item) {
-			if (typeof item[p] != "function") {
-				if (p != "objectName") {
-					console.log(p + ":" + item[p]);
-				}
-			}
-		}
-	}
+    function printObjectToConsole(item)
+    {
+        for (var p in item) {
+            if (typeof item[p] != "function") {
+                if (p != "objectName") {
+                    console.log(p + ":" + item[p]);
+                }
+            }
+        }
+    }
 
-	function setSelectedRow(t_tableID, t_row)
-	{
-		if (t_tableID.currentRow === t_row) {
-			// return;
-		}
+    function setSelectedRow(t_tableID, t_row)
+    {
+        if (t_tableID.currentRow === t_row) {
+            // return;
+        }
 
-		let idx = t_tableID.model.index(t_row, 0);
-		t_tableID.selectionModel.setCurrentIndex(idx, ItemSelectionModel.Clear
-													| ItemSelectionModel.Select
-													| ItemSelectionModel.Rows);
-		t_tableID.forceActiveFocus()
-	}
+        let idx = t_tableID.model.index(t_row, 0);
+        t_tableID.selectionModel.setCurrentIndex(idx, ItemSelectionModel.Clear
+                                                    | ItemSelectionModel.Select
+                                                    | ItemSelectionModel.Rows);
+        t_tableID.forceActiveFocus()
+    }
 
-	function resizeColumnsToContent(t_headerID, t_tableID)
-	{
-		for (let i=0;i<t_tableID.columns;i++) {
-			let w = Math.max(t_headerID.implicitColumnWidth(i), t_tableID.implicitColumnWidth(i))
-			t_tableID.setColumnWidth(i, w)
-		}
-	}
+    function resizeColumnsToContent(t_headerID, t_tableID)
+    {
+        for (let i=0;i<t_tableID.columns;i++) {
+            let w = Math.max(t_headerID.implicitColumnWidth(i), t_tableID.implicitColumnWidth(i))
+            t_tableID.setColumnWidth(i, w)
+        }
+    }
 
-	function resizeColumnsToAvailableWidth(t_headerID, t_tableID)
-	{
-		var iw = []
-		let sum = 0, i = 0
-		for (i=0;i<t_tableID.columns;i++) {
-			iw[i] = Math.max(t_headerID.implicitColumnWidth(i), t_tableID.implicitColumnWidth(i))
-			if (iw[i] < 0 || isNaN(iw[i])) {
-				iw[i] = 1
-			}
-			sum = sum + iw[i]
-		}
-		if (sum === 0) {
-			sum = 1
-		}
-		for (i=0;i<t_tableID.columns;i++) {
-			let w = t_tableID.width * iw[i] / sum
-			if (w < 0 || isNaN(w)) {
-				w = 1
-			}
-			t_tableID.setColumnWidth(i, w)
-		}
-	}
+    function resizeColumnsToAvailableWidth(t_headerID, t_tableID)
+    {
+        var iw = []
+        let sum = 0, i = 0
+        for (i=0;i<t_tableID.columns;i++) {
+            iw[i] = Math.max(t_headerID.implicitColumnWidth(i), t_tableID.implicitColumnWidth(i))
+            if (iw[i] < 0 || isNaN(iw[i])) {
+                iw[i] = 1
+            }
+            sum = sum + iw[i]
+        }
+        if (sum === 0) {
+            sum = 1
+        }
+        for (i=0;i<t_tableID.columns;i++) {
+            let w = t_tableID.width * iw[i] / sum
+            if (w < 0 || isNaN(w)) {
+                w = 1
+            }
+            t_tableID.setColumnWidth(i, w)
+        }
+    }
 
-	function columnWidthFillSpace(t_headerID, t_tableID, t_column)
-	{
-		var iw = []
-		let sum = 0, i = 0
-		for (i=0;i<t_tableID.columns;i++) {
-			iw[i] = Math.max(t_headerID.implicitColumnWidth(i), t_tableID.implicitColumnWidth(i))
-			if (iw[i] < 0 || isNaN(iw[i])) {
-				iw[i] = 1
-			}
-			sum = sum + iw[i]
-		}
-		if (sum === 0) {
-			sum = 1
-		}
-		let w = (t_tableID.width * iw[t_column] / sum)
-		if (w < 0 || isNaN(w)) {
-			return 1
-		}
-		return w;
-	}
+    function columnWidthFillSpace(t_headerID, t_tableID, t_column)
+    {
+        var iw = []
+        let sum = 0, i = 0
+        for (i=0;i<t_tableID.columns;i++) {
+            iw[i] = Math.max(t_headerID.implicitColumnWidth(i), t_tableID.implicitColumnWidth(i))
+            if (iw[i] < 0 || isNaN(iw[i])) {
+                iw[i] = 1
+            }
+            sum = sum + iw[i]
+        }
+        if (sum === 0) {
+            sum = 1
+        }
+        let w = (t_tableID.width * iw[t_column] / sum)
+        if (w < 0 || isNaN(w)) {
+            return 1
+        }
+        return w;
+    }
 
     function columnWidthCalculator(t_headerID, t_tableID, t_column)
     {

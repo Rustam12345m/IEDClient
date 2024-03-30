@@ -25,72 +25,72 @@
 
 namespace Core
 {
-	namespace
-	{
-		void 	printTree(QString t_prefix, QSharedPointer<ModelItem> t_item)
-		{
-			auto &nodeList = t_item->getItemList();
-			for (auto node : nodeList) {
-				qDebug().noquote() << t_prefix << node->getName();
+    namespace
+    {
+        void     printTree(QString t_prefix, QSharedPointer<ModelItem> t_item)
+        {
+            auto &nodeList = t_item->getItemList();
+            for (auto node : nodeList) {
+                qDebug().noquote() << t_prefix << node->getName();
 
-				printTree(t_prefix + "  ", node);
-			}
-		}
-	}
+                printTree(t_prefix + "  ", node);
+            }
+        }
+    }
 
-	void DataModel::resolveIEDName()
-	{
-		if (m_items.isEmpty()) {
-			m_name = "Undefined";
-		} else if (m_items.size() == 1) {
-			// We have only one LD
-			m_name = m_items[0]->getName().first(m_items[0]->getName().size() / 2);
-		} else {
-			// We have more than one LD
-			QList<QString> ldNames;
-			size_t minSize = 0;
-			for (auto ld : m_items) {
-				QString name = ld->getName();
-				if (name.size() > minSize) {
-					minSize = name.size();
-				}
-				ldNames.push_back(name);
-			}
+    void DataModel::resolveIEDName()
+    {
+        if (m_items.isEmpty()) {
+            m_name = "Undefined";
+        } else if (m_items.size() == 1) {
+            // We have only one LD
+            m_name = m_items[0]->getName().first(m_items[0]->getName().size() / 2);
+        } else {
+            // We have more than one LD
+            QList<QString> ldNames;
+            size_t minSize = 0;
+            for (auto ld : m_items) {
+                QString name = ld->getName();
+                if (name.size() > minSize) {
+                    minSize = name.size();
+                }
+                ldNames.push_back(name);
+            }
 
-			for (size_t i=0;i<minSize;i++) {
-				QChar letter = ldNames[0].at(i);
+            for (size_t i=0;i<minSize;i++) {
+                QChar letter = ldNames[0].at(i);
 
-				for (size_t j=1;j<ldNames.size();j++) {
-					if (ldNames[j].at(i) != letter) {
-						m_name = ldNames[0].first(i);
-						i = minSize;
-						break;
-					}
-				}
-			}
-		}
+                for (size_t j=1;j<ldNames.size();j++) {
+                    if (ldNames[j].at(i) != letter) {
+                        m_name = ldNames[0].first(i);
+                        i = minSize;
+                        break;
+                    }
+                }
+            }
+        }
 
-		// Change LDs' names
-		for (size_t i=0;i<m_items.size();i++) {
-			ptrLD ld = getLogicalDevice(i);
-			QString name = ld->getName();
+        // Change LDs' names
+        for (size_t i=0;i<m_items.size();i++) {
+            ptrLD ld = getLogicalDevice(i);
+            QString name = ld->getName();
             ld->m_name = name.right(name.size() - m_name.size());
-		}
-	}
+        }
+    }
 
-	ptrLD DataModel::getLogicalDevice(int t_ld)
-	{
-		return getItem<Core::LogicalDevice>(t_ld);
-	}
+    ptrLD DataModel::getLogicalDevice(int t_ld)
+    {
+        return getItem<Core::LogicalDevice>(t_ld);
+    }
 
-	ptrLN DataModel::getLogicalNode(int t_ld, int t_ln)
-	{
-		auto ld = getItem<Core::LogicalDevice>(t_ld);
-		if (ld) {
-			return ld->getItem<Core::LogicalNode>(t_ln);
-		}
-		return nullptr;
-	}
+    ptrLN DataModel::getLogicalNode(int t_ld, int t_ln)
+    {
+        auto ld = getItem<Core::LogicalDevice>(t_ld);
+        if (ld) {
+            return ld->getItem<Core::LogicalNode>(t_ln);
+        }
+        return nullptr;
+    }
 
     ptrModelItem DataModel::getItemByReference(const QString &t_ref)
     {
@@ -117,35 +117,35 @@ namespace Core
     }
 
     void DataModel::print()
-	{
-		qDebug() << "IED: " << m_name;
+    {
+        qDebug() << "IED: " << m_name;
 
-		auto &ldList = m_items;
-		for (auto ld : ldList) {
-			qDebug() << "  LD: " << ld->getName();
-			printTree("    ", ld);
-		}
-	}
-	
-	void DataModel::pushDataSet(ptrDataSet t_ds)
-	{
-		m_ds.push_back(t_ds);
-	}
+        auto &ldList = m_items;
+        for (auto ld : ldList) {
+            qDebug() << "  LD: " << ld->getName();
+            printTree("    ", ld);
+        }
+    }
+    
+    void DataModel::pushDataSet(ptrDataSet t_ds)
+    {
+        m_ds.push_back(t_ds);
+    }
 
-	void DataModel::pushReportCB(ptrRCB t_cb)
-	{
-		m_rcb.push_back(t_cb);
-	}
+    void DataModel::pushReportCB(ptrRCB t_cb)
+    {
+        m_rcb.push_back(t_cb);
+    }
 
-	void DataModel::pushGooseCB(ptrGOCB t_cb)
-	{
-		m_gocb.push_back(t_cb);
-	}
+    void DataModel::pushGooseCB(ptrGOCB t_cb)
+    {
+        m_gocb.push_back(t_cb);
+    }
 
-	void DataModel::pushSV_CB(ptrSVCB t_cb)
-	{
-		m_svcb.push_back(t_cb);
-	}
+    void DataModel::pushSV_CB(ptrSVCB t_cb)
+    {
+        m_svcb.push_back(t_cb);
+    }
 
     ptrModelItem DataModel::recFindModelItem(QStringList &t_names, int t_inx, ptrModelItem t_item)
     {

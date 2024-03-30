@@ -30,73 +30,73 @@ import AppStylesModule
 // Special delegate for Mod-Beh-Health cells in LN_Table
 Item
 {
-	id: rootID
+    id: rootID
 
-	required property int delegateHeight
-	required property int delegateWidth
-	required property bool selected
-	required property var value
+    required property int delegateHeight
+    required property int delegateWidth
+    required property bool selected
+    required property var value
 
-	property alias prompt: toolTip.text
-	property alias text: textFild.text
+    property alias prompt: toolTip.text
+    property alias text: textFild.text
 
-	implicitHeight: delegateHeight
-	implicitWidth: delegateWidth
+    implicitHeight: delegateHeight
+    implicitWidth: delegateWidth
 
-	signal sigClick(int row, int col)
-	signal sigDoubleClick(int row, int col)
+    signal sigClick(int row, int col)
+    signal sigDoubleClick(int row, int col)
 
-	Rectangle {
-		anchors.fill: parent
+    Rectangle {
+        anchors.fill: parent
 
-		clip: true
-		// border.color: (selected ? "black" : "lightgray")
-		border.color: ColorPalette.tableRowBorderColor2
-		color: (selected ? ColorPalette.tableRowColor1 : ColorPalette.tableRowColor2)
+        clip: true
+        // border.color: (selected ? "black" : "lightgray")
+        border.color: ColorPalette.tableRowBorderColor2
+        color: (selected ? ColorPalette.tableRowColor1 : ColorPalette.tableRowColor2)
 
-		Rectangle {
-			id: led
+        Rectangle {
+            id: led
 
-			anchors {
+            anchors {
                 fill: parent
                 margins: 1
             }
 
-			height: delegateHeight - 4
-			width: height
-			color: rootID.value.color
+            height: delegateHeight - 4
+            width: height
+            color: rootID.value.color
 
-			Text {
-				id: textFild
+            Text {
+                id: textFild
 
-				anchors.centerIn: parent
-				horizontalAlignment: Text.AlignHCenter
-				verticalAlignment: Text.AlignVCenter
+                anchors.centerIn: parent
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
 
                 font.bold: false
-				text: rootID.value.text
-			}
-		}
-		ToolTip {
-			id: toolTip
-			text: rootID.value.tip
-			delay: 200
-			visible: mouseArea.containsMouse && (text != "")
-		}
-	}
+                text: rootID.value.text
+            }
+        }
+        ToolTip {
+            id: toolTip
+            text: rootID.value.tip
+            delay: 200
+            visible: mouseArea.containsMouse && (text != "")
+        }
+    }
 
-	MouseArea {
-		id: mouseArea
+    MouseArea {
+        id: mouseArea
 
-		anchors.fill: parent
-		acceptedButtons: Qt.LeftButton | Qt.RightButton
-		//hoverEnabled: true
+        anchors.fill: parent
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
+        //hoverEnabled: true
 
-		onClicked: function(mouse) {
-			sigClick(row, 1)
-		}
-		onDoubleClicked: function(mouse) {
-			sigDoubleClick(row, 1)
-		}
-	}
+        onClicked: function(mouse) {
+            sigClick(row, 1)
+        }
+        onDoubleClicked: function(mouse) {
+            sigDoubleClick(row, 1)
+        }
+    }
 }

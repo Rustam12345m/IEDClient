@@ -29,11 +29,11 @@ import AppStylesModule
 
 // Page View for all Settings elements of selected LN. SGCB
 FocusScope {
-	id: rootID
+    id: rootID
 
-	Text {
-		anchors.centerIn: parent
+    Text {
+        anchors.centerIn: parent
 
-		text: "Settings (SGCB). Not support yet..."
-	}
+        text: "Settings (SGCB). Not support yet..."
+    }
 }

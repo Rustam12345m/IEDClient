@@ -31,103 +31,103 @@ import "qrc:/common/"
 // Table with DataObjects for concrete DataSet
 FocusScope
 {
-	id: rootID
+    id: rootID
 
-	readonly property int defDelegateHeight: 30
-	readonly property int defDelegateWidth: 60
+    readonly property int defDelegateHeight: 30
+    readonly property int defDelegateWidth: 60
 
-	signal sigLeftOrRightKey()
+    signal sigLeftOrRightKey()
 
-	function resizeColumnsToContent(){
-		Globals.resizeColumnsToContent(headerID, tableID)
-	}
+    function resizeColumnsToContent(){
+        Globals.resizeColumnsToContent(headerID, tableID)
+    }
 
-	// Header for TableView below
-	TableHeader {
-		id: headerID
+    // Header for TableView below
+    TableHeader {
+        id: headerID
 
-		defDelegateWidth: rootID.defDelegateWidth
-		defDelegateHeight: rootID.defDelegateHeight
+        defDelegateWidth: rootID.defDelegateWidth
+        defDelegateHeight: rootID.defDelegateHeight
 
-		anchors {
-			top: parent.top
-			left: parent.left
-			right: parent.right
-		}
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
+        }
 
         resizableColumns: false
-	}
+    }
 
-	// Table of DO for a selected DS
-	TableView {
-		id: tableID
+    // Table of DO for a selected DS
+    TableView {
+        id: tableID
 
-		anchors {
-			top: headerID.bottom
-			bottom: parent.bottom
-			left: parent.left
-			right: parent.right
-		}
+        anchors {
+            top: headerID.bottom
+            bottom: parent.bottom
+            left: parent.left
+            right: parent.right
+        }
 
-		model: iedBackend.getDS_ItemModel()
+        model: iedBackend.getDS_ItemModel()
 
-		focus: true
-		clip: true
-		interactive: true
-		boundsBehavior: Flickable.StopAtBounds
+        focus: true
+        clip: true
+        interactive: true
+        boundsBehavior: Flickable.StopAtBounds
 
-		selectionBehavior: TableView.SelectRows
-		selectionModel: ItemSelectionModel {
-			model: tableID.model
+        selectionBehavior: TableView.SelectRows
+        selectionModel: ItemSelectionModel {
+            model: tableID.model
 
-			// onCurrentChanged: {
-			// }
-		}
+            // onCurrentChanged: {
+            // }
+        }
         columnWidthProvider: function(t_column) {
-			return Globals.columnWidthCalculator(headerID, tableID, t_column)
-		}
+            return Globals.columnWidthCalculator(headerID, tableID, t_column)
+        }
 
-		delegate: TextDelegate {
-			delegateHeight: defDelegateHeight
-			selected: (tableID.currentRow == row)
+        delegate: TextDelegate {
+            delegateHeight: defDelegateHeight
+            selected: (tableID.currentRow == row)
 
-			textAlign: (column == 0) ? Text.AlignLeft : Text.AlignHCenter
-			text: model.display
+            textAlign: (column == 0) ? Text.AlignLeft : Text.AlignHCenter
+            text: model.display
 
-			onSigClick: function(row, col) {
-				Globals.setSelectedRow(tableID, row)
-			}
-		}
+            onSigClick: function(row, col) {
+                Globals.setSelectedRow(tableID, row)
+            }
+        }
 
-		ScrollBar.vertical: ScrollBar {
-			policy: ScrollBar.AsNeeded
-			active: true
-			stepSize: 0.25
+        ScrollBar.vertical: ScrollBar {
+            policy: ScrollBar.AsNeeded
+            active: true
+            stepSize: 0.25
 
-			onActiveChanged: {
-				if (!active) {
-					active = true;
-				}
-			}
-		}
-		ScrollBar.horizontal: ScrollBar {
-			policy: ScrollBar.AsNeeded
-			active: true
-			stepSize: 0.25
+            onActiveChanged: {
+                if (!active) {
+                    active = true;
+                }
+            }
+        }
+        ScrollBar.horizontal: ScrollBar {
+            policy: ScrollBar.AsNeeded
+            active: true
+            stepSize: 0.25
 
-			onActiveChanged: {
-				if (!active) {
-					active = true;
-				}
-			}
-		}
+            onActiveChanged: {
+                if (!active) {
+                    active = true;
+                }
+            }
+        }
 
-		Keys.onPressed: function(event) {
-			if (event.key == Qt.Key_Left || event.key == Qt.Key_Right || event.key == Qt.Key_Tab) {
-				sigLeftOrRightKey()
-				event.accepted = true
-			}
-			event.accepted = false
-		}
-	}
+        Keys.onPressed: function(event) {
+            if (event.key == Qt.Key_Left || event.key == Qt.Key_Right || event.key == Qt.Key_Tab) {
+                sigLeftOrRightKey()
+                event.accepted = true
+            }
+            event.accepted = false
+        }
+    }
 }

@@ -27,22 +27,22 @@
 
 namespace Core
 {
-	/*
-	 * Representation a ReportControlBlock of LD
-	 * */
-	class GooseControlBlock : public QObject, public ModelItem
-	{
-		Q_OBJECT
-	public:
-		GooseControlBlock() : ModelItem(nullptr, "")
-		{
-		}
+    /*
+     * Representation a ReportControlBlock of LD
+     * */
+    class GooseControlBlock : public QObject, public ModelItem
+    {
+        Q_OBJECT
+    public:
+        GooseControlBlock() : ModelItem(nullptr, "")
+        {
+        }
 
-		void	print() {}
+        void    print() {}
 
-	signals:
-		void	sigUpdated();
-	};
+    signals:
+        void    sigUpdated();
+    };
 
-	typedef QSharedPointer< GooseControlBlock > 	ptrGOCB;
+    typedef QSharedPointer< GooseControlBlock >     ptrGOCB;
 }

@@ -25,15 +25,15 @@
 
 namespace Cmd::Interface
 {
-	class IED_StateAPI
-	{
-	public:
-		virtual ~IED_StateAPI() {}
+    class IED_StateAPI
+    {
+    public:
+        virtual ~IED_StateAPI() {}
 
-		virtual Core::ptrModelStateUpd	getStatusForAllLD(Core::ptrDataModel t_model) = 0;
+        virtual Core::ptrModelStateUpd getStatusForAllLD(Core::ptrDataModel t_model) = 0;
         virtual Core::ptrModelStateUpd getStatusForAllLN(Core::ptrLD t_ld) = 0;
 
-		virtual Core::ptrModelStateUpd	getValsForLN(Core::ptrLN t_ln) = 0;
-		virtual Core::ptrModelStateUpd	getValsForDS(Core::ptrDataSet t_ds) = 0;
-	};
+        virtual Core::ptrModelStateUpd getValsForLN(Core::ptrLN t_ln) = 0;
+        virtual Core::ptrModelStateUpd getValsForDS(Core::ptrDataSet t_ds) = 0;
+    };
 }

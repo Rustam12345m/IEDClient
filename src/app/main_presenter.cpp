@@ -24,19 +24,19 @@
 
 namespace App
 {
-	MainPresenter::MainPresenter(): m_appBackend(m_con, m_events),
+    MainPresenter::MainPresenter(): m_appBackend(m_con, m_events),
         m_iedBackend(m_con, m_events), m_fsBackend(m_con, m_events)
-	{
-		connect(&m_con, &IEDConContainer::sigConClosed, this, &MainPresenter::slotConClosed);
-	}
+    {
+        connect(&m_con, &IEDConContainer::sigConClosed, this, &MainPresenter::slotConClosed);
+    }
 
-	void MainPresenter::setQmlContextMembers(QQmlContext *t_context)
-	{
-		t_context->setContextProperty("presenter", this);
-		t_context->setContextProperty("appBackend", &m_appBackend);
-		t_context->setContextProperty("iedBackend", &m_iedBackend);
-		t_context->setContextProperty("fsBackend", &m_fsBackend);
-	}
+    void MainPresenter::setQmlContextMembers(QQmlContext *t_context)
+    {
+        t_context->setContextProperty("presenter", this);
+        t_context->setContextProperty("appBackend", &m_appBackend);
+        t_context->setContextProperty("iedBackend", &m_iedBackend);
+        t_context->setContextProperty("fsBackend", &m_fsBackend);
+    }
 
     QVariant MainPresenter::getIEDConStatus()
     {
@@ -44,13 +44,13 @@ namespace App
         if (isConnected()) {
             retval["isConnected"] = true;
             retval["text"] = QString(tr("Connected to: %1:%2"))
-                                .arg(m_con.m_cred.ip())
-                                .arg(m_con.m_cred.port());
+                                    .arg(m_con.m_cred.ip())
+                                    .arg(m_con.m_cred.port());
         } else if (!m_con.m_cred.ip().isEmpty()) {
             retval["isConnected"] = false;
             retval["text"] = QString(tr("Disconnected from: %1:%2"))
-                                .arg(m_con.m_cred.ip())
-                                .arg(m_con.m_cred.port());
+                                    .arg(m_con.m_cred.ip())
+                                    .arg(m_con.m_cred.port());
         } else {
             retval["isConnected"] = false;
             retval["text"] = tr("Not connected");
@@ -59,50 +59,50 @@ namespace App
     }
 
     void MainPresenter::connectTo(const QVariantMap &t_data)
-	{
+    {
         qDebug() << "MainPresenter: Connect cmd";
 
-		Cmd::IEDCredentials cred(t_data);
-		m_con.allocateNewConnection(cred);
+        Cmd::IEDCredentials cred(t_data);
+        m_con.allocateNewConnection(cred);
 
-		auto cmd = Cmd::ConnectCmd::create(m_con.m_cred, m_con.m_ied);
+        auto cmd = Cmd::ConnectCmd::create(m_con.m_cred, m_con.m_ied);
 
-		connect(cmd.get(), &Cmd::ConnectCmd::sigCmdEvent, this, &MainPresenter::slotCmdEvent);
+        connect(cmd.get(), &Cmd::ConnectCmd::sigCmdEvent, this, &MainPresenter::slotCmdEvent);
 
-		m_con.m_cmdThread->putCommand(cmd);
-	}
+        m_con.m_cmdThread->putCommand(cmd);
+    }
 
-	void MainPresenter::disconnectFrom()
-	{
+    void MainPresenter::disconnectFrom()
+    {
         qDebug() << "MainPresenter: Disconnect cmd";
 
         auto cmd = Cmd::DisConnectCmd::create(m_con.m_ied);
         m_con.m_cmdThread->putCommand(cmd);
-	}
+    }
 
-	void MainPresenter::toolDumpModel(const QVariantMap &t_data)
-	{
+    void MainPresenter::toolDumpModel(const QVariantMap &t_data)
+    {
         /*
         Cmd::IEDCredentials con(t_data);
-		QString dir = t_data.value("path").toString();
+        QString dir = t_data.value("path").toString();
 
-		Tools::DumpModel *dump = new Tools::DumpModel(this);
+        Tools::DumpModel *dump = new Tools::DumpModel(this);
 
-		connect(dump, &Tools::DumpModel::sigFinished, this, &MainPresenter::slotCmdFinished);
-		connect(dump, &Tools::DumpModel::sigProgress, this, &MainPresenter::slotCmdProgress);
+        connect(dump, &Tools::DumpModel::sigFinished, this, &MainPresenter::slotCmdFinished);
+        connect(dump, &Tools::DumpModel::sigProgress, this, &MainPresenter::slotCmdProgress);
         */
 
-		// dump->init(t_dir, t_ip, t_port, t_tls, t_name, t_pass);
-		// dump->start();
-	}
+        // dump->init(t_dir, t_ip, t_port, t_tls, t_name, t_pass);
+        // dump->start();
+    }
 
-	void MainPresenter::slotCmdEvent(Cmd::CmdEvent t_ev)
-	{
+    void MainPresenter::slotCmdEvent(Cmd::CmdEvent t_ev)
+    {
         m_events.putEventToStorage(t_ev);
 
         switch (t_ev.m_type) {
         case Cmd::PROCESS_EVENT: {
-		    emit sigCmdProgress(t_ev.m_perc, t_ev.m_msg);
+            emit sigCmdProgress(t_ev.m_perc, t_ev.m_msg);
             break;
         }
         case Cmd::FINISH_EVENT: {
@@ -110,7 +110,7 @@ namespace App
             m_fsBackend.slotConnected(t_ev.m_result);
             m_appBackend.saveCredsToHistory(m_con.m_cred);
 
-		    emit sigCmdFinished(t_ev.m_result);
+            emit sigCmdFinished(t_ev.m_result);
             emit sigIEDConChanged(t_ev.m_result);
             break;
         }
@@ -119,13 +119,13 @@ namespace App
             break;
         }
         }
-	}
+    }
 
     void MainPresenter::slotConClosed()
     {
         m_iedBackend.slotConnected(false);
         m_fsBackend.slotConnected(false);
 
-		emit sigIEDConChanged(false);
+        emit sigIEDConChanged(false);
     }
 }

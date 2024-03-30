@@ -23,143 +23,143 @@
 
 namespace App::Models
 {
-	LD_PropertiesTable::LD_PropertiesTable(QObject *t_parent, Core::ptrIED t_ied)
-		: QAbstractListModel(t_parent), m_ied{t_ied}
-	{
-		m_ldProp.append(PropertyItem("General information", "Name", ""));
-		m_ldProp.append(PropertyItem("General information", "LN", ""));
-		m_ldProp.append(PropertyItem("General information", "DS", ""));
-		m_ldProp.append(PropertyItem("General information", "RCB", ""));
-		m_ldProp.append(PropertyItem("General information", "GOOSE", ""));
-		m_ldProp.append(PropertyItem("General information", "SV", ""));
+    LD_PropertiesTable::LD_PropertiesTable(QObject *t_parent, Core::ptrIED t_ied)
+        : QAbstractListModel(t_parent), m_ied{t_ied}
+    {
+        m_ldProp.append(PropertyItem("General information", "Name", ""));
+        m_ldProp.append(PropertyItem("General information", "LN", ""));
+        m_ldProp.append(PropertyItem("General information", "DS", ""));
+        m_ldProp.append(PropertyItem("General information", "RCB", ""));
+        m_ldProp.append(PropertyItem("General information", "GOOSE", ""));
+        m_ldProp.append(PropertyItem("General information", "SV", ""));
 
-		m_ldProp.append(PropertyItem("LLN0", "vendor", 	"NamPlt"));
-		m_ldProp.append(PropertyItem("LLN0", "swRev", 	"NamPlt"));
-		m_ldProp.append(PropertyItem("LLN0", "d", 		"NamPlt"));
-		m_ldProp.append(PropertyItem("LLN0", "configRev", "NamPlt"));
-		m_ldProp.append(PropertyItem("LLN0", "ldNs", 	"NamPlt"));
+        m_ldProp.append(PropertyItem("LLN0", "vendor",     "NamPlt"));
+        m_ldProp.append(PropertyItem("LLN0", "swRev",     "NamPlt"));
+        m_ldProp.append(PropertyItem("LLN0", "d",         "NamPlt"));
+        m_ldProp.append(PropertyItem("LLN0", "configRev", "NamPlt"));
+        m_ldProp.append(PropertyItem("LLN0", "ldNs",     "NamPlt"));
 
-		m_ldProp.append(PropertyItem("LPHD1", "vendor", "PhyNam"));
-		m_ldProp.append(PropertyItem("LPHD1", "hwRev",  "PhyNam"));
-		m_ldProp.append(PropertyItem("LPHD1", "swRev",  "PhyNam"));
-		m_ldProp.append(PropertyItem("LPHD1", "serNum", "PhyNam"));
-		m_ldProp.append(PropertyItem("LPHD1", "model",  "PhyNam"));
+        m_ldProp.append(PropertyItem("LPHD1", "vendor", "PhyNam"));
+        m_ldProp.append(PropertyItem("LPHD1", "hwRev",  "PhyNam"));
+        m_ldProp.append(PropertyItem("LPHD1", "swRev",  "PhyNam"));
+        m_ldProp.append(PropertyItem("LPHD1", "serNum", "PhyNam"));
+        m_ldProp.append(PropertyItem("LPHD1", "model",  "PhyNam"));
 
-		// Dev
-		m_devProp.append(PropertyItem("IED information", "Vendor", ""));
-		m_devProp.append(PropertyItem("IED information", "Model", ""));
-		m_devProp.append(PropertyItem("IED information", "Revision", ""));
-		m_devProp.append(PropertyItem("Connection", "Max PDU", ""));
-	}
+        // Dev
+        m_devProp.append(PropertyItem("IED information", "Vendor", ""));
+        m_devProp.append(PropertyItem("IED information", "Model", ""));
+        m_devProp.append(PropertyItem("IED information", "Revision", ""));
+        m_devProp.append(PropertyItem("Connection", "Max PDU", ""));
+    }
 
-	void LD_PropertiesTable::setActiveIED(Core::ptrIED t_ied)
-	{
-		beginResetModel();
-		m_ied = t_ied;
-		endResetModel();
-	}
+    void LD_PropertiesTable::setActiveIED(Core::ptrIED t_ied)
+    {
+        beginResetModel();
+        m_ied = t_ied;
+        endResetModel();
+    }
 
-	QHash<int, QByteArray> LD_PropertiesTable::roleNames() const
-	{
-		return { { SECTION_ROLE, "section" }, { NAME_ROLE, "name" }, { VALUE_ROLE, "value" } };
-	}
+    QHash<int, QByteArray> LD_PropertiesTable::roleNames() const
+    {
+        return { { SECTION_ROLE, "section" }, { NAME_ROLE, "name" }, { VALUE_ROLE, "value" } };
+    }
 
-	int LD_PropertiesTable::rowCount(const QModelIndex &t_index) const
-	{
-		if (m_currentLD >= 0) {
-			return m_ldProp.count();
-		} else {
-			return m_devProp.count();
-		}
-	}
+    int LD_PropertiesTable::rowCount(const QModelIndex &t_index) const
+    {
+        if (m_currentLD >= 0) {
+            return m_ldProp.count();
+        } else {
+            return m_devProp.count();
+        }
+    }
 
-	QVariant LD_PropertiesTable::data(const QModelIndex &t_index, int t_role) const
-	{
-		if (m_currentLD >= 0) {
-			return dataLD(t_index, t_role);
-		} else {
-			return dataIED(t_index, t_role);
-		}
-	}
+    QVariant LD_PropertiesTable::data(const QModelIndex &t_index, int t_role) const
+    {
+        if (m_currentLD >= 0) {
+            return dataLD(t_index, t_role);
+        } else {
+            return dataIED(t_index, t_role);
+        }
+    }
 
-	QVariant LD_PropertiesTable::dataLD(const QModelIndex &t_index, int t_role) const
-	{
-		int row = t_index.row();
-		if (row < 0 || row >= m_ldProp.size()) {
-			return QVariant("");
-		}
+    QVariant LD_PropertiesTable::dataLD(const QModelIndex &t_index, int t_role) const
+    {
+        int row = t_index.row();
+        if (row < 0 || row >= m_ldProp.size()) {
+            return QVariant("");
+        }
 
-		switch (t_role) {
-		case SECTION_ROLE: {
-			if (m_ldProp[row].obj.isEmpty())
-				return QVariant(m_ldProp[row].section);
-			return QVariant(m_ldProp[row].section + " / " + m_ldProp[row].obj);
-		}
-		case NAME_ROLE: {
-			return QVariant(m_ldProp[row].name);
-		}
-		case VALUE_ROLE: {
-			Core::ptrLD ld = m_ied->model().getLogicalDevice(m_currentLD);
-			if (ld) {
-				if (m_ldProp[row].obj.isEmpty()) {
-					// LD's common properties like: count of LN, DS or RCB
-					if (m_ldProp[row].name == "Name") {
-						return ld->getName();
-					} else if (m_ldProp[row].name == "LN") {
-						return QVariant(QString::number(ld->getItemCount()));
-					} else if (m_ldProp[row].name == "RCB") {
-						return QVariant(QString("%1 B / %2 U").arg(7).arg(3));
-					}
-				} else {
-					// DataModel LD parameters
-					auto item = ld->findSubItem(m_ldProp[row].section, m_ldProp[row].obj, m_ldProp[row].name);
-					if (item) {
-						return item->getValue();
-					}
-				}
-				return " ? ";
-			}
-			break;
-		}
-		}
-		return QVariant(" - ");
-	}
+        switch (t_role) {
+        case SECTION_ROLE: {
+            if (m_ldProp[row].obj.isEmpty())
+                return QVariant(m_ldProp[row].section);
+            return QVariant(m_ldProp[row].section + " / " + m_ldProp[row].obj);
+        }
+        case NAME_ROLE: {
+            return QVariant(m_ldProp[row].name);
+        }
+        case VALUE_ROLE: {
+            Core::ptrLD ld = m_ied->model().getLogicalDevice(m_currentLD);
+            if (ld) {
+                if (m_ldProp[row].obj.isEmpty()) {
+                    // LD's common properties like: count of LN, DS or RCB
+                    if (m_ldProp[row].name == "Name") {
+                        return ld->getName();
+                    } else if (m_ldProp[row].name == "LN") {
+                        return QVariant(QString::number(ld->getItemCount()));
+                    } else if (m_ldProp[row].name == "RCB") {
+                        return QVariant(QString("%1 B / %2 U").arg(7).arg(3));
+                    }
+                } else {
+                    // DataModel LD parameters
+                    auto item = ld->findSubItem(m_ldProp[row].section, m_ldProp[row].obj, m_ldProp[row].name);
+                    if (item) {
+                        return item->getValue();
+                    }
+                }
+                return " ? ";
+            }
+            break;
+        }
+        }
+        return QVariant(" - ");
+    }
 
-	QVariant LD_PropertiesTable::dataIED(const QModelIndex &t_index, int t_role) const
-	{
-		int row = t_index.row();
-		if (row < 0 || row >= m_devProp.size()) {
-			return QVariant("");
-		}
+    QVariant LD_PropertiesTable::dataIED(const QModelIndex &t_index, int t_role) const
+    {
+        int row = t_index.row();
+        if (row < 0 || row >= m_devProp.size()) {
+            return QVariant("");
+        }
 
-		switch (t_role) {
-		case SECTION_ROLE: {
-			return QVariant(m_devProp[row].section);
-		}
-		case NAME_ROLE: {
-			return QVariant(m_devProp[row].name);
-		}
-		case VALUE_ROLE: {
-			if (m_devProp[row].name == "Vendor") {
-				return QVariant(m_ied->identify().m_vendor);
-			} else if (m_devProp[row].name == "Model") {
-				return QVariant(m_ied->identify().m_model);
-			} else if (m_devProp[row].name == "Revision") {
-				return QVariant(m_ied->identify().m_revision);
-			} else if (m_devProp[row].name == "Max PDU") {
-				return QVariant(m_ied->identify().m_maxPduSize);
-			}
-			break;
-		}
-		}
-		return QVariant(" - ");
-	}
+        switch (t_role) {
+        case SECTION_ROLE: {
+            return QVariant(m_devProp[row].section);
+        }
+        case NAME_ROLE: {
+            return QVariant(m_devProp[row].name);
+        }
+        case VALUE_ROLE: {
+            if (m_devProp[row].name == "Vendor") {
+                return QVariant(m_ied->identify().m_vendor);
+            } else if (m_devProp[row].name == "Model") {
+                return QVariant(m_ied->identify().m_model);
+            } else if (m_devProp[row].name == "Revision") {
+                return QVariant(m_ied->identify().m_revision);
+            } else if (m_devProp[row].name == "Max PDU") {
+                return QVariant(m_ied->identify().m_maxPduSize);
+            }
+            break;
+        }
+        }
+        return QVariant(" - ");
+    }
 
-	void LD_PropertiesTable::slotLDSelected(int t_ld)
-	{
-		beginResetModel();
-		m_currentLD = t_ld;
-		endResetModel();
-		//emit dataChanged(index(0, 0), index(rowCount() - 1, 0), { SECTION_ROLE, NAME_ROLE, VALUE_ROLE });
-	}
+    void LD_PropertiesTable::slotLDSelected(int t_ld)
+    {
+        beginResetModel();
+        m_currentLD = t_ld;
+        endResetModel();
+        //emit dataChanged(index(0, 0), index(rowCount() - 1, 0), { SECTION_ROLE, NAME_ROLE, VALUE_ROLE });
+    }
 }

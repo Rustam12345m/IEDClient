@@ -30,125 +30,131 @@
 
 namespace App
 {
-	AppSettings::AppSettings() : QObject(nullptr)
-	{
-		// Looking for the config file
-		const QString curDirConfig = QCoreApplication::applicationDirPath()
-									+ "/" + App::ConfigFileName;
-		const QString sysAppDirConfig =  QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)
-									+ "/" + App::ConfigFileName;
-		if (QFile::exists(curDirConfig)) {
-			m_configFilepath = curDirConfig;
-		} else if (QFile::exists(sysAppDirConfig)) {
-			m_configFilepath = sysAppDirConfig;
-		} else {
-			m_configFilepath = curDirConfig;
-		}
-	}
+    AppSettings::AppSettings() : QObject(nullptr)
+    {
+        // Looking for the config file
+        const QString curDirConfig = QCoreApplication::applicationDirPath()
+                                    + "/" + App::ConfigFileName;
+        const QString sysAppDirConfig =  QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)
+                                    + "/" + App::ConfigFileName;
+        if (QFile::exists(curDirConfig)) {
+            m_confFilepath = curDirConfig;
+        } else if (QFile::exists(sysAppDirConfig)) {
+            m_confFilepath = sysAppDirConfig;
+        } else {
+            m_confFilepath = curDirConfig;
+        }
+    }
 
-	AppSettings::AppSettings(const QString &t_filepath) : QObject(nullptr)
-	{
-		m_configFilepath = t_filepath;
-	}
+    AppSettings::AppSettings(const QString &t_filepath) : QObject(nullptr)
+    {
+        m_confFilepath = t_filepath;
+    }
 
-	listConfConectInfo AppSettings::getConnectionList()
-	{
-		listConfConectInfo devs;
+    lisHistConnInfo AppSettings::getConnectionList()
+    {
+        lisHistConnInfo devs;
 
-		readConfigFile(m_configFilepath, devs);
+        readConfigFile(m_confFilepath, devs);
 
-		return devs;
-	}
+        return devs;
+    }
 
-	void AppSettings::putConnectionToConfig(const Cmd::IEDCredentials &t_dev, const QString &t_ied)
-	{
-		App::ConfConnectionInfo newCon(t_dev.ip(), t_dev.port(), t_dev.tls(), t_ied, App::GetCurrentDateTime());
+    void AppSettings::putConnectionToConfig(const Cmd::IEDCredentials &t_creds, const QString &t_ied)
+    {
+        App::ConfConnectionInfo newCon(t_creds, t_ied, App::GetCurrentDateTime());
 
-		auto devs = getConnectionList();
-		for (auto &d : devs) {
-			if (d == newCon) {
-				return;
-			}
-		}
-		devs.push_front(newCon);
+        auto devs = getConnectionList();
+        for (auto it=devs.begin();it!=devs.end();) {
+            if (*it == newCon) {
+                it = devs.erase(it);
+            } else {
+                ++it;
+            }
+        }
+        devs.push_front(newCon);
 
-		writeConfigFile(m_configFilepath, devs);
-		emit sigConfUpdated();
-	}
+        writeConfigFile(m_confFilepath, devs);
+        emit sigConfUpdated();
+    }
 
-	int AppSettings::readConfigFile(const QString &t_filepath, listConfConectInfo &t_list)
-	{
-		QFile conf(t_filepath);
-		if (!conf.open(QFile::ReadOnly | QFile::Text)) {
-			return -1;
-		}
+    int AppSettings::readConfigFile(const QString &t_filepath, lisHistConnInfo &t_list)
+    {
+        QFile conf(t_filepath);
+        if (!conf.open(QFile::ReadOnly | QFile::Text)) {
+            return -1;
+        }
 
-		QXmlStreamReader xml(&conf);
-		while (!xml.atEnd() && !xml.hasError()) {
-			QXmlStreamReader::TokenType token = xml.readNext();
-			if (token == QXmlStreamReader::StartElement) {
-				QString name = xml.name().toString();
+        QXmlStreamReader xml(&conf);
+        while (!xml.atEnd() && !xml.hasError()) {
+            QXmlStreamReader::TokenType token = xml.readNext();
+            if (token == QXmlStreamReader::StartElement) {
+                QString name = xml.name().toString();
 
-				if (name == "main") {
-					// 
-				} else if (name == "history_connections") {
-					// 
-				} else if (name == "history_scl_files") {
-					// 
-				}
+                if (name == "main") {
+                    // 
+                } else if (name == "history_connections") {
+                    // 
+                } else if (name == "history_scl_files") {
+                    // 
+                }
 
-				if (name == "device") {
-					QString ip = xml.attributes().value("ip").toString();
-					int port = xml.attributes().value("port").toInt();
-					bool tls = xml.attributes().value("tls").toInt() == 1 ? true : false;
-					QString ied = xml.attributes().value("ied").toString();
-					QString date = xml.attributes().value("date").toString();
-					t_list.push_front(App::ConfConnectionInfo(ip, port, tls, ied, date));
-				}
-			}
-		}
-		conf.close();
-		return 0;
-	}
+                if (name == "device") {
+                    Cmd::IEDCredentials cred(
+                        xml.attributes().value("ip").toString(),
+                        xml.attributes().value("port").toInt(),
+                        xml.attributes().value("tls").toInt() == 1 ? true : false,
+                        "",
+                        "");
 
-	int AppSettings::writeConfigFile(const QString &t_filepath, listConfConectInfo &t_list)
-	{
-		QFile file(t_filepath);
-		if (!file.open(QFile::WriteOnly | QFile::Text | QFile::Truncate)) {
-			return -1;
-		}
+                    QString iedName = xml.attributes().value("ied").toString();
+                    QString date = xml.attributes().value("date").toString();
+                    t_list.push_front(App::ConfConnectionInfo(cred, iedName, date));
+                }
+            }
+        }
+        conf.close();
+        return 0;
+    }
 
-		QXmlStreamWriter xml(&file);
-		xml.setAutoFormatting(true);
+    int AppSettings::writeConfigFile(const QString &t_filepath, lisHistConnInfo &t_list)
+    {
+        QFile file(t_filepath);
+        if (!file.open(QFile::WriteOnly | QFile::Text | QFile::Truncate)) {
+            return -1;
+        }
 
-		xml.writeStartDocument();
-		xml.writeStartElement("app");
+        QXmlStreamWriter xml(&file);
+        xml.setAutoFormatting(true);
 
-		// main
-		xml.writeStartElement("main");
-		xml.writeEndElement();
+        xml.writeStartDocument();
+        xml.writeStartElement("app");
 
-		// history_connections
-		xml.writeStartElement("history_connections");
-		for (auto &d : t_list) {
-			xml.writeStartElement("device");
-			xml.writeAttribute("ip", d.ip());
-			xml.writeAttribute("port", QString::number(d.port()));
-			xml.writeAttribute("tls", QString::number(d.tls() ? 1 : 0));
-			xml.writeAttribute("ied", d.ied());
-			xml.writeAttribute("date", d.date());
-			xml.writeEndElement();
-		}
-		xml.writeEndElement();
+        // main
+        xml.writeStartElement("main");
+        xml.writeEndElement();
 
-		// history_scl_files
-		xml.writeStartElement("history_scl_files");
-		xml.writeEndElement();
+        // history_connections
+        xml.writeStartElement("history_connections");
+        for (auto &d : t_list) {
+            xml.writeStartElement("device");
+            xml.writeAttribute("ip", d.ip());
+            xml.writeAttribute("port", QString::number(d.port()));
+            xml.writeAttribute("tls", QString::number(d.tls() ? 1 : 0));
+            xml.writeAttribute("ied", d.ied());
+            xml.writeAttribute("date", d.date());
+            xml.writeEndElement();
+        }
+        xml.writeEndElement();
 
-		xml.writeEndElement(); // app
-		xml.writeEndDocument();
+        // history_scl_files
+        xml.writeStartElement("history_scl_files");
+        xml.writeEndElement();
 
-		file.close();
-		return 0;
-	}
+        xml.writeEndElement(); // app
+        xml.writeEndDocument();
+
+        file.close();
+        return 0;
+    }
 }

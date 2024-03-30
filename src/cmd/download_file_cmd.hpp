@@ -25,27 +25,27 @@
 
 namespace Cmd
 {
-	/*
-	 * This class realizes downloading file from the IED
-	 * */
-	class DownloadFileCmd : public CmdInterface
-	{
-		Q_OBJECT
-	public:
-		DownloadFileCmd(const QString &t_name)
-		{
-			m_filename = t_name;
-		}
-		~DownloadFileCmd() {}
+    /*
+     * This class realizes downloading file from the IED
+     * */
+    class DownloadFileCmd : public CmdInterface
+    {
+        Q_OBJECT
+    public:
+        DownloadFileCmd(const QString &t_name)
+        {
+            m_filename = t_name;
+        }
+        ~DownloadFileCmd() {}
 
-		void	execute(Cmd::Interface::ptrIEC61850_API t_api) override;
+        void    execute(Cmd::Interface::ptrIEC61850_API t_api) override;
 
-		// Create new command like Builder pattern
-		static auto create(const QString &t_name) {
-			return QSharedPointer<DownloadFileCmd>::create(t_name);
-		}
-	
-	private:
-		QString 	m_filename;
-	};
+        // Create new command like Builder pattern
+        static auto create(const QString &t_name) {
+            return QSharedPointer<DownloadFileCmd>::create(t_name);
+        }
+    
+    private:
+        QString     m_filename;
+    };
 }
