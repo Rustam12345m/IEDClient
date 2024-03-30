@@ -27,22 +27,22 @@
 
 namespace Core
 {
-	/*
-	 * Representation a ReportControlBlock of LD
-	 * */
-	class SV_ControlBlock : public QObject, public ModelItem
-	{
-		Q_OBJECT
-	public:
-		SV_ControlBlock() : ModelItem(nullptr, "")
-		{
-		}
+    /*
+     * Representation a ReportControlBlock of LD
+     * */
+    class SV_ControlBlock : public QObject, public ModelItem
+    {
+        Q_OBJECT
+    public:
+        SV_ControlBlock() : ModelItem(nullptr, "")
+        {
+        }
 
-		void	print() {}
+        void    print() {}
 
-	signals:
-		void	sigUpdated();
-	};
+    signals:
+        void    sigUpdated();
+    };
 
-	typedef QSharedPointer< SV_ControlBlock > 	ptrSVCB;
+    typedef QSharedPointer< SV_ControlBlock >     ptrSVCB;
 }

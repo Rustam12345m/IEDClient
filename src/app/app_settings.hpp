@@ -29,33 +29,29 @@
 
 namespace App
 {
-	static const int 		DefSaveHistoryLength = 10;
-	static const QString 	ConfigFileName = "iedclient_config.xml";
+    static const int         DefSaveHistoryLength = 10;
+    static const QString     ConfigFileName = "iedclient_config.xml";
+    typedef QList< App::ConfConnectionInfo >    lisHistConnInfo;
 
-	typedef QList< App::ConfConnectionInfo >	listConfConectInfo;
+    class AppSettings : public QObject
+    {
+        Q_OBJECT
+    public:
+        AppSettings();
+        AppSettings(const QString &t_filepath);
+        ~AppSettings() = default;
 
-	/*
-	 * 
-	 * */
-	class AppSettings : public QObject
-	{
-		Q_OBJECT
-	public:
-		AppSettings();
-		AppSettings(const QString &t_filepath);
-		~AppSettings() = default;
+        lisHistConnInfo    getConnectionList();
+        void     putConnectionToConfig(const Cmd::IEDCredentials &t_creds, const QString &t_ied);
 
-		listConfConectInfo	getConnectionList();
-		void 	putConnectionToConfig(const Cmd::IEDCredentials &t_cred, const QString &t_ied);
+    signals:
+        void     sigConfUpdated();
 
-	signals:
-		void 	sigConfUpdated();
+    private:
+        int      readConfigFile(const QString &t_filepath, lisHistConnInfo &t_list);
+        int      writeConfigFile(const QString &t_filepath, lisHistConnInfo &t_list);
 
-	private:
-		int  	readConfigFile(const QString &t_filepath, listConfConectInfo &t_list);
-		int  	writeConfigFile(const QString &t_filepath, listConfConectInfo &t_list);
-
-	private:
-		QString 	m_configFilepath;
-	};
+    private:
+        QString m_confFilepath;
+    };
 }

@@ -38,33 +38,33 @@
 
 namespace App
 {
-	/*
-	 * Interface for all Backends
-	 * */
-	class BackendInterface : public QObject
-	{
-		Q_OBJECT
-	public:
-		BackendInterface(IEDConContainer &t_con, EventStorage &t_ev)
+    /*
+     * Interface for all Backends
+     * */
+    class BackendInterface : public QObject
+    {
+        Q_OBJECT
+    public:
+        BackendInterface(IEDConContainer &t_con, EventStorage &t_ev)
             : m_con(t_con), m_events(t_ev)
         {
         }
-		BackendInterface() = delete;
-		virtual ~BackendInterface() {}
+        BackendInterface() = delete;
+        virtual ~BackendInterface() {}
 
-	protected:
-		void	putCmdToQueue(Cmd::ptrCMD t_cmd);
+    protected:
+        void    putCmdToQueue(Cmd::ptrCMD t_cmd);
 
-	signals:
-		void	sigCmdProgress(int t_perc, QString t_msg);
-		void	sigCmdFinished(bool t_done);
+    signals:
+        void    sigCmdProgress(int t_perc, QString t_msg);
+        void    sigCmdFinished(bool t_done);
 
-	public slots:
-		void			slotCmdEvent(Cmd::CmdEvent t_ev);
-		virtual void 	slotConnected(bool t_done);
+    public slots:
+        void            slotCmdEvent(Cmd::CmdEvent t_ev);
+        virtual void    slotConnected(bool t_done);
 
-	protected:
-		IEDConContainer& 	m_con;
+    protected:
+        IEDConContainer&    m_con;
         EventStorage&       m_events;
-	};
+    };
 }

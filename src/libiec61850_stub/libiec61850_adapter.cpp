@@ -28,89 +28,89 @@ extern "C"
 
 namespace Libiec61850
 {
-	namespace
+    namespace
     {
-		void 	callback_ConnectionHandler(void *t_param, sIedConnection *t_con)
-		{
-			Libiec61850_Adapter *adapter = static_cast<Libiec61850_Adapter*>(t_param);
-			if (adapter != nullptr) {
-				adapter->callbackOnCloseEvent();
-			}
-		}
-	}
+        void     callback_ConnectionHandler(void *t_param, sIedConnection *t_con)
+        {
+            Libiec61850_Adapter *adapter = static_cast<Libiec61850_Adapter*>(t_param);
+            if (adapter != nullptr) {
+                adapter->callbackOnCloseEvent();
+            }
+        }
+    }
 
     bool Libiec61850_Adapter::connect(const Cmd::IEDCredentials &t_creds)
     {
         IedClientError retval = IED_ERROR_OK;
 
-		m_libConn = IedConnection_create();
-		IedConnection_connect(m_libConn, &retval, t_creds.ip().toStdString().c_str(), t_creds.port());
-		if (retval == IED_ERROR_OK) {
-			// Callback for close-events
-			IedConnection_installConnectionClosedHandler(m_libConn, &callback_ConnectionHandler, this);
+        m_libConn = IedConnection_create();
+        IedConnection_connect(m_libConn, &retval, t_creds.ip().toStdString().c_str(), t_creds.port());
+        if (retval == IED_ERROR_OK) {
+            // Callback for close-events
+            IedConnection_installConnectionClosedHandler(m_libConn, &callback_ConnectionHandler, this);
 
-			IedConnection_getDeviceModelFromServer(m_libConn, &retval);
-			if (retval != IED_ERROR_OK) {
-				qDebug() << "!!! ERROR !!!: Connect, get model with error = " << retval;
-			}			
-		} else {
-			IedConnection_destroy(m_libConn);
-			m_libConn = nullptr;
-			return false;
-		}
-		return true;
+            IedConnection_getDeviceModelFromServer(m_libConn, &retval);
+            if (retval != IED_ERROR_OK) {
+                qDebug() << "!!! ERROR !!!: Connect, get model with error = " << retval;
+            }            
+        } else {
+            IedConnection_destroy(m_libConn);
+            m_libConn = nullptr;
+            return false;
+        }
+        return true;
     }
 
     void Libiec61850_Adapter::disconnect()
     {
         if (m_libConn == nullptr) {
-			return;
-		}
+            return;
+        }
 
-		IedClientError error = IED_ERROR_OK;
-		IedConnection_abort(m_libConn, &error);
-		IedConnection_destroy(m_libConn);
-		m_libConn = nullptr;
+        IedClientError error = IED_ERROR_OK;
+        IedConnection_abort(m_libConn, &error);
+        IedConnection_destroy(m_libConn);
+        m_libConn = nullptr;
     }
 
     bool Libiec61850_Adapter::isConnected() const
     {
         if (m_libConn == nullptr) {
-			return false;
-		}
+            return false;
+        }
 
-		IedConnectionState retval = IedConnection_getState(m_libConn);
-		if (retval == IED_STATE_CLOSED) {
-			return false;
-		}
-		return true;
+        IedConnectionState retval = IedConnection_getState(m_libConn);
+        if (retval == IED_STATE_CLOSED) {
+            return false;
+        }
+        return true;
     }
 
     QString Libiec61850_Adapter::getVersion() const
     {
         char *pv = LibIEC61850_getVersionString();
-		return QString("%1").arg(pv);
+        return QString("%1").arg(pv);
     }
 
     Core::DevServIdentity Libiec61850_Adapter::getServIdentity() const
     {
         Core::DevServIdentity ident;
-		MmsConnection mmsCon = IedConnection_getMmsConnection(m_libConn);
+        MmsConnection mmsCon = IedConnection_getMmsConnection(m_libConn);
 
-		MmsError error = MMS_ERROR_NONE;
-		MmsServerIdentity *identity = MmsConnection_identify(mmsCon, &error);
-		if ((error == MMS_ERROR_NONE) && (identity != nullptr)) {
-			ident.m_vendor = QString::fromLocal8Bit(identity->vendorName);
-			ident.m_model = QString::fromLocal8Bit(identity->modelName);
-			ident.m_revision = QString::fromLocal8Bit(identity->revision);
-		}
+        MmsError error = MMS_ERROR_NONE;
+        MmsServerIdentity *identity = MmsConnection_identify(mmsCon, &error);
+        if ((error == MMS_ERROR_NONE) && (identity != nullptr)) {
+            ident.m_vendor = QString::fromLocal8Bit(identity->vendorName);
+            ident.m_model = QString::fromLocal8Bit(identity->modelName);
+            ident.m_revision = QString::fromLocal8Bit(identity->revision);
+        }
 
-		MmsConnectionParameters param = MmsConnection_getMmsConnectionParameters(mmsCon);
-		ident.m_maxPduSize = param.maxPduSize;
-		ident.m_dataStructureNestingLevel = param.dataStructureNestingLevel;
-		ident.m_maxServOutstandingCalled = param.maxServOutstandingCalled;
-		ident.m_maxServOutstandingCalling = param.maxServOutstandingCalling;
-		return ident;
+        MmsConnectionParameters param = MmsConnection_getMmsConnectionParameters(mmsCon);
+        ident.m_maxPduSize = param.maxPduSize;
+        ident.m_dataStructureNestingLevel = param.dataStructureNestingLevel;
+        ident.m_maxServOutstandingCalled = param.maxServOutstandingCalled;
+        ident.m_maxServOutstandingCalling = param.maxServOutstandingCalling;
+        return ident;
     }
 
     void Libiec61850_Adapter::callbackOnCloseEvent()

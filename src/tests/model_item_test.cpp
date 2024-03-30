@@ -19,33 +19,38 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "model_item_test.hpp"
+#include <gtest/gtest.h>
 
 #include "core/data_model_builder.hpp"
 #include "core/item_factory.hpp"
 
 namespace CoreTests
 {
-	TEST(DataModel, DataModel) {
-		auto model = Core::ItemFactory::createModel("NoName").staticCast<Core::DataModel>();
+    TEST(DataModel, DataModel)
+    {
+        auto model = Core::ItemFactory::createModel("NoName").staticCast<Core::DataModel>();
 
-		auto ld1 = Core::ItemFactory::createLD(model.get(), "IEDNameLD1");
-		auto ld2 = Core::ItemFactory::createLD(model.get(), "IEDNameLD2");
-	}
+        auto ld1 = Core::ItemFactory::createLD(model.get(), "IEDNameLD1");
+        auto ld2 = Core::ItemFactory::createLD(model.get(), "IEDNameLD2");
+    }
 
-	TEST(DataModel, LogicalDevices) {
+    TEST(DataModel, LogicalDevices)
+    {
 
-	}
+    }
 
-	TEST(DataModel, LogicalNodes) {
-		
-	}
+    TEST(DataModel, LogicalNodes)
+    {
+        
+    }
 
-	TEST(DataModel, DataObjects) {
-		
-	}
+    TEST(DataModel, DataObjects)
+    {
+        
+    }
 
-	TEST(DataModel, DataSets) {
-		
-	}
+    TEST(DataModel, DataSets)
+    {
+        
+    }
 }

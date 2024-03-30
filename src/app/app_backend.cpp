@@ -26,29 +26,29 @@
 
 namespace App
 {
-	AppBackend::AppBackend(IEDConContainer &t_con, EventStorage &t_ev)
+    AppBackend::AppBackend(IEDConContainer &t_con, EventStorage &t_ev)
         : BackendInterface(t_con, t_ev)
-	{
-		m_eventsModel = new Models::AppEventsTable(this);
-		m_lastConnModel = new Models::HistConTable(this, m_settings);
+    {
+        m_eventsModel = new Models::AppEventsTable(this);
+        m_lastConnModel = new Models::HistConTable(this, m_settings);
 
         connect(&m_events, &EventStorage::sigNewEvent, this, &AppBackend::slotNewStatusMessage);
-	}
+    }
 
-	QString AppBackend::getAppVersion()
-	{
-		return QString("%1").arg(PROJECT_VERSION);
-	}
+    QString AppBackend::getAppVersion()
+    {
+        return QString("%1").arg(PROJECT_VERSION);
+    }
 
-	QString AppBackend::getQtVersion()
-	{
-		return QString("%1").arg(qVersion());
-	}
+    QString AppBackend::getQtVersion()
+    {
+        return QString("%1").arg(qVersion());
+    }
 
-	QString AppBackend::getLibVersion()
-	{
-		return m_con.m_api->getVersion();
-	}
+    QString AppBackend::getLibVersion()
+    {
+        return m_con.m_api->getVersion();
+    }
 
     QString AppBackend::getLastStatusMsg()
     {
@@ -61,7 +61,7 @@ namespace App
     }
 
     void AppBackend::saveCredsToHistory(const Cmd::IEDCredentials &t_cred)
-	{
-		m_settings.putConnectionToConfig(t_cred, m_con.m_ied->model().getName());
-	}
+    {
+        m_settings.putConnectionToConfig(t_cred, m_con.m_ied->model().getName());
+    }
 }

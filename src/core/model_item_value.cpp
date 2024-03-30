@@ -19,44 +19,36 @@
  *  See COPYING file for the complete license text.
  * */
 
+#include "model_item_value.hpp"
 #include "model_item.hpp"
-#include "model_values_updater.hpp"
 
 namespace Core
 {
-    void ModelItem::addSubItem(QSharedPointer<ModelItem> t_child)
+    namespace
     {
-        m_items.push_back(t_child);
+        void recurs_fillValue(ptrModelItem t_root, ptrModelItem t_item, QString &t_val)
+        {
+            if (t_item->getItemCount() == 0) {
+                // Leaft = End
+                t_val += QString("%1 = \"%2\"; ").arg(t_item->getReference(t_root.get())).arg(t_item->getValue());
+            }
+
+            auto subItemList = t_item->getItemList();
+            for (auto s : subItemList) {
+                recurs_fillValue(t_root, s, t_val);
+            }
+        }
     }
 
-    QString ModelItem::getValue() const
+    QString ModelItemFullValue::get(QSharedPointer<ModelItem> t_item)
     {
-        if (m_value) {
-            return m_value->str();
-        }
-        return "";
-    }
-
-    bool ModelItem::updateValue(ptrModelValue t_newValue)
-    {
-        if (m_value && (*m_value == *t_newValue)) {
-            return false;
+        if (t_item->getItemCount() == 0) {
+            return t_item->getValue();
         }
 
-        m_value = t_newValue;
-
-        if (m_parent != nullptr) {
-            auto nodes = QSharedPointer<QList<ModelItem*>>::create();
-            m_parent->notifyFromChild(nodes);
-        }
-        return true;
-    }
-
-    void ModelItem::notifyFromChild(QSharedPointer<QList<ModelItem*>> t_nodes)
-    {
-        if (m_parent != nullptr) {
-            t_nodes->push_front(this);
-            m_parent->notifyFromChild(t_nodes);
-        }
+        auto subItemList = t_item->getItemList();
+        QString fullValue;
+        recurs_fillValue(t_item, t_item, fullValue);
+        return fullValue;
     }
 }

@@ -29,94 +29,94 @@
 
 namespace Core
 {
-	class FileOn
-	{
-	public:
-		FileOn(const QString &t_name, uint32_t t_size, uint64_t t_ts)
-			: m_fileName{t_name}, m_size{t_size}, m_mts{t_ts}
-		{
-		}
-		FileOn() = delete;
+    class FileOn
+    {
+    public:
+        FileOn(const QString &t_name, uint32_t t_size, uint64_t t_ts)
+            : m_fileName{t_name}, m_size{t_size}, m_mts{t_ts}
+        {
+        }
+        FileOn() = delete;
 
-		QString 	name() const {
-			return m_fileName;
-		}
-		uint32_t 	size() const {
-			return m_size;
-		}
-		uint64_t 	timestamp() const {
-			return m_mts;
-		}
+        QString     name() const {
+            return m_fileName;
+        }
+        uint32_t     size() const {
+            return m_size;
+        }
+        uint64_t     timestamp() const {
+            return m_mts;
+        }
 
-	public:
-		QString 	m_fileName;
-		uint32_t 	m_size = 0;
-		uint64_t 	m_mts = 0; // last modified ts
-	};
+    public:
+        QString     m_fileName;
+        uint32_t    m_size = 0;
+        uint64_t    m_mts = 0; // last modified ts
+    };
 
-	class DirOn
-	{
-	public:
-		QString name()
-		{
-			return m_name;
-		}
+    class DirOn
+    {
+    public:
+        QString name()
+        {
+            return m_name;
+        }
 
-	public:
-		DirOn() {}
-		DirOn(const QString &t_name) : m_name{t_name} {}
+    public:
+        DirOn() {}
+        DirOn(const QString &t_name) : m_name{t_name} {}
 
-		void 		put(const FileOn &t_file)
-		{
-			m_file.push_back(t_file);
-		}
+        void          put(const FileOn &t_file)
+        {
+            m_file.push_back(t_file);
+        }
 
-		std::tuple<size_t, size_t> 		getDirectoryInfo() {
-			size_t total = 0;
-			for (auto &f : m_file) {
-				total += f.size();
-			}
-			size_t count = m_file.size();
-			return std::make_tuple(count, total);
-		}
-		size_t 		getCount() {
-			return m_file.size();
-		}
-		void 		removeFileFromList(int t_index) {
-			m_file.removeAt(t_index);
-		}
+        std::tuple<size_t, size_t>         getDirectoryInfo() {
+            size_t total = 0;
+            for (auto &f : m_file) {
+                total += f.size();
+            }
+            size_t count = m_file.size();
+            return std::make_tuple(count, total);
+        }
+        size_t        getCount() {
+            return m_file.size();
+        }
+        void          removeFileFromList(int t_index) {
+            m_file.removeAt(t_index);
+        }
 
-	public:
-		QString 		m_name;
-		QList<FileOn> 	m_file;
-	};
+    public:
+        QString       m_name;
+        QList<FileOn> m_file;
+    };
 
-	class FS_Model : public QObject
-	{
-		Q_OBJECT
-	public:
-		FS_Model(QObject *t_parent = nullptr) : QObject(t_parent) {}
+    class FS_Model : public QObject
+    {
+        Q_OBJECT
+    public:
+        FS_Model(QObject *t_parent = nullptr) : QObject(t_parent) {}
 
-		void put(const DirOn &t_dir)
-		{
-			m_dir = t_dir;
-			emit sigFS_Updated();
-		}
+        void put(const DirOn &t_dir)
+        {
+            m_dir = t_dir;
+            emit sigFS_Updated();
+        }
 
-		auto 		getFS_StatInfo() {
-			return m_dir.getDirectoryInfo();
-		}
-		size_t 		getCount() {
-			return m_dir.getCount();
-		}
-		void 		removeFileFromList(int t_index) {
-			m_dir.removeFileFromList(t_index);
-		}
+        auto getFS_StatInfo() {
+            return m_dir.getDirectoryInfo();
+        }
+        size_t getCount() {
+            return m_dir.getCount();
+        }
+        void removeFileFromList(int t_index) {
+            m_dir.removeFileFromList(t_index);
+        }
 
-	signals:
-		void sigFS_Updated();
+    signals:
+        void sigFS_Updated();
 
-	public:
-		DirOn 		m_dir;
-	};
+    public:
+        DirOn m_dir;
+    };
 }

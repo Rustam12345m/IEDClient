@@ -29,165 +29,165 @@ import "qrc:/common/"
 
 // LogicalDevice block in GridView
 Item {
-	id: rootID
+    id: rootID
 
-	required property int 		index
-	required property bool 		selected
-	required property var 		ld_object
+    required property int         index
+    required property bool         selected
+    required property var         ld_object
 
-	property ListModel ldValsModel: ListModel {}
+    property ListModel ldValsModel: ListModel {}
 
-	// Geometry
-	property int cellEdge: 28
-	property int borderWidth: 2
-	width: 200
-	height: (5 / 6 * width)
+    // Geometry
+    property int cellEdge: 28
+    property int borderWidth: 2
+    width: 200
+    height: (5 / 6 * width)
 
-	signal sigLeftClicked()
-	signal sigDLeftClicked()
-	signal sigLN_Page()
-	signal sigDS_Page()
-	signal sigRCB_Page()
+    signal sigLeftClicked()
+    signal sigDLeftClicked()
+    signal sigLN_Page()
+    signal sigDS_Page()
+    signal sigRCB_Page()
 
-	Rectangle {
-		anchors.fill: parent
+    Rectangle {
+        anchors.fill: parent
 
-		border.color: (selected ? "gray" : "lightgray")
-		border.width: rootID.borderWidth
-		color: "pink"
+        border.color: (selected ? "gray" : "lightgray")
+        border.width: rootID.borderWidth
+        color: "pink"
 
-		// Label
-		Rectangle {
-			id: labelRectID
+        // Label
+        Rectangle {
+            id: labelRectID
 
-			anchors {
-				top: parent.top
-				left: parent.left
-				right: parent.right
+            anchors {
+                top: parent.top
+                left: parent.left
+                right: parent.right
 
-				margins: rootID.borderWidth
-				bottomMargin: 0
-			}
-			height: rootID.cellEdge
+                margins: rootID.borderWidth
+                bottomMargin: 0
+            }
+            height: rootID.cellEdge
 
-			color: (selected ? "gray" : "lightgray")
+            color: (selected ? "gray" : "lightgray")
 
-			Text {
-				id: ldName
+            Text {
+                id: ldName
 
-				anchors.fill: parent
+                anchors.fill: parent
 
-				horizontalAlignment: Text.AlignLeft
-				verticalAlignment: Text.AlignVCenter
-				padding: 6
+                horizontalAlignment: Text.AlignLeft
+                verticalAlignment: Text.AlignVCenter
+                padding: 6
 
-				wrapMode: Text.Wrap
-				elide: Text.ElideRight
+                wrapMode: Text.Wrap
+                elide: Text.ElideRight
 
-				font.bold: true
-				font.pointSize: 12
-				color: "black"
+                font.bold: true
+                font.pointSize: 12
+                color: "black"
 
-				text: "LD: " + ld_object.name
-			}
-		}
-		// Values
-		Rectangle {
-			anchors {
-				top: labelRectID.bottom
-				bottom: parent.bottom
-				left: parent.left
-				right: parent.right
+                text: "LD: " + ld_object.name
+            }
+        }
+        // Values
+        Rectangle {
+            anchors {
+                top: labelRectID.bottom
+                bottom: parent.bottom
+                left: parent.left
+                right: parent.right
 
-				margins: rootID.borderWidth
-				topMargin: 0
-			}
-			// color: "red"
+                margins: rootID.borderWidth
+                topMargin: 0
+            }
+            // color: "red"
 
-			ListView {
-				anchors.fill: parent
+            ListView {
+                anchors.fill: parent
 
-				model: rootID.ldValsModel
+                model: rootID.ldValsModel
 
-				delegate: Rectangle {
-					height: 20
+                delegate: Rectangle {
+                    height: 20
 
-					RowLayout {
-						anchors.fill: parent
+                    RowLayout {
+                        anchors.fill: parent
 
-						Text {
-							Layout.preferredWidth: 50
-							padding: 6
+                        Text {
+                            Layout.preferredWidth: 50
+                            padding: 6
 
-							text: model.param
+                            text: model.param
 
-							font.pointSize: 10
-						}
-						Text {
-							padding: 6
+                            font.pointSize: 10
+                        }
+                        Text {
+                            padding: 6
 
-							text: model.value
+                            text: model.value
                             color: model.color
 
-							font.pointSize: 10
+                            font.pointSize: 10
                             font.bold: true
-						}
-					}
-				}
+                        }
+                    }
+                }
 
-				Component.onCompleted: {
-					rootID.ldValsModel.append({ param: "Mod:", 		value: ld_object.mod.text, color: ld_object.mod.color })
-					rootID.ldValsModel.append({ param: "Beh:", 		value: ld_object.beh.text, color: ld_object.beh.color })
-					rootID.ldValsModel.append({ param: "Health:", 	value: ld_object.health.text, color: ld_object.health.color })
-					rootID.ldValsModel.append({ param: "", 			value: "", color: "" })
-					rootID.ldValsModel.append({ param: "Sim:", 		value: ld_object.sim.text, color: ld_object.sim.color })
-					rootID.ldValsModel.append({ param: "Blk:", 		value: ld_object.blk.text, color: ld_object.blk.color })
-				}
-			}
-		}
+                Component.onCompleted: {
+                    rootID.ldValsModel.append({ param: "Mod:",         value: ld_object.mod.text, color: ld_object.mod.color })
+                    rootID.ldValsModel.append({ param: "Beh:",         value: ld_object.beh.text, color: ld_object.beh.color })
+                    rootID.ldValsModel.append({ param: "Health:",     value: ld_object.health.text, color: ld_object.health.color })
+                    rootID.ldValsModel.append({ param: "",             value: "", color: "" })
+                    rootID.ldValsModel.append({ param: "Sim:",         value: ld_object.sim.text, color: ld_object.sim.color })
+                    rootID.ldValsModel.append({ param: "Blk:",         value: ld_object.blk.text, color: ld_object.blk.color })
+                }
+            }
+        }
 
-		MouseArea {
-			anchors.fill: parent
-			acceptedButtons: Qt.LeftButton | Qt.RightButton
-			preventStealing: true
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.LeftButton | Qt.RightButton
+            preventStealing: true
 
-			onClicked: function(msx) {
-				if (msx.button === Qt.RightButton) {
-					contextMenu.popup()
-				}
-				sigLeftClicked()
-			}
-			onDoubleClicked: function(msx) {
-				sigDLeftClicked()
-			}
-			onPressAndHold: function(msx) {
-				if (msx.source === Qt.MouseEventNotSynthesized) {
-					contextMenu.popup()
-				}
-			}
+            onClicked: function(msx) {
+                if (msx.button === Qt.RightButton) {
+                    contextMenu.popup()
+                }
+                sigLeftClicked()
+            }
+            onDoubleClicked: function(msx) {
+                sigDLeftClicked()
+            }
+            onPressAndHold: function(msx) {
+                if (msx.source === Qt.MouseEventNotSynthesized) {
+                    contextMenu.popup()
+                }
+            }
 
-			Menu {
-				id: contextMenu
+            Menu {
+                id: contextMenu
 
-				MenuItem {
-					text: "Logical nodes"
-					onTriggered: {
-						sigLN_Page()
-					}
-				}
-				MenuItem {
-					text: "Datasets"
-					onTriggered: {
-						sigDS_Page()
-					}
-				}
-				MenuItem {
-					text: "Report control blocks"
-					onTriggered: {
-						sigRCB_Page()
-					}
-				}
-			}
-		}
-	}
+                MenuItem {
+                    text: "Logical nodes"
+                    onTriggered: {
+                        sigLN_Page()
+                    }
+                }
+                MenuItem {
+                    text: "Datasets"
+                    onTriggered: {
+                        sigDS_Page()
+                    }
+                }
+                MenuItem {
+                    text: "Report control blocks"
+                    onTriggered: {
+                        sigRCB_Page()
+                    }
+                }
+            }
+        }
+    }
 }

@@ -25,73 +25,73 @@
 
 namespace Core
 {
-	/*
-	 * Representation a Data Object of Logical Node
-	 * DO have several DA in different FC
-	 * */
-	class DataObject : public ModelItem
-	{
-	public:
-		QString		getValue() const override {
-			if (m_value) {
-				return m_value->getValue();
-			}
-			return " - ";
-		}
-		QString		getQuality() const {
-			if (m_quality) {
-				return m_quality->getValue();
-			}
-			return " - ";
-		}
-		QString		getTimestamp() const {
-			if (m_timestamp) {
-				return m_timestamp->getValue();
-			}
-			return " - ";
-		}
-		QString		getDesc() const {
-			if (m_description) {
-				return m_description->getValue();
-			}
-			return " - ";
-		}
+    /*
+     * Representation a Data Object of Logical Node
+     * DO have several DA in different FC
+     * */
+    class DataObject : public ModelItem
+    {
+    public:
+        QString        getValue() const override {
+            if (m_value) {
+                return m_value->getValue();
+            }
+            return " - ";
+        }
+        QString        getQuality() const {
+            if (m_quality) {
+                return m_quality->getValue();
+            }
+            return " - ";
+        }
+        QString        getTimestamp() const {
+            if (m_timestamp) {
+                return m_timestamp->getValue();
+            }
+            return " - ";
+        }
+        QString        getDesc() const {
+            if (m_description) {
+                return m_description->getValue();
+            }
+            return " - ";
+        }
 
-		void		addSubItem(QSharedPointer< ModelItem > t_node) override {
-			m_items.push_back(t_node);
+        void        addSubItem(QSharedPointer< ModelItem > t_node) override {
+            m_items.push_back(t_node);
 
             ptrDA da = t_node.staticCast<DataAttribute>();
             if (!da) {
                 return;
             }
 
-			if (t_node->getName() == "stVal" || t_node->getName() == "mag") {
-				m_value = da;
-			}
-			else if (t_node->getName() == "q") {
-				m_quality = da;
-			}
-			else if (t_node->getName() == "t") {
-				m_timestamp = da;
-			}
-			else if (t_node->getName() == "d") {
-				m_description = da;
-			}
-		}
+            if (t_node->getName() == "stVal" || t_node->getName() == "mag") {
+                m_value = da;
+            }
+            else if (t_node->getName() == "q") {
+                m_quality = da;
+            }
+            else if (t_node->getName() == "t") {
+                m_timestamp = da;
+            }
+            else if (t_node->getName() == "d") {
+                m_description = da;
+            }
+        }
 
-	public:
-		DataObject(ModelItem *t_parent, const QString &t_name)
-			: ModelItem(t_parent, t_name)
-		{
-			m_delimetr = "."; // Between LNName and DOName
-		}
+    public:
+        DataObject(ModelItem *t_parent, const QString &t_name)
+            : ModelItem(t_parent, t_name)
+        {
+            m_delimetr = "."; // Between LNName and DOName
+        }
 
-	protected:
-		ptrDA		m_value;
-		ptrDA		m_quality;
-		ptrDA		m_timestamp;
-		ptrDA		m_description;
+    protected:
+        ptrDA        m_value;
+        ptrDA        m_quality;
+        ptrDA        m_timestamp;
+        ptrDA        m_description;
         ptrModelItem m_fc[Core::FC_ENUM::COUNT];
-	};
-	typedef QSharedPointer< DataObject > 	ptrDO;
+    };
+    typedef QSharedPointer< DataObject >     ptrDO;
 }

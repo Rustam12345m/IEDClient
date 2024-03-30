@@ -27,36 +27,36 @@
 
 namespace App::Models
 {
-	class HistConTable : public QAbstractTableModel
-	{
-		Q_OBJECT
-		enum ColumnType {
-			NUMBER = 0,
-			IED_NAME,
-			IP_ADDR,
-			PORT_COLUMN,
-			LAST_CONNECT,
-			COLUMNS_COUNT
-		};
+    class HistConTable : public QAbstractTableModel
+    {
+        Q_OBJECT
+        enum ColumnType {
+            NUMBER = 0,
+            IED_NAME,
+            IP_ADDR,
+            PORT_COLUMN,
+            LAST_CONNECT,
+            COLUMNS_COUNT
+        };
 
-	public:
-		HistConTable(QObject *t_parent, App::AppSettings &t_conf);
+    public:
+        HistConTable(QObject *t_parent, App::AppSettings &t_conf);
 
-		QVariant headerData(int t_column, Qt::Orientation t_orientation,
-							int t_role = Qt::DisplayRole) const override;
+        QVariant headerData(int t_column, Qt::Orientation t_orientation,
+                            int t_role = Qt::DisplayRole) const override;
 
-		QHash<int, QByteArray> roleNames() const override;
+        QHash<int, QByteArray> roleNames() const override;
 
-		int rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
-		int columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
+        int rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
+        int columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
 
-		QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
+        QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
-	public slots:
-		void 	slotAppConfigUpdated();
+    public slots:
+        void     slotAppConfigUpdated();
 
-	protected:
-		App::AppSettings&	 	m_settings;
-		App::listConfConectInfo	m_con;
-	};
+    protected:
+        App::AppSettings&       m_settings;
+        App::lisHistConnInfo    m_con;
+    };
 }

@@ -27,85 +27,85 @@ import AppStylesModule
 // Custom TabBar
 Rectangle
 {
-	id: rootID
+    id: rootID
 
-	color: "white"
-	focus: false
+    color: "white"
+    focus: false
 
-	property bool leftSide: false
-	property bool horizontalBar: false
-	property alias model: listViewID.model
-	property alias currentIndex: listViewID.currentIndex
-	property alias spacing: listViewID.spacing
-	property int cellWidth: 60
-	property int cellHeight: 120
+    property bool leftSide: false
+    property bool horizontalBar: false
+    property alias model: listViewID.model
+    property alias currentIndex: listViewID.currentIndex
+    property alias spacing: listViewID.spacing
+    property int cellWidth: 60
+    property int cellHeight: 120
 
-	property color selectedColor: "gray"
-	property color unselectedColor: "lightgray"
+    property color selectedColor: "gray"
+    property color unselectedColor: "lightgray"
 
-	signal sigTabSelected(int index)
+    signal sigTabSelected(int index)
 
-	implicitHeight: rootID.horizontalBar ? rootID.height : (listViewID.count * rootID.cellHeight)
-	implicitWidth: rootID.horizontalBar ? (listViewID.count * rootID.cellWidth) : rootID.width
+    implicitHeight: rootID.horizontalBar ? rootID.height : (listViewID.count * rootID.cellHeight)
+    implicitWidth: rootID.horizontalBar ? (listViewID.count * rootID.cellWidth) : rootID.width
 
-	ListView {
-		id: listViewID
+    ListView {
+        id: listViewID
 
-		anchors {
-			fill: parent
-		}
-		boundsBehavior: Flickable.StopAtBounds
+        anchors {
+            fill: parent
+        }
+        boundsBehavior: Flickable.StopAtBounds
 
-		// model: ListModel {
-		// 	ListElement { title: "Test 1" }
-		// 	ListElement { title: "Test 2" }
-		// }
+        // model: ListModel {
+        //     ListElement { title: "Test 1" }
+        //     ListElement { title: "Test 2" }
+        // }
 
-		focus: false
-		spacing: 1
-		orientation: rootID.horizontalBar ? ListView.Horizontal	: ListView.Vertical
+        focus: false
+        spacing: 1
+        orientation: rootID.horizontalBar ? ListView.Horizontal    : ListView.Vertical
 
-		delegate: Item {
+        delegate: Item {
             id: btnItemID
-			required property int index
-			required property string title
-			property bool selected: (listViewID.currentIndex === index)
+            required property int index
+            required property string title
+            property bool selected: (listViewID.currentIndex === index)
 
-			implicitHeight: rootID.horizontalBar ? rootID.height : rootID.cellHeight
-			implicitWidth: rootID.horizontalBar ? rootID.cellWidth : rootID.width
+            implicitHeight: rootID.horizontalBar ? rootID.height : rootID.cellHeight
+            implicitWidth: rootID.horizontalBar ? rootID.cellWidth : rootID.width
 
-			Rectangle {
+            Rectangle {
                 id: btnRectID
-				width: parent.width
-				height: parent.height
+                width: parent.width
+                height: parent.height
 
-				border.width: 1
-				border.color: "lightgray"
-				color: btnItemID.selected ? rootID.selectedColor : rootID.unselectedColor
+                border.width: 1
+                border.color: "lightgray"
+                color: btnItemID.selected ? rootID.selectedColor : rootID.unselectedColor
 
                 Rectangle {
                     id: hiddenRectID
                     anchors.fill: parent
 
                     border.width: 1
-				    border.color: "lightgray"
+                    border.color: "lightgray"
                     color: rootID.selectedColor
                     visible: false
                 }
 
-				Text {
-					anchors {
-						centerIn: parent
-					}
-					rotation: rootID.horizontalBar ? 0 : (rootID.leftSide ? -90 : 90)
+                Text {
+                    anchors {
+                        centerIn: parent
+                    }
+                    rotation: rootID.horizontalBar ? 0 : (rootID.leftSide ? -90 : 90)
 
-					text: title
-					focus: false
+                    text: title
+                    focus: false
                     font.bold: selected
-				}
-				MouseArea {
-					anchors.fill: parent
-					acceptedButtons: Qt.LeftButton
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.LeftButton
                     hoverEnabled: true
 
                     onEntered: {
@@ -116,14 +116,14 @@ Rectangle
                         hiddenRectID.visible = false
                     }
 
-					onClicked: function(mouse) {
-						listViewID.currentIndex = index
-						sigTabSelected(index)
+                    onClicked: function(mouse) {
+                        listViewID.currentIndex = index
+                        sigTabSelected(index)
 
-						mouse.accepted = true
-					}
-				}
-			}
-		}
-	}
+                        mouse.accepted = true
+                    }
+                }
+            }
+        }
+    }
 }

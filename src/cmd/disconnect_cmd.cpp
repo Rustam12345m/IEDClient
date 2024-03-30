@@ -23,8 +23,8 @@
 
 namespace Cmd
 {
-	void DisConnectCmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
-	{
+    void DisConnectCmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
+    {
         t_api->disconnect();
-	}
+    }
 }

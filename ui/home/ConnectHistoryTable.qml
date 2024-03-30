@@ -30,84 +30,84 @@ import "qrc:/common/"
 
 FocusScope
 {
-	id: rootID
+    id: rootID
 
-	readonly property int defDelegateHeight: 30
-	readonly property int defDelegateWidth: 150
+    readonly property int defDelegateHeight: 30
+    readonly property int defDelegateWidth: 150
 
-	signal sigDeviceSelected(string t_ip, int t_port)
+    signal sigDeviceSelected(string t_ip, int t_port)
 
-	function getValue(row, col) {
-		let idx = tableID.model.index(row, col)
-		return tableID.model.data(idx, "display")
-	}
+    function getValue(row, col) {
+        let idx = tableID.model.index(row, col)
+        return tableID.model.data(idx, "display")
+    }
 
-	// Header for TableView below
-	TableHeader {
-		id: headerID
+    // Header for TableView below
+    TableHeader {
+        id: headerID
 
-		defDelegateWidth: rootID.defDelegateWidth
-		defDelegateHeight: rootID.defDelegateHeight
+        defDelegateWidth: rootID.defDelegateWidth
+        defDelegateHeight: rootID.defDelegateHeight
 
-		anchors {
-			left: parent.left
-			top: parent.top
-			right: parent.right
-		}
-	}
+        anchors {
+            left: parent.left
+            top: parent.top
+            right: parent.right
+        }
+    }
 
-	// Table of last used IED
-	TableView {
-		id: tableID
+    // Table of last used IED
+    TableView {
+        id: tableID
 
-		anchors {
-			left: parent.left
-			right: parent.right
-			top: headerID.bottom
-			bottom: parent.bottom
-		}
-		boundsBehavior: Flickable.StopAtBounds
-		clip: true
+        anchors {
+            left: parent.left
+            right: parent.right
+            top: headerID.bottom
+            bottom: parent.bottom
+        }
+        boundsBehavior: Flickable.StopAtBounds
+        clip: true
 
-		focus: true
-		model: appBackend.lastConnList
-		interactive: true
+        focus: true
+        model: appBackend.lastConnList
+        interactive: true
 
-		selectionBehavior: TableView.SelectRows
-		selectionModel: ItemSelectionModel {
-			model: tableID.model
+        selectionBehavior: TableView.SelectRows
+        selectionModel: ItemSelectionModel {
+            model: tableID.model
 
-			/*
-			onCurrentChanged: {
-			}
-			*/
-		}
+            /*
+            onCurrentChanged: {
+            }
+            */
+        }
 
-		columnWidthProvider: function(t_column) {
-			return Globals.columnWidthFillSpace(headerID, tableID, t_column)
-		}
+        columnWidthProvider: function(t_column) {
+            return Globals.columnWidthFillSpace(headerID, tableID, t_column)
+        }
 
-		delegate: TextDelegate {
-			delegateHeight: defDelegateHeight
-			text: model.display
+        delegate: TextDelegate {
+            delegateHeight: defDelegateHeight
+            text: model.display
 
-			onSigClick: function(row, col) {
-				Globals.setSelectedRow(tableID, row)
+            onSigClick: function(row, col) {
+                Globals.setSelectedRow(tableID, row)
 
-				let ip = rootID.getValue(row, 2)
-				let port = rootID.getValue(row, 3)
+                let ip = rootID.getValue(row, 2)
+                let port = rootID.getValue(row, 3)
 
-				sigDeviceSelected(ip, port)
-			}
+                sigDeviceSelected(ip, port)
+            }
 
-			onSigDoubleClick: function(row, col) {
-				//console.log("On double click: row = " + row + ", col = " + col)
-			}
-		}
+            onSigDoubleClick: function(row, col) {
+                //console.log("On double click: row = " + row + ", col = " + col)
+            }
+        }
 
-		Keys.onPressed: function(event) {
-			console.log("ConHistoryTable: " + event.key)
-			event.accepted = false
-		}
-	}
+        Keys.onPressed: function(event) {
+            console.log("ConHistoryTable: " + event.key)
+            event.accepted = false
+        }
+    }
 }

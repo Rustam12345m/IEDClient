@@ -28,81 +28,81 @@ import "qrc:/common/"
 // DataSets page
 FocusScope
 {
-	id: rootID
+    id: rootID
 
-	function resizeColumnsOnPage() {
-		tableDS_Val.resizeColumnsToContent()
-	}
+    function resizeColumnsOnPage() {
+        tableDS_Val.resizeColumnsToContent()
+    }
 
-	SplitView {
-		id: splitView
+    SplitView {
+        id: splitView
 
-		focus: true
-		anchors.fill: parent
+        focus: true
+        anchors.fill: parent
 
-		// Delimiter
-		handle: SplitDelimeter {
-			height: splitView.height
-			pressed: SplitHandle.pressed
-		}
+        // Delimiter
+        handle: SplitDelimeter {
+            height: splitView.height
+            pressed: SplitHandle.pressed
+        }
 
-		// Area for TableView of all DS
-		Rectangle {
-			SplitView.minimumWidth: 300
-			SplitView.fillWidth: false
+        // Area for TableView of all DS
+        Rectangle {
+            SplitView.minimumWidth: 300
+            SplitView.fillWidth: false
 
-			color: "white"
+            color: "white"
 
-			// Table
-			DS_OverviewTable {
-				id: tableDS_Info
+            // Table
+            DS_OverviewTable {
+                id: tableDS_Info
 
-				anchors.fill: parent
+                anchors.fill: parent
 
-				onSigLeftOrRightKey: function() {
-					tableDS_Info.focus = false
-					tableDS_Val.focus = true
-				}
-			}
-		}
+                onSigLeftOrRightKey: function() {
+                    tableDS_Info.focus = false
+                    tableDS_Val.focus = true
+                }
+            }
+        }
 
-		// Area for DataSet values
-		Rectangle {
-			SplitView.minimumWidth: 100
-			SplitView.fillWidth: true
+        // Area for DataSet values
+        Rectangle {
+            SplitView.minimumWidth: 100
+            SplitView.fillWidth: true
 
-			color: "white"
+            color: "white"
 
-			// Table
-			DS_StateTable {
-				id: tableDS_Val
+            // Table
+            DS_StateTable {
+                id: tableDS_Val
 
-				anchors.fill: parent
+                anchors.fill: parent
 
-				onSigLeftOrRightKey: function() {
-					tableDS_Info.focus = true
-					tableDS_Val.focus = false
-				}
-			}
-		}
-	}
+                onSigLeftOrRightKey: function() {
+                    tableDS_Info.focus = true
+                    tableDS_Val.focus = false
+                }
+            }
+        }
+    }
 
-	onVisibleChanged: {
-		if (visible) {
-			tableDS_Info.focus = true
-		}
-	}
+    onVisibleChanged: {
+        if (visible) {
+            tableDS_Info.focus = true
+        }
+    }
 
-	Keys.onPressed: function(event) {
-		if (event.key == Qt.Key_Left) {
-			tableDS_Info.focus = true
-			tableDS_Val.focus = false
-			event.accepted = true
-		}
-		if (event.key == Qt.Key_Right) {
-			tableDS_Info.focus = false
-			tableDS_Val.focus = true
-			event.accepted = true
-		}
-	}
+    Keys.onPressed: function(event) {
+        if (event.key == Qt.Key_Left) {
+            tableDS_Info.focus = true
+            tableDS_Val.focus = false
+            event.accepted = true
+        }
+        if (event.key == Qt.Key_Right) {
+            tableDS_Info.focus = false
+            tableDS_Val.focus = true
+            event.accepted = true
+        }
+    }
 }

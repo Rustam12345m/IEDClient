@@ -25,13 +25,13 @@
 
 namespace Cmd::Interface
 {
-	class IED_ModelAPI : public QObject
-	{
+    class IED_ModelAPI : public QObject
+    {
         Q_OBJECT
-	public:
-		virtual ~IED_ModelAPI() {}
+    public:
+        virtual ~IED_ModelAPI() {}
 
-		virtual int fetchDataModel(Core::DataModelBuilder &t_builder) = 0;
+        virtual int fetchDataModel(Core::DataModelBuilder &t_builder) = 0;
 
     signals:
         void sigFoundNode(const QString t_ref);

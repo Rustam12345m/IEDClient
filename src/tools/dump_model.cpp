@@ -27,36 +27,36 @@
 
 namespace Tools
 {
-	DumpModel::DumpModel(QObject *t_parent) : QThread(t_parent)
-	{
-	}
+    DumpModel::DumpModel(QObject *t_parent) : QThread(t_parent)
+    {
+    }
 
-	DumpModel::~DumpModel()
-	{
-		qDebug() << "DumpModel: Destructor";
-	}
+    DumpModel::~DumpModel()
+    {
+        qDebug() << "DumpModel: Destructor";
+    }
 
-	void DumpModel::init(const QString &t_dir, const QString &t_ip, unsigned int t_port,
-						 bool t_tls, const QString &t_name, const QString &t_pass)
-	{
-		m_fileDirectory = t_dir;
-		m_ip = t_ip;
-		m_port = t_port;
-		m_tls = t_tls;
-		m_user = t_name;
-		m_password = t_pass;
-	}
+    void DumpModel::init(const QString &t_dir, const QString &t_ip, unsigned int t_port,
+                         bool t_tls, const QString &t_name, const QString &t_pass)
+    {
+        m_fileDirectory = t_dir;
+        m_ip = t_ip;
+        m_port = t_port;
+        m_tls = t_tls;
+        m_user = t_name;
+        m_password = t_pass;
+    }
 
-	void DumpModel::run()
-	{
-		qDebug() << "DumpModel start process";
-		for (int i=0;i<10;i++) {
-			emit sigProgress(i * 5, QString("Progress is %1").arg(i * 5));
-			QThread::sleep(1);
-		}
-		emit sigFinished(true);
+    void DumpModel::run()
+    {
+        qDebug() << "DumpModel start process";
+        for (int i=0;i<10;i++) {
+            emit sigProgress(i * 5, QString("Progress is %1").arg(i * 5));
+            QThread::sleep(1);
+        }
+        emit sigFinished(true);
 
-		qDebug() << "DumpModel finish";
-		this->deleteLater();
-	}
+        qDebug() << "DumpModel finish";
+        this->deleteLater();
+    }
 }

@@ -29,96 +29,96 @@ import "qrc:/common/"
 
 // LD page
 FocusScope {
-	id: rootID
+    id: rootID
 
-	readonly property int blkSpace: 30
-	readonly property int blkWidth: 200
-	readonly property int blkHeight: 150
-	readonly property int blkBorder: 4
+    readonly property int blkSpace: 30
+    readonly property int blkWidth: 200
+    readonly property int blkHeight: 150
+    readonly property int blkBorder: 4
 
-	signal sigActivatePage(int page)
+    signal sigActivatePage(int page)
 
-	// Grid of Logical devices
-	GridView {
-		id: gridView
+    // Grid of Logical devices
+    GridView {
+        id: gridView
 
-		anchors.fill: parent
-		anchors.margins: blkSpace
+        anchors.fill: parent
+        anchors.margins: blkSpace
 
-		cellWidth: blkWidth + 2 * blkBorder + blkSpace
-		cellHeight: blkHeight + 2 * blkBorder + blkSpace
+        cellWidth: blkWidth + 2 * blkBorder + blkSpace
+        cellHeight: blkHeight + 2 * blkBorder + blkSpace
 
-		focus: true
-		keyNavigationEnabled: true
-		boundsBehavior: Flickable.StopAtBounds
+        focus: true
+        keyNavigationEnabled: true
+        boundsBehavior: Flickable.StopAtBounds
 
-		model: iedBackend.getLD_GridModel()
+        model: iedBackend.getLD_GridModel()
 
-		delegate: LD_GridItem {
-			selected: (gridView.currentIndex == index)
+        delegate: LD_GridItem {
+            selected: (gridView.currentIndex == index)
 
-			onSigLeftClicked: {
-				gridView.focus = true
-				gridView.currentIndex = index
-			}
-			onSigDLeftClicked: {
-				if (gridView.currentIndex != index) {
-					gridView.currentIndex = index
-				}
-				sigActivatePage(Globals.Page.LN)
-			}
+            onSigLeftClicked: {
+                gridView.focus = true
+                gridView.currentIndex = index
+            }
+            onSigDLeftClicked: {
+                if (gridView.currentIndex != index) {
+                    gridView.currentIndex = index
+                }
+                sigActivatePage(Globals.Page.LN)
+            }
 
-			onSigLN_Page: {
-				sigActivatePage(Globals.Page.LN)
-			}
-			onSigDS_Page: {
-				sigActivatePage(Globals.Page.DS)
-			}
-			onSigRCB_Page: {
-				sigActivatePage(Globals.Page.RCB)
-			}
-		}
+            onSigLN_Page: {
+                sigActivatePage(Globals.Page.LN)
+            }
+            onSigDS_Page: {
+                sigActivatePage(Globals.Page.DS)
+            }
+            onSigRCB_Page: {
+                sigActivatePage(Globals.Page.RCB)
+            }
+        }
 
-		onCurrentIndexChanged: {
-			gridView.model.setSelectedLD(gridView.currentIndex)
-		}
+        onCurrentIndexChanged: {
+            gridView.model.setSelectedLD(gridView.currentIndex)
+        }
 
-		// Reset selection
-		MouseArea {
-			anchors.fill: parent
-			acceptedButtons: Qt.LeftButton
+        // Reset selection
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.LeftButton
 
-			onClicked: function(msx) {
-				if (gridView.indexAt(mouseX, mouseY) === -1) {
-					gridView.currentIndex = -1
-					msx.accepted = true
-				} else {
-					msx.accepted = false
-				}
-			}
-			propagateComposedEvents: true
-		}
+            onClicked: function(msx) {
+                if (gridView.indexAt(mouseX, mouseY) === -1) {
+                    gridView.currentIndex = -1
+                    msx.accepted = true
+                } else {
+                    msx.accepted = false
+                }
+            }
+            propagateComposedEvents: true
+        }
 
-		onVisibleChanged: {
-			if ((gridView.currentIndex < 0) && (gridView.count > 0)) {
-				gridView.currentIndex = 0
-			}
-		}
-	}
+        onVisibleChanged: {
+            if ((gridView.currentIndex < 0) && (gridView.count > 0)) {
+                gridView.currentIndex = 0
+            }
+        }
+    }
 
-	Keys.onPressed: function(event) {
-		//console.log("LD_Page: Key pressed " + event.key)
-		if (event.key == Qt.Key_Return || event.key == Qt.Key_Enter) {
-			sigActivatePage(Globals.Page.LN)
-		}
-	}
+    Keys.onPressed: function(event) {
+        //console.log("LD_Page: Key pressed " + event.key)
+        if (event.key == Qt.Key_Return || event.key == Qt.Key_Enter) {
+            sigActivatePage(Globals.Page.LN)
+        }
+    }
 
-	onVisibleChanged: {
-		//console.log("LD_Grid: Focus " + visible)
-		if (visible) {
-			gridView.focus = true
-		} else {
-			gridView.focus = false
-		}
-	}
+    onVisibleChanged: {
+        //console.log("LD_Grid: Focus " + visible)
+        if (visible) {
+            gridView.focus = true
+        } else {
+            gridView.focus = false
+        }
+    }
 }

@@ -27,34 +27,34 @@
 
 namespace App::Models
 {
-	class LD_OverviewGrid : public QAbstractListModel
-	{
-		Q_OBJECT
-		enum LD_ModelRole {
-			LD_ROLE_VALUES = Qt::UserRole + 1
-		};
+    class LD_OverviewGrid : public QAbstractListModel
+    {
+        Q_OBJECT
+        enum LD_ModelRole {
+            LD_ROLE_VALUES = Qt::UserRole + 1
+        };
 
-	public:
-		LD_OverviewGrid(QObject *t_parent, Core::ptrIED t_ied);
+    public:
+        LD_OverviewGrid(QObject *t_parent, Core::ptrIED t_ied);
 
-		void 		setActiveIED(Core::ptrIED t_ied);
+        void        setActiveIED(Core::ptrIED t_ied);
 
-		QHash<int, QByteArray> roleNames() const override;
-		int			rowCount(const QModelIndex &t_index = QModelIndex()) const override;
-		QVariant	data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
+        QHash<int, QByteArray> roleNames() const override;
+        int         rowCount(const QModelIndex &t_index = QModelIndex()) const override;
+        QVariant    data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
-		Q_INVOKABLE void 	setSelectedLD(int t_ld);
+        Q_INVOKABLE void     setSelectedLD(int t_ld);
 
-	signals:
-		void 		sigLDSelected(int t_ld);
+    signals:
+        void        sigLDSelected(int t_ld);
 
-	public slots:
-		void		slotDataUpdated(Core::ptrModelItemList t_nodes);
+    public slots:
+        void        slotDataUpdated(Core::ptrModelItemList t_nodes);
     
     private:
         void        connectToUpdates(Core::DataModel &t_model, bool t_con);
 
-	private:
-		Core::ptrIED	m_ied;
-	};
+    private:
+        Core::ptrIED    m_ied;
+    };
 }

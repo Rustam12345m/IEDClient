@@ -26,21 +26,21 @@
 
 namespace Cmd
 {
-	/*
-	 * This is a basic class for all requests to IED through libiec61850
-	 * */
-	class CmdInterface : public QObject
-	{
-		Q_OBJECT
-	public:
-		CmdInterface() = default;
-		virtual ~CmdInterface() {}
+    /*
+     * This is a basic class for all requests to IED through libiec61850
+     * */
+    class CmdInterface : public QObject
+    {
+        Q_OBJECT
+    public:
+        CmdInterface() = default;
+        virtual ~CmdInterface() {}
 
-		virtual void	execute(Cmd::Interface::ptrIEC61850_API t_api) {
-		}
+        virtual void execute(Cmd::Interface::ptrIEC61850_API t_api) {
+        }
 
-	signals:
-        void    sigCmdEvent(CmdEvent t_event);
-	};
-	typedef QSharedPointer< CmdInterface >	ptrCMD;
+    signals:
+        void sigCmdEvent(CmdEvent t_event);
+    };
+    typedef QSharedPointer< CmdInterface >    ptrCMD;
 }

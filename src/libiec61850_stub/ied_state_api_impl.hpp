@@ -31,13 +31,13 @@ namespace Libiec61850
     {
     public:
         IED_StateAPI_Impl(Libiec61850_Adapter &t_api) : m_api(t_api) {}
-    	~IED_StateAPI_Impl() override = default;
+        ~IED_StateAPI_Impl() override = default;
 
-        Core::ptrModelStateUpd	getStatusForAllLD(Core::ptrDataModel t_model) override;
+        Core::ptrModelStateUpd getStatusForAllLD(Core::ptrDataModel t_model) override;
         Core::ptrModelStateUpd getStatusForAllLN(Core::ptrLD t_ld) override;
 
-		Core::ptrModelStateUpd	getValsForLN(Core::ptrLN t_ln) override;
-		Core::ptrModelStateUpd	getValsForDS(Core::ptrDataSet t_ds) override;
+        Core::ptrModelStateUpd getValsForLN(Core::ptrLN t_ln) override;
+        Core::ptrModelStateUpd getValsForDS(Core::ptrDataSet t_ds) override;
     
     private:
         Libiec61850_Adapter&   m_api;

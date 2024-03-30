@@ -26,26 +26,26 @@
 
 namespace Cmd
 {
-	class UpdateDataSet_Cmd : public CmdInterface
-	{
-		Q_OBJECT
-	public:
-		UpdateDataSet_Cmd(Core::ptrIED t_ied, Core::ptrDataSet t_ds)
-			: m_ied{t_ied}, m_dataset{t_ds}
-		{
-		}
+    class UpdateDataSet_Cmd : public CmdInterface
+    {
+        Q_OBJECT
+    public:
+        UpdateDataSet_Cmd(Core::ptrIED t_ied, Core::ptrDataSet t_ds)
+            : m_ied{t_ied}, m_dataset{t_ds}
+        {
+        }
 
-		void 	execute(Cmd::Interface::ptrIEC61850_API t_api) override;
+        void     execute(Cmd::Interface::ptrIEC61850_API t_api) override;
 
-		static auto create(Core::ptrIED t_ied, Core::ptrDataSet t_ds) {
-			return QSharedPointer<UpdateDataSet_Cmd>::create(t_ied, t_ds);
-		}
+        static auto create(Core::ptrIED t_ied, Core::ptrDataSet t_ds) {
+            return QSharedPointer<UpdateDataSet_Cmd>::create(t_ied, t_ds);
+        }
 
-	signals:
-		void 	sigModelValues(Core::ptrModelStateUpd t_vals);
+    signals:
+        void     sigModelValues(Core::ptrModelStateUpd t_vals);
 
-	private:
-		Core::ptrIED 	    m_ied;
-		Core::ptrDataSet    m_dataset;
-	};
+    private:
+        Core::ptrIED        m_ied;
+        Core::ptrDataSet    m_dataset;
+    };
 }

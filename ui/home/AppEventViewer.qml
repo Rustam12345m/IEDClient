@@ -25,140 +25,140 @@ import QtQuick.Layouts
 
 Window
 {
-	title: qsTr("IEDClient - System messages")
+    title: qsTr("IEDClient - System messages")
 
-	id: windowID
+    id: windowID
 
-	width: 800
-	height: 300
-	visible: true
+    width: 800
+    height: 300
+    visible: true
 
-	Rectangle {
-		id: rootID
+    Rectangle {
+        id: rootID
 
-		anchors.fill: parent
+        anchors.fill: parent
 
-		HorizontalHeaderView {
-			id: header
+        HorizontalHeaderView {
+            id: header
 
-			anchors.left: tableID.left
-			anchors.top: parent.top
-			anchors.right: parent.right
+            anchors.left: tableID.left
+            anchors.top: parent.top
+            anchors.right: parent.right
 
-			boundsBehavior: Flickable.StopAtBounds
-			syncView: tableID
+            boundsBehavior: Flickable.StopAtBounds
+            syncView: tableID
 
-			delegate: Rectangle {
-				implicitWidth: text.implicitWidth + 20
-				implicitHeight: 30
-				color: "#f6f6f6"
-				border.color: "#e4e4e4"
+            delegate: Rectangle {
+                implicitWidth: text.implicitWidth + 20
+                implicitHeight: 30
+                color: "#f6f6f6"
+                border.color: "#e4e4e4"
 
-				Label {
-					id: text
+                Label {
+                    id: text
 
-					anchors.centerIn: parent
+                    anchors.centerIn: parent
 
-					horizontalAlignment: Text.AlignHCenter
-					verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
 
-					text: model[header.textRole]
-					color: "#ff26282a"
-				}
-			}
-		}
+                    text: model[header.textRole]
+                    color: "#ff26282a"
+                }
+            }
+        }
 
-		TableView {
-			id: tableID
+        TableView {
+            id: tableID
 
-			anchors {
-				left: parent.left
-				top: header.bottom
-				right: parent.right
-				bottom: parent.bottom
-			}
+            anchors {
+                left: parent.left
+                top: header.bottom
+                right: parent.right
+                bottom: parent.bottom
+            }
 
-			clip: true
-			interactive: true
-			boundsBehavior: Flickable.StopAtBounds
+            clip: true
+            interactive: true
+            boundsBehavior: Flickable.StopAtBounds
 
-			model: appBackend.appLogsModel
+            model: appBackend.appLogsModel
 
-			selectionBehavior: TableView.SelectRows
-			selectionModel: ItemSelectionModel {
-				model: tableID.model
+            selectionBehavior: TableView.SelectRows
+            selectionModel: ItemSelectionModel {
+                model: tableID.model
 
-				onCurrentChanged: {
-					//console.log("Select current changed: " + currentIndex)
-				}
-			}
+                onCurrentChanged: {
+                    //console.log("Select current changed: " + currentIndex)
+                }
+            }
 
-			function calcGoodWidthFoColumn(col) {
-				const iw = []
-				let sum = 0
-				for (let i=0;i<columns;i++) {
-					iw[i] = Math.max(header.implicitColumnWidth(i), implicitColumnWidth(i))
-					sum = sum + iw[i]
-				}
-				if (sum === 0) sum = 1
-				return width * (iw[col] / sum)
-			}
-			function setGoodColumnsWidth() {
-				const iw = []
-				let sum = 0, i = 0
-				for (i=0;i<columns;i++) {
-					iw[i] = Math.max(header.implicitColumnWidth(i), implicitColumnWidth(i))
-					sum = sum + iw[i]
-				}
-				if (sum === 0) {
-					sum = 1
-				}
-				for (i=0;i<columns;i++) {
-					setColumnWidth(i, width * iw[i] / sum)
-				}
-			}
+            function calcGoodWidthFoColumn(col) {
+                const iw = []
+                let sum = 0
+                for (let i=0;i<columns;i++) {
+                    iw[i] = Math.max(header.implicitColumnWidth(i), implicitColumnWidth(i))
+                    sum = sum + iw[i]
+                }
+                if (sum === 0) sum = 1
+                return width * (iw[col] / sum)
+            }
+            function setGoodColumnsWidth() {
+                const iw = []
+                let sum = 0, i = 0
+                for (i=0;i<columns;i++) {
+                    iw[i] = Math.max(header.implicitColumnWidth(i), implicitColumnWidth(i))
+                    sum = sum + iw[i]
+                }
+                if (sum === 0) {
+                    sum = 1
+                }
+                for (i=0;i<columns;i++) {
+                    setColumnWidth(i, width * iw[i] / sum)
+                }
+            }
 
-			onWidthChanged: function() {
-				setGoodColumnsWidth()
-			}
+            onWidthChanged: function() {
+                setGoodColumnsWidth()
+            }
 
-			ScrollBar.vertical: ScrollBar {
-				policy: ScrollBar.AsNeeded
-				active: true
-				onActiveChanged: {
-					if (!active) {
-						active = true;
-					}
-				}
-			}
+            ScrollBar.vertical: ScrollBar {
+                policy: ScrollBar.AsNeeded
+                active: true
+                onActiveChanged: {
+                    if (!active) {
+                        active = true;
+                    }
+                }
+            }
 
-			delegate: Rectangle {
-				required property bool selected
+            delegate: Rectangle {
+                required property bool selected
 
-				implicitWidth: textArea.implicitWidth + 20
-				implicitHeight: 20
+                implicitWidth: textArea.implicitWidth + 20
+                implicitHeight: 20
 
-				color: (selected ? "lightgray" : "white")
-				border.color: (selected ? "black" : "lightgray")
-				border.width: 1
+                color: (selected ? "lightgray" : "white")
+                border.color: (selected ? "black" : "lightgray")
+                border.width: 1
 
-				Text {
-					id: textArea
-					text: display
-					anchors.centerIn: parent
-				}
-				MouseArea {
-					anchors.fill: parent
-					acceptedButtons: Qt.LeftButton | Qt.RightButton
+                Text {
+                    id: textArea
+                    text: display
+                    anchors.centerIn: parent
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.LeftButton | Qt.RightButton
 
-					onClicked: function(mouse) {
-						let idx = tableID.model.index(row, 0);
-						tableID.selectionModel.setCurrentIndex(idx, ItemSelectionModel.Clear
-																	| ItemSelectionModel.Select
-																	| ItemSelectionModel.Rows);
-					}
-				}
-			}
-		}
-	}
+                    onClicked: function(mouse) {
+                        let idx = tableID.model.index(row, 0);
+                        tableID.selectionModel.setCurrentIndex(idx, ItemSelectionModel.Clear
+                                                                    | ItemSelectionModel.Select
+                                                                    | ItemSelectionModel.Rows);
+                    }
+                }
+            }
+        }
+    }
 }

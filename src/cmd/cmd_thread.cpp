@@ -23,33 +23,33 @@
 
 namespace Cmd
 {
-	CmdThread::CmdThread(Cmd::Interface::ptrIEC61850_API t_api) : m_api(t_api)
-	{
-		setObjectName("CmdThread");
-		start();
-	}
+    CmdThread::CmdThread(Cmd::Interface::ptrIEC61850_API t_api) : m_api(t_api)
+    {
+        setObjectName("CmdThread");
+        start();
+    }
 
-	CmdThread::~CmdThread()
-	{
-		m_queue.stop();
+    CmdThread::~CmdThread()
+    {
+        m_queue.stop();
 
-		if (isRunning()) {
-			wait();
-		}
-	}
+        if (isRunning()) {
+            wait();
+        }
+    }
 
-	void CmdThread::putCommand(ptrCMD t_cmd)
-	{
-		m_queue.push(t_cmd);
-	}
+    void CmdThread::putCommand(ptrCMD t_cmd)
+    {
+        m_queue.push(t_cmd);
+    }
 
-	void CmdThread::run()
-	{
-		while (m_queue.isRunning()) {
-			ptrCMD cmd = m_queue.pop();
-			if (cmd) {
-				cmd->execute(m_api);
-			}
-		}
-	}
+    void CmdThread::run()
+    {
+        while (m_queue.isRunning()) {
+            ptrCMD cmd = m_queue.pop();
+            if (cmd) {
+                cmd->execute(m_api);
+            }
+        }
+    }
 }

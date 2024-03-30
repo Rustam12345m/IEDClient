@@ -38,7 +38,7 @@ namespace
         return dt.toString("HH:mm:ss dd.MM.yyyy"); // ms isn't important
     }
 
-    void 	getValuesForItemByMmsValue(Core::ptrModelItem t_item, Core::ptrModelStateUpd t_vals,
+    void     getValuesForItemByMmsValue(Core::ptrModelItem t_item, Core::ptrModelStateUpd t_vals,
                                        MmsValue *t_mmsValue)
     {
         if (t_item == nullptr || t_vals == nullptr || t_mmsValue == nullptr) {
@@ -148,7 +148,7 @@ namespace
         }
     }
 
-    int 	getValuesForDataAttribute(Core::ptrModelItem t_item, Core::ptrModelStateUpd t_vals,
+    int     getValuesForDataAttribute(Core::ptrModelItem t_item, Core::ptrModelStateUpd t_vals,
                                       sIedConnection *t_con, FunctionalConstraint t_fc)
     {
         IedClientError retval = IED_ERROR_OK;
@@ -165,7 +165,7 @@ namespace
         return 0;
     }
 
-    int 	getValuesForDataObject(Core::ptrDO t_do, Core::ptrModelStateUpd t_vals,
+    int     getValuesForDataObject(Core::ptrDO t_do, Core::ptrModelStateUpd t_vals,
                                    sIedConnection *t_con)
     {
         if (t_do == nullptr || t_vals == nullptr || t_con == nullptr) {
@@ -187,13 +187,13 @@ namespace Libiec61850
     Core::ptrModelStateUpd IED_StateAPI_Impl::getStatusForAllLD(Core::ptrDataModel t_model)
     {
         if (!m_api.isConnected()) {
-			return nullptr;
-		}
+            return nullptr;
+        }
 
-		auto vals = Core::ptrModelStateUpd::create();
+        auto vals = Core::ptrModelStateUpd::create();
 
         for (size_t i=0;i<t_model->getItemCount();i++) {
-			auto ld = t_model->getItem< Core::LogicalDevice >(i);
+            auto ld = t_model->getItem< Core::LogicalDevice >(i);
 
             if (ld->lln0()) {
                 getValuesForDataObject(ld->lln0()->getModItem(), vals, m_api.m_libConn);
@@ -201,50 +201,50 @@ namespace Libiec61850
                 getValuesForDataObject(ld->lln0()->getHealthItem(), vals, m_api.m_libConn);
             }
         }
-		return vals;
+        return vals;
     }
 
     Core::ptrModelStateUpd IED_StateAPI_Impl::getStatusForAllLN(Core::ptrLD t_ld)
     {
         if (!m_api.isConnected()) {
-			return nullptr;
-		}
+            return nullptr;
+        }
 
         auto vals = Core::ptrModelStateUpd::create();
-		for (size_t i=0;i<t_ld->getItemCount();i++) {
-			auto ln = t_ld->getItem< Core::LogicalNode >(i);
+        for (size_t i=0;i<t_ld->getItemCount();i++) {
+            auto ln = t_ld->getItem< Core::LogicalNode >(i);
 
-			for (size_t j=0;j<ln->getItemCount();j++) {
-				getValuesForDataObject(ln->getModItem(), vals, m_api.m_libConn);
-				getValuesForDataObject(ln->getBehItem(), vals, m_api.m_libConn);
-				getValuesForDataObject(ln->getHealthItem(), vals, m_api.m_libConn);
-			}
-		}
+            for (size_t j=0;j<ln->getItemCount();j++) {
+                getValuesForDataObject(ln->getModItem(), vals, m_api.m_libConn);
+                getValuesForDataObject(ln->getBehItem(), vals, m_api.m_libConn);
+                getValuesForDataObject(ln->getHealthItem(), vals, m_api.m_libConn);
+            }
+        }
         return vals;
     }
 
     Core::ptrModelStateUpd IED_StateAPI_Impl::getValsForLN(Core::ptrLN t_ln)
     {
         if (!m_api.isConnected()) {
-			return nullptr;
-		}
+            return nullptr;
+        }
 
-		auto vals = Core::ptrModelStateUpd::create();
-		for (size_t i=0;i<t_ln->getItemCount();i++) {
-			auto item = t_ln->getItem< Core::DataObject >(i);
+        auto vals = Core::ptrModelStateUpd::create();
+        for (size_t i=0;i<t_ln->getItemCount();i++) {
+            auto item = t_ln->getItem< Core::DataObject >(i);
 
-			getValuesForDataObject(item, vals, m_api.m_libConn);
-		}
-		return vals;
+            getValuesForDataObject(item, vals, m_api.m_libConn);
+        }
+        return vals;
     }
 
     Core::ptrModelStateUpd IED_StateAPI_Impl::getValsForDS(Core::ptrDataSet t_ds)
     {
         if (!m_api.isConnected()) {
-			return nullptr;
-		}
+            return nullptr;
+        }
 
-		//ClientDataSet clientDataSet = IedConnection_readDataSetValues(con, &error, "simpleIOGenericIO/LLN0.AnalogueValues", NULL);
+        //ClientDataSet clientDataSet = IedConnection_readDataSetValues(con, &error, "simpleIOGenericIO/LLN0.AnalogueValues", NULL);
         return nullptr;
     }
 }

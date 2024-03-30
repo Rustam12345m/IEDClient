@@ -26,26 +26,26 @@
 
 namespace Cmd
 {
-	/*
-	 * This class realizes downloading file from the IED
-	 * */
-	class UpdateRCBs_Cmd : public CmdInterface
-	{
-		Q_OBJECT
-	public:
-		UpdateRCBs_Cmd(Core::ptrIED t_ied) : m_ied{t_ied}
-		{
-		}
-		~UpdateRCBs_Cmd() = default;
+    /*
+     * This class realizes downloading file from the IED
+     * */
+    class UpdateRCBs_Cmd : public CmdInterface
+    {
+        Q_OBJECT
+    public:
+        UpdateRCBs_Cmd(Core::ptrIED t_ied) : m_ied{t_ied}
+        {
+        }
+        ~UpdateRCBs_Cmd() = default;
 
-		void	execute(Cmd::Interface::ptrIEC61850_API t_api) override;
+        void    execute(Cmd::Interface::ptrIEC61850_API t_api) override;
 
-		// Create new command like Builder pattern
-		static auto create(Core::ptrIED t_ied) {
-			return QSharedPointer<UpdateRCBs_Cmd>::create(t_ied);
-		}
+        // Create new command like Builder pattern
+        static auto create(Core::ptrIED t_ied) {
+            return QSharedPointer<UpdateRCBs_Cmd>::create(t_ied);
+        }
 
-	private:
-		Core::ptrIED	m_ied;
-	};
+    private:
+        Core::ptrIED    m_ied;
+    };
 }

@@ -26,106 +26,106 @@ import AppStylesModule
 
 Rectangle
 {
-	id: rootID
+    id: rootID
 
-	height: 24
+    height: 24
 
-	color: ColorPalette.statusBarColor
-	clip: true
+    color: ColorPalette.statusBarColor
+    clip: true
 
-	property alias msgStatusText: msgStatusTextID.text
-	property alias pageStatusText: pageStatusTextID.text
+    property alias msgStatusText: msgStatusTextID.text
+    property alias pageStatusText: pageStatusTextID.text
     property var appConnStatus
 
-	RowLayout {
-		anchors {
-			fill: parent
+    RowLayout {
+        anchors {
+            fill: parent
 
-			leftMargin: 5
-			rightMargin: 5
-		}
-		spacing: 10
+            leftMargin: 5
+            rightMargin: 5
+        }
+        spacing: 10
 
-		Text {
-			Layout.fillWidth: true
-			Layout.alignment: Qt.AlignVCenter
+        Text {
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignVCenter
 
-			id: msgStatusTextID
-			height: parent.height
+            id: msgStatusTextID
+            height: parent.height
 
-			horizontalAlignment: Text.AlignLeft // HCenter
-			verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignLeft // HCenter
+            verticalAlignment: Text.AlignVCenter
 
-			text: ""
+            text: ""
 
             onTextChanged: {
                 if (msgStatusTextID.text != "") {
                     timerStatusMsgID.restart()
                 }
             }
-		}
-		Rectangle {
-			Layout.alignment: Qt.AlignVCenter
+        }
+        Rectangle {
+            Layout.alignment: Qt.AlignVCenter
 
-			width: 1
-			height: parent.height - 4
-			color: ColorPalette.modalColor
-		}
-		Text {
-			Layout.fillWidth: false
-			Layout.alignment: Qt.AlignVCenter
-			Layout.preferredWidth: 200
+            width: 1
+            height: parent.height - 4
+            color: ColorPalette.modalColor
+        }
+        Text {
+            Layout.fillWidth: false
+            Layout.alignment: Qt.AlignVCenter
+            Layout.preferredWidth: 200
 
-			id: pageStatusTextID
-			height: parent.height
+            id: pageStatusTextID
+            height: parent.height
 
-			horizontalAlignment: Text.AlignHCenter //Left
-			verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter //Left
+            verticalAlignment: Text.AlignVCenter
 
-			font.bold: false
-			color: ColorPalette.textColor
-			text: ""
-		}
-		Rectangle {
-			Layout.alignment: Qt.AlignVCenter
+            font.bold: false
+            color: ColorPalette.textColor
+            text: ""
+        }
+        Rectangle {
+            Layout.alignment: Qt.AlignVCenter
 
-			width: 1
-			height: parent.height - 4
-			color: ColorPalette.modalColor
-		}
-		Row {
-			height: parent.height
-			spacing: 5
+            width: 1
+            height: parent.height - 4
+            color: ColorPalette.modalColor
+        }
+        Row {
+            height: parent.height
+            spacing: 5
 
-			Text {
-				Layout.alignment: Qt.AlignVCenter
+            Text {
+                Layout.alignment: Qt.AlignVCenter
 
-				id: conStatusTextID
+                id: conStatusTextID
 
-				horizontalAlignment: Text.AlignLeft
-				verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignLeft
+                verticalAlignment: Text.AlignVCenter
 
-				text: appConnStatus.text
-			}
-			Led {
-				Layout.alignment: Qt.AlignVCenter
+                text: appConnStatus.text
+            }
+            Led {
+                Layout.alignment: Qt.AlignVCenter
 
-				height: 20
-				width: 20
-				color: appConnStatus.isConnected ? "green" : "gray"
-			}
-		}
-	}
+                height: 20
+                width: 20
+                color: appConnStatus.isConnected ? "green" : "gray"
+            }
+        }
+    }
 
-	Timer {
-		id: timerStatusMsgID
+    Timer {
+        id: timerStatusMsgID
 
-		interval: 5000
-		running: false
-		repeat: false
+        interval: 5000
+        running: false
+        repeat: false
 
-		onTriggered: {
+        onTriggered: {
             msgStatusTextID.text = "";
-		}
-	}
+        }
+    }
 }

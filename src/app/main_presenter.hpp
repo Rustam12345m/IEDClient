@@ -30,44 +30,43 @@
 
 namespace App
 {
-	/*
-	 * MainPresenter for QML contains specific backends like FS, LD
-	 * */
-	class MainPresenter : public QObject
-	{
-		Q_OBJECT
-	public:
-		MainPresenter();
-		~MainPresenter() = default;
+    /*
+     * MainPresenter for QML contains specific backends like FS, LD
+     * */
+    class MainPresenter : public QObject
+    {
+        Q_OBJECT
+    public:
+        MainPresenter();
+        ~MainPresenter() = default;
 
-		void 		setQmlContextMembers(QQmlContext *t_context);
+        void setQmlContextMembers(QQmlContext *t_context);
 
-		Q_PROPERTY(QVariant iedConStatus READ getIEDConStatus NOTIFY sigIEDConChanged)
+        Q_PROPERTY(QVariant iedConStatus READ getIEDConStatus NOTIFY sigIEDConChanged)
         Q_INVOKABLE QVariant getIEDConStatus();
 
-		// API for QML
-		Q_INVOKABLE void 	connectTo(const QVariantMap &t_data);
-		Q_INVOKABLE void 	disconnectFrom();
-		Q_INVOKABLE void 	toolDumpModel(const QVariantMap &t_data);
+        // API for QML
+        Q_INVOKABLE void connectTo(const QVariantMap &t_data);
+        Q_INVOKABLE void disconnectFrom();
+        Q_INVOKABLE void toolDumpModel(const QVariantMap &t_data);
+        Q_INVOKABLE bool isConnected() { return m_con.isConnected(); }
 
-		Q_INVOKABLE bool 	isConnected() { return m_con.isConnected(); }
+    public slots:
+        void slotCmdEvent(Cmd::CmdEvent t_ev);
+        void slotConClosed();
 
-	public slots:
-		void		slotCmdEvent(Cmd::CmdEvent t_ev);
-        void        slotConClosed();
+    signals:
+        void sigCmdProgress(int t_perc, QString t_msg);
+        void sigCmdFinished(bool t_done);
+        void sigIEDConChanged(bool t_done);
 
-	signals:
-		void		sigCmdProgress(int t_perc, QString t_msg);
-		void		sigCmdFinished(bool t_done);
-		void 		sigIEDConChanged(bool t_done);
-
-	protected:
-		IEDConContainer	m_con; // Complex component of IED's stub
+    protected:
+        IEDConContainer m_con; // Complex component of IED's stub
         EventStorage    m_events;
 
-		// Backends for QML
-		AppBackend      m_appBackend;
-		IED_Backend     m_iedBackend;
-		IED_FS_Backend  m_fsBackend;
-	};
+        // Backends for QML
+        AppBackend      m_appBackend;
+        IED_Backend     m_iedBackend;
+        IED_FS_Backend  m_fsBackend;
+    };
 }

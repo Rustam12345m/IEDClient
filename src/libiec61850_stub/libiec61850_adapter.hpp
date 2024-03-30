@@ -51,11 +51,11 @@ namespace Libiec61850
         Cmd::Interface::IED_FS_API&        fs() override { return m_fs; }
 
     public:
-        void 	callbackOnCloseEvent();
+        void     callbackOnCloseEvent();
 
     private:
-		// libiec61850 stuff
-		sIedConnection*         m_libConn = nullptr;
+        // libiec61850 stuff
+        sIedConnection*         m_libConn = nullptr;
 
         IED_ModelAPI_Impl       m_model;
         IED_StateAPI_Impl       m_state;

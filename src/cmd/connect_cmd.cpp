@@ -28,8 +28,8 @@
 
 namespace Cmd
 {
-	void ConnectCmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
-	{
+    void ConnectCmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
+    {
         emit sigCmdEvent(CmdEvent::StartEvent(m_cred.ip(),
                 QString(tr("Try to connect to %1:%2")).arg(m_cred.ip()).arg(m_cred.port())));
 
@@ -59,14 +59,14 @@ namespace Cmd
                 QString(tr("IEDClient successfully connected to %1:%2"))
                         .arg(m_cred.ip()).arg(m_cred.port()),
                 true));
-	}
+    }
 
-	void ConnectCmd::slotFoundNewLN(const QString &t_msg)
-	{
+    void ConnectCmd::slotFoundNewLN(const QString &t_msg)
+    {
         m_percProgress += 5;
         if (m_percProgress >= 99) {
             m_percProgress = 99;
         }
         emit sigCmdEvent(CmdEvent::ProcessEvent(m_cred.ip(), t_msg, m_percProgress));
-	}
+    }
 }

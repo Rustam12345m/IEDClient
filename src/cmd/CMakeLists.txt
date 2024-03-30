@@ -7,42 +7,42 @@ set(SOURCES
     interface/ied_control_api.hpp
     interface/iec61850_api.hpp
 
-	cmd_interface.hpp
+    cmd_interface.hpp
     cmd_event.hpp
-	command_queue.hpp
+    command_queue.hpp
 
-	cmd_thread.hpp
-	cmd_thread.cpp
+    cmd_thread.hpp
+    cmd_thread.cpp
 
-	ied_credentials.hpp
-	connect_cmd.hpp
-	connect_cmd.cpp
-	disconnect_cmd.hpp
-	disconnect_cmd.cpp
+    ied_credentials.hpp
+    connect_cmd.hpp
+    connect_cmd.cpp
+    disconnect_cmd.hpp
+    disconnect_cmd.cpp
 
-	update_lds_status_cmd.hpp
-	update_lds_status_cmd.cpp
+    update_lds_status_cmd.hpp
+    update_lds_status_cmd.cpp
 
-	update_lns_status_cmd.cpp
-	update_lns_status_cmd.cpp
+    update_lns_status_cmd.cpp
+    update_lns_status_cmd.cpp
 
-	update_dataset_cmd.hpp
-	update_dataset_cmd.cpp
+    update_dataset_cmd.hpp
+    update_dataset_cmd.cpp
 
-	update_ln_cmd.hpp
-	update_ln_cmd.cpp
+    update_ln_cmd.hpp
+    update_ln_cmd.cpp
 
-	update_rcbs_cmd.hpp
-	update_rcbs_cmd.cpp
+    update_rcbs_cmd.hpp
+    update_rcbs_cmd.cpp
 
-	get_filelist_cmd.hpp
-	get_filelist_cmd.cpp
+    get_filelist_cmd.hpp
+    get_filelist_cmd.cpp
 
-	download_file_cmd.hpp
-	download_file_cmd.cpp
+    download_file_cmd.hpp
+    download_file_cmd.cpp
 
-	remove_file_cmd.hpp
-	remove_file_cmd.cpp
+    remove_file_cmd.hpp
+    remove_file_cmd.cpp
 )
 
 qt_add_library(cmd_lib STATIC ${SOURCES})

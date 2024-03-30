@@ -26,29 +26,29 @@
 
 namespace Cmd
 {
-	/*
-	 * 
-	 * */
-	class UpdateLNode_Cmd : public CmdInterface
-	{
-		Q_OBJECT
-	public:
-		UpdateLNode_Cmd(Core::ptrIED t_ied, Core::ptrLN t_lnode)
-			: m_ied{t_ied}, m_lnode{t_lnode}
-		{
-		}
+    /*
+     * 
+     * */
+    class UpdateLNode_Cmd : public CmdInterface
+    {
+        Q_OBJECT
+    public:
+        UpdateLNode_Cmd(Core::ptrIED t_ied, Core::ptrLN t_lnode)
+            : m_ied{t_ied}, m_lnode{t_lnode}
+        {
+        }
 
-		void 	execute(Cmd::Interface::ptrIEC61850_API t_api) override;
+        void     execute(Cmd::Interface::ptrIEC61850_API t_api) override;
 
-		static auto create(Core::ptrIED t_ied, Core::ptrLN t_lnode) {
-			return QSharedPointer<UpdateLNode_Cmd>::create(t_ied, t_lnode);
-		}
+        static auto create(Core::ptrIED t_ied, Core::ptrLN t_lnode) {
+            return QSharedPointer<UpdateLNode_Cmd>::create(t_ied, t_lnode);
+        }
 
-	signals:
-		void 	sigModelValues(Core::ptrModelStateUpd t_vals);
+    signals:
+        void     sigModelValues(Core::ptrModelStateUpd t_vals);
 
-	private:
-		Core::ptrIED    m_ied;
-		Core::ptrLN     m_lnode;
-	};
+    private:
+        Core::ptrIED    m_ied;
+        Core::ptrLN     m_lnode;
+    };
 }

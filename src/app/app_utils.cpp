@@ -25,9 +25,9 @@
 
 namespace App
 {
-	QString GetCurrentDateTime()
-	{
-		QDateTime current = QDateTime::currentDateTime();
-		return current.toString("dd.MM.yyyy HH:mm:ss"); // Custom format: "2023-12-31 23:59:59"
-	}
+    QString GetCurrentDateTime()
+    {
+        QDateTime current = QDateTime::currentDateTime();
+        return current.toString("dd.MM.yyyy HH:mm:ss"); // Custom format: "2023-12-31 23:59:59"
+    }
 }

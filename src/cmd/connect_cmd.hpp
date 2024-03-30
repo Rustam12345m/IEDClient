@@ -27,29 +27,29 @@
 
 namespace Cmd
 {
-	/*
-	 * This class realizes connecting to IED through pure TCP or TLS
-	 * */
-	class ConnectCmd : public CmdInterface
-	{
-		Q_OBJECT
-	public:
-		ConnectCmd(const IEDCredentials &t_cred, Core::ptrIED t_ied)
-				: m_cred(t_cred), m_ied(t_ied) {}
-		~ConnectCmd() {}
+    /*
+     * This class realizes connecting to IED through pure TCP or TLS
+     * */
+    class ConnectCmd : public CmdInterface
+    {
+        Q_OBJECT
+    public:
+        ConnectCmd(const IEDCredentials &t_cred, Core::ptrIED t_ied)
+                : m_cred(t_cred), m_ied(t_ied) {}
+        ~ConnectCmd() {}
 
-		void	execute(Cmd::Interface::ptrIEC61850_API t_api) override;
+        void    execute(Cmd::Interface::ptrIEC61850_API t_api) override;
 
-		static auto create(const IEDCredentials &t_cred, Core::ptrIED t_ied) {
-			return QSharedPointer<ConnectCmd>::create(t_cred, t_ied);
-		}
+        static auto create(const IEDCredentials &t_cred, Core::ptrIED t_ied) {
+            return QSharedPointer<ConnectCmd>::create(t_cred, t_ied);
+        }
 
-	private slots:
-		void 	slotFoundNewLN(const QString &t_ref);
+    private slots:
+        void     slotFoundNewLN(const QString &t_ref);
 
-	private:
-		IEDCredentials	m_cred;
-		Core::ptrIED    m_ied;
-        int             m_percProgress = 0;
-	};
+    private:
+        IEDCredentials m_cred;
+        Core::ptrIED   m_ied;
+        int            m_percProgress = 0;
+    };
 }

@@ -27,92 +27,92 @@ import AppStylesModule
 // Header for TableView
 HorizontalHeaderView
 {
-	id: headerID
+    id: headerID
 
-	property int sortOrder: 0
-	property int sortedColumn: 0
-	property bool rightTextAlign: false
+    property int sortOrder: 0
+    property int sortedColumn: 0
+    property bool rightTextAlign: false
 
-	boundsBehavior: Flickable.StopAtBounds
-	resizableColumns: true
+    boundsBehavior: Flickable.StopAtBounds
+    resizableColumns: true
 
-	focus: false
-	clip: true
-	syncView: tableID
+    focus: false
+    clip: true
+    syncView: tableID
 
-	delegate: Rectangle {
-		property int column: model.column
-		property bool sortable: model.display.sortable
+    delegate: Rectangle {
+        property int column: model.column
+        property bool sortable: model.display.sortable
 
-		implicitWidth: labelID.implicitWidth + 24 + 24
-		// implicitWidth: rowID.implicitWidth + 10
-		implicitHeight: 30
+        implicitWidth: labelID.implicitWidth + 24 + 24
+        // implicitWidth: rowID.implicitWidth + 10
+        implicitHeight: 30
 
-		border.color: ColorPalette.tableRowBorderColor2
-		color: ColorPalette.tableHeaderColor
-		clip: true
+        border.color: ColorPalette.tableRowBorderColor2
+        color: ColorPalette.tableHeaderColor
+        clip: true
 
-		Row {
-			id: rowID
+        Row {
+            id: rowID
 
-			anchors.fill: parent
-			spacing: 8
+            anchors.fill: parent
+            spacing: 8
 
-			layoutDirection: Qt.RightToLeft
-			rightPadding: 8
-			leftPadding: 8
-			focus: false
+            layoutDirection: Qt.RightToLeft
+            rightPadding: 8
+            leftPadding: 8
+            focus: false
 
-			Text {
-				id: labelID
+            Text {
+                id: labelID
 
-				anchors.verticalCenter: parent.verticalCenter
+                anchors.verticalCenter: parent.verticalCenter
 
-				horizontalAlignment: rightTextAlign ? Text.AlignRight : Text.AlignHCenter
-				color: ColorPalette.tableTextColor
-				font.bold: true
-				focus: false
+                horizontalAlignment: rightTextAlign ? Text.AlignRight : Text.AlignHCenter
+                color: ColorPalette.tableTextColor
+                font.bold: true
+                focus: false
 
-				text: model.display.text
-			}
-			Image {
-				id: imgID
+                text: model.display.text
+            }
+            Image {
+                id: imgID
 
-				anchors.verticalCenter: parent.verticalCenter
+                anchors.verticalCenter: parent.verticalCenter
 
-				visible: (headerID.sortedColumn == column)
-				source: (headerID.sortOrder == 0) ? "qrc:/img/icons/keyboard_arrow_down.svg"
-													: "qrc:/img/icons/keyboard_arrow_up.svg"
+                visible: (headerID.sortedColumn == column)
+                source: (headerID.sortOrder == 0) ? "qrc:/img/icons/keyboard_arrow_down.svg"
+                                                    : "qrc:/img/icons/keyboard_arrow_up.svg"
 
-				width: 24
-				height: 24
-				focus: false
-			}
-		}
-		MouseArea {
-			anchors {
-				fill: parent
-				leftMargin: 5
-				rightMargin: 5
-			}
+                width: 24
+                height: 24
+                focus: false
+            }
+        }
+        MouseArea {
+            anchors {
+                fill: parent
+                leftMargin: 5
+                rightMargin: 5
+            }
 
-			onClicked: function(mouse) {
-				mouse.accepted = true
+            onClicked: function(mouse) {
+                mouse.accepted = true
 
-				if (sortable) {
-					if (headerID.sortedColumn != column) {
-						headerID.sortedColumn = column
-						headerID.sortOrder = 0
-					}
+                if (sortable) {
+                    if (headerID.sortedColumn != column) {
+                        headerID.sortedColumn = column
+                        headerID.sortOrder = 0
+                    }
 
-					if (headerID.sortOrder == 0) {
-						headerID.sortOrder = 1
-					} else {
-						headerID.sortOrder = 0
-					}
-					tableID.model.sort(parent.column, headerID.sortOrder)
-				}
-			}
-		}
-	}
+                    if (headerID.sortOrder == 0) {
+                        headerID.sortOrder = 1
+                    } else {
+                        headerID.sortOrder = 0
+                    }
+                    tableID.model.sort(parent.column, headerID.sortOrder)
+                }
+            }
+        }
+    }
 }

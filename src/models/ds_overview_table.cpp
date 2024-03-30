@@ -23,58 +23,58 @@
 
 namespace App::Models
 {
-	DS_OverviewTable::DS_OverviewTable(QObject *t_parent, QSharedPointer<Core::IED> t_ied)
-		: QAbstractListModel(t_parent), m_ied(t_ied)
-	{
-	}
+    DS_OverviewTable::DS_OverviewTable(QObject *t_parent, QSharedPointer<Core::IED> t_ied)
+        : QAbstractListModel(t_parent), m_ied(t_ied)
+    {
+    }
 
-	void DS_OverviewTable::setActiveIED(QSharedPointer<Core::IED> t_ied)
-	{
-		beginResetModel();
-		m_ied = t_ied;
-		endResetModel();
-	}
+    void DS_OverviewTable::setActiveIED(QSharedPointer<Core::IED> t_ied)
+    {
+        beginResetModel();
+        m_ied = t_ied;
+        endResetModel();
+    }
 
-	void DS_OverviewTable::setSelectedDS(int t_ds)
-	{
-		m_currentDS = t_ds;
-		emit sigDSSelected(m_currentDS);
-	}
+    void DS_OverviewTable::setSelectedDS(int t_ds)
+    {
+        m_currentDS = t_ds;
+        emit sigDSSelected(m_currentDS);
+    }
 
-	QHash<int, QByteArray> DS_OverviewTable::roleNames() const
-	{
-		return { { SECTION_ROLE, "section" }, { NAME_ROLE, "name" }, { VALUE_ROLE, "value" } };
-	}
+    QHash<int, QByteArray> DS_OverviewTable::roleNames() const
+    {
+        return { { SECTION_ROLE, "section" }, { NAME_ROLE, "name" }, { VALUE_ROLE, "value" } };
+    }
 
-	int DS_OverviewTable::rowCount(const QModelIndex &t_parent) const
-	{
-		return m_ied->model().getDataSetList().count();
-	}
+    int DS_OverviewTable::rowCount(const QModelIndex &t_parent) const
+    {
+        return m_ied->model().getDataSetList().count();
+    }
 
-	QVariant DS_OverviewTable::data(const QModelIndex &t_index, int t_role) const
-	{
-		int row = t_index.row();
-		auto getDataSetList = m_ied->model().getDataSetList();
-		if (row >= getDataSetList.count()) {
-			return QVariant(" ? ");
-		}
+    QVariant DS_OverviewTable::data(const QModelIndex &t_index, int t_role) const
+    {
+        int row = t_index.row();
+        auto getDataSetList = m_ied->model().getDataSetList();
+        if (row >= getDataSetList.count()) {
+            return QVariant(" ? ");
+        }
 
-		switch (t_role) {
-		case SECTION_ROLE: {
-			return QVariant(getDataSetList[row]->Core::ModelItem::getParent()->getReference());
-		}
-		case NAME_ROLE: {
-			return QVariant(getDataSetList[row]->getName());
-		}
-		case VALUE_ROLE: {
-			return QVariant(QString::number(getDataSetList[row]->getItemCount()));
-		}
-		}
-		return QVariant("??");
-	}
+        switch (t_role) {
+        case SECTION_ROLE: {
+            return QVariant(getDataSetList[row]->Core::ModelItem::getParent()->getReference());
+        }
+        case NAME_ROLE: {
+            return QVariant(getDataSetList[row]->getName());
+        }
+        case VALUE_ROLE: {
+            return QVariant(QString::number(getDataSetList[row]->getItemCount()));
+        }
+        }
+        return QVariant("??");
+    }
 
-	void DS_OverviewTable::slotDataUpdated()
-	{
-		//emit dataChanged(index(0, DS_LD_Column), index(rowCount() - 1, COLUMN_COUNT));
-	}
+    void DS_OverviewTable::slotDataUpdated()
+    {
+        //emit dataChanged(index(0, DS_LD_Column), index(rowCount() - 1, COLUMN_COUNT));
+    }
 }

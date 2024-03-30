@@ -25,95 +25,95 @@ import QtQuick.Layouts
 
 Rectangle
 {
-	id: rootID
+    id: rootID
 
-	anchors.fill: parent
+    anchors.fill: parent
 
-	color: "gray"
-	opacity: 0.8
-	z: 100500
-	visible: false
+    color: "gray"
+    opacity: 0.8
+    z: 100500
+    visible: false
 
-	Dialog {
-		id: dialogID
+    Dialog {
+        id: dialogID
 
-		anchors.centerIn: parent
-		z: 100501
+        anchors.centerIn: parent
+        z: 100501
 
-		width: Math.max(600, progressText.implicitWidth + 50)
-		height: 150
+        width: Math.max(600, progressText.implicitWidth + 50)
+        height: 150
 
-		modal: true
-		closePolicy: Dialog.NoAutoClose
-		visible: false
+        modal: true
+        closePolicy: Dialog.NoAutoClose
+        visible: false
 
-		Rectangle {
-			color: "lightgray"
-			anchors.fill: parent
+        Rectangle {
+            color: "lightgray"
+            anchors.fill: parent
 
-			ColumnLayout {
-				anchors.fill: parent
+            ColumnLayout {
+                anchors.fill: parent
 
-				Text {
-					Layout.alignment: Qt.AlignCenter
-					Layout.fillWidth: true
-					horizontalAlignment: Text.AlignHCenter
+                Text {
+                    Layout.alignment: Qt.AlignCenter
+                    Layout.fillWidth: true
+                    horizontalAlignment: Text.AlignHCenter
 
-					id: progressText
-					font.bold: true
-					font.pixelSize: 16
+                    id: progressText
+                    font.bold: true
+                    font.pixelSize: 16
 
-					color: "black"
-					text: "Please, wait..."
-				}
-				ProgressBar {
-					Layout.alignment: Qt.AlignBottom
-					Layout.fillWidth: true
+                    color: "black"
+                    text: "Please, wait..."
+                }
+                ProgressBar {
+                    Layout.alignment: Qt.AlignBottom
+                    Layout.fillWidth: true
 
-					id: progressBar
-					width: 100
-					height: 30
+                    id: progressBar
+                    width: 100
+                    height: 30
 
-					from: 0.0
-					to: 100.0
-					value: 0.0
+                    from: 0.0
+                    to: 100.0
+                    value: 0.0
 
-					Text {
-						id: progressValue
+                    Text {
+                        id: progressValue
 
-						anchors.centerIn: parent
-						z: 1
+                        anchors.centerIn: parent
+                        z: 1
 
-						text: ""
-						color: "black"
-					}
-				}
-			}
-		}
-	}
+                        text: ""
+                        color: "black"
+                    }
+                }
+            }
+        }
+    }
 
-	function isActive() {
-		return dialogID.visible
-	}
-	function startLoad() {
-		//console.log("ModalProgressBar: startLoad")
-		parent.enabled = false
+    function isActive() {
+        return dialogID.visible
+    }
+    function startLoad() {
+        //console.log("ModalProgressBar: startLoad")
+        parent.enabled = false
 
-		progressBar.value = 0
-		rootID.visible = true
-		dialogID.visible = true
-	}
-	function finishLoad() {
-		//console.log("ModalProgressBar: finishLoad")
-		rootID.visible = false
-		dialogID.visible = false
+        progressBar.value = 0
+        rootID.visible = true
+        dialogID.visible = true
+    }
+    function finishLoad() {
+        //console.log("ModalProgressBar: finishLoad")
+        rootID.visible = false
+        dialogID.visible = false
 
-		parent.enabled = true
-	}
-	function updateLoad(t_perc, t_msg) {
-		progressBar.value = t_perc
-		progressValue.text = t_perc + " %"
+        parent.enabled = true
+    }
+    function updateLoad(t_perc, t_msg) {
+        progressBar.value = t_perc
+        progressValue.text = t_perc + " %"
 
-		progressText.text = t_msg
-	}
+        progressText.text = t_msg
+    }
 }

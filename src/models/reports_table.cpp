@@ -23,64 +23,64 @@
 
 namespace App::Models
 {
-	ReportsTable::ReportsTable(QObject *t_parent, QSharedPointer<Core::IED> t_ied)
-		: QAbstractTableModel(t_parent), m_ied(t_ied)
-	{
-	}
+    ReportsTable::ReportsTable(QObject *t_parent, QSharedPointer<Core::IED> t_ied)
+        : QAbstractTableModel(t_parent), m_ied(t_ied)
+    {
+    }
 
-	void ReportsTable::setActiveIED(QSharedPointer<Core::IED> t_ied)
-	{
-		beginResetModel();
-		m_ied = t_ied;
-		endResetModel();
-	}
+    void ReportsTable::setActiveIED(QSharedPointer<Core::IED> t_ied)
+    {
+        beginResetModel();
+        m_ied = t_ied;
+        endResetModel();
+    }
 
-	QVariant ReportsTable::headerData(int t_section, Qt::Orientation t_orientation, int t_role) const
-	{
-		switch (t_orientation) {
-		case Qt::Horizontal: {
-			const char* labels[] = { "Name", "Mode", "Beh", "Health" };
+    QVariant ReportsTable::headerData(int t_section, Qt::Orientation t_orientation, int t_role) const
+    {
+        switch (t_orientation) {
+        case Qt::Horizontal: {
+            const char* labels[] = { "Name", "Mode", "Beh", "Health" };
 
-			return QVariant(labels[t_section % COLUMN_COUNT]);
-		}
-		case Qt::Vertical: {
-			break;
-		}
-		}
-		return QVariant();
-	}
+            return QVariant(labels[t_section % COLUMN_COUNT]);
+        }
+        case Qt::Vertical: {
+            break;
+        }
+        }
+        return QVariant();
+    }
 
-	QHash<int, QByteArray> ReportsTable::roleNames() const
-	{
-		return { { Qt::DisplayRole, "value" } };
-	}
+    QHash<int, QByteArray> ReportsTable::roleNames() const
+    {
+        return { { Qt::DisplayRole, "value" } };
+    }
 
-	int ReportsTable::rowCount(const QModelIndex &t_parent) const
-	{
-		return 0;
-	}
+    int ReportsTable::rowCount(const QModelIndex &t_parent) const
+    {
+        return 0;
+    }
 
-	int ReportsTable::columnCount(const QModelIndex &t_parent) const
-	{
-		return COLUMN_COUNT;
-	}
+    int ReportsTable::columnCount(const QModelIndex &t_parent) const
+    {
+        return COLUMN_COUNT;
+    }
 
-	QVariant ReportsTable::data(const QModelIndex &t_index, int t_role) const
-	{
-		return QVariant(" ? ");
-	}
+    QVariant ReportsTable::data(const QModelIndex &t_index, int t_role) const
+    {
+        return QVariant(" ? ");
+    }
 
-	void ReportsTable::slotDataUpdated()
-	{
-		emit dataChanged(index(0, ModeColumn), index(rowCount() - 1, HealthColumn));
-	}
+    void ReportsTable::slotDataUpdated()
+    {
+        emit dataChanged(index(0, ModeColumn), index(rowCount() - 1, HealthColumn));
+    }
 
-	void ReportsTable::slotRCBSelected(int t_inx)
-	{
-		if (m_currentRCB != t_inx) {
-			beginResetModel();
-			m_currentRCB = t_inx;
-			endResetModel();
-		}
-	}
+    void ReportsTable::slotRCBSelected(int t_inx)
+    {
+        if (m_currentRCB != t_inx) {
+            beginResetModel();
+            m_currentRCB = t_inx;
+            endResetModel();
+        }
+    }
 }

@@ -1,19 +1,12 @@
-set(TEST_TARGET_NAME tests)
+set(TEST_TARGET_NAME unit_tests)
 
 set(TEST_SOURCES
-	main.cpp
+    main.cpp
 
-    model_item_test.hpp
-    model_item_test.cpp
-
-    data_model_test.hpp
+    app_settings_test.cpp
     data_model_test.cpp
-
-	app_settings_test.hpp
-	app_settings_test.cpp
-
-	cmd_test.hpp
-	cmd_test.cpp
+    model_item_test.cpp
+    cmd_test.cpp
 )
 
 # Unit tests
@@ -24,4 +17,4 @@ target_link_libraries(${TEST_TARGET_NAME} PRIVATE app_lib)
 target_link_libraries(${TEST_TARGET_NAME} PRIVATE aggregated_qt_lib)
 
 # CTest
-add_test(NAME Tests COMMAND ${TEST_TARGET_NAME})
+add_test(NAME ${TEST_TARGET_NAME} COMMAND ${TEST_TARGET_NAME})

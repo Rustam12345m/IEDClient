@@ -25,31 +25,31 @@
 
 namespace Cmd
 {
-	/*
-	 * This class realizes downloading file from the IED
-	 * */
-	class RemoveFileCMD : public CmdInterface
-	{
-		Q_OBJECT
-	public:
-		RemoveFileCMD(const QString &t_name, int t_fileIndex)
-			: m_filename(t_name), m_fileIndex(t_fileIndex)
-		{
-		}
-		~RemoveFileCMD() {}
+    /*
+     * This class realizes downloading file from the IED
+     * */
+    class RemoveFileCMD : public CmdInterface
+    {
+        Q_OBJECT
+    public:
+        RemoveFileCMD(const QString &t_name, int t_fileIndex)
+            : m_filename(t_name), m_fileIndex(t_fileIndex)
+        {
+        }
+        ~RemoveFileCMD() {}
 
-		void	execute(Cmd::Interface::ptrIEC61850_API t_api) override;
+        void    execute(Cmd::Interface::ptrIEC61850_API t_api) override;
 
-		// Create new command like Builder pattern
-		static auto create(const QString &t_name, int t_row) {
-			return QSharedPointer<RemoveFileCMD>::create(t_name, t_row);
-		}
+        // Create new command like Builder pattern
+        static auto create(const QString &t_name, int t_row) {
+            return QSharedPointer<RemoveFileCMD>::create(t_name, t_row);
+        }
 
-	signals:
-		void 		sigFileRemoved(int t_row);
+    signals:
+        void    sigFileRemoved(int t_row);
 
-	protected:
-		QString 	m_filename;
-		int			m_fileIndex = -1; // row in the table
-	};
+    protected:
+        QString m_filename;
+        int     m_fileIndex = -1; // row in the table
+    };
 }

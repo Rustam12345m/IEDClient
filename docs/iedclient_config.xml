@@ -1,14 +1,14 @@
 <app>
-	<main />
+    <main />
 
-	<history_connections>
-		<device ip="1.1.1.1" 		port="102" tls="false" 	date="01.02.1999 01:54:05" />
-		<device ip="1.1.1.2" 		port="102" tls="true" 	date="01.02.1999 02:54:05" />
-		<device ip="1.1.1.3" 		port="102" tls="false" 	date="01.02.1999 03:54:05" />
-		<device ip="192.168.0.201" 	port="102" tls="false"	date="01.02.1999 03:54:05" />
-	</history_connections>
+    <history_connections>
+        <device ip="1.1.1.1"         port="102" tls="false"    date="01.02.1999 01:54:05" />
+        <device ip="1.1.1.2"         port="102" tls="true"     date="01.02.1999 02:54:05" />
+        <device ip="1.1.1.3"         port="102" tls="false"    date="01.02.1999 03:54:05" />
+        <device ip="192.168.0.201"   port="102" tls="false"    date="01.02.1999 03:54:05" />
+    </history_connections>
 
-	<history_scl_files>
-		<file path="/1/2/3/4/scl.cid" />
-	</history_scl_files>
+    <history_scl_files>
+        <file path="/1/2/3/4/scl.cid" />
+    </history_scl_files>
 </app>

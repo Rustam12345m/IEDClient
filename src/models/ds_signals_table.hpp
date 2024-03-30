@@ -26,40 +26,40 @@
 
 namespace App::Models
 {
-	class DS_SignalsTable : public QAbstractTableModel
-	{
-		Q_OBJECT
-		enum ColumnType {
-			DS_REF_COLUMN = 0,
-			DS_FC_COLUMN,
-			DS_VALUE_COLUMN,
+    class DS_SignalsTable : public QAbstractTableModel
+    {
+        Q_OBJECT
+        enum ColumnType {
+            DS_REF_COLUMN = 0,
+            DS_FC_COLUMN,
+            DS_VALUE_COLUMN,
 
-			COLUMN_COUNT
-		};
+            COLUMN_COUNT
+        };
 
-	public:
-		DS_SignalsTable(QObject *t_parent, Core::ptrIED t_ied);
+    public:
+        DS_SignalsTable(QObject *t_parent, Core::ptrIED t_ied);
 
-		void 	setActiveIED(Core::ptrIED t_ied);
-		auto 	getDataSet() {
-			return m_dataSet;
-		}
+        void    setActiveIED(Core::ptrIED t_ied);
+        auto    getDataSet() {
+            return m_dataSet;
+        }
 
-		QVariant headerData(int t_section, Qt::Orientation t_orientation,
-							int t_role = Qt::DisplayRole) const override;
-		QHash<int, QByteArray> roleNames() const override;
-		int 	rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
-		int 	columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
+        QVariant headerData(int t_section, Qt::Orientation t_orientation,
+                            int t_role = Qt::DisplayRole) const override;
+        QHash<int, QByteArray> roleNames() const override;
+        int     rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
+        int     columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
 
-		QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
+        QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
-	public slots:
-		void 	slotDataSetSelected(int t_ds);
-		void 	slotDataUpdated(QList<Core::ptrModelItem> t_items);
+    public slots:
+        void    slotDataSetSelected(int t_ds);
+        void    slotDataUpdated(QList<Core::ptrModelItem> t_items);
 
-	private:
-		Core::ptrIED            m_ied;
-		Core::ptrDataSet 		m_dataSet;
-		QMetaObject::Connection m_updConnection; // signal from LogicalNode
-	};
+    private:
+        Core::ptrIED            m_ied;
+        Core::ptrDataSet        m_dataSet;
+        QMetaObject::Connection m_updConnection; // signal from LogicalNode
+    };
 }

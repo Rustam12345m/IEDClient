@@ -25,14 +25,14 @@
 
 namespace Cmd::Interface
 {
-	class IED_FS_API : public QObject
-	{
+    class IED_FS_API : public QObject
+    {
         Q_OBJECT
-	public:
-		virtual ~IED_FS_API() {}
+    public:
+        virtual ~IED_FS_API() {}
 
-		virtual int		getFileList(Core::DirOn &t_dir) = 0;
-		virtual void 	download(const QString &t_filename) = 0;
-		virtual int 	remove(const QString &t_filename) = 0;
-	};
+        virtual int  getFileList(Core::DirOn &t_dir) = 0;
+        virtual void download(const QString &t_filename) = 0;
+        virtual int  remove(const QString &t_filename) = 0;
+    };
 }

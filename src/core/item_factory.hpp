@@ -24,31 +24,31 @@
 
 namespace Core
 {
-	class ModelItem; // forward
+    class ModelItem; // forward
 
-	/*
-	 * Factory for all classes inherit from Item
-	 * */
-	class ItemFactory
-	{
-	public:
-		// Object Tree <- base node for IED Data Object model
-		static QSharedPointer<ModelItem>	createModel(const QString &t_name);
+    /*
+     * Factory for all classes inherit from Item
+     * */
+    class ItemFactory
+    {
+    public:
+        // Object Tree <- base node for IED Data Object model
+        static QSharedPointer<ModelItem> createModel(const QString &t_name);
 
-		// Logical Device
-		static QSharedPointer<ModelItem>	createLD(ModelItem *t_parent, const QString &t_name);
+        // Logical Device
+        static QSharedPointer<ModelItem> createLD(ModelItem *t_parent, const QString &t_name);
 
-		// Logical Node
-		static QSharedPointer<ModelItem>	createLN(ModelItem *t_parent, const QString &t_name);
+        // Logical Node
+        static QSharedPointer<ModelItem> createLN(ModelItem *t_parent, const QString &t_name);
 
-		// Data Object
-		static QSharedPointer<ModelItem>	createDO(ModelItem *t_parent, const QString &t_name);
+        // Data Object
+        static QSharedPointer<ModelItem> createDO(ModelItem *t_parent, const QString &t_name);
 
-		// Data Attribute
-		static QSharedPointer<ModelItem>	createDA(ModelItem *t_parent, const QString &t_name,
-					  						        const QString &t_fc);
+        // Data Attribute
+        static QSharedPointer<ModelItem> createDA(ModelItem *t_parent, const QString &t_name,
+                                                  const QString &t_fc);
 
-		// Sub Attribute
-		static QSharedPointer<ModelItem>	createSA(ModelItem *t_parent, const QString &t_name);
-	};
+        // Sub Attribute
+        static QSharedPointer<ModelItem> createSA(ModelItem *t_parent, const QString &t_name);
+    };
 }

@@ -25,9 +25,9 @@
 
 namespace Cmd::Interface
 {
-	class IED_ControlAPI
-	{
-	public:
-		virtual ~IED_ControlAPI() {}
-	};
+    class IED_ControlAPI
+    {
+    public:
+        virtual ~IED_ControlAPI() {}
+    };
 }

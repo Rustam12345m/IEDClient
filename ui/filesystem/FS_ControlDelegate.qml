@@ -26,72 +26,72 @@ import AppStylesModule
 
 Item
 {
-	required property bool selected
+    required property bool selected
 
-	signal sigDownloadFile(int row)
-	signal sigRemoveFile(int row)
+    signal sigDownloadFile(int row)
+    signal sigRemoveFile(int row)
 
-	id: rootID
-	implicitWidth: downloadBtn.width + progressBar.width + removeBtn.width + 5
+    id: rootID
+    implicitWidth: downloadBtn.width + progressBar.width + removeBtn.width + 5
 
-	Rectangle {
-		anchors.fill: parent
+    Rectangle {
+        anchors.fill: parent
 
-		border.width: 1
-		border.color: ColorPalette.tableRowBorderColor2
-		color: (selected ? ColorPalette.tableRowColor1 : ColorPalette.tableRowColor2)
+        border.width: 1
+        border.color: ColorPalette.tableRowBorderColor2
+        color: (selected ? ColorPalette.tableRowColor1 : ColorPalette.tableRowColor2)
 
-		Row {
-			anchors {
-				leftMargin: 5
-				rightMargin: 5
-				fill: parent
-			}
-			spacing: 5
+        Row {
+            anchors {
+                leftMargin: 5
+                rightMargin: 5
+                fill: parent
+            }
+            spacing: 5
 
-			Button {
-				id: downloadBtn
+            Button {
+                id: downloadBtn
 
-				width: rootID.height
-				height: rootID.height
+                width: rootID.height
+                height: rootID.height
 
-				icon.source: "qrc:/img/icons/download.svg"
+                icon.source: "qrc:/img/icons/download.svg"
 
-				onClicked: function() {
-					sigDownloadFile(row)
-				}
-			}
+                onClicked: function() {
+                    sigDownloadFile(row)
+                }
+            }
 
-			ProgressBar {
-				id: progressBar
+            ProgressBar {
+                id: progressBar
 
-				width: 120
-				height: rootID.height
+                width: 120
+                height: rootID.height
 
-				from: 0.0
-				to: 100.0
-				value: 0.0
+                from: 0.0
+                to: 100.0
+                value: 0.0
 
-				Text {
-					anchors.centerIn: parent
-					text: progressBar.value + " %"
+                Text {
+                    anchors.centerIn: parent
+                    text: progressBar.value + " %"
 
-					z: 1
-				}
-			}
+                    z: 1
+                }
+            }
 
-			Button {
-				id: removeBtn
+            Button {
+                id: removeBtn
 
-				width: rootID.height
-				height: rootID.height
+                width: rootID.height
+                height: rootID.height
 
-				icon.source: "qrc:/img/icons/clear.svg"
+                icon.source: "qrc:/img/icons/clear.svg"
 
-				onClicked: function() {
-					sigRemoveFile(row)
-				}
-			}
-		}
-	}
+                onClicked: function() {
+                    sigRemoveFile(row)
+                }
+            }
+        }
+    }
 }

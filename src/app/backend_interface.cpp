@@ -23,24 +23,24 @@
 
 namespace App
 {
-	void BackendInterface::putCmdToQueue(Cmd::ptrCMD t_cmd)
-	{
-		connect(t_cmd.get(), &Cmd::CmdInterface::sigCmdEvent, this, &BackendInterface::slotCmdEvent);
+    void BackendInterface::putCmdToQueue(Cmd::ptrCMD t_cmd)
+    {
+        connect(t_cmd.get(), &Cmd::CmdInterface::sigCmdEvent, this, &BackendInterface::slotCmdEvent);
 
-		m_con.m_cmdThread->putCommand(t_cmd);
-	}
+        m_con.m_cmdThread->putCommand(t_cmd);
+    }
 
-	void BackendInterface::slotCmdEvent(Cmd::CmdEvent t_ev)
-	{
+    void BackendInterface::slotCmdEvent(Cmd::CmdEvent t_ev)
+    {
         m_events.putEventToStorage(t_ev);
 
         switch (t_ev.m_type) {
         case Cmd::PROCESS_EVENT: {
-		    emit sigCmdProgress(t_ev.m_perc, t_ev.m_msg);
+            emit sigCmdProgress(t_ev.m_perc, t_ev.m_msg);
             break;
         }
         case Cmd::FINISH_EVENT: {
-		    emit sigCmdFinished(t_ev.m_result);
+            emit sigCmdFinished(t_ev.m_result);
             break;
         }
         case Cmd::START_EVENT:
@@ -48,9 +48,9 @@ namespace App
             break;
         }
         }
-	}
+    }
 
-	void BackendInterface::slotConnected(bool t_done)
-	{
-	}
+    void BackendInterface::slotConnected(bool t_done)
+    {
+    }
 }

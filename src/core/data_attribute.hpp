@@ -56,34 +56,34 @@ namespace Core
         UNDEFINED = -1
     };
 
-	/*
-	 * Representation of a Data Attribute of Data Object
-	 * Has important FunctionConstrain = FC
-	 * */
-	class DataAttribute : public ModelItem
-	{
-	public:
-		FC_ENUM	    fcNum() const {
-			return m_fc;
-		}
-		QString		fcStr() const {
-			return fcNumToString(m_fc);
-		}
+    /*
+     * Representation of a Data Attribute of Data Object
+     * Has important FunctionConstrain = FC
+     * */
+    class DataAttribute : public ModelItem
+    {
+    public:
+        FC_ENUM    fcNum() const {
+            return m_fc;
+        }
+        QString    fcStr() const {
+            return fcNumToString(m_fc);
+        }
 
-	public:
-		DataAttribute(ModelItem *t_parent, const QString &t_name, const QString &t_fc)
-			: ModelItem(t_parent, t_name)
-		{
-			m_fc = fcStringToNum(t_fc);
-			m_delimetr = "."; // Between DOName and DAName
-		}
+    public:
+        DataAttribute(ModelItem *t_parent, const QString &t_name, const QString &t_fc)
+            : ModelItem(t_parent, t_name)
+        {
+            m_fc = fcStringToNum(t_fc);
+            m_delimetr = "."; // Between DOName and DAName
+        }
 
         static const char* fcNumToString(FC_ENUM t_num);
         static const char* fcNumToDescription(FC_ENUM t_num);
         static FC_ENUM fcStringToNum(const QString &t_num);
 
-	protected:
-		FC_ENUM     m_fc = FC_ENUM::UNDEFINED;
-	};
-	typedef QSharedPointer< DataAttribute >		ptrDA;
+    protected:
+        FC_ENUM     m_fc = FC_ENUM::UNDEFINED;
+    };
+    typedef QSharedPointer< DataAttribute >        ptrDA;
 }

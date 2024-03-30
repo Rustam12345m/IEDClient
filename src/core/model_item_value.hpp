@@ -26,26 +26,36 @@
 
 namespace Core
 {
-	class ModelItemValue
-	{
-	public:
-		ModelItemValue() {}
-		ModelItemValue(const QString &t_value) : m_value(t_value) {}
+    class ModelItemValue
+    {
+    public:
+        ModelItemValue() {}
+        ModelItemValue(const QString &t_value) : m_value(t_value) {}
 
-		QString 	str() {
-			return m_value;
-		}
+        QString     str() {
+            return m_value;
+        }
 
-		bool operator==(const ModelItemValue &t_other) {
-			return (m_value == t_other.m_value);
-		}
+        bool operator==(const ModelItemValue &t_other) {
+            return (m_value == t_other.m_value);
+        }
 
-		static auto	create(const QString &t_value) {
-			return QSharedPointer<ModelItemValue>::create(t_value);
-		}
+        static auto create(const QString &t_value) {
+            return QSharedPointer<ModelItemValue>::create(t_value);
+        }
 
-	private:
-		QString 	m_value;
-	};
-	typedef QSharedPointer<ModelItemValue> 	ptrModelValue;
+    private:
+        QString     m_value;
+    };
+    typedef QSharedPointer<ModelItemValue>     ptrModelValue;
+
+    /*
+     * This class helps to fetch a full value for a ModelItem that contains all sub values
+     * */
+    class ModelItem;
+    class ModelItemFullValue
+    {
+    public:
+        static QString get(QSharedPointer<ModelItem> t_item);
+    };
 }

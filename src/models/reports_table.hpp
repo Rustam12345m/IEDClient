@@ -27,36 +27,36 @@
 
 namespace App::Models
 {
-	class ReportsTable : public QAbstractTableModel
-	{
-		Q_OBJECT
-		enum ColumnType {
-			NameColumn = 0,
-			ModeColumn,
-			BehColumn,
-			HealthColumn,
+    class ReportsTable : public QAbstractTableModel
+    {
+        Q_OBJECT
+        enum ColumnType {
+            NameColumn = 0,
+            ModeColumn,
+            BehColumn,
+            HealthColumn,
 
-			COLUMN_COUNT
-		};
-	public:
-		ReportsTable(QObject *t_parent, QSharedPointer<Core::IED> t_ied);
+            COLUMN_COUNT
+        };
+    public:
+        ReportsTable(QObject *t_parent, QSharedPointer<Core::IED> t_ied);
 
-		void 	setActiveIED(QSharedPointer<Core::IED> t_ied);
+        void     setActiveIED(QSharedPointer<Core::IED> t_ied);
 
-		QVariant headerData(int t_section, Qt::Orientation t_orientation,
-							int t_role = Qt::DisplayRole) const override;
-		QHash<int, QByteArray> roleNames() const override;
-		int		rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
-		int 	columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
+        QVariant headerData(int t_section, Qt::Orientation t_orientation,
+                            int t_role = Qt::DisplayRole) const override;
+        QHash<int, QByteArray> roleNames() const override;
+        int      rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
+        int      columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
 
-		QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
+        QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
-	public slots:
-		void 	slotDataUpdated();
-		void 	slotRCBSelected(int t_inx);
+    public slots:
+        void     slotDataUpdated();
+        void     slotRCBSelected(int t_inx);
 
-	private:
-		QSharedPointer<Core::IED> 	m_ied;
-		int		m_currentRCB = -1;
-	};
+    private:
+        QSharedPointer<Core::IED> m_ied;
+        int      m_currentRCB = -1;
+    };
 }

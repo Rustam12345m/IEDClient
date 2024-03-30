@@ -27,33 +27,33 @@
 
 namespace App
 {
-	/*
-	* Presenter of Filesystem on IED for QML page
-	* */
-	class IED_FS_Backend : public BackendInterface
-	{
-		Q_OBJECT
-	public:
-		IED_FS_Backend(IEDConContainer &t_con, EventStorage &t_ev);
-		~IED_FS_Backend() = default;
+    /*
+    * Presenter of Filesystem on IED for QML page
+    * */
+    class IED_FS_Backend : public BackendInterface
+    {
+        Q_OBJECT
+    public:
+        IED_FS_Backend(IEDConContainer &t_con, EventStorage &t_ev);
+        ~IED_FS_Backend() = default;
 
-		// Properties for QML
-		Q_PROPERTY(QAbstractTableModel* 	filesModel 	READ getModel 		CONSTANT)
-		Q_PROPERTY(QAbstractItemModel* 		sortModel 	READ getSortedModel CONSTANT)
+        // Properties for QML
+        Q_PROPERTY(QAbstractTableModel*     filesModel    READ getModel       CONSTANT)
+        Q_PROPERTY(QAbstractItemModel*      sortModel     READ getSortedModel CONSTANT)
 
-		QAbstractTableModel*	getModel() const { return m_fsModel; }
-		QAbstractItemModel* 	getSortedModel() const { return m_sortedModel; }
+        QAbstractTableModel* getModel() const { return m_fsModel; }
+        QAbstractItemModel*  getSortedModel() const { return m_sortedModel; }
 
-		// API for QML
-		Q_INVOKABLE QString fsPageStatus();
-		Q_INVOKABLE void 	updateFilesDirectory(const QString &t_path);
-		Q_INVOKABLE void 	downloadFile(const QString &t_filename);
-		Q_INVOKABLE void 	removeFile(const QString &t_filename, int t_row);
+        // API for QML
+        Q_INVOKABLE QString fsPageStatus();
+        Q_INVOKABLE void updateFilesDirectory(const QString &t_path);
+        Q_INVOKABLE void downloadFile(const QString &t_filename);
+        Q_INVOKABLE void removeFile(const QString &t_filename, int t_row);
 
-		void 				slotConnected(bool t_done) override;
+        void slotConnected(bool t_done) override;
 
-	protected:
-		Models::IED_FileTable* 	m_fsModel = nullptr;
-		Models::SortProxyModel* m_sortedModel = nullptr;
-	};
+    protected:
+        Models::IED_FileTable*  m_fsModel = nullptr;
+        Models::SortProxyModel* m_sortedModel = nullptr;
+    };
 }

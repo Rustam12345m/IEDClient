@@ -31,150 +31,150 @@ import "qrc:/common/"
 // Table of all Logical Nodes for one Logical Device
 Item
 {
-	id: rootID
+    id: rootID
 
-	readonly property int defDelegateHeight: 30
-	readonly property int defDelegateWidth: 70
+    readonly property int defDelegateHeight: 30
+    readonly property int defDelegateWidth: 70
 
-	signal sigSelectedNewLN()
+    signal sigSelectedNewLN()
 
-	// Header of LN table below
-	TableHeader {
-		id: headerID
+    // Header of LN table below
+    TableHeader {
+        id: headerID
 
-		defDelegateWidth: rootID.defDelegateWidth
-		defDelegateHeight: rootID.defDelegateHeight
+        defDelegateWidth: rootID.defDelegateWidth
+        defDelegateHeight: rootID.defDelegateHeight
 
-		anchors {
-			left: parent.left
-			right: parent.right
-			top: parent.top
-		}
-	}
+        anchors {
+            left: parent.left
+            right: parent.right
+            top: parent.top
+        }
+    }
 
-	// Table of all LN for selected LD with status columns
-	TableView {
-		id: tableID
+    // Table of all LN for selected LD with status columns
+    TableView {
+        id: tableID
 
-		anchors {
-			left: parent.left
-			right: parent.right
-			top: headerID.bottom
-			bottom: parent.bottom
-		}
-		model: iedBackend.getLN_ComModel()
+        anchors {
+            left: parent.left
+            right: parent.right
+            top: headerID.bottom
+            bottom: parent.bottom
+        }
+        model: iedBackend.getLN_ComModel()
 
-		focus: true
-		clip: true
-		interactive: true
-		boundsBehavior: Flickable.StopAtBounds
+        focus: true
+        clip: true
+        interactive: true
+        boundsBehavior: Flickable.StopAtBounds
 
-		selectionBehavior: TableView.SelectRows
-		selectionModel: ItemSelectionModel {
-			model: tableID.model
-		}
+        selectionBehavior: TableView.SelectRows
+        selectionModel: ItemSelectionModel {
+            model: tableID.model
+        }
 
-		onCurrentRowChanged: {
-			tableID.model.setSelectedLN(tableID.currentRow)
-			sigSelectedNewLN()
-		}
+        onCurrentRowChanged: {
+            tableID.model.setSelectedLN(tableID.currentRow)
+            sigSelectedNewLN()
+        }
 
-		columnWidthProvider: function(column) {
-			switch (column) {
-			case 0: {
-				let res = width - 3 * defDelegateWidth
-				return res
-			}
-			default: {
-				let v1 = header.implicitColumnWidth(column)
-				let v2 = implicitColumnWidth(column)
-				let res = (v1 > v2) ? v1 : v2
-				return Math.max(res, defDelegateWidth)
-			}
-			}
-		}
+        columnWidthProvider: function(column) {
+            switch (column) {
+            case 0: {
+                let res = width - 3 * defDelegateWidth
+                return res
+            }
+            default: {
+                let v1 = header.implicitColumnWidth(column)
+                let v2 = implicitColumnWidth(column)
+                let res = (v1 > v2) ? v1 : v2
+                return Math.max(res, defDelegateWidth)
+            }
+            }
+        }
 
-		delegate: DelegateChooser {
-			// Name
-			DelegateChoice {
-				column: 0
+        delegate: DelegateChooser {
+            // Name
+            DelegateChoice {
+                column: 0
 
-				delegate: TextDelegate {
-					delegateHeight: defDelegateHeight
-					selected: (tableID.currentRow == row)
+                delegate: TextDelegate {
+                    delegateHeight: defDelegateHeight
+                    selected: (tableID.currentRow == row)
 
-					textAlign: Text.AlignRight// HCenter
-					text: model.value
+                    textAlign: Text.AlignRight// HCenter
+                    text: model.value
 
-					onSigClick: function(row, col) {
-						Globals.setSelectedRow(tableID, row)
-					}
-				}
-			}
-			// Mode
-			DelegateChoice {
-				column: 1
+                    onSigClick: function(row, col) {
+                        Globals.setSelectedRow(tableID, row)
+                    }
+                }
+            }
+            // Mode
+            DelegateChoice {
+                column: 1
 
-				delegate: ModBehHealthDelegate {
-					delegateHeight: defDelegateHeight
-					delegateWidth: defDelegateWidth
-					selected: (tableID.currentRow == row)
+                delegate: ModBehHealthDelegate {
+                    delegateHeight: defDelegateHeight
+                    delegateWidth: defDelegateWidth
+                    selected: (tableID.currentRow == row)
 
-					value: model.value
+                    value: model.value
 
-					onSigClick: function(row, col) {
-						Globals.setSelectedRow(tableID, row)
-					}
-				}
-			}
-			// Beh
-			DelegateChoice {
-				column: 2
+                    onSigClick: function(row, col) {
+                        Globals.setSelectedRow(tableID, row)
+                    }
+                }
+            }
+            // Beh
+            DelegateChoice {
+                column: 2
 
-				delegate: ModBehHealthDelegate {
-					delegateHeight: defDelegateHeight
-					delegateWidth: defDelegateWidth
-					selected: (tableID.currentRow == row)
+                delegate: ModBehHealthDelegate {
+                    delegateHeight: defDelegateHeight
+                    delegateWidth: defDelegateWidth
+                    selected: (tableID.currentRow == row)
 
-					value: model.value
+                    value: model.value
 
-					onSigClick: function(row, col) {
-						Globals.setSelectedRow(tableID, row)
-					}
-				}
-			}
-			// Health
-			DelegateChoice {
-				column: 3
+                    onSigClick: function(row, col) {
+                        Globals.setSelectedRow(tableID, row)
+                    }
+                }
+            }
+            // Health
+            DelegateChoice {
+                column: 3
 
-				delegate: ModBehHealthDelegate {
-					delegateHeight: defDelegateHeight
-					delegateWidth: defDelegateWidth
-					selected: (tableID.currentRow == row)
+                delegate: ModBehHealthDelegate {
+                    delegateHeight: defDelegateHeight
+                    delegateWidth: defDelegateWidth
+                    selected: (tableID.currentRow == row)
 
-					value: model.value
+                    value: model.value
 
-					onSigClick: function(row, col) {
-						Globals.setSelectedRow(tableID, row)
-					}
-				}
-			}
-		}
+                    onSigClick: function(row, col) {
+                        Globals.setSelectedRow(tableID, row)
+                    }
+                }
+            }
+        }
 
-		ScrollBar.vertical: ScrollBar {
-			policy: ScrollBar.AsNeeded
-			active: true
-			onActiveChanged: {
-				if (!active) {
-					active = true;
-				}
-			}
-		}
+        ScrollBar.vertical: ScrollBar {
+            policy: ScrollBar.AsNeeded
+            active: true
+            onActiveChanged: {
+                if (!active) {
+                    active = true;
+                }
+            }
+        }
 
-		onVisibleChanged: {
-			if (tableID.rows > 0 && tableID.currentRow < 0) {
-				Globals.setSelectedRow(tableID, 0)
-			}
-		}
-	}
+        onVisibleChanged: {
+            if (tableID.rows > 0 && tableID.currentRow < 0) {
+                Globals.setSelectedRow(tableID, 0)
+            }
+        }
+    }
 }
