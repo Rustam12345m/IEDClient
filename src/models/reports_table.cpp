@@ -52,7 +52,7 @@ namespace App::Models
 
     QHash<int, QByteArray> ReportsTable::roleNames() const
     {
-        return { { Qt::DisplayRole, "value" } };
+        return { { Qt::DisplayRole, "display" } };
     }
 
     int ReportsTable::rowCount(const QModelIndex &t_parent) const

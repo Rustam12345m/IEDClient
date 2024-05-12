@@ -21,7 +21,7 @@
 
 #include <gtest/gtest.h>
 
-namespace TestsCMD
+namespace UnitTests
 {
     TEST(ModelTest, SubTest1)
     {

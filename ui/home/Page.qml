@@ -93,6 +93,7 @@ FocusScope
                         height: parent.height
 
                         text: qsTr("IP")
+                        color: "white"
 
                         font.pixelSize: 14
                         font.bold: true
@@ -137,6 +138,7 @@ FocusScope
                         height: parent.height
 
                         text: qsTr("Port")
+                        color: "white"
 
                         font.pixelSize: 14
                         font.bold: true
@@ -174,8 +176,23 @@ FocusScope
                     }
 
                     // TLS switcher
+                    Text {
+                        Layout.preferredWidth: 25
+                        Layout.alignment: Qt.AlignVCenter
+
+                        height: parent.height
+
+                        text: qsTr("TLS")
+                        color: "white"
+
+                        font.pixelSize: 14
+                        font.bold: true
+
+                        horizontalAlignment: Text.AlignRight
+                        verticalAlignment: Text.AlignVCenter
+                    }
                     Rectangle {
-                        Layout.preferredWidth: 100
+                        Layout.preferredWidth: 50
                         Layout.alignment: Qt.AlignVCenter
 
                         height: parent.inputBoxHeight
@@ -186,7 +203,8 @@ FocusScope
                             anchors.centerIn: parent
 
                             height: parent.height
-                            text: qsTr("TLS")
+                            // text: qsTr("TLS")
+                            // color: "white"
 
                             font.pixelSize: 14
                             font.bold: true

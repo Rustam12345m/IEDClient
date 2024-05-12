@@ -102,9 +102,8 @@ Item
                 delegate: TextDelegate {
                     delegateHeight: defDelegateHeight
                     selected: (tableID.currentRow == row)
-
                     textAlign: Text.AlignRight// HCenter
-                    text: model.value
+                    text: model.display
 
                     onSigClick: function(row, col) {
                         Globals.setSelectedRow(tableID, row)
@@ -119,8 +118,7 @@ Item
                     delegateHeight: defDelegateHeight
                     delegateWidth: defDelegateWidth
                     selected: (tableID.currentRow == row)
-
-                    value: model.value
+                    value: model.display
 
                     onSigClick: function(row, col) {
                         Globals.setSelectedRow(tableID, row)
@@ -135,8 +133,7 @@ Item
                     delegateHeight: defDelegateHeight
                     delegateWidth: defDelegateWidth
                     selected: (tableID.currentRow == row)
-
-                    value: model.value
+                    value: model.display
 
                     onSigClick: function(row, col) {
                         Globals.setSelectedRow(tableID, row)
@@ -151,8 +148,7 @@ Item
                     delegateHeight: defDelegateHeight
                     delegateWidth: defDelegateWidth
                     selected: (tableID.currentRow == row)
-
-                    value: model.value
+                    value: model.display
 
                     onSigClick: function(row, col) {
                         Globals.setSelectedRow(tableID, row)

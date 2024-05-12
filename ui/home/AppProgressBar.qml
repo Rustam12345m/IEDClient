@@ -25,11 +25,13 @@ import QtQuick.Layouts
 
 Rectangle
 {
-    id: rootID
+    property var windowColor: "lightgray"
+    property var windowShadeColor: "gray"
 
+    id: rootID
     anchors.fill: parent
 
-    color: "gray"
+    color: windowShadeColor
     opacity: 0.8
     z: 100500
     visible: false
@@ -48,7 +50,7 @@ Rectangle
         visible: false
 
         Rectangle {
-            color: "lightgray"
+            color: rootID.windowColor
             anchors.fill: parent
 
             ColumnLayout {
@@ -62,8 +64,8 @@ Rectangle
                     id: progressText
                     font.bold: true
                     font.pixelSize: 16
-
                     color: "black"
+
                     text: "Please, wait..."
                 }
                 ProgressBar {

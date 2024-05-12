@@ -31,9 +31,9 @@ import "qrc:/common/"
 Item {
     id: rootID
 
-    required property int         index
-    required property bool         selected
-    required property var         ld_object
+    required property int  index
+    required property bool selected
+    required property var  ld_object
 
     property ListModel ldValsModel: ListModel {}
 
@@ -52,9 +52,8 @@ Item {
     Rectangle {
         anchors.fill: parent
 
-        border.color: (selected ? "gray" : "lightgray")
         border.width: rootID.borderWidth
-        color: "pink"
+        border.color: labelRectID.color
 
         // Label
         Rectangle {
@@ -70,7 +69,7 @@ Item {
             }
             height: rootID.cellEdge
 
-            color: (selected ? "gray" : "lightgray")
+            color: (selected ? ColorPalette.ldColorSelect : ColorPalette.ldColor)
 
             Text {
                 id: ldName
@@ -86,7 +85,7 @@ Item {
 
                 font.bold: true
                 font.pointSize: 12
-                color: "black"
+                color: selected ? "white" : "black"
 
                 text: "LD: " + ld_object.name
             }
@@ -136,12 +135,12 @@ Item {
                 }
 
                 Component.onCompleted: {
-                    rootID.ldValsModel.append({ param: "Mod:",         value: ld_object.mod.text, color: ld_object.mod.color })
-                    rootID.ldValsModel.append({ param: "Beh:",         value: ld_object.beh.text, color: ld_object.beh.color })
-                    rootID.ldValsModel.append({ param: "Health:",     value: ld_object.health.text, color: ld_object.health.color })
-                    rootID.ldValsModel.append({ param: "",             value: "", color: "" })
-                    rootID.ldValsModel.append({ param: "Sim:",         value: ld_object.sim.text, color: ld_object.sim.color })
-                    rootID.ldValsModel.append({ param: "Blk:",         value: ld_object.blk.text, color: ld_object.blk.color })
+                    rootID.ldValsModel.append({ param: "Mod:",    value: ld_object.mod.text, color: ld_object.mod.color })
+                    rootID.ldValsModel.append({ param: "Beh:",    value: ld_object.beh.text, color: ld_object.beh.color })
+                    rootID.ldValsModel.append({ param: "Health:", value: ld_object.health.text, color: ld_object.health.color })
+                    rootID.ldValsModel.append({ param: "",        value: "", color: "" })
+                    rootID.ldValsModel.append({ param: "Sim:",    value: ld_object.sim.text, color: ld_object.sim.color })
+                    rootID.ldValsModel.append({ param: "Blk:",    value: ld_object.blk.text, color: ld_object.blk.color })
                 }
             }
         }

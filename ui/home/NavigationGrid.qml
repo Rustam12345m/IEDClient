@@ -69,12 +69,12 @@ Rectangle
             cellHeight: 50
 
             model: ListModel {
-                ListElement { name: "Home";     page: Globals.Page.START }
-                ListElement { name: "LD";         page: Globals.Page.LD }
-                ListElement { name: "LN";         page: Globals.Page.LN }
-                ListElement { name: "DS";         page: Globals.Page.DS }
-                ListElement { name: "RCB";         page: Globals.Page.RCB }
-                ListElement { name: "FS";         page: Globals.Page.FS }
+                ListElement { name: "Home"; page: Globals.Page.START }
+                ListElement { name: "LD";   page: Globals.Page.LD }
+                ListElement { name: "LN";   page: Globals.Page.LN }
+                ListElement { name: "DS";   page: Globals.Page.DS }
+                ListElement { name: "RCB";  page: Globals.Page.RCB }
+                ListElement { name: "FS";   page: Globals.Page.FS }
             }
 
             delegate: Rectangle {

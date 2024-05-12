@@ -105,7 +105,7 @@ FocusScope {
 
         delegate: TreeViewDelegate {
             TapHandler {
-                acceptedButtons: Qt.RightButton //Qt.LeftButton
+                acceptedButtons: Qt.RightButton
 
                 onTapped: function() {
                     sigValueClicked("DO_Reference", "DO_Name", "Value_123")

@@ -69,7 +69,7 @@ namespace App::Models
 
     QHash<int, QByteArray> LN_OverviewTable::roleNames() const
     {
-        return { { Qt::DisplayRole, "value" } };
+        return { { Qt::DisplayRole, "display" } };
     }
 
     int LN_OverviewTable::rowCount(const QModelIndex &t_parent) const

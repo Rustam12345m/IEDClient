@@ -29,7 +29,7 @@ Item {
 
     signal sigClicked()
 
-    anchors.verticalCenter: parent.verticalCenter
+    // anchors.verticalCenter: parent.verticalCenter
 
     Button {
         id: btn

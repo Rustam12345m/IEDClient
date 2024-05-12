@@ -23,7 +23,7 @@
 
 #include "app/app_settings.hpp"
 
-namespace AppConfigTests
+namespace UnitTests
 {
     TEST(AppConfig_ConCredentials, CheckSaveParameters) {
         Cmd::IEDCredentials con("ip", 123, false, "name", "pass");

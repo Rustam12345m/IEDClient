@@ -64,7 +64,7 @@ HorizontalHeaderView
             font.bold: true
             focus: false
 
-            text: model[headerID.textRole]
+            text: model.display
         }
     }
 }

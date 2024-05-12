@@ -67,7 +67,7 @@ namespace App::Models
     private:
         Core::ptrIED    m_ied;
         Core::ptrLD     m_ldev; // selected Logical Device by user
-        int             mldevIndex = 0; //
+        int             m_ldevIndex = 0; //
         QMetaObject::Connection m_updConnection; // signal from LD
     };
 }

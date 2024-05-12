@@ -39,7 +39,7 @@ namespace App::Models
 
     QHash<int, QByteArray> AppEventsTable::roleNames() const
     {
-        return { {Qt::DisplayRole, "display"} };
+        return { { Qt::DisplayRole, "display" } };
     }
 
     Qt::ItemFlags AppEventsTable::flags(const QModelIndex &t_index) const
