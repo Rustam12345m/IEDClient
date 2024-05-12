@@ -79,7 +79,7 @@ FocusScope
             }
 
             onWidthChanged: {
-                if (width < 50) {
+                if (width < 80) {
                     width = 0
                 }
             }

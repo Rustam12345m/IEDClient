@@ -179,11 +179,11 @@ Window
     }
 
     Component.onCompleted: {
-        rootID.appInfoListModel.append({ name: "Author:",             desc: "Rustam Mustafin",             web: "" })
-        rootID.appInfoListModel.append({ name: "Application:",        desc: appBackend.getAppVersion(),    web: "https://github.com/Rustam12345m/IEDClient" })
-        rootID.appInfoListModel.append({ name: "License:",             desc: "GPL-3.0",                      web: "https://www.gnu.org/licenses/gpl-3.0.html" })
-        rootID.appInfoListModel.append({ name: "Qt library:",         desc: appBackend.getQtVersion(),     web: "https://www.qt.io/" })
-        rootID.appInfoListModel.append({ name: "libiec61850:",         desc: appBackend.getLibVersion(),    web: "https://github.com/mz-automation/libiec61850" })
-        rootID.appInfoListModel.append({ name: "Material Icons:",     desc: "0.14.13",                     web: "https://github.com/google/material-design-icons" })
+        rootID.appInfoListModel.append({ name: "Author:",         desc: "Rustam Mustafin",          web: "" })
+        rootID.appInfoListModel.append({ name: "Application:",    desc: appBackend.getAppVersion(), web: "https://github.com/Rustam12345m/IEDClient" })
+        rootID.appInfoListModel.append({ name: "License:",        desc: "GPL-3.0",                  web: "https://www.gnu.org/licenses/gpl-3.0.html" })
+        rootID.appInfoListModel.append({ name: "Qt library:",     desc: appBackend.getQtVersion(),  web: "https://www.qt.io/" })
+        rootID.appInfoListModel.append({ name: "libiec61850:",    desc: appBackend.getLibVersion(), web: "https://github.com/mz-automation/libiec61850" })
+        rootID.appInfoListModel.append({ name: "Material Icons:", desc: "0.14.13",                  web: "https://github.com/google/material-design-icons" })
     }
 }

@@ -24,7 +24,7 @@
 #include "core/data_model_builder.hpp"
 #include "core/item_factory.hpp"
 
-namespace CoreTests
+namespace UnitTests
 {
     TEST(DataModel, DataModel)
     {

@@ -36,6 +36,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("OSI");
     QCoreApplication::setOrganizationDomain("opensource.org");
     QCoreApplication::setApplicationName("IEDClient");
+    QThread::currentThread()->setObjectName("GUI");
 
     // Singletons
     qmlRegisterSingletonType(QUrl("qrc:/singletons/Globals.qml"), "GlobalVarsModule", 1, 0, "Globals");
@@ -45,9 +46,6 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
 
     presenter.setQmlContextMembers(engine.rootContext());
-
     engine.load(QStringLiteral("qrc:/main.qml"));
-
-    QThread::currentThread()->setObjectName("GUI");
     return app.exec();
 }

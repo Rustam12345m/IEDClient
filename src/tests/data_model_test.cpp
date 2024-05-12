@@ -26,7 +26,7 @@
 
 #include <iostream>
 
-namespace CoreTests
+namespace UnitTests
 {
     class DataModel_Fixt : public ::testing::Test
     {

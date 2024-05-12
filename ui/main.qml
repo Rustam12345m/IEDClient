@@ -73,197 +73,112 @@ ApplicationWindow
 
             // Menu + ToolBar
             RowLayout {
+                readonly property int btnHeight: 30
+                id: toolBar
+
                 anchors {
                     fill: parent
-                    leftMargin: 0
-                    rightMargin: 10
+                    topMargin: ColorPalette.borderWidth
+                    leftMargin: ColorPalette.borderWidth
+                    rightMargin: ColorPalette.borderWidth
                 }
                 spacing: 10
 
-                // Menu
-                Item {
-                    width: myMenuBar.implicitWidth + 2
-                    height: myMenuBar.implicitHeight + 2
+                // Delimiter
+                // Rectangle {
+                //     Layout.alignment: Qt.AlignVCenter
 
-                    MenuBar {
-                        id: myMenuBar
-                        anchors.centerIn: parent
+                //     width: 1
+                //     height: toolBar.btnHeight - 4
+                //     color: ColorPalette.modalColor
+                // }
+                // Home
+                ToolBarButton {
+                    Layout.alignment: Qt.AlignVCenter
+                    width: toolBar.btnHeight
+                    height: toolBar.btnHeight
 
-                        Menu {
-                            title: qsTr("&Menu")
+                    icon: "qrc:/img/icons/home.svg"
+                    prompt: "Go to start page"
 
-                            MenuItem {
-                                text: qsTr("Connect")
-                                icon.source: "qrc:/img/icons/call.svg"
-                                enabled: false
-                            }
-                            MenuItem {
-                                text: qsTr("Disconnect")
-                                icon.source: "qrc:/img/icons/call_end.svg"
-                                enabled: false
-                            }
-                            MenuItem {
-                                text: qsTr("Settings")
-                                icon.source: "qrc:/img/icons/build.svg"
-                                enabled: false
-                            }
-                            MenuSeparator {
-                            }
-                            MenuItem {
-                                text: qsTr("Exit")
-                                onTriggered: {
-                                    console.log("Bye - bye. Exit")
-                                    Qt.quit()
-                                }
-                                icon.source: "qrc:/img/icons/close.svg"
-                            }
-                        }
-                        Menu {
-                            title: qsTr("&Tools")
-
-                            MenuItem {
-                                text: qsTr("Save model")
-                                icon.source: "qrc:/img/icons/save.svg"
-                                enabled: false
-                            }
-                            MenuItem {
-                                text: qsTr("Check SCL")
-                                icon.source: "qrc:/img/icons/task_alt.svg"
-                                enabled: false
-                            }
-                            MenuSeparator {
-                            }
-                            MenuItem {
-                                text: qsTr("Event logger")
-                                Shortcut {
-                                    sequence: "Ctrl+E"
-                                    onActivated: openEventLog()
-                                }
-                                onTriggered: openEventLog()
-                                icon.source: "qrc:/img/icons/terminal.svg"
-                            }
-                        }
-                        Menu {
-                            title: qsTr("&Program")
-                            
-                            MenuItem {
-                                text: qsTr("Documentation")
-                                icon.source: "qrc:/img/icons/school.svg"
-                                enabled: false
-                            }
-                            MenuSeparator {
-                            }
-                            MenuItem {
-                                text: qsTr("About")
-                                onTriggered: {
-                                    rootWindowID.showAbotProgramWindow()
-                                }
-                                icon.source: "qrc:/img/icons/info.svg"
-                            }
-                        }
+                    onSigClicked: function() {
+                        rootWindowID.setActivePage(Globals.Page.START)
                     }
                 }
+                // Full-screen
+                ToolBarButton {
+                    id: fullScreenBtn
+                    Layout.alignment: Qt.AlignVCenter
+                    width: toolBar.btnHeight
+                    height: toolBar.btnHeight
 
-                // ToolBar
-                Item {
-                    Layout.preferredWidth: toolBarRow.implicitWidth
-                    readonly property int btnHeight: 30
+                    icon: "qrc:/img/icons/fullscreen.svg"
+                    prompt: "Full screen mode"
 
-                    id: toolBar
-                    height: parent.height
+                    onSigClicked: function() {
+                        toFullscreenMode()
+                    }
+                }
+                // Disconnect
+                ToolBarButton {
+                    Layout.alignment: Qt.AlignVCenter
+                    width: toolBar.btnHeight
+                    height: toolBar.btnHeight
 
-                    // ToolBar buttons
-                    Row {
-                        id: toolBarRow
+                    visible: presenter.isConnected
+                    icon: "qrc:/img/icons/call_end.svg"
+                    prompt: "Close the connection"
 
-                        anchors.fill: parent
-                        spacing: 5
+                    onSigClicked: function() {
+                        presenter.disconnectFrom()
+                    }
+                }
+                // Navigation screen
+                // ToolBarButton {
+                //     Layout.alignment: Qt.AlignVCenter
+                //     width: toolBar.btnHeight
+                //     height: toolBar.btnHeight
+                //     icon: "qrc:/img/icons/view_comfy_alt.svg"
+                //     prompt: "Navigation window"
+                //     onSigClicked: function() {
+                //         console.log("Clicked: " + prompt)
+                //         rootWindowID.showNavigationGrid()
+                //     }
+                // }
+                // Delimiter
+                Rectangle {
+                    // anchors.verticalCenter: parent.verticalCenter
+                    Layout.alignment: Qt.AlignVCenter
 
-                        // Home
-                        ToolBarButton {
-                            icon: "qrc:/img/icons/home.svg"
-                            prompt: "Go to start page"
-                            width: toolBar.btnHeight
-                            height: toolBar.btnHeight
+                    width: 1
+                    height: toolBar.btnHeight - 4
+                    color: ColorPalette.modalColor
+                }
+                // Table's columns to content size
+                ToolBarButton {
+                    Layout.alignment: Qt.AlignVCenter
+                    width: toolBar.btnHeight
+                    height: toolBar.btnHeight
 
-                            onSigClicked: function() {
-                                rootWindowID.setActivePage(Globals.Page.START)
-                            }
-                        }
-                        // Full-screen
-                        ToolBarButton {
-                            id: fullScreenBtn
-                            icon: "qrc:/img/icons/fullscreen.svg"
-                            prompt: "Full screen mode"
-                            width: toolBar.btnHeight
-                            height: toolBar.btnHeight
+                    icon: "qrc:/img/icons/code.svg"
+                    prompt: "Set appropriate width for columns"
 
-                            onSigClicked: function() {
-                                toFullscreenMode()
-                            }
-                        }
-                        // Disconnect
-                        ToolBarButton {
-                            icon: "qrc:/img/icons/call_end.svg"
-                            prompt: "Close the connection"
-                            width: toolBar.btnHeight
-                            height: toolBar.btnHeight
-                            visible: presenter.isConnected
+                    onSigClicked: function() {
+                        console.log("Clicked: " + prompt)
+                        rootWindowID.resizeColumnsOnPage()
+                    }
+                }
+                // Update
+                ToolBarButton {
+                    Layout.alignment: Qt.AlignVCenter
+                    width: toolBar.btnHeight
+                    height: toolBar.btnHeight
 
-                            onSigClicked: function() {
-                                presenter.disconnectFrom()
-                            }
-                        }
-                        // Navigation screen
-                        // ToolBarButton {
-                        //     icon: "qrc:/img/icons/view_comfy_alt.svg"
-                        //     prompt: "Navigation window"
-                        //     width: toolBar.btnHeight
-                        //     height: toolBar.btnHeight
+                    icon: "qrc:/img/icons/refresh.svg"
+                    prompt: "Update data on this page"
 
-                        //     onSigClicked: function() {
-                        //         console.log("Clicked: " + prompt)
-                        //         rootWindowID.showNavigationGrid()
-                        //     }
-                        // }
-                        // Delimiter
-                        Rectangle {
-                            anchors.verticalCenter: parent.verticalCenter
-
-                            width: 1
-                            height: toolBar.btnHeight - 4
-                            color: ColorPalette.modalColor
-                        }
-                        // Table's columns to content size
-                        ToolBarButton {
-                            icon: "qrc:/img/icons/code.svg"
-                            prompt: "Set appropriate width for columns"
-                            width: toolBar.btnHeight
-                            height: toolBar.btnHeight
-
-                            onSigClicked: function() {
-                                console.log("Clicked: " + prompt)
-                                rootWindowID.resizeColumnsOnPage()
-                            }
-                        }
-                        // Update
-                        ToolBarButton {
-                            icon: "qrc:/img/icons/refresh.svg"
-                            prompt: "Update data on this page"
-                            width: toolBar.btnHeight
-                            height: toolBar.btnHeight
-
-                            onSigClicked: function() {
-                                rootWindowID.updateActivePage()
-                            }
-                        }
-                        // Delimiter
-                        Rectangle {
-                            anchors.verticalCenter: parent.verticalCenter
-                            width: 1
-                            height: toolBar.btnHeight - 4
-                            color: ColorPalette.modalColor
-                        }
+                    onSigClicked: function() {
+                        rootWindowID.updateActivePage()
                     }
                 }
 
@@ -271,6 +186,65 @@ ApplicationWindow
                 Item {
                     Layout.fillWidth: true
                     height: toolBar.btnHeight
+                }
+
+                // Delimiter
+                Rectangle {
+                    // anchors.verticalCenter: parent.verticalCenter
+                    Layout.alignment: Qt.AlignVCenter
+
+                    width: 1
+                    height: toolBar.btnHeight - 4
+                    color: ColorPalette.modalColor
+                }
+                // Events
+                ToolBarButton {
+                    Layout.alignment: Qt.AlignVCenter
+                    width: toolBar.btnHeight
+                    height: toolBar.btnHeight
+
+                    icon: "qrc:/img/icons/terminal.svg"
+                    prompt: "Event logger"
+                    visible: presenter.isConnected
+
+                    onSigClicked: function() {
+                        console.log("Clickerd: ", prompt)
+                        openEventLog()
+                    }
+                    Shortcut {
+                        sequence: "Ctrl+E"
+                        onActivated: openEventLog()
+                    }
+                }
+                // About
+                ToolBarButton {
+                    Layout.alignment: Qt.AlignVCenter
+                    width: toolBar.btnHeight
+                    height: toolBar.btnHeight
+
+                    icon: "qrc:/img/icons/info.svg"
+                    prompt: "About IEDClient"
+                    visible: presenter.isConnected
+
+                    onSigClicked: function() {
+                        console.log("Clickerd: ", prompt)
+                        rootWindowID.showAbotProgramWindow()
+                    }
+                }
+                // Exit, close the app
+                ToolBarButton {
+                    Layout.alignment: Qt.AlignVCenter
+                    width: toolBar.btnHeight
+                    height: toolBar.btnHeight
+
+                    icon: "qrc:/img/icons/input.svg"
+                    prompt: "Exit"
+                    visible: presenter.isConnected
+
+                    onSigClicked: function() {
+                        console.log("Clickerd: ", prompt)
+                        Qt.quit()
+                    }
                 }
             }
         }
@@ -500,7 +474,7 @@ ApplicationWindow
                     }
 
                     onWidthChanged: function() {
-                        if (width < 50) {
+                        if (width < 80) {
                             width = 0;
                         }
                     }
@@ -600,6 +574,9 @@ ApplicationWindow
     }
     Home.AppProgressBar {
         id: globalProgressBar
+
+        windowColor: "#A9A9A9" // ColorPalette.modalColor
+        windowShadeColor: "#D9D9D9" //ColorPalette.toolBarColor
     }
 
     // Common functions
