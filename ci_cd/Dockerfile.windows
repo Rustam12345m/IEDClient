@@ -1,0 +1,22 @@
+# Use a Windows base image
+FROM mcr.microsoft.com/windows:20H2
+
+# Install dependencies
+SHELL ["powershell", "-Command"]
+RUN Set-ExecutionPolicy Bypass -Scope Process; \
+    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; \
+    iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')); \
+    choco install cmake -y; \
+    choco install mingw -y; \
+    choco install qt6-default -y; \
+    choco install gtest -y
+
+# Copy the application source code
+COPY . C:\app
+WORKDIR C:\app
+
+# Build and run tests
+RUN mkdir build; cd build; \
+    cmake ..; \
+    cmake --build .; \
+    ctest

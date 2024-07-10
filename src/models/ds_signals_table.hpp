@@ -38,9 +38,9 @@ namespace App::Models
         };
 
     public:
-        DS_SignalsTable(QObject *t_parent, Core::ptrIED t_ied);
+        DS_SignalsTable(QObject *t_parent, Core::IED::ptr t_ied);
 
-        void    setActiveIED(Core::ptrIED t_ied);
+        void    setActiveIED(Core::IED::ptr t_ied);
         auto    getDataSet() {
             return m_dataSet;
         }
@@ -55,11 +55,11 @@ namespace App::Models
 
     public slots:
         void    slotDataSetSelected(int t_ds);
-        void    slotDataUpdated(QList<Core::ptrModelItem> t_items);
+        void    slotDataUpdated(QList<Core::ModelItem::ptr> t_items);
 
     private:
-        Core::ptrIED            m_ied;
-        Core::ptrDataSet        m_dataSet;
+        Core::IED::ptr            m_ied;
+        Core::DataSet::ptr        m_dataSet;
         QMetaObject::Connection m_updConnection; // signal from LogicalNode
     };
 }

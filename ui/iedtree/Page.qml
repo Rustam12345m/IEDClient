@@ -19,37 +19,20 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "cmd_thread.hpp"
+import QtQuick
+import QtQuick.Controls
+import Qt.labs.qmlmodels
 
-namespace Cmd
+import GlobalVarsModule
+import AppStylesModule
+
+import "qrc:/common/"
+
+// Main IED's tree page
+Item
 {
-    CmdThread::CmdThread(Cmd::Interface::ptrIEC61850_API t_api) : m_api(t_api)
-    {
-        setObjectName("CmdThread");
-        start();
-    }
+    id: rootID
 
-    CmdThread::~CmdThread()
-    {
-        m_queue.stop();
-
-        if (isRunning()) {
-            wait();
-        }
-    }
-
-    void CmdThread::putCommand(CmdInterface::ptr t_cmd)
-    {
-        m_queue.push(t_cmd);
-    }
-
-    void CmdThread::run()
-    {
-        while (m_queue.isRunning()) {
-            CmdInterface::ptr cmd = m_queue.pop();
-            if (cmd) {
-                cmd->execute(m_api);
-            }
-        }
+    onVisibleChanged: {
     }
 }

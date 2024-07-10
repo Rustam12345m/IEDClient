@@ -22,7 +22,7 @@ The application targets the following platforms:
 
 ## Installation Instructions
 
-(Your detailed installation instructions will go here.)
+...
 
 ## Usage Guidelines
 
@@ -30,7 +30,7 @@ The user's guide is currently in development. Users will be able to access the g
 
 ## Contributing
 
-(Here, you can provide guidelines for how others can contribute to your project. This can include coding standards, pull request processes, etc. Refer to your AUTHORS file for more detailed information on contributors.)
+...
 
 ## Issues
 

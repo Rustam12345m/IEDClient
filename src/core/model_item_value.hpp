@@ -29,6 +29,8 @@ namespace Core
     class ModelItemValue
     {
     public:
+        using ptr = QSharedPointer< ModelItemValue >;
+
         ModelItemValue() {}
         ModelItemValue(const QString &t_value) : m_value(t_value) {}
 
@@ -41,13 +43,12 @@ namespace Core
         }
 
         static auto create(const QString &t_value) {
-            return QSharedPointer<ModelItemValue>::create(t_value);
+            return ModelItemValue::ptr::create(t_value);
         }
 
     private:
         QString     m_value;
     };
-    typedef QSharedPointer<ModelItemValue>     ptrModelValue;
 
     /*
      * This class helps to fetch a full value for a ModelItem that contains all sub values
@@ -56,6 +57,6 @@ namespace Core
     class ModelItemFullValue
     {
     public:
-        static QString get(QSharedPointer<ModelItem> t_item);
+        static QString get(QSharedPointer< ModelItem > t_item);
     };
 }

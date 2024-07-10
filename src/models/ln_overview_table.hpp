@@ -40,11 +40,11 @@ namespace App::Models
             COLUMN_COUNT
         };
 
-        LN_OverviewTable(QObject *t_parent, Core::ptrIED t_ied);
+        LN_OverviewTable(QObject *t_parent, Core::IED::ptr t_ied);
 
         Q_INVOKABLE void setSelectedLN(int t_inx);
 
-        void     setActiveIED(Core::ptrIED t_ied);
+        void     setActiveIED(Core::IED::ptr t_ied);
         auto     getLogicalDevice() const { return m_ldev; }
 
         QVariant headerData(int t_section, Qt::Orientation t_orientation,
@@ -61,13 +61,13 @@ namespace App::Models
         void     sigLNSelected(int t_ld, int t_ln);
 
     public slots:
-        void     slotDataUpdated(QSharedPointer<QList<Core::ModelItem*>> t_nodes);
+        void     slotDataUpdated(Core::ModelItem::ptrList t_nodes);
         void     slotLDSelected(int t_ld);
 
     private:
-        Core::ptrIED    m_ied;
-        Core::ptrLD     m_ldev; // selected Logical Device by user
-        int             m_ldevIndex = 0; //
-        QMetaObject::Connection m_updConnection; // signal from LD
+        Core::IED::ptr              m_ied;
+        Core::LogicalDevice::ptr    m_ldev; // selected Logical Device by user
+        int m_ldevIndex = 0; //
+        QMetaObject::Connection     m_updConnection; // signal from LD
     };
 }

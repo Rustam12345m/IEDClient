@@ -37,13 +37,13 @@ namespace Core
     public:
         SignalMatrixRow() = default;
         SignalMatrixRow(const QString &t_path, const QString &t_fc,
-                        ptrModelItem t_v, ptrModelItem t_q, ptrModelItem t_ts,
-                        ptrModelItem t_desc)
+                        ModelItem::ptr t_v, ModelItem::ptr t_q, ModelItem::ptr t_ts,
+                        ModelItem::ptr t_desc)
             : m_path{t_path}, m_fc{t_fc}, m_value(t_v), m_quality(t_q), m_timestamp(t_ts),
             m_desc(t_desc)
         {}
 
-        ptrModelItem base() const { return m_dataObject; }
+        ModelItem::ptr base() const { return m_dataObject; }
         QString    name() const { return m_path; }
         QString    fc() const { return m_fc; }
         QString    value() const {
@@ -72,13 +72,13 @@ namespace Core
         }
 
     private:
-        ptrModelItem    m_dataObject;
-        QString         m_path;
-        QString         m_fc; // Functional constraint of the Value
-        ptrModelItem    m_value;
-        ptrModelItem    m_quality;
-        ptrModelItem    m_timestamp;
-        ptrModelItem    m_desc;
+        ModelItem::ptr    m_dataObject;
+        QString           m_path;
+        QString           m_fc; // Functional constraint of the Value
+        ModelItem::ptr    m_value;
+        ModelItem::ptr    m_quality;
+        ModelItem::ptr    m_timestamp;
+        ModelItem::ptr    m_desc;
 
         friend class LN_SignalMatrixBuilder;
     };
@@ -100,6 +100,8 @@ namespace Core
     class LN_SignalMatrix
     {
     public:
+        using ptr = QSharedPointer< LN_SignalMatrix >;
+
         LN_SignalMatrix() {}
 
         int         size() const {
@@ -156,7 +158,7 @@ namespace Core
     protected:
         QList<SignalMatrixRow>    m_signals;
 
-        friend class LN_SignalMatrixBuilder;
+    friend class LN_SignalMatrixBuilder;
     };
 
     /*
@@ -165,12 +167,12 @@ namespace Core
     class LN_SignalMatrixBuilder
     {
     public:
-        static QSharedPointer<LN_SignalMatrix> create(QSharedPointer<LogicalNode> t_ln);
+        static LN_SignalMatrix::ptr create(QSharedPointer< LogicalNode > t_ln);
 
     private:
-        static void recursiveFillMatrix(QSharedPointer<LN_SignalMatrix> t_table,
-                                        QSharedPointer<ModelItem> t_root,
-                                        QSharedPointer<ModelItem> t_item,
+        static void recursiveFillMatrix(LN_SignalMatrix::ptr t_table,
+                                        ModelItem::ptr t_root,
+                                        ModelItem::ptr t_item,
                                         SignalMatrixRow t_prototype);
     };
 }

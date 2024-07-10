@@ -31,47 +31,40 @@ namespace Core
     class DataModel : public ModelItem
     {
     public:
+        using ptr = QSharedPointer< DataModel >;
+
         DataModel(const QString &t_name) : ModelItem(nullptr, t_name)
         {
             m_delimetr = ""; // There isn't a delimetr because it is a top node
         }
         ~DataModel() = default;
 
-        ptrModelItem getItemByReference(const QString &t_ref);
-        ptrLD     getLogicalDevice(int t_ld);
-        ptrLN     getLogicalNode(int t_ld, int t_ln);
+        ModelItem::ptr      getItemByReference(const QString &t_ref);
+        LogicalDevice::ptr  getLogicalDevice(int t_ld);
+        LogicalNode::ptr    getLogicalNode(int t_ld, int t_ln);
 
-        const QList<ptrDataSet> getDataSetList() {
-            return m_ds;
-        }
-        const QList<ptrRCB>     getReportCBList() {
-            return m_rcb;
-        }
-        const QList<ptrGOCB>    getGO_CBList() {
-            return m_gocb;
-        }
-        const QList<ptrSVCB>    getSV_CBList() {
-            return m_svcb;
-        }
+        const auto getDataSetList() { return m_ds; }
+        const auto getReportCBList() { return m_rcb; }
+        const auto getGO_CBList() { return m_gocb; }
+        const auto getSV_CBList() { return m_svcb; }
 
-        void    pushDataSet(ptrDataSet t_ds);
-        void    pushReportCB(ptrRCB t_cb);
-        void    pushGooseCB(ptrGOCB t_cb);
-        void    pushSV_CB(ptrSVCB t_cb);
+        void pushDataSet(DataSet::ptr t_ds);
+        void pushReportCB(ReportBlock::ptr t_cb);
+        void pushGooseCB(GooseControlBlock::ptr t_cb);
+        void pushSV_CB(SV_ControlBlock::ptr t_cb);
 
-        void    print();
+        void print();
 
     private:
-        ptrModelItem recFindModelItem(QStringList &t_names, int t_inx, ptrModelItem t_item);
-        void          resolveIEDName(); // TODO: Move to DataModelBuilder
+        ModelItem::ptr recFindModelItem(QStringList &t_names, int t_inx, ModelItem::ptr t_item);
+        void resolveIEDName(); // TODO: Move to DataModelBuilder
 
     private:
-        QList<ptrDataSet>    m_ds;
-        QList<ptrRCB>        m_rcb;
-        QList<ptrGOCB>       m_gocb;
-        QList<ptrSVCB>       m_svcb;
+        QList< DataSet::ptr >             m_ds;
+        QList< ReportBlock::ptr >         m_rcb;
+        QList< GooseControlBlock::ptr >   m_gocb;
+        QList< SV_ControlBlock::ptr >     m_svcb;
     
     friend class DataModelBuilder;
     };
-    typedef QSharedPointer<DataModel>    ptrDataModel;
 }

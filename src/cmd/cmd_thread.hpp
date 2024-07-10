@@ -33,14 +33,14 @@ namespace Cmd
     {
         Q_OBJECT
     private:
-        CommandQueue<ptrCMD>            m_queue;
+        CommandQueue<CmdInterface::ptr>            m_queue;
         Cmd::Interface::ptrIEC61850_API m_api;
 
     public:
         CmdThread(Cmd::Interface::ptrIEC61850_API t_api);
         ~CmdThread();
 
-        void    putCommand(ptrCMD t_cmd);
+        void    putCommand(CmdInterface::ptr t_cmd);
 
     private:
         void    run();

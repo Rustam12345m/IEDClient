@@ -34,6 +34,8 @@ namespace Core
     {
         Q_OBJECT
     public:
+        using ptr = QSharedPointer< SV_ControlBlock >;
+
         SV_ControlBlock() : ModelItem(nullptr, "")
         {
         }
@@ -43,6 +45,4 @@ namespace Core
     signals:
         void    sigUpdated();
     };
-
-    typedef QSharedPointer< SV_ControlBlock >     ptrSVCB;
 }

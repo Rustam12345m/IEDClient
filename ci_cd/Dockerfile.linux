@@ -1,0 +1,15 @@
+FROM ubuntu:24.04
+
+# Install dependencies
+RUN apt-get update && \
+    apt-get install -y cmake g++ qt6-base-dev libgtest-dev
+
+# Copy the application source code
+COPY . /IEDClient
+WORKDIR /IEDClient
+
+# Build and run tests
+RUN mkdir -p build && cd build && \
+    cmake .. && \
+    make && \
+    ctest

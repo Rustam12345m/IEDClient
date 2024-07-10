@@ -42,6 +42,8 @@
         <file>logical_node/LN_SettingsView.qml</file>
         <file>logical_node/DiaChangeValue.qml</file>
 
+        <file>iedtree/Page.qml</file>
+
         <file>filesystem/Page.qml</file>
         <file>filesystem/FS_ControlDelegate.qml</file>
     </qresource>

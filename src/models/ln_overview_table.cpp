@@ -26,18 +26,18 @@ namespace App::Models
 {
     namespace
     {
-        inline int getInt(Core::ptrModelItem t_item)
+        inline int getInt(Core::ModelItem::ptr t_item)
         {
             return t_item ? t_item->getValue().toInt() : -1;
         }
     }
 
-    LN_OverviewTable::LN_OverviewTable(QObject *t_parent, Core::ptrIED t_ied)
+    LN_OverviewTable::LN_OverviewTable(QObject *t_parent, Core::IED::ptr t_ied)
         : QAbstractTableModel(t_parent), m_ied(t_ied)
     {
     }
 
-    void LN_OverviewTable::setActiveIED(Core::ptrIED t_ied)
+    void LN_OverviewTable::setActiveIED(Core::IED::ptr t_ied)
     {
         beginResetModel();
         m_ied = t_ied;
@@ -107,7 +107,7 @@ namespace App::Models
         return QVariant(" ? ");
     }
 
-    void LN_OverviewTable::slotDataUpdated(QSharedPointer<QList<Core::ModelItem*>> t_nodes)
+    void LN_OverviewTable::slotDataUpdated(Core::ModelItem::ptrList t_nodes)
     {
         emit dataChanged(index(0, MOD_COLUMN), index(rowCount() - 1, HEALTH_COLUMN));
     }

@@ -30,9 +30,10 @@ import "qrc:/common/"
 import "qrc:/home/" as Home
 import "qrc:/logical_device/" as LD
 import "qrc:/logical_node/" as LN
-import "qrc:/filesystem/" as FS
 import "qrc:/dataset/" as DS
 import "qrc:/reports/" as RCB
+import "qrc:/iedtree/" as IEDTREE
+import "qrc:/filesystem/" as FS
 
 ApplicationWindow
 {
@@ -285,6 +286,7 @@ ApplicationWindow
                     ListElement { title: "Logical nodes" }
                     ListElement { title: "DataSets" }
                     ListElement { title: "Report blocks" }
+                    ListElement { title: "Tree" }
                     ListElement { title: "Files" }
                 }
 
@@ -294,7 +296,7 @@ ApplicationWindow
             }
         }
 
-        // Work Area
+        // Work Area with pages
         Rectangle {
             id: workArea
 
@@ -421,6 +423,20 @@ ApplicationWindow
                                     focus = true
                                     setActivePanel(Globals.Panel.RCB_PROPERTIES)
                                     setPageStatusText(iedBackend.rcbPageStatus())
+                                } else {
+                                    focus = false
+                                }
+                            }
+                        }
+
+                        IEDTREE.Page {
+                            id: iedTreeID
+
+                            onVisibleChanged: {
+                                if (visible) {
+                                    focus = true
+                                    // setActivePanel(Globals.Panel.RCB_PROPERTIES)
+                                    // setPageStatusText(iedBackend.rcbPageStatus())
                                 } else {
                                     focus = false
                                 }

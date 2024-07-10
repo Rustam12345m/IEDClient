@@ -33,22 +33,22 @@ namespace Cmd
     {
         Q_OBJECT
     public:
-        UpdateLNode_Cmd(Core::ptrIED t_ied, Core::ptrLN t_lnode)
+        UpdateLNode_Cmd(Core::IED::ptr t_ied, Core::LogicalNode::ptr t_lnode)
             : m_ied{t_ied}, m_lnode{t_lnode}
         {
         }
 
         void     execute(Cmd::Interface::ptrIEC61850_API t_api) override;
 
-        static auto create(Core::ptrIED t_ied, Core::ptrLN t_lnode) {
+        static auto create(Core::IED::ptr t_ied, Core::LogicalNode::ptr t_lnode) {
             return QSharedPointer<UpdateLNode_Cmd>::create(t_ied, t_lnode);
         }
 
     signals:
-        void     sigModelValues(Core::ptrModelStateUpd t_vals);
+        void     sigModelValues(Core::ModelStateUpdater::ptr t_vals);
 
     private:
-        Core::ptrIED    m_ied;
-        Core::ptrLN     m_lnode;
+        Core::IED::ptr          m_ied;
+        Core::LogicalNode::ptr  m_lnode;
     };
 }

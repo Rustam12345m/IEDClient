@@ -32,34 +32,34 @@
 
 namespace Core
 {
-    QSharedPointer<ModelItem> ItemFactory::createModel(const QString &t_name)
+    ModelItem::ptr ItemFactory::createModel(const QString &t_name)
     {
-        return QSharedPointer<DataModel>::create(t_name);
+        return DataModel::ptr::create(t_name);
     }
 
-    QSharedPointer<ModelItem> ItemFactory::createLD(ModelItem *t_parent, const QString &t_name)
+    ModelItem::ptr ItemFactory::createLD(ModelItem *t_parent, const QString &t_name)
     {
-        return QSharedPointer<LogicalDevice>::create(t_parent, t_name);
+        return LogicalDevice::ptr::create(t_parent, t_name);
     }
 
-    QSharedPointer<ModelItem> ItemFactory::createLN(ModelItem *t_parent, const QString &t_name)
+    ModelItem::ptr ItemFactory::createLN(ModelItem *t_parent, const QString &t_name)
     {
-        return QSharedPointer<LogicalNode>::create(t_parent, t_name);
+        return LogicalNode::ptr::create(t_parent, t_name);
     }
 
-    QSharedPointer<ModelItem> ItemFactory::createDO(ModelItem *t_parent, const QString &t_name)
+    ModelItem::ptr ItemFactory::createDO(ModelItem *t_parent, const QString &t_name)
     {
-        return QSharedPointer<DataObject>::create(t_parent, t_name);
+        return DataObject::ptr::create(t_parent, t_name);
     }
 
-    QSharedPointer<ModelItem> ItemFactory::createDA(ModelItem *t_parent, const QString &t_name,
+    ModelItem::ptr ItemFactory::createDA(ModelItem *t_parent, const QString &t_name,
                                                 const QString &t_fc)
     {
-        return QSharedPointer<DataAttribute>::create(t_parent, t_name, t_fc);
+        return DataAttribute::ptr::create(t_parent, t_name, t_fc);
     }
 
-    QSharedPointer<ModelItem> ItemFactory::createSA(ModelItem *t_parent, const QString &t_name)
+    ModelItem::ptr ItemFactory::createSA(ModelItem *t_parent, const QString &t_name)
     {
-        return QSharedPointer<SubAttribute>::create(t_parent, t_name);
+        return SubAttribute::ptr::create(t_parent, t_name);
     }
 }

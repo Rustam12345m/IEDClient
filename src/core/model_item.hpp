@@ -30,7 +30,6 @@ namespace Core
 {
     class ModelItem;
     class ModelStateUpdater;
-    typedef QSharedPointer<QList<ModelItem*>>   ptrModelItemList;
 
     /*
      * This is a basic class for all elements in the data model of an IED.
@@ -40,6 +39,9 @@ namespace Core
     class ModelItem
     {
     public:
+        using ptr = QSharedPointer< ModelItem >;
+        using ptrList = QSharedPointer< QList< ModelItem* > >;
+
         ModelItem(ModelItem *t_parent, const QString &t_name) : m_parent(t_parent), m_name(t_name) {}
         ModelItem() = delete;
         virtual ~ModelItem() {}
@@ -79,12 +81,12 @@ namespace Core
             }
             return nullptr;
         }
-        QSharedPointer< ModelItem > getItem(int t_inx) {
+        ModelItem::ptr getItem(int t_inx) {
             return ModelItem::getItem<ModelItem>(t_inx);
         }
         virtual QString getValue() const;
 
-        QSharedPointer<ModelItem> findSubItem(const QString &t_name) {
+        ModelItem::ptr findSubItem(const QString &t_name) {
             for (auto it : m_items) {
                 if (it->getName() == t_name) {
                     return it;
@@ -93,7 +95,7 @@ namespace Core
             return nullptr;
         }
         template <typename... Names>
-        QSharedPointer<ModelItem> findSubItem(const QString &t_first, Names... rest) {
+        ModelItem::ptr findSubItem(const QString &t_first, Names... rest) {
             for (auto it : m_items) {
                 if (it->getName() == t_first) {
                     return it->findSubItem(rest...);
@@ -102,20 +104,19 @@ namespace Core
             return nullptr;
         }
 
-        virtual void   addSubItem(QSharedPointer< ModelItem > t_child);
-        virtual bool   updateValue(ptrModelValue t_newValue);
+        virtual void   addSubItem(ModelItem::ptr t_child);
+        virtual bool   updateValue(ModelItemValue::ptr t_newValue);
 
     protected:
-        virtual void   notifyFromChild(QSharedPointer<QList<ModelItem*>> t_nodes);
+        virtual void   notifyFromChild(ModelItem::ptrList t_nodes);
 
     protected:
         ModelItem*     m_parent = nullptr;
         QString        m_name;
         QString        m_delimetr = "/"; // Current node and its children
-        ptrModelValue  m_value;
-        QList<QSharedPointer<ModelItem>> m_items; // List of children
+        ModelItemValue::ptr   m_value;
+        QList<ModelItem::ptr> m_items; // List of children
 
     friend class DataModelBuilder;
     };
-    typedef QSharedPointer< ModelItem >     ptrModelItem;
 }

@@ -42,14 +42,15 @@ namespace App
         ~AppSettings() = default;
 
         lisHistConnInfo    getConnectionList();
-        void     putConnectionToConfig(const Cmd::IEDCredentials &t_creds, const QString &t_ied);
+        void    putConnectionToConfig(const Cmd::IEDCredentials &t_creds, const QString &t_ied);
+        void    saveHistoryList(const lisHistConnInfo &t_list);
 
     signals:
-        void     sigConfUpdated();
+        void    sigConfUpdated();
 
     private:
-        int      readConfigFile(const QString &t_filepath, lisHistConnInfo &t_list);
-        int      writeConfigFile(const QString &t_filepath, lisHistConnInfo &t_list);
+        int     readConfigFile(const QString &t_filepath, lisHistConnInfo &t_list);
+        int     writeConfigFile(const QString &t_filepath, const lisHistConnInfo &t_list);
 
     private:
         QString m_confFilepath;

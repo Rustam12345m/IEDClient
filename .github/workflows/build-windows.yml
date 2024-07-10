@@ -1,0 +1,17 @@
+name: Build and Test on Windows
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build Docker image
+      run: docker build -f Dockerfile.windows -t iedclient:windows .
+
+    - name: Run Docker container
+      run: docker run iedclient:windows

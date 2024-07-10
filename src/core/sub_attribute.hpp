@@ -38,11 +38,12 @@ namespace Core
     class SubAttribute: public ModelItem
     {
     public:
+        using ptr = QSharedPointer< SubAttribute >;
+
         SubAttribute(ModelItem *t_parent, const QString &t_name)
             : ModelItem(t_parent, t_name)
         {
             m_delimetr = "."; // Between DAName and SAName
         }
     };
-    typedef QSharedPointer<SubAttribute>    ptrSDA;
 }

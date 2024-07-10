@@ -27,7 +27,7 @@ namespace Cmd
 {
     void UpdateLDs_StatusCmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
     {
-        Core::ptrModelStateUpd vals = t_api->state().getStatusForAllLD(m_ied->getDataModel());
+        Core::ModelStateUpdater::ptr vals = t_api->state().getStatusForAllLD(m_ied->getDataModel());
         if (vals) {
             // Update process must to be finished in the GUI thread
             emit sigModelValues(vals);

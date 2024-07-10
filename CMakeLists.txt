@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
-project(IEDClient VERSION "1.0.0" LANGUAGES C CXX)
+project(IEDClient VERSION "0.0.1" LANGUAGES C CXX)
 
 set(PROJECT                     "IEDClient")
 set(CMAKE_CXX_STANDARD          17)
@@ -31,3 +31,21 @@ endif()
 
 add_subdirectory(3rdparty/)
 add_subdirectory(src/)
+
+# Install artifacts:
+# install(TARGETS ${PROJECT} DESTINATION bin)
+
+# Install the executable into "${CMAKE_INSTALL_PREFIX}/bin".
+install(TARGETS ${PROJECT}
+    BUNDLE  DESTINATION .
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+# Generate the deployment script for the target MyApp.
+# qt_generate_deploy_app_script(
+qt_generate_deploy_qml_app_script(
+    TARGET ${PROJECT}
+    FILENAME_VARIABLE deploy_script
+    NO_UNSUPPORTED_PLATFORM_ERROR
+)
+# Call the deployment script on "cmake --install".
+install(SCRIPT ${deploy_script})

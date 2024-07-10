@@ -37,7 +37,7 @@ namespace UnitTests
         void SetUp() override;
         void TearDown() override;
 
-        Core::ptrDataModel  m_model;
+        Core::DataModel::ptr  m_model;
     };
 
     void DataModel_Fixt::SetUp()

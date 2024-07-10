@@ -38,9 +38,9 @@ namespace App::Models
         };
 
     public:
-        LN_CommonTree(QObject *t_parent, Core::ptrIED t_ied);
+        LN_CommonTree(QObject *t_parent, Core::IED::ptr t_ied);
 
-        void        setActiveIED(Core::ptrIED t_ied);
+        void        setActiveIED(Core::IED::ptr t_ied);
 
         QVariant    headerData(int t_sect, Qt::Orientation t_orient,
                                int t_role = Qt::DisplayRole) const override;
@@ -53,11 +53,11 @@ namespace App::Models
 
     public slots:
         void     slotLNSelected(int t_ld, int t_ln);
-        void     slotDataUpdated(QSharedPointer<QList<Core::ModelItem*>> t_nodes);
+        void     slotDataUpdated(Core::ModelItem::ptrList t_nodes);
 
     private:
-        Core::ptrIED             m_ied;
-        Core::ptrLN              m_lnode;
+        Core::IED::ptr           m_ied;
+        Core::LogicalNode::ptr   m_lnode;
         QMetaObject::Connection  m_updConnection; // signal from LogicalNode
     };
 }

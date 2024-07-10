@@ -42,17 +42,19 @@ namespace Core
     {
         Q_OBJECT
     public:
+        using ptr = QSharedPointer< LogicalNode >;
+
         LogicalNode(ModelItem *t_parent, const QString &t_name)
             : QObject(nullptr), ModelItem(t_parent, t_name)
         {
             m_delimetr = "/"; // Between LDName and LNName
         }
 
-        ptrDO    getModItem() const { return m_mod; }
-        ptrDO    getBehItem() const { return m_beh; }
-        ptrDO    getHealthItem() const { return m_health; }
+        DataObject::ptr    getModItem() const { return m_mod; }
+        DataObject::ptr    getBehItem() const { return m_beh; }
+        DataObject::ptr    getHealthItem() const { return m_health; }
 
-        void     addSubItem(QSharedPointer< ModelItem > t_child) override {
+        void     addSubItem(ModelItem::ptr t_child) override {
             if (t_child->getName() == "Mod") {
                 m_mod = t_child.dynamicCast<DataObject>();
             } else if (t_child->getName() == "Beh") {
@@ -62,13 +64,13 @@ namespace Core
             }
             ModelItem::addSubItem(t_child);
         }
-        void     addSubItem(QSharedPointer< DataSet > t_ds) {
+        void     addSubItem(DataSet::ptr t_ds) {
             m_dataSets.push_back(t_ds);
         }
-        void     addSubItem(QSharedPointer< ReportBlock > t_rcb) {
+        void     addSubItem(ReportBlock::ptr t_rcb) {
             m_rcbs.push_back(t_rcb);
         }
-        void     addSubItem(QSharedPointer< GooseControlBlock > t_gocb) {
+        void     addSubItem(GooseControlBlock::ptr t_gocb) {
             m_gooses.push_back(t_gocb);
         }
 
@@ -86,21 +88,20 @@ namespace Core
         }
 
     signals:
-        void     sigDataObjectUpdated(ptrModelItemList t_nodes);
+        void     sigDataObjectUpdated(ModelItem::ptrList t_nodes);
 
     protected:
-         void    notifyFromChild(ptrModelItemList t_nodes) override;
+         void    notifyFromChild(ModelItem::ptrList t_nodes) override;
 
     protected:
-        QSharedPointer<DataObject>         m_mod;
-        QSharedPointer<DataObject>         m_beh;
-        QSharedPointer<DataObject>         m_health;
-        QList< ptrDataSet >                m_dataSets;
-        QList< ptrRCB >                    m_rcbs;
-        QList< ptrGOCB >                   m_gooses;
-        QSharedPointer<LN_SignalMatrix>    m_sigMatrix;
+        DataObject::ptr         m_mod;
+        DataObject::ptr         m_beh;
+        DataObject::ptr         m_health;
+        LN_SignalMatrix::ptr    m_sigMatrix;
+        QList< DataSet::ptr >           m_dataSets;
+        QList< ReportBlock::ptr >       m_rcbs;
+        QList< GooseControlBlock::ptr > m_gooses;
 
     friend class DataModelBuilder;
     };
-    typedef QSharedPointer< LogicalNode >    ptrLN;
 }

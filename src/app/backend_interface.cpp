@@ -23,7 +23,7 @@
 
 namespace App
 {
-    void BackendInterface::putCmdToQueue(Cmd::ptrCMD t_cmd)
+    void BackendInterface::putCmdToQueue(Cmd::CmdInterface::ptr t_cmd)
     {
         connect(t_cmd.get(), &Cmd::CmdInterface::sigCmdEvent, this, &BackendInterface::slotCmdEvent);
 

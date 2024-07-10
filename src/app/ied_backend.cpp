@@ -103,7 +103,7 @@ namespace App
     {
         qDebug() << "IED_Backend: Update DataSet";
 
-        Core::ptrDataSet ds = m_dsSigModel->getDataSet();
+        Core::DataSet::ptr ds = m_dsSigModel->getDataSet();
         auto cmd = Cmd::UpdateDataSet_Cmd::create(m_con.m_ied, ds);
         connect(cmd.get(), &Cmd::UpdateDataSet_Cmd::sigModelValues, this,
                 &IED_Backend::slotUpdateItems, Qt::QueuedConnection);
@@ -148,7 +148,7 @@ namespace App
         m_reportsModel->setActiveIED(m_con.m_ied);
     }
 
-    void IED_Backend::slotUpdateItems(Core::ptrModelStateUpd t_vals)
+    void IED_Backend::slotUpdateItems(Core::ModelStateUpdater::ptr t_vals)
     {
         if (t_vals) {
             t_vals->update();

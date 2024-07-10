@@ -107,6 +107,10 @@ FocusScope
 
         Keys.onPressed: function(event) {
             console.log("ConHistoryTable: " + event.key)
+
+            // Current row
+            appBackend.lastConnList.removeFromHistory(tableID.currentRow)
+
             event.accepted = false
         }
     }

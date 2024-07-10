@@ -27,7 +27,7 @@ namespace Core
 {
     namespace
     {
-        void     printTree(QString t_prefix, QSharedPointer<ModelItem> t_item)
+        void     printTree(QString t_prefix, ModelItem::ptr t_item)
         {
             auto &nodeList = t_item->getItemList();
             for (auto node : nodeList) {
@@ -72,18 +72,18 @@ namespace Core
 
         // Change LDs' names
         for (size_t i=0;i<m_items.size();i++) {
-            ptrLD ld = getLogicalDevice(i);
+            LogicalDevice::ptr ld = getLogicalDevice(i);
             QString name = ld->getName();
             ld->m_name = name.right(name.size() - m_name.size());
         }
     }
 
-    ptrLD DataModel::getLogicalDevice(int t_ld)
+    LogicalDevice::ptr DataModel::getLogicalDevice(int t_ld)
     {
         return getItem<Core::LogicalDevice>(t_ld);
     }
 
-    ptrLN DataModel::getLogicalNode(int t_ld, int t_ln)
+    LogicalNode::ptr DataModel::getLogicalNode(int t_ld, int t_ln)
     {
         auto ld = getItem<Core::LogicalDevice>(t_ld);
         if (ld) {
@@ -92,7 +92,7 @@ namespace Core
         return nullptr;
     }
 
-    ptrModelItem DataModel::getItemByReference(const QString &t_ref)
+    ModelItem::ptr DataModel::getItemByReference(const QString &t_ref)
     {
         // MMS_REF: "HugeModelIEDMain/GGIO1.Mod[CO]"
         // MMS_REF: "HugeModelIEDMain/GGIO1.Mod.stVal[ST]"
@@ -127,27 +127,27 @@ namespace Core
         }
     }
     
-    void DataModel::pushDataSet(ptrDataSet t_ds)
+    void DataModel::pushDataSet(DataSet::ptr t_ds)
     {
         m_ds.push_back(t_ds);
     }
 
-    void DataModel::pushReportCB(ptrRCB t_cb)
+    void DataModel::pushReportCB(ReportBlock::ptr t_cb)
     {
         m_rcb.push_back(t_cb);
     }
 
-    void DataModel::pushGooseCB(ptrGOCB t_cb)
+    void DataModel::pushGooseCB(GooseControlBlock::ptr t_cb)
     {
         m_gocb.push_back(t_cb);
     }
 
-    void DataModel::pushSV_CB(ptrSVCB t_cb)
+    void DataModel::pushSV_CB(SV_ControlBlock::ptr t_cb)
     {
         m_svcb.push_back(t_cb);
     }
 
-    ptrModelItem DataModel::recFindModelItem(QStringList &t_names, int t_inx, ptrModelItem t_item)
+    ModelItem::ptr DataModel::recFindModelItem(QStringList &t_names, int t_inx, ModelItem::ptr t_item)
     {
         if (t_item == nullptr) {
             return nullptr;

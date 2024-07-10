@@ -24,12 +24,12 @@
 
 namespace App::Models
 {
-    DS_SignalsTable::DS_SignalsTable(QObject *t_parent, Core::ptrIED t_ied)
+    DS_SignalsTable::DS_SignalsTable(QObject *t_parent, Core::IED::ptr t_ied)
         : QAbstractTableModel(t_parent), m_ied(t_ied)
     {
     }
 
-    void DS_SignalsTable::setActiveIED(Core::ptrIED t_ied)
+    void DS_SignalsTable::setActiveIED(Core::IED::ptr t_ied)
     {
         beginResetModel();
         m_ied = t_ied;
@@ -102,7 +102,7 @@ namespace App::Models
         return QVariant(" ? ");
     }
 
-    void DS_SignalsTable::slotDataUpdated(QList<Core::ptrModelItem> t_items)
+    void DS_SignalsTable::slotDataUpdated(QList<Core::ModelItem::ptr> t_items)
     {
         emit dataChanged(index(0, DS_VALUE_COLUMN), index(rowCount() - 1, COLUMN_COUNT));
     }
@@ -110,7 +110,7 @@ namespace App::Models
     void DS_SignalsTable::slotDataSetSelected(int t_ds)
     {
         auto getDataSetList = m_ied->model().getDataSetList();
-        Core::ptrDataSet newDS;
+        Core::DataSet::ptr newDS;
         if (t_ds >= 0 && t_ds < getDataSetList.size()) {
             newDS = getDataSetList[t_ds];
 

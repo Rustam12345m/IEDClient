@@ -63,19 +63,20 @@ namespace Core
     class DataAttribute : public ModelItem
     {
     public:
-        FC_ENUM    fcNum() const {
-            return m_fc;
-        }
-        QString    fcStr() const {
-            return fcNumToString(m_fc);
-        }
+        using ptr = QSharedPointer< DataAttribute >;
 
-    public:
         DataAttribute(ModelItem *t_parent, const QString &t_name, const QString &t_fc)
             : ModelItem(t_parent, t_name)
         {
             m_fc = fcStringToNum(t_fc);
             m_delimetr = "."; // Between DOName and DAName
+        }
+
+        FC_ENUM    fcNum() const {
+            return m_fc;
+        }
+        QString    fcStr() const {
+            return fcNumToString(m_fc);
         }
 
         static const char* fcNumToString(FC_ENUM t_num);
@@ -85,5 +86,4 @@ namespace Core
     protected:
         FC_ENUM     m_fc = FC_ENUM::UNDEFINED;
     };
-    typedef QSharedPointer< DataAttribute >        ptrDA;
 }

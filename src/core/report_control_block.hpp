@@ -31,11 +31,12 @@ namespace Core
     class ReportBlock : public ModelItem
     {
     public:
+        using ptr = QSharedPointer< ReportBlock >;
+
         ReportBlock() : ModelItem(nullptr, "")
         {
         }
 
         void print() {}
     };
-    typedef QSharedPointer< ReportBlock >     ptrRCB;
 }

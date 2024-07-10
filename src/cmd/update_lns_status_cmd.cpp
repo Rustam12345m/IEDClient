@@ -26,7 +26,7 @@ namespace Cmd
 {
     void UpdateLNs_StatusCmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
     {
-        Core::ptrModelStateUpd vals = t_api->state().getStatusForAllLN(m_ld);
+        Core::ModelStateUpdater::ptr vals = t_api->state().getStatusForAllLN(m_ld);
         if (vals) {
             emit sigModelValues(vals);
 

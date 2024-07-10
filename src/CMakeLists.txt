@@ -13,11 +13,13 @@ target_link_libraries(aggregated_qt_lib INTERFACE
     Qt6::QuickControls2
 )
 
+# Build the main binary
 qt6_add_resources(QRC_SOURCE ${CMAKE_SOURCE_DIR}/ui/resources.qrc)
 qt_add_executable(${PROJECT} main.cpp ${QRC_SOURCE})
 
 target_link_libraries(${PROJECT} PRIVATE app_lib)
 target_link_libraries(${PROJECT} PRIVATE aggregated_qt_lib)
+target_link_libraries(${PROJECT} PRIVATE Qt6::Core Qt6::Gui Qt6::Qml Qt6::Quick Qt6::QuickControls2)
 
 # Tests
 if(BUILD_TESTS)
