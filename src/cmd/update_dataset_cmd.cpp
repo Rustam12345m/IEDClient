@@ -25,7 +25,7 @@ namespace Cmd
 {
     void UpdateDataSet_Cmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
     {
-        Core::ptrModelStateUpd vals = t_api->state().getValsForDS(m_dataset);
+        Core::ModelStateUpdater::ptr vals = t_api->state().getValsForDS(m_dataset);
         if (vals) {
             emit sigModelValues(vals);
 

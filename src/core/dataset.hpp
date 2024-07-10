@@ -37,7 +37,7 @@ namespace Core
 
         const QString    ref() const { return m_name; }
         const QString    fc() const { return m_fc; }
-        ptrModelItem     item() { return m_valItem; }
+        ModelItem::ptr   item() { return m_valItem; }
 
         QString          getValue() const override {
             if (m_valItem) {
@@ -48,7 +48,7 @@ namespace Core
 
     private:
         QString         m_fc;
-        ptrModelItem    m_valItem;
+        ModelItem::ptr  m_valItem;
 
     friend class DataModelBuilder;
     };
@@ -60,6 +60,8 @@ namespace Core
     {
         Q_OBJECT
     public:
+        using ptr = QSharedPointer< DataSet >;
+
         DataSet(ModelItem *t_parent, const QString &t_name, const QString &t_lnRef, bool t_del)
             : QObject(nullptr), ModelItem(t_parent, t_name),
             m_lnReference{t_lnRef}, m_isDeletable{t_del}
@@ -68,11 +70,10 @@ namespace Core
         const QString ref() const { return m_lnReference; }
 
     signals:
-        void     sigItemUpdated(QList<ptrModelItem> t_items);
+        void     sigItemUpdated(QList<ModelItem::ptr> t_items);
 
     private:
         QString m_lnReference;
         bool    m_isDeletable = false;
     };
-    typedef QSharedPointer< DataSet >     ptrDataSet;
 }

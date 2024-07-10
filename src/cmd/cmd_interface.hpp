@@ -33,14 +33,15 @@ namespace Cmd
     {
         Q_OBJECT
     public:
+        using ptr = QSharedPointer< CmdInterface >;
+
         CmdInterface() = default;
         virtual ~CmdInterface() {}
 
-        virtual void execute(Cmd::Interface::ptrIEC61850_API t_api) {
+        virtual void execute(Cmd::Interface::IEC61850_API::ptr t_api) {
         }
 
     signals:
         void sigCmdEvent(CmdEvent t_event);
     };
-    typedef QSharedPointer< CmdInterface >    ptrCMD;
 }

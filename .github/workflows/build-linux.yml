@@ -1,0 +1,20 @@
+name: Build and Test on Linux
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Build Docker image
+      run: docker build -f Dockerfile.linux -t iedclient:linux .
+
+    - name: Run Docker container
+      run: docker run iedclient:linux

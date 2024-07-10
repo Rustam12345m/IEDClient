@@ -26,18 +26,18 @@ namespace App::Models
 {
     namespace
     {
-        inline int getInt(Core::ptrModelItem t_item)
+        inline int getInt(Core::ModelItem::ptr t_item)
         {
             return t_item ? t_item->getValue().toInt() : -1;
         }
     }
 
-    LD_OverviewGrid::LD_OverviewGrid(QObject *t_parent, Core::ptrIED t_ied)
+    LD_OverviewGrid::LD_OverviewGrid(QObject *t_parent, Core::IED::ptr t_ied)
         : QAbstractListModel(t_parent), m_ied(t_ied)
     {
     }
 
-    void LD_OverviewGrid::setActiveIED(Core::ptrIED t_ied)
+    void LD_OverviewGrid::setActiveIED(Core::IED::ptr t_ied)
     {
         beginResetModel();
 
@@ -107,7 +107,7 @@ namespace App::Models
         }
     }
 
-    void LD_OverviewGrid::slotDataUpdated(Core::ptrModelItemList t_nodes)
+    void LD_OverviewGrid::slotDataUpdated(Core::ModelItem::ptrList t_nodes)
     {
         // qDebug() << "LD_OverviewGrid: Data updated";
 

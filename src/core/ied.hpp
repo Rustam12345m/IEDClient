@@ -35,9 +35,11 @@ namespace Core
     class IED
     {
     public:
+        using ptr = QSharedPointer< IED >;
+
         IED(QObject *t_parent=nullptr) {
-            m_model = QSharedPointer<Core::DataModel>::create("");
-            m_fsModel = QSharedPointer<Core::FS_Model>::create();
+            m_model = DataModel::ptr::create("");
+            m_fsModel = FS_Model::ptr::create();
         }
         ~IED() = default;
 
@@ -52,17 +54,16 @@ namespace Core
             m_servIdent = t_ident;
         }
 
-        void setModel(QSharedPointer<DataModel> t_model) {
+        void setModel(DataModel::ptr t_model) {
             m_model = t_model;
         }
-        void setFSModel(QSharedPointer<FS_Model> t_model) {
+        void setFSModel(FS_Model::ptr t_model) {
             m_fsModel = t_model;
         }
 
     private:
-        QSharedPointer<DataModel>   m_model;
-        QSharedPointer<FS_Model>    m_fsModel;
-        DevServIdentity             m_servIdent;
+        DataModel::ptr      m_model;
+        FS_Model::ptr       m_fsModel;
+        DevServIdentity     m_servIdent;
     };
-    typedef QSharedPointer<IED>     ptrIED;
 }

@@ -24,7 +24,7 @@
 
 namespace Core
 {
-    void ModelItem::addSubItem(QSharedPointer<ModelItem> t_child)
+    void ModelItem::addSubItem(ModelItem::ptr t_child)
     {
         m_items.push_back(t_child);
     }
@@ -37,7 +37,7 @@ namespace Core
         return "";
     }
 
-    bool ModelItem::updateValue(ptrModelValue t_newValue)
+    bool ModelItem::updateValue(ModelItemValue::ptr t_newValue)
     {
         if (m_value && (*m_value == *t_newValue)) {
             return false;
@@ -46,13 +46,13 @@ namespace Core
         m_value = t_newValue;
 
         if (m_parent != nullptr) {
-            auto nodes = QSharedPointer<QList<ModelItem*>>::create();
+            auto nodes = ModelItem::ptrList::create();
             m_parent->notifyFromChild(nodes);
         }
         return true;
     }
 
-    void ModelItem::notifyFromChild(QSharedPointer<QList<ModelItem*>> t_nodes)
+    void ModelItem::notifyFromChild(ModelItem::ptrList t_nodes)
     {
         if (m_parent != nullptr) {
             t_nodes->push_front(this);

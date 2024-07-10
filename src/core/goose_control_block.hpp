@@ -34,6 +34,8 @@ namespace Core
     {
         Q_OBJECT
     public:
+        using ptr = QSharedPointer< GooseControlBlock >;
+
         GooseControlBlock() : ModelItem(nullptr, "")
         {
         }
@@ -43,6 +45,4 @@ namespace Core
     signals:
         void    sigUpdated();
     };
-
-    typedef QSharedPointer< GooseControlBlock >     ptrGOCB;
 }

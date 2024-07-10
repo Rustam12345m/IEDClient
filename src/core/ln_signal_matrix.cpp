@@ -24,9 +24,9 @@
 
 namespace Core
 {
-    QSharedPointer<LN_SignalMatrix> LN_SignalMatrixBuilder::create(QSharedPointer<LogicalNode> t_ln)
+    LN_SignalMatrix::ptr LN_SignalMatrixBuilder::create(QSharedPointer< LogicalNode > t_ln)
     {
-        auto matrix = QSharedPointer<LN_SignalMatrix>::create();
+        auto matrix = LN_SignalMatrix::ptr::create();
 
         auto dataObjList = t_ln->getItemList();
         for (auto item : dataObjList) {
@@ -37,14 +37,14 @@ namespace Core
         return matrix;
     }
 
-    void LN_SignalMatrixBuilder::recursiveFillMatrix(QSharedPointer<LN_SignalMatrix> t_matrix,
-                                                     QSharedPointer<ModelItem> t_root,
-                                                     QSharedPointer<ModelItem> t_item,
+    void LN_SignalMatrixBuilder::recursiveFillMatrix(LN_SignalMatrix::ptr t_matrix,
+                                                     ModelItem::ptr t_root,
+                                                     ModelItem::ptr t_item,
                                                      SignalMatrixRow t_rowPrototype)
     {
         // Find Q, TS, Desc elements
         for (size_t i=0;i<t_item->getItemCount();i++) {
-            ptrModelItem child = t_item->getItem(i);
+            ModelItem::ptr child = t_item->getItem(i);
             if (child->getName() == "q") {
                 t_rowPrototype.m_quality = child;
                 continue;
@@ -64,9 +64,9 @@ namespace Core
 
         // Create signals
         for (size_t i=0;i<t_item->getItemCount();i++) {
-            ptrModelItem child = t_item->getItem(i);
+            ModelItem::ptr child = t_item->getItem(i);
 
-            ptrDA da = child.dynamicCast<Core::DataAttribute>();
+            auto da = child.dynamicCast<Core::DataAttribute>();
             if (da) {
                 auto fc = da->fcStr();
                 if (!FC.contains(da->fcStr())) {

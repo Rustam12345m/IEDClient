@@ -35,6 +35,8 @@ namespace Libiec61850
     class Libiec61850_Adapter : public Cmd::Interface::IEC61850_API
     {
     public:
+        using ptr = QSharedPointer< Libiec61850_Adapter >;
+
         Libiec61850_Adapter() : m_model(*this), m_state(*this), m_fs(*this) {}
         ~Libiec61850_Adapter() override {}
 
@@ -67,5 +69,4 @@ namespace Libiec61850
     friend class IED_ControlAPI_Impl;
     friend class IED_FS_API_Impl;
     };
-    typedef QSharedPointer<Libiec61850_Adapter>    ptrAdapter;
 }

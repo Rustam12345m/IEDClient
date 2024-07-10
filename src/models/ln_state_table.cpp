@@ -40,12 +40,12 @@ namespace
 
 namespace App::Models
 {
-    LN_SignalTable::LN_SignalTable(QObject *t_parent, Core::ptrIED t_ied)
+    LN_SignalTable::LN_SignalTable(QObject *t_parent, Core::IED::ptr t_ied)
         : QAbstractTableModel(t_parent), m_ied(t_ied)
     {
     }
 
-    void LN_SignalTable::setActiveIED(Core::ptrIED t_ied)
+    void LN_SignalTable::setActiveIED(Core::IED::ptr t_ied)
     {
         beginResetModel();
         m_ied = t_ied;
@@ -156,7 +156,7 @@ namespace App::Models
         return QVariant(" ? ");
     }
 
-    void LN_SignalTable::slotDataUpdated(QSharedPointer<QList<Core::ModelItem*>> t_nodes)
+    void LN_SignalTable::slotDataUpdated(Core::ModelItem::ptrList t_nodes)
     {
         if (t_nodes->empty()) {
             return;
@@ -177,7 +177,7 @@ namespace App::Models
     void LN_SignalTable::slotLNSelected(int t_ld, int t_ln)
     {
         // qDebug() << "LN_SignalTable: ld = " << t_ld << " ln = " << t_ln;
-        Core::ptrLN ln = m_ied->model().getLogicalNode(t_ld, t_ln);
+        Core::LogicalNode::ptr ln = m_ied->model().getLogicalNode(t_ld, t_ln);
         if (ln != m_lnode) {
             if (m_lnode) {
                 disconnect(m_updConnection);

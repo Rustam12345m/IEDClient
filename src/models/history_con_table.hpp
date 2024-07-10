@@ -52,6 +52,8 @@ namespace App::Models
 
         QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
+        Q_INVOKABLE void removeFromHistory(int t_index);
+
     public slots:
         void     slotAppConfigUpdated();
 

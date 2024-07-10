@@ -36,7 +36,7 @@ namespace Core
         DataModelBuilder& createLN(const QString &t_name);
         DataModelBuilder& createDO(const QString &t_name);
         DataModelBuilder& createDA(const QString &t_name, const QString &t_fc);
-        DataModelBuilder& createSDA(QSharedPointer<ModelItem> t_parent, const QString &t_name);
+        DataModelBuilder& createSDA(ModelItem::ptr t_parent, const QString &t_name);
 
         DataModelBuilder& createDataSet(const QString &t_name, const QString &t_lnRef, bool t_del);
         DataModelBuilder& createDataSet_Elem(const QString &t_ref, const QString &t_fc);
@@ -55,19 +55,19 @@ namespace Core
         auto     lastGOCB() const { return m_lastGOCB; }
         auto     lastSVCB() const { return m_lastSVCB; }
 
-        ptrDataModel    build(QThread *t_guiThread);
+        DataModel::ptr    build(QThread *t_guiThread);
 
     private:
-        ptrDataModel m_model;
-        ptrLD        m_lastLD;
-        ptrLN        m_lastLN;
-        ptrDO        m_lastDO;
-        ptrDA        m_lastDA;
-        ptrSDA       m_lastSDA;
+        DataModel::ptr          m_model;
+        LogicalDevice::ptr      m_lastLD;
+        LogicalNode::ptr        m_lastLN;
+        DataObject::ptr         m_lastDO;
+        DataAttribute::ptr      m_lastDA;
+        SubAttribute::ptr       m_lastSDA;
         //
-        ptrDataSet   m_lastDataSet;
-        ptrRCB       m_lastRCB;
-        ptrGOCB      m_lastGOCB;
-        ptrSVCB      m_lastSVCB;
+        DataSet::ptr            m_lastDataSet;
+        ReportBlock::ptr        m_lastRCB;
+        GooseControlBlock::ptr  m_lastGOCB;
+        SV_ControlBlock::ptr    m_lastSVCB;
     };
 }

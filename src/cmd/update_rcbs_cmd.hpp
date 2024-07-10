@@ -33,7 +33,7 @@ namespace Cmd
     {
         Q_OBJECT
     public:
-        UpdateRCBs_Cmd(Core::ptrIED t_ied) : m_ied{t_ied}
+        UpdateRCBs_Cmd(Core::IED::ptr t_ied) : m_ied{t_ied}
         {
         }
         ~UpdateRCBs_Cmd() = default;
@@ -41,11 +41,11 @@ namespace Cmd
         void    execute(Cmd::Interface::ptrIEC61850_API t_api) override;
 
         // Create new command like Builder pattern
-        static auto create(Core::ptrIED t_ied) {
+        static auto create(Core::IED::ptr t_ied) {
             return QSharedPointer<UpdateRCBs_Cmd>::create(t_ied);
         }
 
     private:
-        Core::ptrIED    m_ied;
+        Core::IED::ptr    m_ied;
     };
 }

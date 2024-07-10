@@ -32,35 +32,43 @@ namespace Core
     class DataObject : public ModelItem
     {
     public:
-        QString        getValue() const override {
+        using ptr = QSharedPointer< DataObject >;
+
+        DataObject(ModelItem *t_parent, const QString &t_name)
+            : ModelItem(t_parent, t_name)
+        {
+            m_delimetr = "."; // Between LNName and DOName
+        }
+
+        QString     getValue() const override {
             if (m_value) {
                 return m_value->getValue();
             }
             return " - ";
         }
-        QString        getQuality() const {
+        QString     getQuality() const {
             if (m_quality) {
                 return m_quality->getValue();
             }
             return " - ";
         }
-        QString        getTimestamp() const {
+        QString     getTimestamp() const {
             if (m_timestamp) {
                 return m_timestamp->getValue();
             }
             return " - ";
         }
-        QString        getDesc() const {
+        QString     getDesc() const {
             if (m_description) {
                 return m_description->getValue();
             }
             return " - ";
         }
 
-        void        addSubItem(QSharedPointer< ModelItem > t_node) override {
+        void        addSubItem(ModelItem::ptr t_node) override {
             m_items.push_back(t_node);
 
-            ptrDA da = t_node.staticCast<DataAttribute>();
+            DataAttribute::ptr da = t_node.staticCast<DataAttribute>();
             if (!da) {
                 return;
             }
@@ -79,19 +87,11 @@ namespace Core
             }
         }
 
-    public:
-        DataObject(ModelItem *t_parent, const QString &t_name)
-            : ModelItem(t_parent, t_name)
-        {
-            m_delimetr = "."; // Between LNName and DOName
-        }
-
     protected:
-        ptrDA        m_value;
-        ptrDA        m_quality;
-        ptrDA        m_timestamp;
-        ptrDA        m_description;
-        ptrModelItem m_fc[Core::FC_ENUM::COUNT];
+        DataAttribute::ptr      m_value;
+        DataAttribute::ptr      m_quality;
+        DataAttribute::ptr      m_timestamp;
+        DataAttribute::ptr      m_description;
+        ModelItem::ptr          m_fc[Core::FC_ENUM::COUNT];
     };
-    typedef QSharedPointer< DataObject >     ptrDO;
 }

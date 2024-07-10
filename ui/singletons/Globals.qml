@@ -31,6 +31,7 @@ QtObject
         LN,
         DS,
         RCB,
+        IED_TREE,
         FS
     }
 

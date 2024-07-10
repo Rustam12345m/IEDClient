@@ -26,7 +26,7 @@ namespace Core
 {
     namespace
     {
-        void recurs_fillValue(ptrModelItem t_root, ptrModelItem t_item, QString &t_val)
+        void recurs_fillValue(ModelItem::ptr t_root, ModelItem::ptr t_item, QString &t_val)
         {
             if (t_item->getItemCount() == 0) {
                 // Leaft = End
@@ -40,7 +40,7 @@ namespace Core
         }
     }
 
-    QString ModelItemFullValue::get(QSharedPointer<ModelItem> t_item)
+    QString ModelItemFullValue::get(QSharedPointer< ModelItem > t_item)
     {
         if (t_item->getItemCount() == 0) {
             return t_item->getValue();

@@ -71,7 +71,7 @@ namespace App
 
     public slots:
         void     slotConnected(bool t_done) override;
-        void     slotUpdateItems(Core::ptrModelStateUpd t_vals);
+        void     slotUpdateItems(Core::ModelStateUpdater::ptr t_vals);
 
     protected:
         // Models for Tables in GUI

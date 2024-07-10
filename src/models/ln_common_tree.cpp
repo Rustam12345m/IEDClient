@@ -23,12 +23,12 @@
 
 namespace App::Models
 {
-    LN_CommonTree::LN_CommonTree(QObject *t_parent, Core::ptrIED t_ied)
+    LN_CommonTree::LN_CommonTree(QObject *t_parent, Core::IED::ptr t_ied)
         : QAbstractItemModel(t_parent), m_ied(t_ied)
     {
     }
 
-    void LN_CommonTree::setActiveIED(Core::ptrIED t_ied)
+    void LN_CommonTree::setActiveIED(Core::IED::ptr t_ied)
     {
         beginResetModel();
         m_ied = t_ied;
@@ -143,7 +143,7 @@ namespace App::Models
         return QVariant(" ? ");
     }
 
-    void LN_CommonTree::slotDataUpdated(QSharedPointer<QList<Core::ModelItem*>> t_nodes)
+    void LN_CommonTree::slotDataUpdated(Core::ModelItem::ptrList t_nodes)
     {
         //qDebug() << "LN_CommonTree: slotDataUpdated";
         // emit dataChanged(index(0, 0), index(rowCount() - 1, VALUE_COLUMN));
@@ -153,7 +153,7 @@ namespace App::Models
     {
         // qDebug() << "LN_CommonTree: ld = " << t_ld << " ln = " << t_ln;
 
-        Core::ptrLN ln = m_ied->model().getLogicalNode(t_ld, t_ln);
+        Core::LogicalNode::ptr ln = m_ied->model().getLogicalNode(t_ld, t_ln);
         if (ln != m_lnode) {
             if (m_lnode) {
                 disconnect(m_updConnection);

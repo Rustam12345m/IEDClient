@@ -53,7 +53,7 @@ namespace App
         virtual ~BackendInterface() {}
 
     protected:
-        void    putCmdToQueue(Cmd::ptrCMD t_cmd);
+        void    putCmdToQueue(Cmd::CmdInterface::ptr t_cmd);
 
     signals:
         void    sigCmdProgress(int t_perc, QString t_msg);

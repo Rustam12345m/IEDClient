@@ -32,14 +32,16 @@ namespace Core
     class ModelStateUpdater
     {
     public:
+        using ptr = QSharedPointer< ModelStateUpdater >;
+
         ModelStateUpdater() {}
 
-        void     push(ptrModelItem t_item, ptrModelValue t_value) {
+        void     push(ModelItem::ptr t_item, ModelItemValue::ptr t_value) {
             m_values.emplace_back(t_item, t_value);
         }
 
         auto     update() {
-            QList<ptrModelItem> result; // updated items (new value)
+            QList<ModelItem::ptr> result; // updated items (new value)
             for (const auto&[item, value] : m_values) {
                 if (item->updateValue(value)) {
                     result.push_back(item);
@@ -52,7 +54,6 @@ namespace Core
         size_t  count() const { return m_values.size(); }
 
     private:
-        QList< QPair<ptrModelItem, ptrModelValue> > m_values;
+        QList< QPair<ModelItem::ptr, ModelItemValue::ptr> > m_values;
     };
-    typedef QSharedPointer< ModelStateUpdater >         ptrModelStateUpd;
 }

@@ -30,22 +30,22 @@ namespace Cmd
     {
         Q_OBJECT
     public:
-        UpdateDataSet_Cmd(Core::ptrIED t_ied, Core::ptrDataSet t_ds)
+        UpdateDataSet_Cmd(Core::IED::ptr t_ied, Core::DataSet::ptr t_ds)
             : m_ied{t_ied}, m_dataset{t_ds}
         {
         }
 
         void     execute(Cmd::Interface::ptrIEC61850_API t_api) override;
 
-        static auto create(Core::ptrIED t_ied, Core::ptrDataSet t_ds) {
+        static auto create(Core::IED::ptr t_ied, Core::DataSet::ptr t_ds) {
             return QSharedPointer<UpdateDataSet_Cmd>::create(t_ied, t_ds);
         }
 
     signals:
-        void     sigModelValues(Core::ptrModelStateUpd t_vals);
+        void     sigModelValues(Core::ModelStateUpdater::ptr t_vals);
 
     private:
-        Core::ptrIED        m_ied;
-        Core::ptrDataSet    m_dataset;
+        Core::IED::ptr        m_ied;
+        Core::DataSet::ptr    m_dataset;
     };
 }

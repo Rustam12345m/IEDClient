@@ -50,9 +50,9 @@ namespace App::Models
         };
 
     public:
-        LD_PropertiesTable(QObject *t_parent, Core::ptrIED t_ied);
+        LD_PropertiesTable(QObject *t_parent, Core::IED::ptr t_ied);
 
-        void setActiveIED(Core::ptrIED t_ied);
+        void setActiveIED(Core::IED::ptr t_ied);
 
         QHash<int, QByteArray> roleNames() const override;
         int rowCount(const QModelIndex &t_index = QModelIndex()) const override;
@@ -66,7 +66,7 @@ namespace App::Models
         void     slotLDSelected(int t_ld);
 
     private:
-        Core::ptrIED        m_ied;
+        Core::IED::ptr        m_ied;
         QList<PropertyItem> m_ldProp;
         QList<PropertyItem> m_devProp;
         int                 m_currentLD = -1;

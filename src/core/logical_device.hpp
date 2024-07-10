@@ -32,16 +32,18 @@ namespace Core
     {
         Q_OBJECT
     public:
+        using ptr = QSharedPointer< LogicalDevice >;
+
         LogicalDevice(ModelItem *t_parent, const QString &t_name) 
             : QObject(nullptr), ModelItem(t_parent, t_name)
         {
             m_delimetr = ""; // There isn't a delimetr between IEDName and LDName
         }
 
-        ptrLN     lln0() const { return m_lln0; }
-        ptrLN     lphd1() const { return m_lphd1; }
+        LogicalNode::ptr     lln0() const { return m_lln0; }
+        LogicalNode::ptr     lphd1() const { return m_lphd1; }
 
-        void    addSubItem(QSharedPointer< ModelItem > t_node) override {
+        void    addSubItem(ModelItem::ptr t_node) override {
             QString name = t_node->getName();
             if (name.contains("LLN0")) {
                 m_lln0 = t_node.dynamicCast<LogicalNode>();
@@ -54,19 +56,18 @@ namespace Core
         }
 
     signals:
-        void     sigDataObjectUpdated(ptrModelItemList t_nodes);
+        void     sigDataObjectUpdated(ModelItem::ptrList t_nodes);
 
     protected:
-         void     notifyFromChild(ptrModelItemList t_nodes) override {
+         void     notifyFromChild(ModelItem::ptrList t_nodes) override {
             emit sigDataObjectUpdated(t_nodes);
         };
 
     protected:
-        ptrLN    m_lln0; // LN0
-        ptrLN    m_lphd1; // LPHD1
+        LogicalNode::ptr    m_lln0; // LN0
+        LogicalNode::ptr    m_lphd1; // LPHD1
 
     friend class DataModel;
     friend class DataModelBuilder;
     };
-    typedef QSharedPointer< LogicalDevice >        ptrLD;
 }

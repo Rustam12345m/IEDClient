@@ -44,9 +44,9 @@ namespace App::Models
         };
 
     public:
-        LN_SignalTable(QObject *t_parent, Core::ptrIED t_ied);
+        LN_SignalTable(QObject *t_parent, Core::IED::ptr t_ied);
 
-        void     setActiveIED(Core::ptrIED t_ied);
+        void     setActiveIED(Core::IED::ptr t_ied);
         auto     getCurrectLN() const {
             return m_lnode;
         }
@@ -60,12 +60,12 @@ namespace App::Models
         QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
     public slots:
-        void     slotDataUpdated(QSharedPointer<QList<Core::ModelItem*>> t_nodes);
+        void     slotDataUpdated(Core::ModelItem::ptrList t_nodes);
         void     slotLNSelected(int t_ld, int t_ln);
 
     private:
-        Core::ptrIED            m_ied;
-        Core::ptrLN             m_lnode; // currect logical node of this model
+        Core::IED::ptr          m_ied;
+        Core::LogicalNode::ptr  m_lnode; // currect logical node of this model
         QMetaObject::Connection m_updConnection; // signal from LogicalNode
     };
 }

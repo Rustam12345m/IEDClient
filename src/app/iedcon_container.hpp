@@ -51,9 +51,9 @@ namespace App
             m_ied.clear();
 
             m_cred = t_cred;
-            m_ied = QSharedPointer<Core::IED>::create();
+            m_ied = Core::IED::ptr::create();
 
-            auto apiImpl =  Libiec61850::ptrAdapter::create();
+            auto apiImpl =  Libiec61850::Libiec61850_Adapter::ptr::create();
             connect(apiImpl.get(), &Cmd::Interface::IEC61850_API::sigConClosed,
                     this, &IEDConContainer::slotConClosed);
             m_api = apiImpl;
@@ -70,9 +70,9 @@ namespace App
         }
 
     public:
-        Core::ptrIED            m_ied;
+        Core::IED::ptr          m_ied;
         Cmd::IEDCredentials     m_cred; // Information about ip/port/etc
         Cmd::ptrCmdThread       m_cmdThread;
-        Libiec61850::ptrAdapter m_api; // Connection & API
+        Libiec61850::Libiec61850_Adapter::ptr m_api; // Connection & API
     };
 }

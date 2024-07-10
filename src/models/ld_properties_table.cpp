@@ -23,7 +23,7 @@
 
 namespace App::Models
 {
-    LD_PropertiesTable::LD_PropertiesTable(QObject *t_parent, Core::ptrIED t_ied)
+    LD_PropertiesTable::LD_PropertiesTable(QObject *t_parent, Core::IED::ptr t_ied)
         : QAbstractListModel(t_parent), m_ied{t_ied}
     {
         m_ldProp.append(PropertyItem("General information", "Name", ""));
@@ -52,7 +52,7 @@ namespace App::Models
         m_devProp.append(PropertyItem("Connection", "Max PDU", ""));
     }
 
-    void LD_PropertiesTable::setActiveIED(Core::ptrIED t_ied)
+    void LD_PropertiesTable::setActiveIED(Core::IED::ptr t_ied)
     {
         beginResetModel();
         m_ied = t_ied;
@@ -99,7 +99,7 @@ namespace App::Models
             return QVariant(m_ldProp[row].name);
         }
         case VALUE_ROLE: {
-            Core::ptrLD ld = m_ied->model().getLogicalDevice(m_currentLD);
+            Core::LogicalDevice::ptr ld = m_ied->model().getLogicalDevice(m_currentLD);
             if (ld) {
                 if (m_ldProp[row].obj.isEmpty()) {
                     // LD's common properties like: count of LN, DS or RCB

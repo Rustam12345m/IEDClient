@@ -48,7 +48,7 @@ namespace Core
 
     DataModelBuilder& DataModelBuilder::createDO(const QString &t_name)
     {
-        m_lastDO = QSharedPointer<DataObject>::create(m_lastLN.get(), t_name);
+        m_lastDO = DataObject::ptr::create(m_lastLN.get(), t_name);
         m_lastLN->addSubItem(m_lastDO);
         return *this;
     }
@@ -60,7 +60,7 @@ namespace Core
         return *this;
     }
 
-    DataModelBuilder& DataModelBuilder::createSDA(QSharedPointer<ModelItem> t_parent, const QString &t_name)
+    DataModelBuilder& DataModelBuilder::createSDA(ModelItem::ptr t_parent, const QString &t_name)
     {
         m_lastSDA = QSharedPointer<SubAttribute>::create(t_parent.get(), t_name);
         t_parent->addSubItem(m_lastSDA);

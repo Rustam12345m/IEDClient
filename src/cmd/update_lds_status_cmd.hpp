@@ -33,24 +33,24 @@ namespace Cmd
     {
         Q_OBJECT
     public:
-        UpdateLDs_StatusCmd(Core::ptrIED t_ied) : m_ied(t_ied)
+        UpdateLDs_StatusCmd(Core::IED::ptr t_ied) : m_ied(t_ied)
         {
         }
         ~UpdateLDs_StatusCmd() override {}
 
         void    execute(Cmd::Interface::ptrIEC61850_API t_api) override;
 
-        static auto create(Core::ptrIED t_ied) {
+        static auto create(Core::IED::ptr t_ied) {
             return QSharedPointer<UpdateLDs_StatusCmd>::create(t_ied);
         }
     
     signals:
-        void     sigModelValues(Core::ptrModelStateUpd t_vals);
+        void     sigModelValues(Core::ModelStateUpdater::ptr t_vals);
 
     private slots:
         void     slotMsgProgress(const QString &t_msg);
 
     private:
-        Core::ptrIED    m_ied;
+        Core::IED::ptr    m_ied;
     };
 }

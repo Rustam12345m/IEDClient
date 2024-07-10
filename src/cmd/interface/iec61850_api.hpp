@@ -38,6 +38,8 @@ namespace Cmd::Interface
     {
         Q_OBJECT
     public:
+        using ptr = QSharedPointer< IEC61850_API >;
+
         virtual ~IEC61850_API() {}
 
         virtual bool connect(const Cmd::IEDCredentials &t_creds) = 0;

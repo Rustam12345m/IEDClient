@@ -78,6 +78,11 @@ namespace App
         emit sigConfUpdated();
     }
 
+    void AppSettings::saveHistoryList(const lisHistConnInfo &t_list)
+    {
+        writeConfigFile(m_confFilepath, t_list);
+    }
+
     int AppSettings::readConfigFile(const QString &t_filepath, lisHistConnInfo &t_list)
     {
         QFile conf(t_filepath);
@@ -117,7 +122,7 @@ namespace App
         return 0;
     }
 
-    int AppSettings::writeConfigFile(const QString &t_filepath, lisHistConnInfo &t_list)
+    int AppSettings::writeConfigFile(const QString &t_filepath, const lisHistConnInfo &t_list)
     {
         QFile file(t_filepath);
         if (!file.open(QFile::WriteOnly | QFile::Text | QFile::Truncate)) {

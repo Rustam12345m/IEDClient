@@ -95,6 +95,8 @@ namespace Core
     {
         Q_OBJECT
     public:
+        using ptr = QSharedPointer< FS_Model >;
+
         FS_Model(QObject *t_parent = nullptr) : QObject(t_parent) {}
 
         void put(const DirOn &t_dir)
