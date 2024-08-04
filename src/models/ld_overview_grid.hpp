@@ -33,7 +33,6 @@ namespace App::Models
         enum LD_ModelRole {
             LD_ROLE_VALUES = Qt::UserRole + 1
         };
-
     public:
         LD_OverviewGrid(QObject *t_parent, Core::IED::ptr t_ied);
 
@@ -43,18 +42,18 @@ namespace App::Models
         int         rowCount(const QModelIndex &t_index = QModelIndex()) const override;
         QVariant    data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
-        Q_INVOKABLE void     setSelectedLD(int t_ld);
+        Q_INVOKABLE void setSelectedLD(int t_ld);
 
     signals:
-        void        sigLDSelected(int t_ld);
+        void sigLDSelected(int t_ld);
 
     public slots:
-        void        slotDataUpdated(Core::ModelItem::ptrList t_nodes);
-    
-    private:
-        void        connectToUpdates(Core::DataModel &t_model, bool t_con);
+        void slotDataUpdated(Core::ModelItem::ptrList t_nodes);
 
     private:
-        Core::IED::ptr    m_ied;
+        void connectToUpdates(Core::DataModel &t_model, bool t_con);
+
+    private:
+        Core::IED::ptr m_ied;
     };
 }

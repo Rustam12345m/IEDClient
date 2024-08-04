@@ -58,8 +58,8 @@ namespace App::Models
         void    slotDataUpdated(QList<Core::ModelItem::ptr> t_items);
 
     private:
-        Core::IED::ptr            m_ied;
-        Core::DataSet::ptr        m_dataSet;
+        Core::IED::ptr          m_ied;
+        Core::DataSet::ptr      m_dataSet;
         QMetaObject::Connection m_updConnection; // signal from LogicalNode
     };
 }

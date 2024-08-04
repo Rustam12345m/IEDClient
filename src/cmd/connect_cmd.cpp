@@ -28,7 +28,7 @@
 
 namespace Cmd
 {
-    void ConnectCmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
+    void ConnectCmd::execute(Cmd::Interface::IEC61850_API::ptr t_api)
     {
         emit sigCmdEvent(CmdEvent::StartEvent(m_cred.ip(),
                 QString(tr("Try to connect to %1:%2")).arg(m_cred.ip()).arg(m_cred.port())));

@@ -32,13 +32,13 @@ struct sIedConnection; // Forward declaration
 
 namespace Libiec61850
 {
-    class Libiec61850_Adapter : public Cmd::Interface::IEC61850_API
+    class ApiAdapter : public Cmd::Interface::IEC61850_API
     {
     public:
-        using ptr = QSharedPointer< Libiec61850_Adapter >;
+        using ptr = QSharedPointer< ApiAdapter >;
 
-        Libiec61850_Adapter() : m_model(*this), m_state(*this), m_fs(*this) {}
-        ~Libiec61850_Adapter() override {}
+        ApiAdapter() : m_model(*this), m_state(*this), m_fs(*this) {}
+        ~ApiAdapter() override {}
 
         bool    connect(const Cmd::IEDCredentials &t_creds) override;
         void    disconnect() override;

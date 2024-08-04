@@ -23,12 +23,12 @@
 
 namespace App::Models
 {
-    ReportsTable::ReportsTable(QObject *t_parent, QSharedPointer<Core::IED> t_ied)
+    ReportsTable::ReportsTable(QObject *t_parent, Core::IED::ptr t_ied)
         : QAbstractTableModel(t_parent), m_ied(t_ied)
     {
     }
 
-    void ReportsTable::setActiveIED(QSharedPointer<Core::IED> t_ied)
+    void ReportsTable::setActiveIED(Core::IED::ptr t_ied)
     {
         beginResetModel();
         m_ied = t_ied;

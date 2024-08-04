@@ -37,13 +37,13 @@ namespace
 
 namespace App::Models
 {
-    IED_FileTable::IED_FileTable(QObject *t_parent, QSharedPointer<Core::IED> t_ied)
+    IED_FileTable::IED_FileTable(QObject *t_parent, Core::IED::ptr t_ied)
         : QAbstractTableModel(t_parent), m_ied(t_ied)
     {
         connect(&m_ied->fs(), SIGNAL(sigFS_Updated()), this, SLOT(slotDataUpdated()));
     }
 
-    void IED_FileTable::setActiveIED(QSharedPointer<Core::IED> t_ied)
+    void IED_FileTable::setActiveIED(Core::IED::ptr t_ied)
     {
         beginResetModel();
         m_ied = t_ied;

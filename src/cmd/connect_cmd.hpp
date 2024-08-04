@@ -35,10 +35,11 @@ namespace Cmd
         Q_OBJECT
     public:
         ConnectCmd(const IEDCredentials &t_cred, Core::IED::ptr t_ied)
-                : m_cred(t_cred), m_ied(t_ied) {}
+                : m_cred(t_cred), m_ied(t_ied)
+        {}
         ~ConnectCmd() {}
 
-        void    execute(Cmd::Interface::ptrIEC61850_API t_api) override;
+        void    execute(Cmd::Interface::IEC61850_API::ptr t_api) override;
 
         static auto create(const IEDCredentials &t_cred, Core::IED::ptr t_ied) {
             return QSharedPointer<ConnectCmd>::create(t_cred, t_ied);
@@ -50,6 +51,6 @@ namespace Cmd
     private:
         IEDCredentials m_cred;
         Core::IED::ptr m_ied;
-        int            m_percProgress = 0;
+        int m_percProgress = 0;
     };
 }

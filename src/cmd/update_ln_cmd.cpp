@@ -23,7 +23,7 @@
 
 namespace Cmd
 {
-    void UpdateLNode_Cmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
+    void UpdateLNode_Cmd::execute(Cmd::Interface::IEC61850_API::ptr t_api)
     {
         Core::ModelStateUpdater::ptr vals = t_api->state().getValsForLN(m_lnode);
         if (vals) {

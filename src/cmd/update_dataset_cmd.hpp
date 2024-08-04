@@ -35,7 +35,7 @@ namespace Cmd
         {
         }
 
-        void     execute(Cmd::Interface::ptrIEC61850_API t_api) override;
+        void     execute(Cmd::Interface::IEC61850_API::ptr t_api) override;
 
         static auto create(Core::IED::ptr t_ied, Core::DataSet::ptr t_ds) {
             return QSharedPointer<UpdateDataSet_Cmd>::create(t_ied, t_ds);
@@ -45,7 +45,7 @@ namespace Cmd
         void     sigModelValues(Core::ModelStateUpdater::ptr t_vals);
 
     private:
-        Core::IED::ptr        m_ied;
-        Core::DataSet::ptr    m_dataset;
+        Core::IED::ptr     m_ied;
+        Core::DataSet::ptr m_dataset;
     };
 }

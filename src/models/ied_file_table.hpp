@@ -43,15 +43,11 @@ namespace App::Models
 
             FS_COLUMN_COUNT
         };
-
-    private:
-        QSharedPointer<Core::IED> m_ied;
-
     public:
-        IED_FileTable(QObject *t_parent, QSharedPointer<Core::IED> t_ied);
+        IED_FileTable(QObject *t_parent, Core::IED::ptr t_ied);
         ~IED_FileTable() = default;
 
-        void        setActiveIED(QSharedPointer<Core::IED> t_ied);
+        void        setActiveIED(Core::IED::ptr t_ied);
 
         int         rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
         int         columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
@@ -69,5 +65,8 @@ namespace App::Models
     public slots:
         void        slotDataUpdated();
         void        slotRemoveFile(int t_row);
+
+    private:
+        Core::IED::ptr m_ied;
     };
 }

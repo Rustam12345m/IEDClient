@@ -24,7 +24,7 @@
 
 namespace Cmd
 {
-    void DownloadFileCmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
+    void DownloadFileCmd::execute(Cmd::Interface::IEC61850_API::ptr t_api)
     {
         qDebug() << "CMD: DownloadFileCmd " << m_filename;
 

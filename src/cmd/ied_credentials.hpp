@@ -42,11 +42,11 @@ namespace Cmd
             m_password = t_data.value("password").toString();
         }
 
-        const auto     ip() const { return m_ip; }
-        const auto     port() const { return m_port; }
-        const auto     tls() const { return m_tls; }
-        const auto     login() const { return m_login; }
-        const auto     password() const { return m_password; }
+        const auto ip() const { return m_ip; }
+        const auto port() const { return m_port; }
+        const auto tls() const { return m_tls; }
+        const auto login() const { return m_login; }
+        const auto password() const { return m_password; }
 
         bool operator==(const IEDCredentials &t_right) {
             return (m_ip == t_right.m_ip)
@@ -57,10 +57,10 @@ namespace Cmd
         }
 
     protected:
-        QString     m_ip;
-        int         m_port = 0;
-        bool        m_tls = false;
-        QString     m_login;
-        QString     m_password;
+        QString m_ip;
+        int     m_port = 0;
+        bool    m_tls = false;
+        QString m_login;
+        QString m_password;
     };
 };

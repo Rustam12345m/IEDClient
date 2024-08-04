@@ -39,7 +39,6 @@ namespace App
     public:
         AppSettings();
         AppSettings(const QString &t_filepath);
-        ~AppSettings() = default;
 
         lisHistConnInfo    getConnectionList();
         void    putConnectionToConfig(const Cmd::IEDCredentials &t_creds, const QString &t_ied);

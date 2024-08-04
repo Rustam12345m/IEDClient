@@ -34,8 +34,8 @@ namespace App::Models
         SortHeaderValue(const QString &t_text, bool t_sort)
             : m_text(t_text), m_sortable(t_sort) {}
 
-        QString        m_text;
-        bool         m_sortable = false;
+        QString m_text;
+        bool    m_sortable = false;
 
         Q_PROPERTY(int         sortable     MEMBER     m_sortable)
         Q_PROPERTY(QString     text         MEMBER     m_text)

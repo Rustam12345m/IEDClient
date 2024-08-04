@@ -43,8 +43,8 @@ namespace Core
         }
         ~IED() = default;
 
-        DataModel&   model() { return *m_model; }
-        FS_Model&    fs() { return *m_fsModel; }
+        DataModel& model() { return *m_model; }
+        FS_Model&  fs() { return *m_fsModel; }
 
         auto getDataModel() { return m_model; }
         auto getFSModel() { return m_fsModel; }
@@ -62,8 +62,8 @@ namespace Core
         }
 
     private:
-        DataModel::ptr      m_model;
-        FS_Model::ptr       m_fsModel;
-        DevServIdentity     m_servIdent;
+        DataModel::ptr  m_model;
+        FS_Model::ptr   m_fsModel;
+        DevServIdentity m_servIdent;
     };
 }

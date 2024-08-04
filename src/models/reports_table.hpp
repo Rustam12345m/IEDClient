@@ -39,9 +39,9 @@ namespace App::Models
             COLUMN_COUNT
         };
     public:
-        ReportsTable(QObject *t_parent, QSharedPointer<Core::IED> t_ied);
+        ReportsTable(QObject *t_parent, Core::IED::ptr t_ied);
 
-        void     setActiveIED(QSharedPointer<Core::IED> t_ied);
+        void     setActiveIED(Core::IED::ptr t_ied);
 
         QVariant headerData(int t_section, Qt::Orientation t_orientation,
                             int t_role = Qt::DisplayRole) const override;
@@ -56,7 +56,7 @@ namespace App::Models
         void     slotRCBSelected(int t_inx);
 
     private:
-        QSharedPointer<Core::IED> m_ied;
+        Core::IED::ptr m_ied;
         int      m_currentRCB = -1;
     };
 }

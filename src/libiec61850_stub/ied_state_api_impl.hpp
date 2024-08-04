@@ -25,12 +25,12 @@
 
 namespace Libiec61850
 {
-    class Libiec61850_Adapter;
+    class ApiAdapter;
 
     class IED_StateAPI_Impl : public Cmd::Interface::IED_StateAPI
     {
     public:
-        IED_StateAPI_Impl(Libiec61850_Adapter &t_api) : m_api(t_api) {}
+        IED_StateAPI_Impl(ApiAdapter &t_api) : m_api(t_api) {}
         ~IED_StateAPI_Impl() override = default;
 
         Core::ModelStateUpdater::ptr getStatusForAllLD(Core::DataModel::ptr t_model) override;
@@ -40,6 +40,6 @@ namespace Libiec61850
         Core::ModelStateUpdater::ptr getValsForDS(Core::DataSet::ptr t_ds) override;
     
     private:
-        Libiec61850_Adapter&   m_api;
+        ApiAdapter&   m_api;
     };
 };

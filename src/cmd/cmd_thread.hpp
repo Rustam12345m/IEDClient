@@ -32,18 +32,19 @@ namespace Cmd
     class CmdThread : public QThread
     {
         Q_OBJECT
-    private:
-        CommandQueue<CmdInterface::ptr>            m_queue;
-        Cmd::Interface::ptrIEC61850_API m_api;
-
     public:
-        CmdThread(Cmd::Interface::ptrIEC61850_API t_api);
+        using ptr = QSharedPointer< CmdThread >;
+
+        CmdThread(Cmd::Interface::IEC61850_API::ptr t_api);
         ~CmdThread();
 
         void    putCommand(CmdInterface::ptr t_cmd);
 
     private:
         void    run();
+
+    private:
+        CommandQueue<CmdInterface::ptr> m_queue;
+        Cmd::Interface::IEC61850_API::ptr m_api;
     };
-    typedef QSharedPointer<CmdThread>   ptrCmdThread;
 }

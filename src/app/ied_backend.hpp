@@ -46,32 +46,32 @@ namespace App
         IED_Backend(IEDConContainer &t_con, EventStorage &t_ev);
         ~IED_Backend() = default;
 
-        Q_INVOKABLE QAbstractListModel*     getLD_GridModel() const { return m_ldsModel; }
-        Q_INVOKABLE QAbstractListModel*     getLD_PropModel() const { return m_ldPropModel; }
-        Q_INVOKABLE QAbstractTableModel*    getLN_ComModel() const { return m_lnsModel; }
-        Q_INVOKABLE QAbstractItemModel*     getLN_StateModel() const { return m_sortDOModel; }
-        Q_INVOKABLE QAbstractItemModel*     getLN_TreeModel() const { return m_lnTreeModel; }
-        Q_INVOKABLE QAbstractListModel*     getDS_ComModel() const { return m_dsComModel; }
-        Q_INVOKABLE QAbstractTableModel*    getDS_ItemModel() const { return m_dsSigModel; }
-        Q_INVOKABLE QAbstractTableModel*    getRCB_ComModel() const { return m_rcbComModel; }
-        Q_INVOKABLE QAbstractTableModel*    getReportsModel() const { return m_reportsModel; }
+        Q_INVOKABLE QAbstractListModel*  getLD_GridModel() const { return m_ldsModel; }
+        Q_INVOKABLE QAbstractListModel*  getLD_PropModel() const { return m_ldPropModel; }
+        Q_INVOKABLE QAbstractTableModel* getLN_ComModel() const { return m_lnsModel; }
+        Q_INVOKABLE QAbstractItemModel*  getLN_StateModel() const { return m_sortDOModel; }
+        Q_INVOKABLE QAbstractItemModel*  getLN_TreeModel() const { return m_lnTreeModel; }
+        Q_INVOKABLE QAbstractListModel*  getDS_ComModel() const { return m_dsComModel; }
+        Q_INVOKABLE QAbstractTableModel* getDS_ItemModel() const { return m_dsSigModel; }
+        Q_INVOKABLE QAbstractTableModel* getRCB_ComModel() const { return m_rcbComModel; }
+        Q_INVOKABLE QAbstractTableModel* getReportsModel() const { return m_reportsModel; }
 
         // CMD
-        Q_INVOKABLE void        updateLDs_Status();
-        Q_INVOKABLE void        updateLNs_Status();
-        Q_INVOKABLE void        updateRCBs_Status();
-        Q_INVOKABLE void        updateLN_TreeValues();
-        Q_INVOKABLE void        updateDS_Values();
+        Q_INVOKABLE void updateLDs_Status();
+        Q_INVOKABLE void updateLNs_Status();
+        Q_INVOKABLE void updateRCBs_Status();
+        Q_INVOKABLE void updateLN_TreeValues();
+        Q_INVOKABLE void updateDS_Values();
 
         // Status bar
-        Q_INVOKABLE QString     ldsPageStatus();
-        Q_INVOKABLE QString     lnsPageStatus();
-        Q_INVOKABLE QString     dsPageStatus();
-        Q_INVOKABLE QString     rcbPageStatus();
+        Q_INVOKABLE QString ldsPageStatus();
+        Q_INVOKABLE QString lnsPageStatus();
+        Q_INVOKABLE QString dsPageStatus();
+        Q_INVOKABLE QString rcbPageStatus();
 
     public slots:
-        void     slotConnected(bool t_done) override;
-        void     slotUpdateItems(Core::ModelStateUpdater::ptr t_vals);
+        void slotConnected(bool t_done) override;
+        void slotUpdateItems(Core::ModelStateUpdater::ptr t_vals);
 
     protected:
         // Models for Tables in GUI

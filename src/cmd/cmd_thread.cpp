@@ -23,7 +23,7 @@
 
 namespace Cmd
 {
-    CmdThread::CmdThread(Cmd::Interface::ptrIEC61850_API t_api) : m_api(t_api)
+    CmdThread::CmdThread(Cmd::Interface::IEC61850_API::ptr t_api) : m_api(t_api)
     {
         setObjectName("CmdThread");
         start();

@@ -34,14 +34,14 @@ namespace Core
 
     DataModelBuilder& DataModelBuilder::createLD(const QString &t_name)
     {
-        m_lastLD = QSharedPointer<LogicalDevice>::create(m_model.get(), t_name);
+        m_lastLD = LogicalDevice::ptr::create(m_model.get(), t_name);
         m_model->addSubItem(m_lastLD);
         return *this;
     }
 
     DataModelBuilder& DataModelBuilder::createLN(const QString &t_name)
     {
-        m_lastLN = QSharedPointer<LogicalNode>::create(m_lastLD.get(), t_name);
+        m_lastLN = LogicalNode::ptr::create(m_lastLD.get(), t_name);
         m_lastLD->addSubItem(m_lastLN);
         return *this;
     }
@@ -55,21 +55,21 @@ namespace Core
 
     DataModelBuilder& DataModelBuilder::createDA(const QString &t_name, const QString &t_fc)
     {
-        m_lastDA = QSharedPointer<DataAttribute>::create(m_lastDO.get(), t_name, t_fc);
+        m_lastDA = DataAttribute::ptr::create(m_lastDO.get(), t_name, t_fc);
         m_lastDO->addSubItem(m_lastDA);
         return *this;
     }
 
     DataModelBuilder& DataModelBuilder::createSDA(ModelItem::ptr t_parent, const QString &t_name)
     {
-        m_lastSDA = QSharedPointer<SubAttribute>::create(t_parent.get(), t_name);
+        m_lastSDA = SubAttribute::ptr::create(t_parent.get(), t_name);
         t_parent->addSubItem(m_lastSDA);
         return *this;
     }
 
     DataModelBuilder& DataModelBuilder::createDataSet(const QString &t_name, const QString &t_lnRef, bool t_del)
     {
-        m_lastDataSet = QSharedPointer<DataSet>::create(lastLN().get(), t_name, t_lnRef, t_del);
+        m_lastDataSet = DataSet::ptr::create(lastLN().get(), t_name, t_lnRef, t_del);
         m_model->pushDataSet(m_lastDataSet);
         // m_lastLN->
         return *this;
@@ -77,7 +77,7 @@ namespace Core
 
     DataModelBuilder& DataModelBuilder::createDataSet_Elem(const QString &t_ref, const QString &t_fc)
     {
-        auto dsEnt = QSharedPointer<DataSetItem>::create(lastDataSet().get(), t_ref, t_fc);
+        auto dsEnt = DataSetItem::ptr::create(lastDataSet().get(), t_ref, t_fc);
         lastDataSet()->addSubItem(dsEnt);
         return *this;
     }

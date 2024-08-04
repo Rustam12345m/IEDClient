@@ -59,7 +59,7 @@ namespace Core
         void     sigDataObjectUpdated(ModelItem::ptrList t_nodes);
 
     protected:
-         void     notifyFromChild(ModelItem::ptrList t_nodes) override {
+         void    notifyFromChild(ModelItem::ptrList t_nodes) override {
             emit sigDataObjectUpdated(t_nodes);
         };
 

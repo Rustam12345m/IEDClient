@@ -38,7 +38,7 @@ namespace Cmd
         }
         ~UpdateRCBs_Cmd() = default;
 
-        void    execute(Cmd::Interface::ptrIEC61850_API t_api) override;
+        void    execute(Cmd::Interface::IEC61850_API::ptr t_api) override;
 
         // Create new command like Builder pattern
         static auto create(Core::IED::ptr t_ied) {
@@ -46,6 +46,6 @@ namespace Cmd
         }
 
     private:
-        Core::IED::ptr    m_ied;
+        Core::IED::ptr m_ied;
     };
 }

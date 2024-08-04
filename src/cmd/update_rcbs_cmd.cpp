@@ -24,7 +24,7 @@
 
 namespace Cmd
 {
-    void UpdateRCBs_Cmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
+    void UpdateRCBs_Cmd::execute(Cmd::Interface::IEC61850_API::ptr t_api)
     {
     }
 }

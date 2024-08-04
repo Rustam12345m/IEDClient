@@ -30,17 +30,7 @@ namespace Cmd
     template<typename T>
     class CommandQueue
     {
-    protected:
-        std::queue< T >         m_queue;
-        std::mutex              m_lock;
-        std::condition_variable m_condVar;
-        bool                    m_running;
-
     public:
-        CommandQueue() {
-            m_running = true;
-        }
-
         bool    isRunning() {
             std::unique_lock<std::mutex> lock(m_lock);
             return m_running;
@@ -71,5 +61,11 @@ namespace Cmd
             m_queue.pop();
             return val;
         }
+
+    protected:
+        std::queue< T >         m_queue;
+        std::mutex              m_lock;
+        std::condition_variable m_condVar;
+        bool                    m_running = true;
     };
 }
