@@ -38,7 +38,7 @@ namespace Cmd
         }
         ~UpdateLDs_StatusCmd() override {}
 
-        void    execute(Cmd::Interface::ptrIEC61850_API t_api) override;
+        void    execute(Cmd::Interface::IEC61850_API::ptr t_api) override;
 
         static auto create(Core::IED::ptr t_ied) {
             return QSharedPointer<UpdateLDs_StatusCmd>::create(t_ied);
@@ -51,6 +51,6 @@ namespace Cmd
         void     slotMsgProgress(const QString &t_msg);
 
     private:
-        Core::IED::ptr    m_ied;
+        Core::IED::ptr m_ied;
     };
 }

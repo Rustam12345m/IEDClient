@@ -44,16 +44,16 @@ namespace Core
         DataModelBuilder& createGOCB(const QString &t_name);
         DataModelBuilder& createSVCB(const QString &t_name);
 
-        auto     lastLD() const { return m_lastLD; }
-        auto     lastLN() const { return m_lastLN; }
-        auto     lastDO() const { return m_lastDO; }
-        auto     lastDA() const { return m_lastDA; }
-        auto     lastSDA() const { return m_lastSDA; }
+        auto lastLD() const { return m_lastLD; }
+        auto lastLN() const { return m_lastLN; }
+        auto lastDO() const { return m_lastDO; }
+        auto lastDA() const { return m_lastDA; }
+        auto lastSDA() const { return m_lastSDA; }
 
-        auto     lastDataSet() const { return m_lastDataSet; }
-        auto     lastRCB() const { return m_lastRCB; }
-        auto     lastGOCB() const { return m_lastGOCB; }
-        auto     lastSVCB() const { return m_lastSVCB; }
+        auto lastDataSet() const { return m_lastDataSet; }
+        auto lastRCB() const { return m_lastRCB; }
+        auto lastGOCB() const { return m_lastGOCB; }
+        auto lastSVCB() const { return m_lastSVCB; }
 
         DataModel::ptr    build(QThread *t_guiThread);
 

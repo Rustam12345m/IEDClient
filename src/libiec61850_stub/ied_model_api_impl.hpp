@@ -25,12 +25,12 @@
 
 namespace Libiec61850
 {
-    class Libiec61850_Adapter;
+    class ApiAdapter;
 
     class IED_ModelAPI_Impl : public Cmd::Interface::IED_ModelAPI
     {
     public:
-        IED_ModelAPI_Impl(Libiec61850_Adapter &t_api) : m_api(t_api) {};
+        IED_ModelAPI_Impl(ApiAdapter &t_api) : m_api(t_api) {};
         ~IED_ModelAPI_Impl() override = default;
 
         int     fetchDataModel(Core::DataModelBuilder &t_builder) override;
@@ -43,6 +43,6 @@ namespace Libiec61850
         int     fetchLN_SVCB(Core::DataModelBuilder &t_builder);
 
     private:
-        Libiec61850_Adapter&   m_api;
+        ApiAdapter&   m_api;
     };
 };

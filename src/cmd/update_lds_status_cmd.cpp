@@ -25,7 +25,7 @@
 
 namespace Cmd
 {
-    void UpdateLDs_StatusCmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
+    void UpdateLDs_StatusCmd::execute(Cmd::Interface::IEC61850_API::ptr t_api)
     {
         Core::ModelStateUpdater::ptr vals = t_api->state().getStatusForAllLD(m_ied->getDataModel());
         if (vals) {

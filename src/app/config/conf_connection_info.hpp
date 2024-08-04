@@ -28,27 +28,27 @@ namespace App
 {
     class ConfConnectionInfo
     {
-        ConfConnectionInfo() = default;
     public:
         ConfConnectionInfo(const Cmd::IEDCredentials &t_creds,
                            const QString &t_iedName, const QString &t_date)
             : m_creds(t_creds), m_iedName(t_iedName), m_date(t_date)
         {
         }
+        ConfConnectionInfo() = delete;
 
-        const auto     ip() const { return m_creds.ip(); }
-        const auto     port() const { return m_creds.port(); }
-        const auto     tls() const { return m_creds.tls(); }
-        const auto     ied() const { return m_iedName; }
-        const auto     date() const { return m_date; }
+        const auto ip() const { return m_creds.ip(); }
+        const auto port() const { return m_creds.port(); }
+        const auto tls() const { return m_creds.tls(); }
+        const auto ied() const { return m_iedName; }
+        const auto date() const { return m_date; }
 
         bool operator==(const ConfConnectionInfo &t_right) {
             return m_creds == t_right.m_creds;
         }
 
-    public:
+    private:
         Cmd::IEDCredentials m_creds;
-        QString             m_iedName;
-        QString             m_date;
+        QString m_iedName;
+        QString m_date;
     };
 }

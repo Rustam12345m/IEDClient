@@ -38,7 +38,7 @@ namespace Cmd
         }
         ~DownloadFileCmd() {}
 
-        void    execute(Cmd::Interface::ptrIEC61850_API t_api) override;
+        void    execute(Cmd::Interface::IEC61850_API::ptr t_api) override;
 
         // Create new command like Builder pattern
         static auto create(const QString &t_name) {
@@ -46,6 +46,6 @@ namespace Cmd
         }
     
     private:
-        QString     m_filename;
+        QString m_filename;
     };
 }

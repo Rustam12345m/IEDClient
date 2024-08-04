@@ -32,7 +32,7 @@ namespace App
     {
         Q_OBJECT
     public:
-        EventStorage() {}
+        EventStorage() = default;
 
         QString getLastMessage();
 

@@ -32,14 +32,14 @@ namespace Libiec61850
     {
         void     callback_ConnectionHandler(void *t_param, sIedConnection *t_con)
         {
-            Libiec61850_Adapter *adapter = static_cast<Libiec61850_Adapter*>(t_param);
+            ApiAdapter *adapter = static_cast<ApiAdapter*>(t_param);
             if (adapter != nullptr) {
                 adapter->callbackOnCloseEvent();
             }
         }
     }
 
-    bool Libiec61850_Adapter::connect(const Cmd::IEDCredentials &t_creds)
+    bool ApiAdapter::connect(const Cmd::IEDCredentials &t_creds)
     {
         IedClientError retval = IED_ERROR_OK;
 
@@ -61,7 +61,7 @@ namespace Libiec61850
         return true;
     }
 
-    void Libiec61850_Adapter::disconnect()
+    void ApiAdapter::disconnect()
     {
         if (m_libConn == nullptr) {
             return;
@@ -73,7 +73,7 @@ namespace Libiec61850
         m_libConn = nullptr;
     }
 
-    bool Libiec61850_Adapter::isConnected() const
+    bool ApiAdapter::isConnected() const
     {
         if (m_libConn == nullptr) {
             return false;
@@ -86,13 +86,13 @@ namespace Libiec61850
         return true;
     }
 
-    QString Libiec61850_Adapter::getVersion() const
+    QString ApiAdapter::getVersion() const
     {
         char *pv = LibIEC61850_getVersionString();
         return QString("%1").arg(pv);
     }
 
-    Core::DevServIdentity Libiec61850_Adapter::getServIdentity() const
+    Core::DevServIdentity ApiAdapter::getServIdentity() const
     {
         Core::DevServIdentity ident;
         MmsConnection mmsCon = IedConnection_getMmsConnection(m_libConn);
@@ -113,7 +113,7 @@ namespace Libiec61850
         return ident;
     }
 
-    void Libiec61850_Adapter::callbackOnCloseEvent()
+    void ApiAdapter::callbackOnCloseEvent()
     {
         emit sigConClosed();
     }

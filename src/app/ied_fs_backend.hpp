@@ -38,8 +38,8 @@ namespace App
         ~IED_FS_Backend() = default;
 
         // Properties for QML
-        Q_PROPERTY(QAbstractTableModel*     filesModel    READ getModel       CONSTANT)
-        Q_PROPERTY(QAbstractItemModel*      sortModel     READ getSortedModel CONSTANT)
+        Q_PROPERTY(QAbstractTableModel* filesModel READ getModel       CONSTANT)
+        Q_PROPERTY(QAbstractItemModel*  sortModel  READ getSortedModel CONSTANT)
 
         QAbstractTableModel* getModel() const { return m_fsModel; }
         QAbstractItemModel*  getSortedModel() const { return m_sortedModel; }

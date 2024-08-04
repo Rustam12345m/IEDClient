@@ -38,12 +38,12 @@ namespace App::Models
         };
 
     public:
-        DS_OverviewTable(QObject *t_parent, QSharedPointer<Core::IED> t_ied);
+        DS_OverviewTable(QObject *t_parent, Core::IED::ptr t_ied);
 
         Q_INVOKABLE void setSelectedDS(int t_ds);
         int getCurrentDS() const { return m_currentDS; }
 
-        void setActiveIED(QSharedPointer<Core::IED> t_ied);
+        void setActiveIED(Core::IED::ptr t_ied);
 
         QHash<int, QByteArray> roleNames() const override;
         int rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
@@ -56,7 +56,7 @@ namespace App::Models
         void slotDataUpdated();
 
     private:
-        QSharedPointer<Core::IED> m_ied;
+        Core::IED::ptr m_ied;
         int m_currentDS = -1; // selected DataSet
     };
 }

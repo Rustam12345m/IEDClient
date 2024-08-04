@@ -23,7 +23,7 @@
 
 namespace Cmd
 {
-    void GetFileList::execute(Cmd::Interface::ptrIEC61850_API t_api)
+    void GetFileList::execute(Cmd::Interface::IEC61850_API::ptr t_api)
     {
         if (!t_api->isConnected()) {
             emit sigCmdEvent(Cmd::CmdEvent::FinishEvent("IP?", "Connection is closed", true));

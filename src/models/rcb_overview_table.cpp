@@ -23,7 +23,7 @@
 
 namespace App::Models
 {
-    RCB_OverviewTable::RCB_OverviewTable(QObject *t_parent, QSharedPointer<Core::IED> t_ied)
+    RCB_OverviewTable::RCB_OverviewTable(QObject *t_parent, Core::IED::ptr t_ied)
         : QAbstractTableModel(t_parent), m_ied(t_ied)
     {
     }
@@ -34,7 +34,7 @@ namespace App::Models
         emit sigRCBSelected(m_currentRCB);
     }
 
-    void RCB_OverviewTable::setActiveIED(QSharedPointer<Core::IED> t_ied)
+    void RCB_OverviewTable::setActiveIED(Core::IED::ptr t_ied)
     {
         beginResetModel();
         m_ied = t_ied;

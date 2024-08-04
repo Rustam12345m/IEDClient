@@ -23,7 +23,7 @@
 
 namespace Cmd
 {
-    void RemoveFileCMD::execute(Cmd::Interface::ptrIEC61850_API t_api)
+    void RemoveFileCMD::execute(Cmd::Interface::IEC61850_API::ptr t_api)
     {
         t_api->fs().remove(m_filename);
 

@@ -59,5 +59,4 @@ namespace Cmd::Interface
         void sigFoundNode(const QString t_path);
         void sigConClosed();
     };
-    typedef QSharedPointer<IEC61850_API>    ptrIEC61850_API;
 }

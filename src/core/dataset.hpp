@@ -31,6 +31,8 @@ namespace Core
     class DataSetItem : public ModelItem
     {
     public:
+        using ptr = QSharedPointer< DataSetItem >;
+
         DataSetItem(ModelItem *t_parent, const QString &t_ref, const QString &t_fc)
             : ModelItem(t_parent, t_ref), m_fc{t_fc}
         {}
@@ -70,7 +72,7 @@ namespace Core
         const QString ref() const { return m_lnReference; }
 
     signals:
-        void     sigItemUpdated(QList<ModelItem::ptr> t_items);
+        void sigItemUpdated(QList<ModelItem::ptr> t_items);
 
     private:
         QString m_lnReference;

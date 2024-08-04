@@ -53,7 +53,7 @@ namespace App
             m_cred = t_cred;
             m_ied = Core::IED::ptr::create();
 
-            auto apiImpl =  Libiec61850::Libiec61850_Adapter::ptr::create();
+            auto apiImpl =  Libiec61850::ApiAdapter::ptr::create();
             connect(apiImpl.get(), &Cmd::Interface::IEC61850_API::sigConClosed,
                     this, &IEDConContainer::slotConClosed);
             m_api = apiImpl;
@@ -62,17 +62,17 @@ namespace App
         }
 
     signals:
-        void     sigConClosed();
+        void sigConClosed();
 
     public slots:
-        void     slotConClosed() {
+        void slotConClosed() {
             emit sigConClosed();
         }
 
     public:
-        Core::IED::ptr          m_ied;
-        Cmd::IEDCredentials     m_cred; // Information about ip/port/etc
-        Cmd::ptrCmdThread       m_cmdThread;
-        Libiec61850::Libiec61850_Adapter::ptr m_api; // Connection & API
+        Core::IED::ptr m_ied;
+        Cmd::IEDCredentials m_cred; // Information about ip/port/etc
+        Cmd::CmdThread::ptr m_cmdThread;
+        Libiec61850::ApiAdapter::ptr m_api; // Connection & API
     };
 }

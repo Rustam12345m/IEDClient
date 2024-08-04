@@ -52,6 +52,8 @@ namespace App
         BackendInterface() = delete;
         virtual ~BackendInterface() {}
 
+        BackendInterface& operator=(const BackendInterface &t_obj) = delete;
+
     protected:
         void    putCmdToQueue(Cmd::CmdInterface::ptr t_cmd);
 
@@ -60,11 +62,11 @@ namespace App
         void    sigCmdFinished(bool t_done);
 
     public slots:
-        void            slotCmdEvent(Cmd::CmdEvent t_ev);
-        virtual void    slotConnected(bool t_done);
+        void         slotCmdEvent(Cmd::CmdEvent t_ev);
+        virtual void slotConnected(bool t_done);
 
     protected:
-        IEDConContainer&    m_con;
-        EventStorage&       m_events;
+        IEDConContainer& m_con;
+        EventStorage&    m_events;
     };
 }

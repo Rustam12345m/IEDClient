@@ -23,7 +23,7 @@
 
 namespace Cmd
 {
-    void UpdateDataSet_Cmd::execute(Cmd::Interface::ptrIEC61850_API t_api)
+    void UpdateDataSet_Cmd::execute(Cmd::Interface::IEC61850_API::ptr t_api)
     {
         Core::ModelStateUpdater::ptr vals = t_api->state().getValsForDS(m_dataset);
         if (vals) {

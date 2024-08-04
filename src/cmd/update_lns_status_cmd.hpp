@@ -41,12 +41,12 @@ namespace Cmd
         static auto create(Core::IED::ptr t_ied, Core::LogicalDevice::ptr t_ld) {
             return QSharedPointer<UpdateLNs_StatusCmd>::create(t_ied, t_ld);
         }
-    
+
     signals:
         void     sigModelValues(Core::ModelStateUpdater::ptr t_vals);
 
     private:
-        Core::IED::ptr              m_ied;
-        Core::LogicalDevice::ptr    m_ld;
+        Core::IED::ptr           m_ied;
+        Core::LogicalDevice::ptr m_ld;
     };
 }

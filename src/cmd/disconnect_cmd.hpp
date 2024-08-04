@@ -33,7 +33,7 @@ namespace Cmd
         DisConnectCmd(Core::IED::ptr t_ied) {}
         ~DisConnectCmd() {}
 
-        void execute(Cmd::Interface::ptrIEC61850_API t_api) override;
+        void execute(Cmd::Interface::IEC61850_API::ptr t_api) override;
 
         static auto create(Core::IED::ptr t_ied) {
             return QSharedPointer<DisConnectCmd>::create(t_ied);

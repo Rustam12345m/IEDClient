@@ -23,5 +23,5 @@
 
 namespace App
 {
-    QString     GetCurrentDateTime();
+    QString GetCurrentDateTime();
 };

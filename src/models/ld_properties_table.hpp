@@ -63,10 +63,10 @@ namespace App::Models
         QVariant dataIED(const QModelIndex &t_index, int t_role) const;
 
     public slots:
-        void     slotLDSelected(int t_ld);
+        void slotLDSelected(int t_ld);
 
     private:
-        Core::IED::ptr        m_ied;
+        Core::IED::ptr      m_ied;
         QList<PropertyItem> m_ldProp;
         QList<PropertyItem> m_devProp;
         int                 m_currentLD = -1;

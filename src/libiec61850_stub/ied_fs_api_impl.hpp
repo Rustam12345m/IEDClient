@@ -25,12 +25,12 @@
 
 namespace Libiec61850
 {
-    class Libiec61850_Adapter;
+    class ApiAdapter;
 
     class IED_FS_API_Impl : public Cmd::Interface::IED_FS_API
     {
     public:
-        IED_FS_API_Impl(Libiec61850_Adapter &t_api) : m_api(t_api) {}
+        IED_FS_API_Impl(ApiAdapter &t_api) : m_api(t_api) {}
         ~IED_FS_API_Impl() override = default;
 
         int     getFileList(Core::DirOn &t_dir) override;
@@ -38,6 +38,6 @@ namespace Libiec61850
         int     remove(const QString &t_filename) override;
 
     private:
-        Libiec61850_Adapter&   m_api;
+        ApiAdapter&   m_api;
     };
 };
