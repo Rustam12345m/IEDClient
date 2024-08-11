@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.14)
 project(IEDClient VERSION "0.0.1" LANGUAGES C CXX)
 
 set(PROJECT                     "IEDClient")
-set(CMAKE_CXX_STANDARD          17)
+set(CMAKE_CXX_STANDARD          20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_INCLUDE_CURRENT_DIR   ON)
@@ -17,11 +17,8 @@ include_directories(
     ${CMAKE_BINARY_DIR}/include/
 )
 
-# Hack
-set(Qt6_DIR /opt/Qt6/6.7.0/gcc_64/lib/cmake/Qt6/)
-
 # Qt 6 specific stuff
-find_package(Qt6 COMPONENTS Core Qml Quick QuickControls2 QuickTemplates2 REQUIRED)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick QuickControls2 QuickTemplates2)
 qt_standard_project_setup()
 
 if (BUILD_TESTS)
@@ -32,15 +29,12 @@ endif()
 add_subdirectory(3rdparty/)
 add_subdirectory(src/)
 
-# Install artifacts:
-# install(TARGETS ${PROJECT} DESTINATION bin)
-
 # Install the executable into "${CMAKE_INSTALL_PREFIX}/bin".
 install(TARGETS ${PROJECT}
     BUNDLE  DESTINATION .
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
-# Generate the deployment script for the target MyApp.
+# Generate the deployment script for the target 
 # qt_generate_deploy_app_script(
 qt_generate_deploy_qml_app_script(
     TARGET ${PROJECT}

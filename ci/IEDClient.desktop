@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Version=0.0.1
+Name=IEDClient
+Comment=An Open-Source Client for IEC 61850 Protocols
+Exec=IEDClient
+Icon=appimage
+Categories=Network;Utility;
