@@ -5,8 +5,8 @@ set -e # Exit on error
 
 SCRIPT_PATH="$(dirname "$(realpath "$0")")"
 REPO_DIR="$SCRIPT_PATH/../"
-BUILD_DIR="$REPO_DIR"/build/
-INSTALL_DIR="$REPO_DIR"/artifacts/
+BUILD_DIR="$REPO_DIR/build/"
+INSTALL_DIR="$REPO_DIR/install/"
 
 build_release()
 {

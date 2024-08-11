@@ -26,6 +26,7 @@
 #include <QQmlContext>
 
 #include <QQuickStyle>
+#include <iostream>
 
 #include "app/main_presenter.hpp"
 
@@ -47,5 +48,10 @@ int main(int argc, char *argv[])
 
     presenter.setQmlContextMembers(engine.rootContext());
     engine.load(QStringLiteral("qrc:/main.qml"));
+    // Check if the root objects are empty (indicating a failure to load QML)
+    if (engine.rootObjects().isEmpty()) {
+        std::cerr << "Error: Failed to load QML file. Possible reasons could be missing QML plugins or modules." << std::endl;
+        return -1;
+    }
     return app.exec();
 }
