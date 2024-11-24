@@ -55,9 +55,10 @@ namespace Core
     friend class DataModelBuilder;
     };
 
-    /*
-     * Representation of a DataSet of IED
-     * */
+    /**
+     * @class DataSet
+     * @brief Representation for a DataSet of IED
+     */
     class DataSet : public QObject, public ModelItem
     {
         Q_OBJECT

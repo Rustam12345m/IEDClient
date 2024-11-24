@@ -34,10 +34,11 @@
 
 namespace Core
 {
-    /*
-     * Representation of Logical Node
+    /**
+     * @brief Representation of Logical Node
+     *
      * As a QObject this Item should live in GUI's thread
-     * */
+     */
     class LogicalNode : public QObject, public ModelItem
     {
         Q_OBJECT

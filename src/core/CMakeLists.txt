@@ -45,3 +45,4 @@ qt_add_library(core_lib STATIC ${CORE_SOURCES})
 target_link_libraries(core_lib PRIVATE Qt6::Core)
 
 target_include_directories(core_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+

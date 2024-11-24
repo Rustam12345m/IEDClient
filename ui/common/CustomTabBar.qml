@@ -29,7 +29,7 @@ Rectangle
 {
     id: rootID
 
-    color: "white"
+    color: VisualStyle.toolBarColor
     focus: false
 
     property bool leftSide: false
@@ -40,8 +40,8 @@ Rectangle
     property int cellWidth: 60
     property int cellHeight: 120
 
-    property color selectedColor: "gray"
-    property color unselectedColor: "lightgray"
+    property color selectedColor: VisualStyle.tabBar.selColor
+    property color unselectedColor: VisualStyle.tabBar.unselColor
 
     signal sigTabSelected(int index)
 
@@ -62,8 +62,8 @@ Rectangle
         // }
 
         focus: false
-        spacing: 1
-        orientation: rootID.horizontalBar ? ListView.Horizontal    : ListView.Vertical
+        spacing: 0
+        orientation: rootID.horizontalBar ? ListView.Horizontal : ListView.Vertical
 
         delegate: Item {
             id: btnItemID
@@ -79,17 +79,17 @@ Rectangle
                 width: parent.width
                 height: parent.height
 
-                border.width: 1
-                border.color: "lightgray"
+                border.width: 0
+                border.color: VisualStyle.borderColor
                 color: btnItemID.selected ? rootID.selectedColor : rootID.unselectedColor
 
                 Rectangle {
                     id: hiddenRectID
                     anchors.fill: parent
 
-                    border.width: 1
-                    border.color: "lightgray"
-                    color: rootID.selectedColor
+                    border.width: 0
+                    border.color: VisualStyle.borderColor
+                    color: VisualStyle.tabBar.hoverColor
                     visible: false
                 }
 
@@ -101,22 +101,28 @@ Rectangle
 
                     text: title
                     focus: false
-                    font.bold: selected
+                    color: btnItemID.selected ? VisualStyle.tabBar.selTextColor
+                           : (hiddenRectID.visible ? VisualStyle.tabBar.hoverTextColor
+                                                   : VisualStyle.tabBar.unselTextColor);
+                    font.bold: VisualStyle.boldHeaderText
                 }
                 MouseArea {
                     anchors.fill: parent
                     acceptedButtons: Qt.LeftButton
-                    hoverEnabled: true
 
+                    /*
+                    hoverEnabled: true
                     onEntered: {
-                        hiddenRectID.visible = true
+                        hiddenRectID.visible = !btnItemID.selected
                     }
 
                     onExited: {
                         hiddenRectID.visible = false
                     }
+                    */
 
                     onClicked: function(mouse) {
+                        hiddenRectID.visible = false
                         listViewID.currentIndex = index
                         sigTabSelected(index)
 

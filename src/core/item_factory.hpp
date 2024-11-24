@@ -26,9 +26,9 @@ namespace Core
 {
     class ModelItem; // forward
 
-    /*
-     * Factory for all classes inherit from Item
-     * */
+    /**
+     * @brief Factory for all classes inherit from Item
+     */
     class ItemFactory
     {
     public:

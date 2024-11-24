@@ -27,9 +27,9 @@
 
 namespace Cmd
 {
-    /*
-     * This class realizes connecting to IED through pure TCP or TLS
-     * */
+    /**
+     * @brief This class realizes connecting to IED through pure TCP or TLS
+     */
     class ConnectCmd : public CmdInterface
     {
         Q_OBJECT

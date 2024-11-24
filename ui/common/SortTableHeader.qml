@@ -34,7 +34,7 @@ HorizontalHeaderView
     property bool rightTextAlign: false
 
     boundsBehavior: Flickable.StopAtBounds
-    resizableColumns: true
+    // resizableColumns: true
 
     focus: false
     clip: true
@@ -48,8 +48,8 @@ HorizontalHeaderView
         // implicitWidth: rowID.implicitWidth + 10
         implicitHeight: 30
 
-        border.color: ColorPalette.tableRowBorderColor2
-        color: ColorPalette.tableHeaderColor
+        border.color: VisualStyle.table.rowBorderColor2
+        color: VisualStyle.table.headerColor
         clip: true
 
         Row {
@@ -69,8 +69,8 @@ HorizontalHeaderView
                 anchors.verticalCenter: parent.verticalCenter
 
                 horizontalAlignment: rightTextAlign ? Text.AlignRight : Text.AlignHCenter
-                color: ColorPalette.tableTextColor
-                font.bold: true
+                color: VisualStyle.table.headerTextColor
+                font.bold: VisualStyle.boldHeaderText
                 focus: false
 
                 text: model.display.text

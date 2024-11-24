@@ -25,9 +25,9 @@
 
 namespace Core
 {
-    /*
-     * Representation a Logical Device of an IED
-     * */
+    /**
+     * @brief Representation a Logical Device of an IED
+     */
     class LogicalDevice : public QObject, public ModelItem
     {
         Q_OBJECT

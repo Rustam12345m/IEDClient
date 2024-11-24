@@ -26,9 +26,9 @@
 
 namespace Cmd
 {
-    /*
-     * This class realizes downloading file from the IED
-     * */
+    /**
+     * @brief This class realizes downloading file from the IED
+     */
     class UpdateRCBs_Cmd : public CmdInterface
     {
         Q_OBJECT

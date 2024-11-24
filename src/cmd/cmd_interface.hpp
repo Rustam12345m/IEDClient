@@ -26,9 +26,9 @@
 
 namespace Cmd
 {
-    /*
-     * This is a basic class for all requests to IED through libiec61850
-     * */
+    /**
+     * @brief This is a basic class for all requests to IED through libiec61850
+     */
     class CmdInterface : public QObject
     {
         Q_OBJECT

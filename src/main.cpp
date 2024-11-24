@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
 
     // Singletons
     qmlRegisterSingletonType(QUrl("qrc:/singletons/Globals.qml"), "GlobalVarsModule", 1, 0, "Globals");
-    qmlRegisterSingletonType(QUrl("qrc:/singletons/ColorPalette.qml"), "AppStylesModule", 1, 0, "ColorPalette");
+    qmlRegisterSingletonType(QUrl("qrc:/singletons/VisualStyle.qml"), "AppStylesModule", 1, 0, "VisualStyle");
 
     App::MainPresenter presenter; // have to be created befor engine
     QQmlApplicationEngine engine;

@@ -34,12 +34,12 @@ namespace Cmd
         FINISH_EVENT
     };
 
-    /*
-     * This class contains messages from the command that is performed:
+    /**
+     * @brief This class contains messages from the command that is performed:
      * - Request message
      * - Process message
      * - Result message
-     * */
+     */
     class CmdEvent
     {
     public:

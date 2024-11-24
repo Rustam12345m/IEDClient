@@ -44,8 +44,8 @@ Item
         width: 16
         radius: height/2
 
-        border.width: 1
-        border.color: "black"
+        // border.width: 1
+        // border.color: "black"
 
         color: "gray"
 

@@ -22,15 +22,22 @@ The application targets the following platforms:
 
 ## Installation Instructions
 
-...
+
+## Third-Party Dependencies
+
+This project uses several third-party libraries to enhance functionality:
+
+- Qt
+- libiec61850
+- Google Test
+- PaperColor theme
+- Material Icons
 
 ## Usage Guidelines
 
 The user's guide is currently in development. Users will be able to access the guide using the F1 key within the application.
 
 ## Contributing
-
-...
 
 ## Issues
 

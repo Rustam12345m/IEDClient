@@ -26,11 +26,11 @@
 
 namespace App::Models
 {
-    /*
-     * This is a model for the selected LogicalNode that contains the following columns:
+    /**
+     * @brief This is a model for the selected LogicalNode that contains the following columns:
      * Path to the attirubte, value, quality, timestamp and description
      * 
-     * */
+     */
     class LN_SignalTable : public QAbstractTableModel
     {
         Q_OBJECT

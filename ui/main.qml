@@ -55,7 +55,7 @@ ApplicationWindow
         anchors {
             fill: parent
         }
-        color: ColorPalette.borderColor
+        color: VisualStyle.borderColor
 
         // Menu + ToolBar
         Rectangle {
@@ -69,7 +69,7 @@ ApplicationWindow
             // width: parent.width
             height: 30 + 4
 
-            color: ColorPalette.toolBarColor
+            color: VisualStyle.toolBarColor
             clip: true
 
             // Menu + ToolBar
@@ -79,9 +79,9 @@ ApplicationWindow
 
                 anchors {
                     fill: parent
-                    topMargin: ColorPalette.borderWidth
-                    leftMargin: ColorPalette.borderWidth
-                    rightMargin: ColorPalette.borderWidth
+                    topMargin: VisualStyle.borderWidth
+                    leftMargin: VisualStyle.borderWidth
+                    rightMargin: VisualStyle.borderWidth
                 }
                 spacing: 10
 
@@ -91,7 +91,7 @@ ApplicationWindow
 
                 //     width: 1
                 //     height: toolBar.btnHeight - 4
-                //     color: ColorPalette.modalColor
+                //     color: VisualStyle.modalColor
                 // }
                 // Home
                 ToolBarButton {
@@ -153,7 +153,7 @@ ApplicationWindow
 
                     width: 1
                     height: toolBar.btnHeight - 4
-                    color: ColorPalette.modalColor
+                    color: VisualStyle.modalColor
                 }
                 // Table's columns to content size
                 ToolBarButton {
@@ -196,7 +196,7 @@ ApplicationWindow
 
                     width: 1
                     height: toolBar.btnHeight - 4
-                    color: ColorPalette.modalColor
+                    color: VisualStyle.modalColor
                 }
                 // Events
                 ToolBarButton {
@@ -260,25 +260,26 @@ ApplicationWindow
                 right: mainBack.right
             }
             // width: parent.width
-            height: 30 + 2 * ColorPalette.borderWidth
-            color: ColorPalette.toolBarColor
+            height: VisualStyle.tabBar.horizontalHeight + 1 * VisualStyle.borderWidth
+            color: VisualStyle.toolBarColor
 
             CustomTabBar {
                 id: mainTabBarID
 
                 anchors {
                     fill: parent
-                    margins: ColorPalette.borderWidth
+                    margins: VisualStyle.borderWidth
+                    bottomMargin: 0
                 }
 
                 horizontalBar: true
-                cellHeight: 30
-                cellWidth: 125
-                spacing: ColorPalette.borderWidth
+                cellHeight: VisualStyle.tabBar.horizontalHeight
+                cellWidth: VisualStyle.tabBar.horizontalWidth
+                spacing: VisualStyle.tabBar.horizontalSpacing
 
-                color: ColorPalette.toolBarColor
-                selectedColor: "white"// "lightgray" //"#595959"
-                unselectedColor: "#F0F0F0"
+                //color: VisualStyle.toolBarColor
+                //selectedColor: "white"// "lightgray" //"#595959"
+                //unselectedColor: "#F0F0F0"
 
                 model: ListModel {
                     ListElement { title: "Home" }
@@ -306,11 +307,11 @@ ApplicationWindow
                 left: mainBack.left
                 right: mainBack.right
 
-                margins: ColorPalette.borderWidth
+                margins: VisualStyle.borderWidth
                 topMargin: 0
                 bottomMargin: 0
             }
-            color: ColorPalette.backgroundColor1
+            color: VisualStyle.backgroundColor1
 
             // Pages and Property panel
             SplitView {
@@ -470,7 +471,7 @@ ApplicationWindow
                     SplitView.fillWidth: false
                     SplitView.preferredWidth: 250
 
-                    color: ColorPalette.backgroundColor2
+                    color: VisualStyle.backgroundColor1
 
                     // Stack for Panels
                     StackLayout {
@@ -491,7 +492,10 @@ ApplicationWindow
 
                     onWidthChanged: function() {
                         if (width < 80) {
-                            width = 0;
+                            panelStack.visible = false
+                            width = 0
+                        } else if (!panelStack.visible) {
+                            panelStack.visible = true
                         }
                     }
                 }
@@ -591,8 +595,8 @@ ApplicationWindow
     Home.AppProgressBar {
         id: globalProgressBar
 
-        windowColor: "#A9A9A9" // ColorPalette.modalColor
-        windowShadeColor: "#D9D9D9" //ColorPalette.toolBarColor
+        windowColor: VisualStyle.undefinedColor1
+        windowShadeColor: VisualStyle.undefinedColor2
     }
 
     // Common functions

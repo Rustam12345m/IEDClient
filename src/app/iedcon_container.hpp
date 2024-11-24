@@ -30,22 +30,22 @@
 
 namespace App
 {
-    /*
-     * This object holds all stuff associated with IED that was connected to
-     * */
+    /**
+     * @brief This object holds all stuff associated with IED that was connected to
+     */
     class IEDConContainer : public QObject
     {
         Q_OBJECT
     public:
         IEDConContainer() {
-            allocateNewConnection(Cmd::IEDCredentials());
+            createNewConnection(Cmd::IEDCredentials());
         }
 
         bool     isConnected() const {
             return m_api->isConnected();
         }
 
-        void     allocateNewConnection(const Cmd::IEDCredentials &t_cred) {
+        void     createNewConnection(const Cmd::IEDCredentials &t_cred) {
             m_cmdThread.clear();
             m_api.clear();
             m_ied.clear();

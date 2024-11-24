@@ -69,7 +69,7 @@ Item {
             }
             height: rootID.cellEdge
 
-            color: (selected ? ColorPalette.ldColorSelect : ColorPalette.ldColor)
+            color: (selected ? VisualStyle.ldGrid.selColor : VisualStyle.ldGrid.color)
 
             Text {
                 id: ldName
@@ -83,7 +83,7 @@ Item {
                 wrapMode: Text.Wrap
                 elide: Text.ElideRight
 
-                font.bold: true
+                font.bold: VisualStyle.boldHeaderText
                 font.pointSize: 12
                 color: selected ? "white" : "black"
 
@@ -129,7 +129,7 @@ Item {
                             color: model.color
 
                             font.pointSize: 10
-                            font.bold: true
+                            font.bold: VisualStyle.boldHeaderText
                         }
                     }
                 }

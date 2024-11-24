@@ -25,10 +25,11 @@
 
 namespace Core
 {
-    /*
-     * This class holds pointers to current Items and new values for them.
+    /**
+     * @brief This class holds pointers to current Items and new values for them.
+     * 
      * To prevent race conditions, the values of ModelItem must be updated in the GUI thread.
-     * */
+     */
     class ModelStateUpdater
     {
     public:

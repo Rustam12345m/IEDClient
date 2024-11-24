@@ -81,11 +81,13 @@ namespace App::Models
     {
         qDebug() << "Remove from history index: " << t_index;
 
-        beginResetModel();
-        m_con.removeAt(t_index);
-        endResetModel();
+        if (t_index >= 0 && t_index < m_con.size()) {
+            beginResetModel();
+            m_con.removeAt(t_index);
+            endResetModel();
 
-        m_settings.saveHistoryList(m_con);
+            m_settings.saveHistoryList(m_con);
+        }
     }
 
     void HistConTable::slotAppConfigUpdated()

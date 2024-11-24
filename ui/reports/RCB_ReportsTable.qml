@@ -46,7 +46,7 @@ FocusScope
             right: parent.right
         }
 
-        resizableColumns: false
+        // resizableColumns: false
     }
 
     // Table of files on the IED

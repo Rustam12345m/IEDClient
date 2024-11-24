@@ -26,10 +26,10 @@
 
 namespace App::Models
 {
-    /*
-    * This class represents the model for TableView which contains information
-    * about files on the IED
-    * */
+    /**
+     * @brief This class represents the model for TableView which contains information
+     * about files on the IED
+     */
     class IED_FileTable : public QAbstractTableModel
     {
         Q_OBJECT

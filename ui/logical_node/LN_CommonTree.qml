@@ -46,7 +46,7 @@ FocusScope {
             right: parent.right
         }
         boundsBehavior: Flickable.StopAtBounds
-        resizableColumns: false
+        // resizableColumns: false
 
         syncView: treeViewID
 

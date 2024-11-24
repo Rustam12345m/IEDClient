@@ -49,7 +49,7 @@ Item
             right: parent.right
         }
 
-        resizableColumns: false
+        // resizableColumns: false
     }
 
     // Table of DO for a selected LN

@@ -53,10 +53,10 @@ FocusScope
 
             leftSide: true
             cellWidth: 30
-            color: ColorPalette.toolBarColor
+            color: VisualStyle.toolBarColor
 
-            selectedColor: "white"
-            unselectedColor: ColorPalette.toolBarColor
+            //selectedColor: "white"
+            //unselectedColor: VisualStyle.toolBarColor
 
             model: ListModel {
                 ListElement { title: "BRCB" }
@@ -84,7 +84,7 @@ FocusScope
             top: parent.top
         }
 
-        resizableColumns: false
+        // resizableColumns: false
     }
 
     // Table of RCB on the IED

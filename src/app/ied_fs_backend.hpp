@@ -27,9 +27,9 @@
 
 namespace App
 {
-    /*
-    * Presenter of Filesystem on IED for QML page
-    * */
+    /**
+     * @brief Presenter of Filesystem on IED for QML page
+     */
     class IED_FS_Backend : public BackendInterface
     {
         Q_OBJECT

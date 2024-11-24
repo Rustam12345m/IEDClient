@@ -38,7 +38,7 @@ namespace Core
             return m_value;
         }
 
-        bool operator==(const ModelItemValue &t_other) {
+        bool operator==(const ModelItemValue &t_other) const {
             return (m_value == t_other.m_value);
         }
 
@@ -50,9 +50,9 @@ namespace Core
         QString     m_value;
     };
 
-    /*
+    /**
      * This class helps to fetch a full value for a ModelItem that contains all sub values
-     * */
+     */
     class ModelItem;
     class ModelItemFullValue
     {

@@ -62,7 +62,7 @@ FocusScope
             SplitView.preferredWidth: 300
             SplitView.fillWidth: false
 
-            color: ColorPalette.backgroundColor2
+            color: VisualStyle.backgroundColor2
 
             // Table
             LN_OverviewTable {
@@ -90,7 +90,7 @@ FocusScope
             SplitView.minimumWidth: 200
             SplitView.fillWidth: true
 
-            color: ColorPalette.backgroundColor1
+            color: VisualStyle.backgroundColor1
 
             // Different view pages for the LN
             StackLayout {
@@ -145,10 +145,10 @@ FocusScope
                     anchors.fill: parent
 
                     cellWidth: 30
-                    color: ColorPalette.toolBarColor
+                    color: VisualStyle.toolBarColor
 
-                    selectedColor: "white"
-                    unselectedColor: ColorPalette.toolBarColor
+                    //selectedColor: "white"
+                    //unselectedColor: VisualStyle.toolBarColor
 
                     model: ListModel {
                         ListElement { title: "State" }

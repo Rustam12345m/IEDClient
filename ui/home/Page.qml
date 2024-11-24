@@ -45,7 +45,7 @@ FocusScope
     Rectangle {
         anchors.fill: parent
 
-        color: ColorPalette.backgroundColor1
+        color: VisualStyle.backgroundColor1
 
         // mini-window
         Rectangle {
@@ -55,8 +55,8 @@ FocusScope
             width: 800
             height: 400
 
-            border.width: ColorPalette.borderWidth
-            border.color: ColorPalette.modalColor
+            border.width: VisualStyle.borderWidth
+            border.color: VisualStyle.modalColor
 
             // Connect properties
             Rectangle {
@@ -70,7 +70,7 @@ FocusScope
                 }
 
                 height: 50
-                color: ColorPalette.modalColor
+                color: VisualStyle.modalColor
 
                 MouseArea {
                     anchors.fill: parent
@@ -96,7 +96,7 @@ FocusScope
                         color: "white"
 
                         font.pixelSize: 14
-                        font.bold: true
+                        font.bold: VisualStyle.boldHeaderText
 
                         horizontalAlignment: Text.AlignRight
                         verticalAlignment: Text.AlignVCenter
@@ -141,7 +141,7 @@ FocusScope
                         color: "white"
 
                         font.pixelSize: 14
-                        font.bold: true
+                        font.bold: VisualStyle.boldHeaderText
 
                         horizontalAlignment: Text.AlignRight
                         verticalAlignment: Text.AlignVCenter
@@ -186,7 +186,7 @@ FocusScope
                         color: "white"
 
                         font.pixelSize: 14
-                        font.bold: true
+                        font.bold: VisualStyle.boldHeaderText
 
                         horizontalAlignment: Text.AlignRight
                         verticalAlignment: Text.AlignVCenter
@@ -207,7 +207,7 @@ FocusScope
                             // color: "white"
 
                             font.pixelSize: 14
-                            font.bold: true
+                            font.bold: VisualStyle.boldHeaderText
 
                             KeyNavigation.backtab: portInput
                             KeyNavigation.tab: userNameInput
@@ -296,7 +296,7 @@ FocusScope
                         text: qsTr("Connect")
 
                         font.pixelSize: 14
-                        font.bold: true
+                        font.bold: VisualStyle.boldHeaderText
 
                         icon.source: "qrc:/img/icons/call.svg"
 
@@ -326,6 +326,8 @@ FocusScope
                     margins: parent.border.width
                     topMargin: 0
                 }
+
+                color: VisualStyle.backgroundColor1
 
                 ConnectHistoryTable {
                     anchors.fill: parent

@@ -27,9 +27,9 @@
 
 namespace App::Models
 {
-    /*
-     * ListModel with properties for the selected LD
-     * */
+    /**
+     * @brief ListModel with properties for the selected LD
+     */
     class LD_PropertiesTable : public QAbstractListModel
     {
         Q_OBJECT

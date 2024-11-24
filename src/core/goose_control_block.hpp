@@ -27,9 +27,9 @@
 
 namespace Core
 {
-    /*
-     * Representation a ReportControlBlock of LD
-     * */
+    /**
+     * @brief Representation a ReportControlBlock of LD
+     */
     class GooseControlBlock : public QObject, public ModelItem
     {
         Q_OBJECT

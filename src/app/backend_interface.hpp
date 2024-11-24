@@ -38,9 +38,9 @@
 
 namespace App
 {
-    /*
-     * Interface for all Backends
-     * */
+    /**
+     * @brief Interface for all Backends
+     */
     class BackendInterface : public QObject
     {
         Q_OBJECT

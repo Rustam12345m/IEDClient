@@ -42,7 +42,7 @@ namespace App
         const auto ied() const { return m_iedName; }
         const auto date() const { return m_date; }
 
-        bool operator==(const ConfConnectionInfo &t_right) {
+        bool operator==(const ConfConnectionInfo &t_right) const {
             return m_creds == t_right.m_creds;
         }
 

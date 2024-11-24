@@ -25,10 +25,11 @@
 
 namespace Core
 {
-    /*
-     * Representation a Data Object of Logical Node
-     * DO have several DA in different FC
-     * */
+    /**
+     * @brief Representation a Data Object of Logical Node
+     *
+     * (DO have several DA in different FC)
+     */
     class DataObject : public ModelItem
     {
     public:

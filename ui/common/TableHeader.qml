@@ -46,8 +46,8 @@ HorizontalHeaderView
         implicitWidth: Math.max(labelID.implicitWidth + 10, defDelegateWidth)
         implicitHeight: defDelegateHeight
 
-        border.color: ColorPalette.tableRowBorderColor2
-        color: ColorPalette.tableHeaderColor
+        border.color: VisualStyle.table.rowBorderColor2
+        color: VisualStyle.table.headerColor
         clip: true
 
         Text {
@@ -60,8 +60,8 @@ HorizontalHeaderView
             rightPadding: 8
             leftPadding: 8
 
-            color: ColorPalette.tableTextColor
-            font.bold: true
+            color: VisualStyle.table.headerTextColor
+            font.bold: VisualStyle.boldHeaderText
             focus: false
 
             text: model.display

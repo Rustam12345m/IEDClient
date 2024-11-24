@@ -51,3 +51,4 @@ target_link_libraries(models_lib PUBLIC core_lib cmd_lib)
 target_link_libraries(models_lib PUBLIC Qt6::Core)
 
 target_include_directories(models_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+

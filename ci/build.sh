@@ -100,6 +100,7 @@ while [ "$1" != "" ]; do
             ;;
         --hack )
             simple_rebuild
+            ;;
         --clean )
             clean_all
             ;;
@@ -107,4 +108,3 @@ while [ "$1" != "" ]; do
     shift
 done
 
-exit 0

@@ -78,9 +78,10 @@ Thumbs.db
 # Project's files
 bin/
 build*/
+install/
 artifacts/
-3rdparty/
 .vscode/
+tmp/
 
 # Tmp
 *.dtmp

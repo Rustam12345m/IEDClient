@@ -30,10 +30,10 @@ Rectangle
 
     required property bool pressed
 
-    implicitWidth: ColorPalette.delimeterWidth
-    width: ColorPalette.delimeterWidth
+    implicitWidth: VisualStyle.delimeterWidth
+    width: VisualStyle.delimeterWidth
 
-    color: rootID.pressed ? "#707070" : ColorPalette.borderColor
+    color: rootID.pressed ? "#707070" : VisualStyle.borderColor
 
     Rectangle {
         anchors.centerIn: parent
@@ -47,7 +47,7 @@ Rectangle
     }
 
     containmentMask: Item {
-        width: ColorPalette.delimeterWidth
+        width: VisualStyle.delimeterWidth
         height: rootID.height
     }
 }
