@@ -25,9 +25,9 @@
 
 namespace Cmd
 {
-    /*
-     * This class realizes downloading file from the IED
-     * */
+    /**
+     * @brief This class realizes downloading file from the IED
+     */
     class DownloadFileCmd : public CmdInterface
     {
         Q_OBJECT

@@ -48,7 +48,7 @@ namespace Cmd
         const auto login() const { return m_login; }
         const auto password() const { return m_password; }
 
-        bool operator==(const IEDCredentials &t_right) {
+        bool operator==(const IEDCredentials &t_right) const {
             return (m_ip == t_right.m_ip)
                     && (m_port == t_right.m_port)
                     && (m_tls == t_right.m_tls)

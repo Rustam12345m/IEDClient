@@ -27,9 +27,9 @@
 
 namespace Core
 {
-    /*
-     * Representation a ReportControlBlock of LD
-     * */
+    /**
+     * @brief Representation a ReportControlBlock of LD
+     */
     class SV_ControlBlock : public QObject, public ModelItem
     {
         Q_OBJECT

@@ -28,9 +28,9 @@ Rectangle
 {
     id: rootID
 
-    height: 24
+    height: VisualStyle.statusBar.height
 
-    color: ColorPalette.statusBarColor
+    color: VisualStyle.statusBar.color
     clip: true
 
     property alias msgStatusText: msgStatusTextID.text
@@ -57,6 +57,7 @@ Rectangle
             verticalAlignment: Text.AlignVCenter
 
             text: ""
+            color: VisualStyle.statusBar.textColor
 
             onTextChanged: {
                 if (msgStatusTextID.text != "") {
@@ -69,7 +70,7 @@ Rectangle
 
             width: 1
             height: parent.height - 4
-            color: ColorPalette.modalColor
+            color: VisualStyle.modalColor
         }
         Text {
             Layout.fillWidth: false
@@ -82,8 +83,8 @@ Rectangle
             horizontalAlignment: Text.AlignHCenter //Left
             verticalAlignment: Text.AlignVCenter
 
-            font.bold: false
-            color: ColorPalette.textColor
+            font.bold: VisualStyle.boldHeaderText
+            color: VisualStyle.statusBar.textColor
             text: ""
         }
         Rectangle {
@@ -91,7 +92,7 @@ Rectangle
 
             width: 1
             height: parent.height - 4
-            color: ColorPalette.modalColor
+            color: VisualStyle.modalColor
         }
         Row {
             height: parent.height
@@ -105,6 +106,7 @@ Rectangle
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter
 
+                color: VisualStyle.statusBar.textColor
                 text: appConnStatus.text
             }
             Led {
@@ -112,7 +114,9 @@ Rectangle
 
                 height: 20
                 width: 20
-                color: appConnStatus.isConnected ? "green" : "gray"
+                color: appConnStatus.isConnected
+                       ? VisualStyle.statusBar.connectedColor
+                       : VisualStyle.statusBar.disconnectedColor
             }
         }
     }

@@ -49,15 +49,15 @@ Item
         section.delegate: Rectangle {
             width: ldPropertyList.width
             height: defRowHeight
-            color: ColorPalette.tableHeaderColor
-            border.color: ColorPalette.tableRowBorderColor2
+            color: VisualStyle.table.headerColor
+            border.color: VisualStyle.table.rowBorderColor2
 
             clip: true
 
             Text {
                 text: section
                 anchors.centerIn: parent
-                font.bold: true
+                font.bold: VisualStyle.boldHeaderText
             }
         }
 
@@ -79,8 +79,10 @@ Item
                         height: defRowHeight
 
                         border.width: 1
-                        border.color: ColorPalette.tableRowBorderColor2
-                        color: (index === ldPropertyList.selectedIndex) ? ColorPalette.tableRowColor1 : ColorPalette.tableRowColor2
+                        border.color: VisualStyle.table.rowBorderColor2
+                        color: (index === ldPropertyList.selectedIndex)
+                               ? VisualStyle.table.selRowColor
+                               : VisualStyle.table.rowColor1
 
                         Text {
                             id: textName
@@ -97,9 +99,11 @@ Item
                     }
                     Rectangle {
                         border.width: 1
-                        border.color: ColorPalette.tableRowBorderColor2
+                        border.color: VisualStyle.table.rowBorderColor2
 
-                        color: (index === ldPropertyList.selectedIndex) ? ColorPalette.tableRowColor1 : ColorPalette.tableRowColor2
+                        color: (index === ldPropertyList.selectedIndex)
+                               ? VisualStyle.table.selRowColor
+                               : VisualStyle.table.rowColor1
                         clip: true
 
                         Layout.fillWidth: true

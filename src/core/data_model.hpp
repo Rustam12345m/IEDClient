@@ -25,9 +25,9 @@
 
 namespace Core
 {
-    /*
-     * Representation of a model available by MMS of an IED
-     * */
+    /**
+     * @brief Representation of a model available by MMS of an IED
+     */
     class DataModel : public ModelItem
     {
     public:

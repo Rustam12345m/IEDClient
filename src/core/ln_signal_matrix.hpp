@@ -29,9 +29,6 @@ namespace Core
     class DataObject;
     class LogicalNode;
 
-    /*
-     * 
-     * */
     class SignalMatrixRow
     {
     public:
@@ -83,8 +80,8 @@ namespace Core
         friend class LN_SignalMatrixBuilder;
     };
 
-    /*
-     * Representation Logical Node as a Table by particular FC or their combination
+    /**
+     * @brief Representation Logical Node as a Table by particular FC or their combination
      * 1. ST + MX + DC(d)
      * 2. CO
      * 3. CF + SG ?
@@ -96,7 +93,7 @@ namespace Core
      * - Quality
      * - Timestamp
      * - Description
-     * */
+     */
     class LN_SignalMatrix
     {
     public:
@@ -161,9 +158,9 @@ namespace Core
     friend class LN_SignalMatrixBuilder;
     };
 
-    /*
-     * SignalsTable's builder
-     * */
+    /**
+     * @brief SignalsTable's builder
+     */
     class LN_SignalMatrixBuilder
     {
     public:

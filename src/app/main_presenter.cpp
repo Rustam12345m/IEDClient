@@ -63,7 +63,7 @@ namespace App
         qDebug() << "MainPresenter: Connect cmd";
 
         Cmd::IEDCredentials cred(t_data);
-        m_con.allocateNewConnection(cred);
+        m_con.createNewConnection(cred);
 
         auto cmd = Cmd::ConnectCmd::create(m_con.m_cred, m_con.m_ied);
 

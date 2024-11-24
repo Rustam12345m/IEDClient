@@ -29,9 +29,9 @@
 
 namespace Core
 {
-    /*
-     * Representation of all data for this IED
-     * */
+    /**
+     * @brief Representation of all data for this IED
+     */
     class IED
     {
     public:

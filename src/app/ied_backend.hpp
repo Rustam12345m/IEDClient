@@ -36,9 +36,9 @@
 
 namespace App
 {
-    /*
-     * Presenter for LD, LN, DO table in QML
-     * */
+    /**
+     * @brief Presenter for LD, LN, DO table in QML
+     */
     class IED_Backend : public BackendInterface
     {
         Q_OBJECT

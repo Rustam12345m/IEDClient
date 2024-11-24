@@ -38,8 +38,8 @@ Item
         anchors.fill: parent
 
         border.width: 1
-        border.color: ColorPalette.tableRowBorderColor2
-        color: (selected ? ColorPalette.tableRowColor1 : ColorPalette.tableRowColor2)
+        border.color: VisualStyle.table.rowBorderColor2
+        color: (selected ? VisualStyle.table.rowColor1 : VisualStyle.table.rowColor2)
 
         Row {
             anchors {

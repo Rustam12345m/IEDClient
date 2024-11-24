@@ -26,9 +26,9 @@
 
 namespace Cmd
 {
-    /*
-     * This CMD is needed to update status signals of LN0 for all LDs
-     * */
+    /**
+     * @brief This CMD is needed to update status signals of LN0 for all LDs
+     */
     class UpdateLDs_StatusCmd : public CmdInterface
     {
         Q_OBJECT

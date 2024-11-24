@@ -38,8 +38,8 @@ Item {
     Rectangle {
         anchors.fill: parent
 
-        border.color: ColorPalette.tableRowBorderColor2
-        color: (selected ? ColorPalette.tableRowColor1 : ColorPalette.tableRowColor2)
+        border.color: VisualStyle.table.rowBorderColor2
+        color: (selected ? VisualStyle.table.selRowColor : VisualStyle.table.rowColor1)
 
         Text {
             id: textFild

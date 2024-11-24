@@ -10,7 +10,7 @@
         <file>home/NavigationGrid.qml</file>
 
         <file>singletons/Globals.qml</file>
-        <file>singletons/ColorPalette.qml</file>
+        <file>singletons/VisualStyle.qml</file>
 
         <file>common/ToolBarButton.qml</file>
         <file>common/TextDelegate.qml</file>

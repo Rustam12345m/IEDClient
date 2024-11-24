@@ -29,9 +29,9 @@
 
 namespace App
 {
-    /*
-    * Presenter of other application related data and tables
-    * */
+    /**
+     * @brief Presenter of other application related data and tables
+     */
     class AppBackend : public BackendInterface
     {
         Q_OBJECT

@@ -26,9 +26,6 @@
 
 namespace Cmd
 {
-    /*
-     * 
-     * */
     class UpdateLNode_Cmd : public CmdInterface
     {
         Q_OBJECT

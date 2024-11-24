@@ -20,7 +20,7 @@
  * */
 
 #include "app_backend.hpp"
-#include "builder_information.hpp"
+#include "version.hpp"
 
 #include <QVersionNumber>
 

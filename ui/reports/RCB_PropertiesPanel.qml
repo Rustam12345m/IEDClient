@@ -60,7 +60,7 @@ Item
                 Text {
                     anchors.fill: parent
 
-                    font.bold: true
+                    font.bold: VisualStyle.boldHeaderText
                     //font.pixelSize: 16
 
                     horizontalAlignment: Text.AlignHCenter
@@ -79,7 +79,7 @@ Item
                     height: defRowHeight
 
                     text: "ID"
-                    horizontalAlignment: Text.AlignRight// AlignHCenter
+                    horizontalAlignment: Text.AlignRight
                     verticalAlignment: Text.AlignVCenter
                 }
                 TextField {
@@ -128,7 +128,7 @@ Item
                 Text {
                     anchors.fill: parent
 
-                    font.bold: true
+                    font.bold: VisualStyle.boldHeaderText
                     //font.pixelSize: 16
 
                     horizontalAlignment: Text.AlignHCenter
@@ -195,7 +195,7 @@ Item
                 Text {
                     anchors.fill: parent
 
-                    font.bold: true
+                    font.bold: VisualStyle.boldHeaderText
                     //font.pixelSize: 16
 
                     horizontalAlignment: Text.AlignHCenter

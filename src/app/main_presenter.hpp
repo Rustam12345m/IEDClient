@@ -30,9 +30,9 @@
 
 namespace App
 {
-    /*
-     * MainPresenter for QML contains specific backends like FS, LD
-     * */
+    /**
+     * @brief MainPresenter for QML contains specific backends like FS, LD
+     */
     class MainPresenter : public QObject
     {
         Q_OBJECT

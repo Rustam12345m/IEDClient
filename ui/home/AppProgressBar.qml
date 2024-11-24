@@ -23,6 +23,8 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
+import AppStylesModule
+
 Rectangle
 {
     property var windowColor: "lightgray"
@@ -62,9 +64,9 @@ Rectangle
                     horizontalAlignment: Text.AlignHCenter
 
                     id: progressText
-                    font.bold: true
+                    font.bold: VisualStyle.boldHeaderText
                     font.pixelSize: 16
-                    color: "black"
+                    color: VisualStyle.undefinedColor1
 
                     text: "Please, wait..."
                 }
@@ -87,7 +89,7 @@ Rectangle
                         z: 1
 
                         text: ""
-                        color: "black"
+                        color: VisualStyle.undefinedColor1
                     }
                 }
             }

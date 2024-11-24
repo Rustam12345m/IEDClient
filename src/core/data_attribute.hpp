@@ -56,10 +56,11 @@ namespace Core
         UNDEFINED = -1
     };
 
-    /*
-     * Representation of a Data Attribute of Data Object
+    /**
+     * @brief Representation of a Data Attribute of Data Object
+     * 
      * Has important FunctionConstrain = FC
-     * */
+     */
     class DataAttribute : public ModelItem
     {
     public:

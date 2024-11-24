@@ -31,18 +31,22 @@ namespace Core
     class ModelItem;
     class ModelStateUpdater;
 
-    /*
-     * This is a basic class for all elements in the data model of an IED.
+    /**
+     * @class ModelItem
+     * #brief A basic class for all elements in the data model of an IED.
+     *
      * The data model represents a graph with leaves as this Item. Each Item can hold other Items as leaves.
      * The Item's value must be updated either in the GUI thread using signals/slots or by locking a QMutex.
-     * */
+     */
     class ModelItem
     {
     public:
         using ptr = QSharedPointer< ModelItem >;
         using ptrList = QSharedPointer< QList< ModelItem* > >;
 
-        ModelItem(ModelItem *t_parent, const QString &t_name) : m_parent(t_parent), m_name(t_name) {}
+        ModelItem(ModelItem *t_parent, const QString &t_name)
+            : m_parent(t_parent), m_name(t_name)
+        {}
         ModelItem() = delete;
         virtual ~ModelItem() {}
 

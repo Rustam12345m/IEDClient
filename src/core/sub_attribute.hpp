@@ -25,8 +25,8 @@
 
 namespace Core
 {
-    /*
-     * Representation of Sub-Attribute of Data Attribute
+    /**
+     * @brief Representation of Sub-Attribute of Data Attribute
      * simpleIOGenericIO/GGIO1.SPCSO1.stVal
      * simpleIOGenericIO/GGIO1.AnIn1.mag.f
      *
@@ -34,7 +34,7 @@ namespace Core
      * DA: stVal, mag
      * DO: SPCSO1, AnIn1
      * LN: GGIO1
-     * */
+     */
     class SubAttribute: public ModelItem
     {
     public:

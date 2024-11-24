@@ -25,9 +25,9 @@
 
 namespace Core
 {
-    /*
-     * Representation a ReportControlBlock of LD
-     * */
+    /**
+     * @brief Representation a ReportControlBlock of LD
+     */
     class ReportBlock : public ModelItem
     {
     public:

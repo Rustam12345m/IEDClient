@@ -63,14 +63,14 @@ FocusScope
         section.delegate: Rectangle {
             width: listViewID.width
             height: defRowHeight
-            color: ColorPalette.tableHeaderColor
-            border.color: ColorPalette.tableRowBorderColor2
+            color: VisualStyle.table.headerColor
+            border.color: VisualStyle.table.rowBorderColor2
 
             clip: true
 
             Text {
                 anchors.centerIn: parent
-                font.bold: true
+                font.bold: VisualStyle.boldHeaderText
 
                 text: section
             }
@@ -92,11 +92,11 @@ FocusScope
                         height: defRowHeight
 
                         border.width: 1
-                        border.color: ColorPalette.tableRowBorderColor2
+                        border.color: VisualStyle.table.rowBorderColor2
 
                         clip: true
                         // color: (index === listViewID.selectedIndex) ? "lightgray" : "white"
-                        color: (index === listViewID.selectedIndex) ? ColorPalette.tableRowColor1 : ColorPalette.tableRowColor2
+                        color: (index === listViewID.selectedIndex) ? VisualStyle.table.rowColor1 : VisualStyle.table.rowColor2
 
                         Text {
                             id: textName
@@ -117,11 +117,11 @@ FocusScope
                         height: defRowHeight
 
                         border.width: 1
-                        border.color: ColorPalette.tableRowBorderColor2
+                        border.color: VisualStyle.table.rowBorderColor2
 
                         clip: true
                         // color: (index === listViewID.selectedIndex) ? "lightgray" : "white"
-                        color: (index === listViewID.selectedIndex) ? ColorPalette.tableRowColor1 : ColorPalette.tableRowColor2
+                        color: (index === listViewID.selectedIndex) ? VisualStyle.table.rowColor1 : VisualStyle.table.rowColor2
 
                         Text {
                             id: textValue

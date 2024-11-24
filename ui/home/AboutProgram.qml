@@ -23,8 +23,6 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-import AppStylesModule
-
 Window
 {
     id: rootID
@@ -70,7 +68,7 @@ Window
         Rectangle {
             Layout.preferredWidth: parent.width - 4
             Layout.preferredHeight: 1
-            color: ColorPalette.modalColor
+            color: "white"
         }
         Item {
             Layout.preferredWidth: parent.width

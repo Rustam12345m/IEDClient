@@ -57,7 +57,7 @@ Item
         id: headerID
 
         focus: false
-        resizableColumns: false
+        // resizableColumns: false
 
         anchors {
             top: parent.top
