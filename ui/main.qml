@@ -66,13 +66,14 @@ ApplicationWindow
                 left: mainBack.left
                 right: mainBack.right
             }
-            // width: parent.width
-            height: 30 + 4
+            // height: 30 + 4
+            visible: false
+            height: 0
 
             color: VisualStyle.toolBarColor
             clip: true
 
-            // Menu + ToolBar
+            // ToolBar
             RowLayout {
                 readonly property int btnHeight: 30
                 id: toolBar
@@ -83,7 +84,7 @@ ApplicationWindow
                     leftMargin: VisualStyle.borderWidth
                     rightMargin: VisualStyle.borderWidth
                 }
-                spacing: 10
+                spacing: 4
 
                 // Delimiter
                 // Rectangle {
@@ -156,19 +157,19 @@ ApplicationWindow
                     color: VisualStyle.modalColor
                 }
                 // Table's columns to content size
-                ToolBarButton {
-                    Layout.alignment: Qt.AlignVCenter
-                    width: toolBar.btnHeight
-                    height: toolBar.btnHeight
+                // ToolBarButton {
+                //     Layout.alignment: Qt.AlignVCenter
+                //     width: toolBar.btnHeight
+                //     height: toolBar.btnHeight
 
-                    icon: "qrc:/img/icons/code.svg"
-                    prompt: "Set appropriate width for columns"
+                //     icon: "qrc:/img/icons/code.svg"
+                //     prompt: "Set appropriate width for columns"
 
-                    onSigClicked: function() {
-                        console.log("Clicked: " + prompt)
-                        rootWindowID.resizeColumnsOnPage()
-                    }
-                }
+                //     onSigClicked: function() {
+                //         console.log("Clicked: " + prompt)
+                //         rootWindowID.resizeColumnsOnPage()
+                //     }
+                // }
                 // Update
                 ToolBarButton {
                     Layout.alignment: Qt.AlignVCenter
@@ -199,24 +200,24 @@ ApplicationWindow
                     color: VisualStyle.modalColor
                 }
                 // Events
-                ToolBarButton {
-                    Layout.alignment: Qt.AlignVCenter
-                    width: toolBar.btnHeight
-                    height: toolBar.btnHeight
+                // ToolBarButton {
+                //     Layout.alignment: Qt.AlignVCenter
+                //     width: toolBar.btnHeight
+                //     height: toolBar.btnHeight
 
-                    icon: "qrc:/img/icons/terminal.svg"
-                    prompt: "Event logger"
-                    visible: presenter.isConnected
+                //     icon: "qrc:/img/icons/terminal.svg"
+                //     prompt: "Event logger"
+                //     visible: presenter.isConnected
 
-                    onSigClicked: function() {
-                        console.log("Clickerd: ", prompt)
-                        openEventLog()
-                    }
-                    Shortcut {
-                        sequence: "Ctrl+E"
-                        onActivated: openEventLog()
-                    }
-                }
+                //     onSigClicked: function() {
+                //         console.log("Clickerd: ", prompt)
+                //         openEventLog()
+                //     }
+                //     Shortcut {
+                //         sequence: "Ctrl+E"
+                //         onActivated: openEventLog()
+                //     }
+                // }
                 // About
                 ToolBarButton {
                     Layout.alignment: Qt.AlignVCenter
@@ -268,7 +269,8 @@ ApplicationWindow
 
                 anchors {
                     fill: parent
-                    margins: VisualStyle.borderWidth
+                    margins: 0 //VisualStyle.borderWidth
+                    // topMargin: 0
                     bottomMargin: 0
                 }
 
@@ -277,9 +279,9 @@ ApplicationWindow
                 cellWidth: VisualStyle.tabBar.horizontalWidth
                 spacing: VisualStyle.tabBar.horizontalSpacing
 
-                //color: VisualStyle.toolBarColor
-                //selectedColor: "white"// "lightgray" //"#595959"
-                //unselectedColor: "#F0F0F0"
+                // color: VisualStyle.toolBarColor
+                // selectedColor: VisualStyle.tabBar.selColor
+                // unselectedColor: VisualStyle.tabBar.unselColor
 
                 model: ListModel {
                     ListElement { title: "Home" }
@@ -307,7 +309,7 @@ ApplicationWindow
                 left: mainBack.left
                 right: mainBack.right
 
-                margins: VisualStyle.borderWidth
+                margins: 0 //VisualStyle.borderWidth
                 topMargin: 0
                 bottomMargin: 0
             }
@@ -346,6 +348,7 @@ ApplicationWindow
 
                         Home.Page {
                             id: startPage
+
                             focus: true
 
                             onVisibleChanged: {
@@ -517,7 +520,14 @@ ApplicationWindow
         }
 
         Keys.onPressed: function(event) {
-            // console.log("Window: Key pressed " + event.key)
+            console.log("Window: Key pressed " + event.key)
+
+            // About
+            if (event.key == Qt.Key_F1) {
+                showAbotProgramWindow()
+                event.accepted = true
+                return
+            }
 
             // Update
             if (event.key == Qt.Key_F5) {
@@ -599,6 +609,31 @@ ApplicationWindow
         windowShadeColor: VisualStyle.undefinedColor2
     }
 
+    SubWindow {
+        id: aboutSubWindowID
+        visible: false
+
+        anchors.centerIn: parent
+        width: 600
+        height: 300
+
+        title: "About Program"
+        color: VisualStyle.modalColor// tabBar.unselColor
+        borderColor: "black" //VisualStyle.backgroundColor1
+
+        contentArea: Column {
+            spacing: 10
+            anchors.fill: parent
+            Text { text: "Program Name: MyApp" }
+            Text { text: "Version: 1.0.0" }
+            Text { text: "Author: You" }
+        }
+
+        onSigClicked: function() {
+            aboutSubWindowID.visible = false
+        }
+    }
+
     // Common functions
     function openEventLog() {
         var logsComponent = Qt.createComponent("home/AppEventViewer.qml")
@@ -615,9 +650,7 @@ ApplicationWindow
         }
     }
     function showAbotProgramWindow() {
-        var aboutComponent = Qt.createComponent("home/AboutProgram.qml")
-        var aboutWindow = aboutComponent.createObject(rootWindowID)
-        aboutWindow.show()
+        aboutSubWindowID.visible = true
     }
 
     // Active Page + Panel
@@ -676,7 +709,7 @@ ApplicationWindow
 
     // Process
     function updateActivePage() {
-        console.log("F5: Update active page")
+        // console.log("F5: Update active page")
 
         switch (mainStackID.currentIndex) {
         case Globals.Page.START: {

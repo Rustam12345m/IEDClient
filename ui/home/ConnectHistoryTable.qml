@@ -107,11 +107,11 @@ FocusScope
 
         Keys.onPressed: function(event) {
             console.log("ConHistoryTable: " + event.key)
-
-            // Current row
-            appBackend.lastConnList.removeFromHistory(tableID.currentRow)
-
-            event.accepted = false
+            if (event.key == Qt.Key_Delete) {
+                // Current row
+                appBackend.lastConnList.removeFromHistory(tableID.currentRow)
+                event.accepted = false
+            }
         }
     }
 }

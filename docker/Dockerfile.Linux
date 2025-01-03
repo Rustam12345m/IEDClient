@@ -25,7 +25,7 @@ RUN apt-get update && apt-get install -y \
     qml6-module-qtquick-layouts \
     qml6-module-qtquick-window \
     qt6-tools-dev-tools \
-    qt6-linguist-dev qt6-svg-dev qt6-tools-dev \
+    qt6-svg-dev qt6-tools-dev \
     libxkbcommon-dev ninja-build
 
 # AppImage stuff
