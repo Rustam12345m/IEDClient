@@ -20,6 +20,7 @@
         <file>common/TableHeader.qml</file>
         <file>common/CustomTabBar.qml</file>
         <file>common/AppStatusBar.qml</file>
+        <file>common/SubWindow.qml</file>
 
         <file>dataset/DS_OverviewTable.qml</file>
         <file>dataset/DS_StateTable.qml</file>

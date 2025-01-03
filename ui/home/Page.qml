@@ -29,7 +29,7 @@ import AppStylesModule
 
 import "qrc:/common/"
 
-FocusScope
+Item
 {
     id: rootID
 
@@ -40,42 +40,61 @@ FocusScope
         ipAddrInput.text = ip
         portInput.text = port
     }
+    width: parent.width
+    height: parent.height
 
-    // Page rectangle (screen)
-    Rectangle {
-        anchors.fill: parent
+    SubWindow {
+        id: miniWindowID
 
-        color: VisualStyle.backgroundColor1
+        anchors.centerIn: parent
+        width: 800
+        height: 400
 
-        // mini-window
-        Rectangle {
-            id: miniWindowID
+        title: "Connect to IED"
+        color: VisualStyle.modalColor// tabBar.unselColor
+        borderColor: "black" 
 
-            //anchors.centerIn: parent
-            width: 800
-            height: 400
+        contentArea: Rectangle {
+            anchors.fill: parent
 
-            border.width: VisualStyle.borderWidth
-            border.color: VisualStyle.modalColor
+            // History connect table
+            Rectangle {
+                id: histTableID
 
-            // Connect properties
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    top: parent.top
+                    bottom: connectToDevBarID.top
+                    margins: 0//parent.border.width
+                }
+
+                color: VisualStyle.backgroundColor2
+
+                ConnectHistoryTable {
+                    anchors.fill: parent
+
+                    onSigDeviceSelected: function(t_ip, t_port) {
+                        ipAddrInput.text = t_ip
+                        portInput.text = t_port
+                    }
+                }
+            }
+            // Input for new connection
             Rectangle {
                 id: connectToDevBarID
 
                 anchors {
                     left: parent.left
                     right: parent.right
-                    top: parent.top
-                    margins: parent.border.width
+                    // top: histTableID.bottom
+                    bottom: parent.bottom
+                    margins: 0 // parent.border.width
+                    topMargin: 0
                 }
 
                 height: 50
                 color: VisualStyle.modalColor
-
-                MouseArea {
-                    anchors.fill: parent
-                    drag.target: miniWindowID
-                }
 
                 RowLayout {
                     anchors.fill: parent
@@ -273,7 +292,7 @@ FocusScope
                             echoMode: TextField.Password
 
                             font.pixelSize: 14
-                            
+
                             verticalAlignment: Text.AlignVCenter
                             leftPadding: 4
 
@@ -316,43 +335,13 @@ FocusScope
                     }
                 }
             }
-            // History connect table
-            Rectangle {
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                    top: connectToDevBarID.bottom
-                    bottom: parent.bottom
-                    margins: parent.border.width
-                    topMargin: 0
-                }
 
-                color: VisualStyle.backgroundColor1
-
-                ConnectHistoryTable {
-                    anchors.fill: parent
-
-                    onSigDeviceSelected: function(t_ip, t_port) {
-                        ipAddrInput.text = t_ip
-                        portInput.text = t_port
-                    }
+            Keys.onPressed: function(event) {
+                console.log("HomePage: Key pressed " + event.key)
+                if (event.key == Qt.Key_Return || event.key == Qt.Key_Enter) {
+                    connButton.onClicked()
                 }
             }
         }
-    }
-
-    Keys.onPressed: function(event) {
-        // console.log("HomePage: Key pressed " + event.key)
-        if (event.key == Qt.Key_Return || event.key == Qt.Key_Enter) {
-            connButton.onClicked()
-        }
-    }
-
-    onWidthChanged: moveToCenter()
-    onHeightChanged: moveToCenter()
-
-    function moveToCenter() {
-        miniWindowID.x = (rootID.width - miniWindowID.width) / 2
-        miniWindowID.y = (rootID.height - miniWindowID.height) / 2
     }
 }

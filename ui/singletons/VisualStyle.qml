@@ -40,7 +40,7 @@ QtObject
     property color toolBarColor:            "#005f87"
 
     // Modal
-    property color modalColor:              "#005f87"
+    property color modalColor:              "#0087af"// "#005f87"
 
     // StatusBar
     property QtObject statusBar: QtObject {
