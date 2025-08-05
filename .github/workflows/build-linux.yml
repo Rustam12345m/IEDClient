@@ -8,13 +8,52 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
+      with:
+        submodules: true
+        fetch-depth: 0 
+        recursive: true 
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
 
     - name: Build Docker image
-      run: docker build -f Dockerfile.linux -t iedclient:linux .
+      run: docker build -f docker/Dockerfile.Linux -t iedclient:linux docker/
 
     - name: Run Docker container
-      run: docker run iedclient:linux
+      run: docker run -v ${{ github.workspace }}:/app/ iedclient:linux /bin/bash -c "ls -la /app/ ; /app/ci/build.sh --release"
+
+    - name: Create ZIP archive
+      run: |
+        cd install/release
+        zip -r ../../release.zip .
+
+    - name: Generate Tag Name
+      id: tag_step
+      run: |
+        DATE=$(date +'%Y%m%d')
+        TAG="linux-build-${GITHUB_REF##*/}-$DATE-${GITHUB_RUN_NUMBER}"
+        echo "TAG_NAME=$TAG" >> $GITHUB_ENV
+        echo "::set-output name=tag::$TAG"
+
+    - name: Create GitHub Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ env.TAG_NAME }}
+        release_name: Release ${{ env.TAG_NAME }}
+        draft: false
+        prerelease: false
+
+    - name: Upload ZIP archive
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: release.zip
+        asset_name: IEDClient-${{ env.TAG_NAME }}.zip
+        asset_content_type: application/zip
+

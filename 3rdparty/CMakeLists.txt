@@ -10,4 +10,3 @@ if (BUILD_TESTS)
     set(INSTALL_GTEST OFF CACHE BOOL "" FORCE) # To avoid installing all libs stuff
     add_subdirectory(googletest/)
 endif()
-

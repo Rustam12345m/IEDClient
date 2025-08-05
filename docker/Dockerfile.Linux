@@ -38,3 +38,4 @@ USER builder
 WORKDIR /workdir
 
 CMD ["/bin/bash"]
+
