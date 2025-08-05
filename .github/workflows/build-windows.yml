@@ -1,6 +1,9 @@
 name: Build and Test on Windows
 
-on: [push, pull_request]
+on:
+  push:
+    tags:
+      - "v*"
 
 jobs:
   build:
@@ -8,10 +11,14 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
+      with:
+        submodules: true
+        fetch-depth: 0 
+        recursive: true 
 
     - name: Build Docker image
-      run: docker build -f Dockerfile.windows -t iedclient:windows .
+      run: docker build -f docker/Dockerfile.Windows -t iedclient:windows docker/
 
     - name: Run Docker container
-      run: docker run iedclient:windows
+      run: docker run -v ${{ github.workspace }}:/app/ iedclient:windows /bin/bash -c "ls -la /app/ ; /app/ci/build.sh --release"
