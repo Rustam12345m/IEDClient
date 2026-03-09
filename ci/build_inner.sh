@@ -7,8 +7,8 @@
 #   ./ci/build_inner.sh --debug               # Debug build
 #   ./ci/build_inner.sh --check               # Debug + sanitizers + linter
 #   ./ci/build_inner.sh --hack                # Incremental rebuild (no clean)
-#   ./ci/build_inner.sh --release --archive   # Build and create distributable archive
-#   ./ci/build_inner.sh --archive             # Package an existing build
+#   ./ci/build_inner.sh --release --archive   # Build and create AppImage
+#   ./ci/build_inner.sh --archive             # Package an existing build into AppImage
 #   ./ci/build_inner.sh --clean               # Remove all build artifacts
 #
 # For building inside Docker from your host, use ci/build_local.sh instead.
@@ -38,7 +38,7 @@ Build options:
   --hack        Incremental rebuild only (no clean)
 
 Other options:
-  --archive     Create distributable archive with binary, libs, and Qt plugins
+  --archive     Create self-contained AppImage (binary + libs + Qt plugins)
   --clean       Remove build/, install/, and dist/ directories
   --help        Show this help
 
@@ -73,15 +73,7 @@ do_build() {
     cmake --install "$BUILD_DIR"
 }
 
-# Resolve the Qt paths for plugin/QML collection
-qt_query() {
-    local key="$1"
-    qmake6 -query "$key" 2>/dev/null \
-        || qtpaths6 --"$(echo "$key" | sed 's/QT_INSTALL_//' | tr '[:upper:]' '[:lower:]')"-dir 2>/dev/null \
-        || echo ""
-}
-
-do_archive() {
+do_appimage() {
     local binary="$INSTALL_DIR/bin/IEDClient"
     if [ ! -f "$binary" ]; then
         echo "Error: Binary not found at $binary"
@@ -89,116 +81,50 @@ do_archive() {
         exit 1
     fi
 
-    echo "==> Packaging distributable archive..."
+    echo "==> Packaging AppImage..."
 
-    local pkg="$DIST_DIR/IEDClient"
-    rm -rf "$DIST_DIR"
-    mkdir -p "$pkg/lib" "$pkg/plugins/platforms" "$pkg/qml"
+    local appdir="$BUILD_DIR/IEDClient.AppDir"
+    rm -rf "$appdir" "$DIST_DIR"
+    mkdir -p "$DIST_DIR"
 
-    # --- Binary ---
-    cp "$binary" "$pkg/"
-
-    # Libs that are safe to assume exist on any modern Linux desktop — skip bundling them.
-    local skip_libs="linux-vdso|ld-linux|libc\.so|libm\.so|libdl\.so|librt\.so|libpthread"
-    skip_libs+="|libgcc_s|libstdc\+\+"
-    skip_libs+="|libX11\.so|libXext|libXrender|libxcb\.so|libxcb-|libxkb"
-    skip_libs+="|libdrm|libgbm|libvulkan"
-    skip_libs+="|libwayland-client|libwayland-server|libwayland-egl"
-    skip_libs+="|libfontconfig|libfreetype|libharfbuzz|libexpat|libz\.so|libpng"
-    skip_libs+="|libglib-2|libgobject|libgio-2|libgmodule|libdbus-1|libsystemd|libcap"
-    skip_libs+="|libgpg|liblzma|libzstd|liblz4|libgcrypt|libcom_err"
-    skip_libs+="|libkrb5|libk5crypto|libkeyutils|libbrotli|libpcre|libselinux"
-    skip_libs+="|libmount|libblkid|libffi|libresolv|libnss|libnsl|libmd|libbsd"
-
-    # --- Qt libraries (explicit — ldd misses runtime-loaded Qt modules) ---
-    local qt_lib_path
-    qt_lib_path="$(qt_query QT_INSTALL_LIBS)"
-    if [ -n "$qt_lib_path" ] && [ -d "$qt_lib_path" ]; then
-        echo "  Collecting Qt libraries from $qt_lib_path..."
-        find "$qt_lib_path" -maxdepth 1 -name 'libQt6*.so.*' | while read -r lib; do
-            echo "    $(basename "$lib")"
-            cp -L "$lib" "$pkg/lib/"
-        done
+    # --- Icon ---
+    # Use resources/IEDClient.png if present; otherwise generate a placeholder
+    # from an existing SVG icon.  Replace resources/IEDClient.png with a proper
+    # 256x256 app icon to use it automatically.
+    local icon="$REPO_DIR/resources/IEDClient.png"
+    if [ ! -f "$icon" ]; then
+        echo "  resources/IEDClient.png not found — generating placeholder icon..."
+        if ! command -v rsvg-convert &>/dev/null; then
+            echo "Error: rsvg-convert not found (librsvg2-bin)."
+            echo "       Either add resources/IEDClient.png or rebuild the Docker image:"
+            echo "         ./ci/build_local.sh --rebuild-image"
+            exit 1
+        fi
+        icon="$BUILD_DIR/IEDClient.png"
+        rsvg-convert -w 256 -h 256 "$REPO_DIR/ui/icons/hub.svg" -o "$icon"
     fi
 
-    # --- Qt platform plugins ---
-    local qt_plugin_path
-    qt_plugin_path="$(qt_query QT_INSTALL_PLUGINS)"
+    # --- linuxdeploy with Qt plugin bundles everything automatically ---
+    # QMAKE    — tells the Qt plugin where Qt is installed.
+    # QMLDIR   — source QML tree; the plugin scans it for import statements to
+    #             decide which QML modules to bundle.
+    # OUTPUT   — destination path for the finished AppImage file.
+    export QMAKE=qmake6
+    export QML_SOURCES_PATHS="$REPO_DIR/ui"
+    export OUTPUT="$DIST_DIR/IEDClient-linux-$(uname -m).AppImage"
 
-    if [ -n "$qt_plugin_path" ] && [ -d "$qt_plugin_path" ]; then
-        echo "  Collecting Qt plugins from $qt_plugin_path..."
-
-        # Platform plugins
-        if [ -d "$qt_plugin_path/platforms" ]; then
-            cp -L "$qt_plugin_path/platforms"/libqxcb.so      "$pkg/plugins/platforms/" 2>/dev/null || true
-            cp -L "$qt_plugin_path/platforms"/libqwayland*.so  "$pkg/plugins/platforms/" 2>/dev/null || true
-        fi
-
-        # Other plugin categories
-        for pdir in xcbglintegrations egldeviceintegrations platformthemes imageformats iconengines; do
-            if [ -d "$qt_plugin_path/$pdir" ]; then
-                mkdir -p "$pkg/plugins/$pdir"
-                cp -rL "$qt_plugin_path/$pdir"/*.so "$pkg/plugins/$pdir/" 2>/dev/null || true
-            fi
-        done
-    fi
-
-    # --- Non-Qt shared library deps of the binary ---
-    echo "  Collecting shared libraries..."
-    ldd "$binary" | grep "=> /" | awk '{print $3}' | sort -u | while read -r lib; do
-        local base
-        base="$(basename "$lib")"
-        if [ ! -f "$pkg/lib/$base" ] && ! echo "$lib" | grep -qE "$skip_libs"; then
-            echo "    $base"
-            cp -L "$lib" "$pkg/lib/"
-        fi
-    done
-
-    # --- Transitive deps of all bundled .so files (plugins + qml + libs) ---
-    echo "  Collecting transitive dependencies..."
-    find "$pkg" \( -name '*.so' -o -name '*.so.*' \) | while read -r f; do
-        ldd "$f" 2>/dev/null | grep "=> /" | awk '{print $3}'
-    done | sort -u | while read -r lib; do
-        local base
-        base="$(basename "$lib")"
-        if [ ! -f "$pkg/lib/$base" ] && ! echo "$lib" | grep -qE "$skip_libs"; then
-            echo "    $base"
-            cp -L "$lib" "$pkg/lib/"
-        fi
-    done
-
-    # --- QML modules ---
-    local qt_qml_path
-    qt_qml_path="$(qt_query QT_INSTALL_QML)"
-
-    if [ -n "$qt_qml_path" ] && [ -d "$qt_qml_path" ]; then
-        echo "  Collecting QML modules from $qt_qml_path..."
-        cp -rL "$qt_qml_path"/. "$pkg/qml/"
-    fi
-
-    # --- Launcher script ---
-    cat > "$pkg/IEDClient.sh" <<'LAUNCHER'
-#!/bin/bash
-DIR="$(dirname "$(realpath "$0")")"
-export LD_LIBRARY_PATH="$DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-export QT_PLUGIN_PATH="$DIR/plugins${QT_PLUGIN_PATH:+:$QT_PLUGIN_PATH}"
-export QML2_IMPORT_PATH="$DIR/qml${QML2_IMPORT_PATH:+:$QML2_IMPORT_PATH}"
-exec "$DIR/IEDClient" "$@"
-LAUNCHER
-    chmod +x "$pkg/IEDClient.sh"
-
-    # --- Archive ---
-    local arch
-    arch="$(uname -m)"
-    local archive="$DIST_DIR/IEDClient-linux-${arch}.tar.gz"
-
-    echo "  Creating archive..."
-    tar -czf "$archive" -C "$DIST_DIR" IEDClient/
+    linuxdeploy \
+        --appdir "$appdir" \
+        -e "$binary" \
+        -d "$REPO_DIR/resources/IEDClient.desktop" \
+        -i "$icon" \
+        --plugin qt \
+        --output appimage
 
     local size
-    size="$(du -h "$archive" | cut -f1)"
-    echo "==> Package created: $archive ($size)"
-    echo "    Extract and run:  tar xzf $(basename "$archive") && ./IEDClient/IEDClient.sh"
+    size="$(du -h "$OUTPUT" | cut -f1)"
+    echo "==> AppImage created: $OUTPUT ($size)"
+    echo "    Run with:  chmod +x $(basename "$OUTPUT") && ./$(basename "$OUTPUT")"
 }
 
 # --- Parse arguments ---
@@ -248,7 +174,7 @@ elif [ -n "$BUILD_TYPE" ]; then
 fi
 
 if $DO_ARCHIVE; then
-    do_archive
+    do_appimage
 fi
 
 echo "==> Done."

@@ -4,8 +4,8 @@ on: [push, pull_request]
 
 jobs:
 
-  archive:
-    name: Build tar.gz archive
+  appimage:
+    name: Build AppImage
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -16,17 +16,17 @@ jobs:
       - name: Build Docker image
         run: docker build -f ci/Dockerfile.Linux -t iedclient:linux ci/
 
-      - name: Build and create archive
+      - name: Build and create AppImage
         run: >
           docker run --rm -v ${{ github.workspace }}:/workdir
           iedclient:linux
           /workdir/ci/build_inner.sh --release --archive
 
-      - name: Upload archive
+      - name: Upload AppImage
         uses: actions/upload-artifact@v4
         with:
-          name: IEDClient-linux-archive
-          path: dist/*.tar.gz
+          name: IEDClient-linux-appimage
+          path: dist/*.AppImage
 
   deb:
     name: Build .deb package

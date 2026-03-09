@@ -18,20 +18,22 @@ jobs:
         uses: jurplel/install-qt-action@v3
         with:
           version: '6.8.*'
-          arch: win64_msvc2022_64
+          arch: win64_mingw
+          tools: tools_mingw1310
 
       - name: Configure
         run: >
           cmake -S . -B build
+          -G "MinGW Makefiles"
           -DCMAKE_BUILD_TYPE=Release
           -DCMAKE_INSTALL_PREFIX=install
           -DBUILD_TESTS=OFF
 
       - name: Build
-        run: cmake --build build --config Release --parallel
+        run: cmake --build build --parallel
 
       - name: Install
-        run: cmake --install build --config Release
+        run: cmake --install build
 
       - name: Deploy Qt DLLs
         run: |

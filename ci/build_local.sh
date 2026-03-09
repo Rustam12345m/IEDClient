@@ -17,7 +17,7 @@ set -e
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"
 REPO_DIR="$(realpath "$SCRIPT_DIR/..")"
 
-DOCKER="${DOCKER:-docker}"
+DOCKER="${DOCKER:-podman}"
 IMAGE_NAME="iedclient:linux"
 CONTAINER_WORKDIR="/workdir"
 
@@ -34,21 +34,21 @@ Build options (passed to ci/build_inner.sh inside the container):
   --release         RelWithDebInfo build (default if no build type given)
   --debug           Debug build
   --check           Debug + clang-tidy + sanitizers
-  --archive         Create distributable archive (default when no flags given)
+  --archive         Create self-contained AppImage (default when no flags given)
 
 Local options:
   --rebuild-image   Force rebuild the container image before building
   --help            Show this help
 
 Environment variables:
-  DOCKER            Container runtime to use (default: docker)
-                    Example: DOCKER=podman $0 --release
+  DOCKER            Container runtime to use (default: podman)
+                    Example: DOCKER=docker $0 --release
 
 When called with no arguments, runs: --release --archive
 
 Artifacts are stored in:
   install/          Installed build output (binary, headers)
-  dist/             Distributable archive (tar.gz with binary + libs + plugins)
+  dist/             AppImage (self-contained portable binary)
 EOF
     exit 0
 }
@@ -119,6 +119,6 @@ run_build
 echo ""
 if [ -d "$REPO_DIR/dist" ]; then
     echo "==> Artifacts in dist/:"
-    ls -lh "$REPO_DIR"/dist/*.tar.gz 2>/dev/null || ls -lh "$REPO_DIR/dist/"
+    ls -lh "$REPO_DIR"/dist/*.AppImage 2>/dev/null || ls -lh "$REPO_DIR/dist/"
 fi
 echo "==> Done."
