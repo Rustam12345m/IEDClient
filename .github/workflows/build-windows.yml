@@ -1,24 +1,50 @@
-name: Build and Test on Windows
+name: Build Windows
 
-on:
-  push:
-    tags:
-      - "v*"
+on: [push, pull_request]
 
 jobs:
-  build:
+
+  archive:
+    name: Build zip archive
     runs-on: windows-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-      with:
-        submodules: true
-        fetch-depth: 0 
-        recursive: true 
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
 
-    - name: Build Docker image
-      run: docker build -f docker/Dockerfile.Windows -t iedclient:windows docker/
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: '6.7.*'
+          arch: win64_msvc2022_64
+          modules: 'qtsvg'
 
-    - name: Run Docker container
-      run: docker run -v ${{ github.workspace }}:/app/ iedclient:windows /bin/bash -c "ls -la /app/ ; /app/ci/build.sh --release"
+      - name: Configure
+        run: >
+          cmake -S . -B build
+          -DCMAKE_BUILD_TYPE=Release
+          -DCMAKE_INSTALL_PREFIX=install
+          -DBUILD_TESTS=OFF
+
+      - name: Build
+        run: cmake --build build --config Release --parallel
+
+      - name: Install
+        run: cmake --install build --config Release
+
+      - name: Deploy Qt DLLs
+        run: |
+          New-Item -ItemType Directory -Force -Path dist\IEDClient
+          Copy-Item install\bin\IEDClient.exe dist\IEDClient\
+          windeployqt6 --qmldir ui --release dist\IEDClient\IEDClient.exe
+
+      - name: Create zip
+        run: Compress-Archive -Path dist\IEDClient -DestinationPath dist\IEDClient-windows-x86_64.zip
+
+      - name: Upload archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: IEDClient-windows-archive
+          path: dist\IEDClient-windows-x86_64.zip

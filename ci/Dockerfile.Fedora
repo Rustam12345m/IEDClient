@@ -1,0 +1,20 @@
+FROM fedora:41
+
+RUN dnf install -y \
+    gcc-c++ cmake git ninja-build \
+    file patchelf \
+    qt6-qtbase-devel \
+    qt6-qtdeclarative-devel \
+    qt6-qtquickcontrols2-devel \
+    qt6-qtsvg-devel \
+    qt6-qttools-devel \
+    libxkbcommon-devel \
+    rpm-build \
+    && dnf clean all
+
+# Allow git to work on mounted volumes owned by any user
+RUN git config --system safe.directory '*'
+
+WORKDIR /workdir
+
+CMD ["/bin/bash"]

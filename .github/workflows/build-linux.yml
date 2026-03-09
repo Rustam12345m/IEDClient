@@ -1,59 +1,77 @@
-name: Build and Test on Linux
+name: Build Linux
 
 on: [push, pull_request]
 
 jobs:
-  build:
+
+  archive:
+    name: Build tar.gz archive
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-      with:
-        submodules: true
-        fetch-depth: 0 
-        recursive: true 
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+      - name: Build Docker image
+        run: docker build -f ci/Dockerfile.Linux -t iedclient:linux ci/
 
-    - name: Build Docker image
-      run: docker build -f docker/Dockerfile.Linux -t iedclient:linux docker/
+      - name: Build and create archive
+        run: >
+          docker run --rm -v ${{ github.workspace }}:/workdir
+          iedclient:linux
+          /workdir/ci/build_inner.sh --release --archive
 
-    - name: Run Docker container
-      run: docker run -v ${{ github.workspace }}:/app/ iedclient:linux /bin/bash -c "ls -la /app/ ; /app/ci/build.sh --release"
+      - name: Upload archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: IEDClient-linux-archive
+          path: dist/*.tar.gz
 
-    - name: Create ZIP archive
-      run: |
-        cd install/release
-        zip -r ../../release.zip .
+  deb:
+    name: Build .deb package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
 
-    - name: Generate Tag Name
-      id: tag_step
-      run: |
-        DATE=$(date +'%Y%m%d')
-        TAG="linux-build-${GITHUB_REF##*/}-$DATE-${GITHUB_RUN_NUMBER}"
-        echo "TAG_NAME=$TAG" >> $GITHUB_ENV
-        echo "::set-output name=tag::$TAG"
+      - name: Build Docker image
+        run: docker build -f ci/Dockerfile.Ubuntu -t iedclient:ubuntu ci/
 
-    - name: Create GitHub Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ env.TAG_NAME }}
-        release_name: Release ${{ env.TAG_NAME }}
-        draft: false
-        prerelease: false
+      - name: Build and create .deb
+        run: >
+          docker run --rm -v ${{ github.workspace }}:/workdir
+          iedclient:ubuntu
+          /workdir/ci/deb/create_package.sh
 
-    - name: Upload ZIP archive
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: release.zip
-        asset_name: IEDClient-${{ env.TAG_NAME }}.zip
-        asset_content_type: application/zip
+      - name: Upload .deb
+        uses: actions/upload-artifact@v4
+        with:
+          name: IEDClient-deb
+          path: dist/*.deb
 
+  rpm:
+    name: Build .rpm package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Build Docker image
+        run: docker build -f ci/Dockerfile.Fedora -t iedclient:fedora ci/
+
+      - name: Build and create .rpm
+        run: >
+          docker run --rm -v ${{ github.workspace }}:/workdir
+          iedclient:fedora
+          /workdir/ci/rpm/create_package.sh
+
+      - name: Upload .rpm
+        uses: actions/upload-artifact@v4
+        with:
+          name: IEDClient-rpm
+          path: dist/*.rpm

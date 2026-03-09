@@ -11,13 +11,6 @@ RUN Set-ExecutionPolicy Bypass -Scope Process; \
     choco install qt6-default -y; \
     choco install gtest -y
 
-# Copy the application source code
-COPY ../../IEDClient/ C:\app
 WORKDIR C:\app
 
-# Build and run tests
-RUN mkdir build; cd build; \
-    cmake ..; \
-    cmake --build .; \
-    ctest
-
+CMD ["powershell"]

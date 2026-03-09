@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=IEDClient
+Comment=IEC 61850 IED Client
+Exec=IEDClient
+Icon=iedclient
+Type=Application
+Categories=Utility;Network;

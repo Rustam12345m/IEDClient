@@ -79,9 +79,12 @@ Thumbs.db
 bin/
 build*/
 install/
+install-*/
+dist/
 artifacts/
 .vscode/
 tmp/
+wip/
 
 # Tmp
 *.dtmp

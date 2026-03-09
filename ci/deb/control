@@ -1,0 +1,25 @@
+Package: iedclient
+Version: @VERSION@
+Architecture: @ARCH@
+Maintainer: IEDClient Project
+Section: utils
+Priority: optional
+Description: IEC 61850 IED client application
+ An open-source application for interacting with IED devices
+ using IEC 61850 protocols. Provides enhanced observability for
+ the data model and supports large configurations with numerous
+ logical nodes and multiple logical devices.
+Depends: libqt6core6t64 (>= 6.4) | libqt6core6 (>= 6.4),
+ libqt6gui6t64 (>= 6.4) | libqt6gui6 (>= 6.4),
+ libqt6qml6t64 (>= 6.4) | libqt6qml6 (>= 6.4),
+ libqt6quick6t64 (>= 6.4) | libqt6quick6 (>= 6.4),
+ libqt6quickcontrols2-6 (>= 6.4),
+ qml6-module-qtquick,
+ qml6-module-qtquick-controls,
+ qml6-module-qtquick-layouts,
+ qml6-module-qtquick-window,
+ qml6-module-qtquick-dialogs,
+ qml6-module-qtquick-templates,
+ qml6-module-qt-labs-qmlmodels,
+ qml6-module-qtqml-workerscript,
+ libxkbcommon0

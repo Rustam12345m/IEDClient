@@ -46,3 +46,4 @@ This is an open-source application provided 'as is'. If you encounter any issues
 1. Application version.
 2. Screenshots, if applicable.
 3. A detailed sequence of actions leading to the issue.
+
