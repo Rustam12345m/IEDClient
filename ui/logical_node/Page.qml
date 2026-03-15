@@ -87,7 +87,7 @@ FocusScope
 
         // Area for DataObject's table
         Rectangle {
-            SplitView.minimumWidth: 200
+            SplitView.minimumWidth: Math.max(200, splitView.width * 0.5)
             SplitView.fillWidth: true
 
             color: VisualStyle.input.bg

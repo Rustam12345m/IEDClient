@@ -58,7 +58,7 @@ QtObject
     property QtObject table: QtObject {
         property color headerColor:        "#e4e4e4"
         property color headerTextColor:    "#26282a"
-        property color selRowColor:        "#e4e4e4"
+        property color selRowColor:        "#c5e3f5"
         property color textColor:          "#444444"
         property color rowColor1:          "#ffffff"
         property color rowColor2:          "#ffffff"

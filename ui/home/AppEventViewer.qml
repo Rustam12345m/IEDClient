@@ -107,7 +107,7 @@ Item
                     rightMargin: 4
                 }
                 text: display
-                color: VisualStyle.statusBar.textColor
+                color: VisualStyle.textColor
                 elide: Text.ElideRight
             }
 

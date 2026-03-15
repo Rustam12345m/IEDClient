@@ -69,7 +69,7 @@ Item {
             }
             height: rootID.cellEdge
 
-            color: (selected ? VisualStyle.ldGrid.selColor : VisualStyle.ldGrid.color)
+            color: selected ? VisualStyle.borderColor : VisualStyle.ldGrid.color
 
             Text {
                 id: ldName
@@ -85,7 +85,7 @@ Item {
 
                 font.bold: VisualStyle.boldHeaderText
                 font.pointSize: 12
-                color: selected ? "white" : "black"
+                color: selected ? VisualStyle.statusBar.textColor : VisualStyle.textColor
 
                 text: "LD: " + ld_object.name
             }
@@ -101,7 +101,7 @@ Item {
                 margins: rootID.borderWidth
                 topMargin: 0
             }
-            // color: "red"
+            color: VisualStyle.input.bg
 
             ListView {
                 anchors.fill: parent

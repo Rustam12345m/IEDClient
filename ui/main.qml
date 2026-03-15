@@ -80,6 +80,7 @@ ApplicationWindow
                 anchors {
                     fill: parent
                     topMargin: VisualStyle.borderWidth
+                    bottomMargin: VisualStyle.borderWidth
                     leftMargin: VisualStyle.borderWidth
                     rightMargin: VisualStyle.borderWidth
                 }
@@ -283,7 +284,7 @@ ApplicationWindow
                     ListElement { title: "LOGICAL NODES" }
                     ListElement { title: "DATASETS" }
                     ListElement { title: "REPORT BLOCKS" }
-                    ListElement { title: "TREE" }
+                    ListElement { title: "MODEL" }
                     ListElement { title: "FILES" }
                 }
 
@@ -307,7 +308,7 @@ ApplicationWindow
                 topMargin: 0
                 bottomMargin: 0
             }
-            color: VisualStyle.backgroundColor1
+            color: VisualStyle.input.bg
 
             // Pages and Property panel
             SplitView {
@@ -583,7 +584,10 @@ ApplicationWindow
         borderColor: VisualStyle.borderColor
 
         contentArea: Column {
-            anchors.fill: parent
+            anchors {
+                fill: parent
+                margins: 12
+            }
             spacing: 6
 
             readonly property color textColor: VisualStyle.statusBar.textColor

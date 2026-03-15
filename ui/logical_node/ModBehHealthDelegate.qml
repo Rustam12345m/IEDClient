@@ -54,26 +54,29 @@ Item
         border.color: VisualStyle.table.rowBorderColor2
         color: (selected ? VisualStyle.table.selRowColor : VisualStyle.table.rowColor1)
 
-        Rectangle {
-            id: led
+        Row {
+            anchors.centerIn: parent
+            spacing: 5
 
-            anchors {
-                fill: parent
-                margins: 1
+            Rectangle {
+                id: led
+
+                anchors.verticalCenter: parent.verticalCenter
+                width: 12
+                height: 12
+                radius: 6
+                color: rootID.value.color
             }
-
-            height: delegateHeight - 4
-            width: height
-            color: rootID.value.color
 
             Text {
                 id: textFild
 
-                anchors.centerIn: parent
-                horizontalAlignment: Text.AlignHCenter
+                anchors.verticalCenter: parent.verticalCenter
+                horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter
 
                 font.bold: false
+                color: VisualStyle.textColor
                 text: rootID.value.text
             }
         }

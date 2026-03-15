@@ -94,8 +94,7 @@ Rectangle
             height: parent.height - 4
             color: VisualStyle.modalColor
         }
-        Row {
-            height: parent.height
+        RowLayout {
             spacing: 5
 
             Text {

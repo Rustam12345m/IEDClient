@@ -71,7 +71,7 @@ Item {
             Layout.preferredWidth: Math.min(380, parent.width * 0.42)
             Layout.minimumWidth:   240
 
-            color:        VisualStyle.backgroundColor2
+            color:        VisualStyle.input.bg
             border.color: VisualStyle.borderColor
             border.width: VisualStyle.borderWidth
 
@@ -91,7 +91,7 @@ Item {
                     Text {
                         anchors.centerIn: parent
                         text:             "RECENT CONNECTIONS"
-                        color:            "#eeeeee"
+                        color:            VisualStyle.statusBar.textColor
                         font.pixelSize:   11
                         font.bold:        true
                         font.family:      "Monospace"
@@ -214,7 +214,7 @@ Item {
                 Layout.preferredHeight: quickConnectLayout.implicitHeight +
                                         VisualStyle.borderWidth * 2
 
-                color:        VisualStyle.backgroundColor1
+                color:        VisualStyle.input.bg
                 border.color: VisualStyle.borderColor
                 border.width: VisualStyle.borderWidth
 
@@ -235,7 +235,7 @@ Item {
                         Text {
                             anchors.centerIn: parent
                             text:             "QUICK CONNECT"
-                            color:            "#eeeeee"
+                            color:            VisualStyle.statusBar.textColor
                             font.pixelSize:   11
                             font.bold:        true
                             font.family:      "Monospace"
@@ -472,7 +472,7 @@ Item {
                 Layout.preferredHeight: shortcutsLayout.implicitHeight +
                                         VisualStyle.borderWidth * 2
 
-                color:        VisualStyle.backgroundColor1
+                color:        VisualStyle.input.bg
                 border.color: VisualStyle.borderColor
                 border.width: VisualStyle.borderWidth
 
@@ -493,7 +493,7 @@ Item {
                         Text {
                             anchors.centerIn: parent
                             text:             "SHORTCUTS"
-                            color:            "#eeeeee"
+                            color:            VisualStyle.statusBar.textColor
                             font.pixelSize:   11
                             font.bold:        true
                             font.family:      "Monospace"

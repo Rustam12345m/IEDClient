@@ -104,6 +104,10 @@ FocusScope {
         }
 
         delegate: TreeViewDelegate {
+            background: Rectangle {
+                color: selected ? VisualStyle.table.selRowColor : VisualStyle.table.rowColor1
+            }
+
             TapHandler {
                 acceptedButtons: Qt.RightButton
 
