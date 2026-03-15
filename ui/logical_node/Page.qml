@@ -62,7 +62,7 @@ FocusScope
             SplitView.preferredWidth: 300
             SplitView.fillWidth: false
 
-            color: VisualStyle.backgroundColor2
+            color: VisualStyle.input.bg
 
             // Table
             LN_OverviewTable {
@@ -90,7 +90,7 @@ FocusScope
             SplitView.minimumWidth: 200
             SplitView.fillWidth: true
 
-            color: VisualStyle.backgroundColor1
+            color: VisualStyle.input.bg
 
             // Different view pages for the LN
             StackLayout {
@@ -151,10 +151,10 @@ FocusScope
                     //unselectedColor: VisualStyle.toolBarColor
 
                     model: ListModel {
-                        ListElement { title: "State" }
-                        ListElement { title: "Controls" }
-                        ListElement { title: "Settings" }
-                        ListElement { title: "Tree" }
+                        ListElement { title: "STATE" }
+                        ListElement { title: "CONTROLS" }
+                        ListElement { title: "SETTINGS" }
+                        ListElement { title: "TREE" }
                     }
 
                     onSigTabSelected: function(index) {

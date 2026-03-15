@@ -23,6 +23,8 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
+import AppStylesModule
+
 import "qrc:/common/"
 
 // DataSets page
@@ -51,7 +53,7 @@ FocusScope
             SplitView.minimumWidth: 300
             SplitView.fillWidth: false
 
-            color: "white"
+            color: VisualStyle.input.bg
 
             // Table
             DS_OverviewTable {
@@ -71,7 +73,7 @@ FocusScope
             SplitView.minimumWidth: 100
             SplitView.fillWidth: true
 
-            color: "white"
+            color: VisualStyle.input.bg
 
             // Table
             DS_StateTable {

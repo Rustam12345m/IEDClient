@@ -46,7 +46,7 @@ ApplicationWindow
     minimumHeight: 600
 
     visible: true
-    color: "white"
+    color: VisualStyle.backgroundColor1
 
     // Main area
     Rectangle {
@@ -435,8 +435,7 @@ ApplicationWindow
                             onVisibleChanged: {
                                 if (visible) {
                                     focus = true
-                                    // setActivePanel(Globals.Panel.RCB_PROPERTIES)
-                                    // setPageStatusText(iedBackend.rcbPageStatus())
+                                    setActivePanel(Globals.Panel.HIDE)
                                 } else {
                                     focus = false
                                 }
@@ -552,8 +551,8 @@ ApplicationWindow
     Home.AppProgressBar {
         id: globalProgressBar
 
-        windowColor: VisualStyle.undefinedColor1
-        windowShadeColor: VisualStyle.undefinedColor2
+        windowColor: VisualStyle.progress.bg
+        windowShadeColor: VisualStyle.progress.shade
     }
 
     SubWindow {
@@ -566,7 +565,7 @@ ApplicationWindow
 
         title: "About Program"
         color: VisualStyle.modalColor// tabBar.unselColor
-        borderColor: "black" //VisualStyle.backgroundColor1
+        borderColor: VisualStyle.borderColor
 
         contentArea: Column {
             spacing: 10

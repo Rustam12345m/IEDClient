@@ -27,8 +27,8 @@ import AppStylesModule
 
 Rectangle
 {
-    property var windowColor: "lightgray"
-    property var windowShadeColor: "gray"
+    property var windowColor: VisualStyle.progress.bg
+    property var windowShadeColor: VisualStyle.progress.shade
 
     id: rootID
     anchors.fill: parent
@@ -66,7 +66,7 @@ Rectangle
                     id: progressText
                     font.bold: VisualStyle.boldHeaderText
                     font.pixelSize: 16
-                    color: VisualStyle.undefinedColor1
+                    color: VisualStyle.progress.text
 
                     text: "Please, wait..."
                 }
@@ -89,7 +89,7 @@ Rectangle
                         z: 1
 
                         text: ""
-                        color: VisualStyle.undefinedColor1
+                        color: VisualStyle.progress.text
                     }
                 }
             }

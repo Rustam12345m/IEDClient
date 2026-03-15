@@ -23,6 +23,8 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
+import AppStylesModule
+
 FocusScope
 {
     id: rootID
@@ -30,7 +32,7 @@ FocusScope
     property alias title: titleText.text
     property alias color: subWindowID.color
     default property alias contentArea: contentContainerID.data
-    property color borderColor: "black"
+    property color borderColor: VisualStyle.borderColor
 
     signal sigClicked()
 
@@ -117,7 +119,7 @@ FocusScope
                 id: titleText
                 anchors.centerIn: parent
 
-                color: "black" //"#eeeeee"
+                color: VisualStyle.statusBar.textColor
                 font.pixelSize: 16
                 font.bold: true
             }

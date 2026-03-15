@@ -23,6 +23,8 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
+import AppStylesModule
+
 Window
 {
     title: qsTr("IEDClient - System messages")
@@ -50,9 +52,9 @@ Window
 
             delegate: Rectangle {
                 implicitWidth: text.implicitWidth + 20
-                implicitHeight: 30
-                color: "#f6f6f6"
-                border.color: "#e4e4e4"
+                implicitHeight: VisualStyle.rowHeight
+                color: VisualStyle.section.bg
+                border.color: VisualStyle.section.border
 
                 Label {
                     id: text
@@ -63,7 +65,7 @@ Window
                     verticalAlignment: Text.AlignVCenter
 
                     text: model[header.textRole]
-                    color: "#ff26282a"
+                    color: VisualStyle.section.text
                 }
             }
         }
@@ -138,8 +140,8 @@ Window
                 implicitWidth: textArea.implicitWidth + 20
                 implicitHeight: 20
 
-                color: (selected ? "lightgray" : "white")
-                border.color: (selected ? "black" : "lightgray")
+                color: selected ? VisualStyle.table.selRowColor : VisualStyle.table.rowColor1
+                border.color: selected ? VisualStyle.borderColor : VisualStyle.table.rowBorderColor2
                 border.width: 1
 
                 Text {

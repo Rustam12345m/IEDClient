@@ -31,10 +31,9 @@ import "qrc:/common/"
 // RCB Settings
 Item
 {
-    property int defRowHeight: 30
+    property int defRowHeight: VisualStyle.rowHeight
     property int defTextPadding: 5
     property int defNameWidth: 100
-    readonly property string sectionColor: "#f6f6f6"
 
     //anchors.fill: parent
     clip: true
@@ -52,10 +51,10 @@ Item
             Rectangle {
                 width: parent.width
                 height: defRowHeight
-                color: sectionColor
+                color: VisualStyle.section.bg
 
                 border.width: 1
-                border.color: "lightgray"
+                border.color: VisualStyle.section.border
 
                 Text {
                     anchors.fill: parent
@@ -120,10 +119,10 @@ Item
             Rectangle {
                 width: parent.width
                 height: defRowHeight
-                color: sectionColor
+                color: VisualStyle.section.bg
 
                 border.width: 1
-                border.color: "lightgray"
+                border.color: VisualStyle.section.border
 
                 Text {
                     anchors.fill: parent
@@ -187,10 +186,10 @@ Item
             Rectangle {
                 width: parent.width
                 height: defRowHeight
-                color: sectionColor
+                color: VisualStyle.section.bg
 
                 border.width: 1
-                border.color: "lightgray"
+                border.color: VisualStyle.section.border
 
                 Text {
                     anchors.fill: parent
@@ -242,7 +241,7 @@ Item
             Rectangle {
                 height: 4
                 width: parent.width
-                color: "lightgray"
+                color: VisualStyle.section.border
             }
             RowLayout {
                 width: parent.width
@@ -252,10 +251,7 @@ Item
                 Rectangle {
                     Layout.preferredWidth: parent.width / 2
                     height: parent.height
-
-                    // border.color: "green"
-                    // border.width: 4
-                    color: "green"
+                    color: VisualStyle.button.successBg
 
                     Button {
                         anchors.centerIn: parent
@@ -265,10 +261,7 @@ Item
                 Rectangle {
                     Layout.preferredWidth: parent.width / 2
                     height: parent.height
-
-                    // border.color: "red"
-                    // border.width: 4
-                    color: "red"
+                    color: VisualStyle.button.dangerBg
 
                     Button {
                         anchors.centerIn: parent

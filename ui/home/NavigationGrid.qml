@@ -23,6 +23,7 @@ import QtQuick
 import QtQuick.Controls
 
 import GlobalVarsModule
+import AppStylesModule
 
 Rectangle
 {
@@ -32,7 +33,7 @@ Rectangle
 
     anchors.fill: parent
 
-    color: "gray" //"lightgray"
+    color: VisualStyle.overlayColor
     opacity: 0.8
     z: 100500
     visible: false
@@ -83,9 +84,9 @@ Rectangle
                 width: 90
                 height: 40
 
-                color: "lightgray"
+                color: VisualStyle.backgroundColor1
                 border.width: 2
-                border.color: GridView.isCurrentItem ? "black" : "lightgray"
+                border.color: GridView.isCurrentItem ? VisualStyle.borderColor : VisualStyle.table.rowBorderColor2
 
                 Label {
                     anchors.centerIn: parent

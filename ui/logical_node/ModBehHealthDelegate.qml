@@ -52,7 +52,7 @@ Item
         clip: true
         // border.color: (selected ? "black" : "lightgray")
         border.color: VisualStyle.table.rowBorderColor2
-        color: (selected ? VisualStyle.table.rowColor1 : VisualStyle.table.rowColor2)
+        color: (selected ? VisualStyle.table.selRowColor : VisualStyle.table.rowColor1)
 
         Rectangle {
             id: led

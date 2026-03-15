@@ -39,7 +39,7 @@ Item
 
         border.width: 1
         border.color: VisualStyle.table.rowBorderColor2
-        color: (selected ? VisualStyle.table.rowColor1 : VisualStyle.table.rowColor2)
+        color: (selected ? VisualStyle.table.selRowColor : VisualStyle.table.rowColor1)
 
         Row {
             anchors {

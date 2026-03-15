@@ -33,14 +33,17 @@ QtObject
     property int   borderWidth:             4
     property int   delimeterWidth:          6
     property bool  boldHeaderText:          false
-    property color undefinedColor1:         "pink"
-    property color undefinedColor2:         "red"
-
     // ToolBar
     property color toolBarColor:            "#005f87"
 
     // Modal
-    property color modalColor:              "#0087af"// "#005f87"
+    property color modalColor:              "#0087af"
+
+    // Overlay (modal backdrop, navigation grid shade)
+    property color overlayColor:            "#2a2a2a"
+
+    // Common row height used across tables and panels
+    property int rowHeight:                 30
 
     // StatusBar
     property QtObject statusBar: QtObject {
@@ -54,13 +57,43 @@ QtObject
     // Tables
     property QtObject table: QtObject {
         property color headerColor:        "#e4e4e4"
-        property color headerTextColor:    "black"
+        property color headerTextColor:    "#26282a"
         property color selRowColor:        "#e4e4e4"
         property color textColor:          "#444444"
-        property color rowColor1:          "#eeeeee"
-        property color rowColor2:          "#d0d0d0"
+        property color rowColor1:          "#ffffff"
+        property color rowColor2:          "#ffffff"
         property color rowBorderColor1:    "#707070"
         property color rowBorderColor2:    "#D9D9D9"
+    }
+
+    // Panel section headers (property panels, event viewer, etc.)
+    property QtObject section: QtObject {
+        property color bg:                 "#e4e4e4"
+        property color border:             "#c0c0c0"
+        property color text:               "#26282a"
+    }
+
+    // Form input fields
+    property QtObject input: QtObject {
+        property color bg:                 "#ffffff"
+        property color border:             "#b0b0b0"
+        property color text:               "#0D0D0D"
+        property color placeholder:        "#a0a0a0"
+    }
+
+    // Action buttons (confirm / danger)
+    property QtObject button: QtObject {
+        property color successBg:          "#2e7d32"
+        property color successText:        "#ffffff"
+        property color dangerBg:           "#b71c1c"
+        property color dangerText:         "#ffffff"
+    }
+
+    // Progress / loading dialog
+    property QtObject progress: QtObject {
+        property color bg:                 "#0087af"
+        property color shade:              "#1a1a1a"
+        property color text:               "#eeeeee"
     }
 
     // LD grid styles
@@ -72,11 +105,11 @@ QtObject
     // TabBar styles
     property QtObject tabBar: QtObject {
         property color selColor:            "#e4e4e4"
-        property color selTextColor:        "black"
+        property color selTextColor:        "#26282a"
         property color unselColor:          "#0087af"
         property color unselTextColor:      "#eeeeee"
         property color hoverColor:          "#5fafd7"
-        property color hoverTextColor:      "white"
+        property color hoverTextColor:      "#ffffff"
         // Horizontal tabBar
         property int horizontalHeight:      30
         property int horizontalWidth:       125

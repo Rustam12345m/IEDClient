@@ -96,7 +96,7 @@ FocusScope
 
                         clip: true
                         // color: (index === listViewID.selectedIndex) ? "lightgray" : "white"
-                        color: (index === listViewID.selectedIndex) ? VisualStyle.table.rowColor1 : VisualStyle.table.rowColor2
+                        color: (index === listViewID.selectedIndex) ? VisualStyle.table.selRowColor : VisualStyle.table.rowColor1
 
                         Text {
                             id: textName
@@ -121,7 +121,7 @@ FocusScope
 
                         clip: true
                         // color: (index === listViewID.selectedIndex) ? "lightgray" : "white"
-                        color: (index === listViewID.selectedIndex) ? VisualStyle.table.rowColor1 : VisualStyle.table.rowColor2
+                        color: (index === listViewID.selectedIndex) ? VisualStyle.table.selRowColor : VisualStyle.table.rowColor1
 
                         Text {
                             id: textValue

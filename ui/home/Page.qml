@@ -149,7 +149,7 @@ Item {
                                 width:          parent.width
                                 text:           "▶  " + rootID.getField(cardID.index, 2) +
                                                 " : " + rootID.getField(cardID.index, 3)
-                                color:          cardID.isSelected ? "white" : VisualStyle.textColor
+                                color:          cardID.isSelected ? VisualStyle.statusBar.textColor : VisualStyle.textColor
                                 font.pixelSize: 13
                                 font.bold:      true
                                 font.family:    "Monospace"
@@ -269,8 +269,8 @@ Item {
                             Rectangle {
                                 Layout.fillWidth: true
                                 height:           parent.parent.fieldH
-                                color:            "white"
-                                border.color:     "#aaaaaa"
+                                color:            VisualStyle.input.bg
+                                border.color:     VisualStyle.input.border
                                 border.width:     1
 
                                 TextField {
@@ -279,13 +279,13 @@ Item {
                                     anchors.margins:      1
                                     text:                 "127.0.0.1"
                                     placeholderText:      "IED address"
-                                    placeholderTextColor: "lightgray"
+                                    placeholderTextColor: VisualStyle.input.placeholder
                                     font.pixelSize:       13
                                     font.family:          "Monospace"
                                     verticalAlignment:    Text.AlignVCenter
                                     leftPadding:          4
                                     focus:                true
-                                    color:                "black"
+                                    color:                VisualStyle.input.text
                                     KeyNavigation.tab:    portInput
                                     KeyNavigation.backtab: connButton
                                 }
@@ -308,8 +308,8 @@ Item {
                             Rectangle {
                                 Layout.preferredWidth: 80
                                 height:                parent.parent.fieldH
-                                color:                 "white"
-                                border.color:          "#aaaaaa"
+                                color:                 VisualStyle.input.bg
+                                border.color:          VisualStyle.input.border
                                 border.width:          1
 
                                 TextField {
@@ -318,12 +318,12 @@ Item {
                                     anchors.margins:      1
                                     text:                 "102"
                                     placeholderText:      "MMS"
-                                    placeholderTextColor: "lightgray"
+                                    placeholderTextColor: VisualStyle.input.placeholder
                                     font.pixelSize:       13
                                     font.family:          "Monospace"
                                     verticalAlignment:    Text.AlignVCenter
                                     leftPadding:          4
-                                    color:                "black"
+                                    color:                VisualStyle.input.text
                                     KeyNavigation.tab:    tlsSwitcher
                                     KeyNavigation.backtab: ipAddrInput
                                 }
@@ -372,8 +372,8 @@ Item {
                             Rectangle {
                                 Layout.fillWidth: true
                                 height:           parent.parent.fieldH
-                                color:            "white"
-                                border.color:     "#aaaaaa"
+                                color:            VisualStyle.input.bg
+                                border.color:     VisualStyle.input.border
                                 border.width:     1
 
                                 TextField {
@@ -382,12 +382,12 @@ Item {
                                     anchors.margins:      1
                                     enabled:              tlsSwitcher.checked
                                     placeholderText:      "Username"
-                                    placeholderTextColor: "lightgray"
+                                    placeholderTextColor: VisualStyle.input.placeholder
                                     font.pixelSize:       13
                                     font.family:          "Monospace"
                                     verticalAlignment:    Text.AlignVCenter
                                     leftPadding:          4
-                                    color:                "black"
+                                    color:                VisualStyle.input.text
                                     KeyNavigation.tab:    userPassInput
                                     KeyNavigation.backtab: tlsSwitcher
                                 }
@@ -411,8 +411,8 @@ Item {
                             Rectangle {
                                 Layout.fillWidth: true
                                 height:           parent.parent.fieldH
-                                color:            "white"
-                                border.color:     "#aaaaaa"
+                                color:            VisualStyle.input.bg
+                                border.color:     VisualStyle.input.border
                                 border.width:     1
 
                                 TextField {
@@ -422,12 +422,12 @@ Item {
                                     enabled:              tlsSwitcher.checked
                                     echoMode:             TextField.Password
                                     placeholderText:      "Password"
-                                    placeholderTextColor: "lightgray"
+                                    placeholderTextColor: VisualStyle.input.placeholder
                                     font.pixelSize:       13
                                     font.family:          "Monospace"
                                     verticalAlignment:    Text.AlignVCenter
                                     leftPadding:          4
-                                    color:                "black"
+                                    color:                VisualStyle.input.text
                                     KeyNavigation.tab:    connButton
                                     KeyNavigation.backtab: userNameInput
                                 }

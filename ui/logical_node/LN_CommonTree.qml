@@ -56,8 +56,8 @@ FocusScope {
             implicitWidth: labelID.implicitWidth + 24 + 10
             implicitHeight: 30
 
-            color: "#f6f6f6"
-            border.color: "#e4e4e4"
+            color: VisualStyle.section.bg
+            border.color: VisualStyle.section.border
 
             Row {
                 id: rowID
@@ -69,7 +69,7 @@ FocusScope {
                     id: labelID
 
                     text: model.display
-                    color: "#ff26282a"
+                    color: VisualStyle.section.text
                 }
             }
         }
