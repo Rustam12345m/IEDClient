@@ -31,11 +31,11 @@ namespace Cmd
             emit sigModelValues(vals);
 
             emit sigCmdEvent(CmdEvent::FinishEvent("IP?",
-                    QString("Values of %1 were received").arg(m_lnode->getName()),
+                    QString("Values of %1 received").arg(m_lnode->getName()),
                     true));
         } else {
             emit sigCmdEvent(CmdEvent::FinishEvent("IP?",
-                    QString("Can't get value of %1").arg(m_lnode->getName()),
+                    QString("Cannot get values of %1").arg(m_lnode->getName()),
                     false));
         }
     }

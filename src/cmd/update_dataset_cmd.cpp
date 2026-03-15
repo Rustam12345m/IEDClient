@@ -29,9 +29,9 @@ namespace Cmd
         if (vals) {
             emit sigModelValues(vals);
 
-            emit sigCmdEvent(Cmd::CmdEvent::FinishEvent("", "Dataset's values have been updated", true));
+            emit sigCmdEvent(Cmd::CmdEvent::FinishEvent("", "DataSet values updated", true));
         } else {
-            emit sigCmdEvent(Cmd::CmdEvent::FinishEvent("", "Can't get informatio about this dataset", false));
+            emit sigCmdEvent(Cmd::CmdEvent::FinishEvent("", "Cannot get information about this dataset", false));
         }
     }
 }

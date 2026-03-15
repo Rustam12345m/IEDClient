@@ -33,11 +33,11 @@ namespace Cmd
             emit sigModelValues(vals);
 
             emit sigCmdEvent(CmdEvent::FinishEvent("IP?",
-                    QString("Received values for %1 signals for { LD }").arg(vals->count()),
+                    QString("Received %1 signal values for LD").arg(vals->count()),
                     true));
         } else {
             emit sigCmdEvent(CmdEvent::FinishEvent("IP?",
-                    QString("Can't get values for { LD }"),
+                    QString("Cannot get values for LD"),
                     false));
         }
     }

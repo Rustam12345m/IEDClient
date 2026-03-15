@@ -80,7 +80,7 @@ Rectangle
             id: pageStatusTextID
             height: parent.height
 
-            horizontalAlignment: Text.AlignHCenter //Left
+            horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter
 
             font.bold: VisualStyle.boldHeaderText

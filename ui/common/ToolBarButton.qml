@@ -43,7 +43,7 @@ Item {
     }
     ToolTip {
         id: toolTip
-        text: "Information isn't found"
+        text: "No information available"
         delay: 150
         timeout: 1500
         visible: btn.hovered

@@ -21,146 +21,134 @@
 
 import QtQuick
 import QtQuick.Controls
-import QtQuick.Layouts
 
 import AppStylesModule
 
-Window
+// Event log table — embedded as content in a modal SubWindow
+Item
 {
-    title: qsTr("IEDClient - System messages")
+    id: rootID
 
-    id: windowID
+    signal sigClose()
 
-    width: 800
-    height: 300
-    visible: true
+    // Column header synced to the table below
+    HorizontalHeaderView {
+        id: headerID
 
-    Rectangle {
-        id: rootID
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
+        }
 
-        anchors.fill: parent
+        syncView: tableID
+        boundsBehavior: Flickable.StopAtBounds
 
-        HorizontalHeaderView {
-            id: header
+        delegate: Rectangle {
+            implicitHeight: VisualStyle.rowHeight
+            color: VisualStyle.section.bg
+            border.color: VisualStyle.section.border
 
-            anchors.left: tableID.left
-            anchors.top: parent.top
-            anchors.right: parent.right
+            Text {
+                anchors.centerIn: parent
+                text: model[headerID.textRole]
+                color: VisualStyle.section.text
+                font.bold: VisualStyle.boldHeaderText
+            }
+        }
+    }
 
-            boundsBehavior: Flickable.StopAtBounds
-            syncView: tableID
+    // Scrollable event table
+    TableView {
+        id: tableID
 
-            delegate: Rectangle {
-                implicitWidth: text.implicitWidth + 20
-                implicitHeight: VisualStyle.rowHeight
-                color: VisualStyle.section.bg
-                border.color: VisualStyle.section.border
+        anchors {
+            top: headerID.bottom
+            left: parent.left
+            right: parent.right
+            bottom: closeRowID.top
+            bottomMargin: 4
+        }
 
-                Label {
-                    id: text
+        model: appBackend.appLogsModel
 
-                    anchors.centerIn: parent
+        clip: true
+        interactive: true
+        boundsBehavior: Flickable.StopAtBounds
 
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
+        selectionBehavior: TableView.SelectRows
+        selectionModel: ItemSelectionModel {
+            model: tableID.model
+        }
 
-                    text: model[header.textRole]
-                    color: VisualStyle.section.text
+        columnWidthProvider: function(col) {
+            if (col === 0) return 160
+            if (col === 1) return 120
+            // Last column (Description) fills remaining space
+            return Math.max(50, tableID.width - 280)
+        }
+
+        onWidthChanged: forceLayout()
+
+        delegate: Rectangle {
+            required property bool selected
+
+            implicitHeight: VisualStyle.rowHeight
+            color: selected ? VisualStyle.table.selRowColor : VisualStyle.table.rowColor1
+            border.color: VisualStyle.table.rowBorderColor2
+            border.width: 1
+
+            Text {
+                anchors {
+                    verticalCenter: parent.verticalCenter
+                    left: parent.left
+                    leftMargin: 4
+                    right: parent.right
+                    rightMargin: 4
+                }
+                text: display
+                color: VisualStyle.statusBar.textColor
+                elide: Text.ElideRight
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    let idx = tableID.model.index(row, 0)
+                    tableID.selectionModel.setCurrentIndex(idx,
+                        ItemSelectionModel.Clear | ItemSelectionModel.Select | ItemSelectionModel.Rows)
                 }
             }
         }
 
-        TableView {
-            id: tableID
+        ScrollBar.vertical: ScrollBar {
+            policy: ScrollBar.AsNeeded
+            active: true
+            stepSize: 0.05
 
-            anchors {
-                left: parent.left
-                top: header.bottom
-                right: parent.right
-                bottom: parent.bottom
+            onActiveChanged: {
+                if (!active) active = true
             }
+        }
+    }
 
-            clip: true
-            interactive: true
-            boundsBehavior: Flickable.StopAtBounds
+    // Close button row
+    Item {
+        id: closeRowID
 
-            model: appBackend.appLogsModel
+        anchors {
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+        }
+        height: 36
 
-            selectionBehavior: TableView.SelectRows
-            selectionModel: ItemSelectionModel {
-                model: tableID.model
+        Button {
+            anchors.centerIn: parent
+            text: "Close"
+            focusPolicy: Qt.NoFocus
 
-                onCurrentChanged: {
-                    //console.log("Select current changed: " + currentIndex)
-                }
-            }
-
-            function calcGoodWidthFoColumn(col) {
-                const iw = []
-                let sum = 0
-                for (let i=0;i<columns;i++) {
-                    iw[i] = Math.max(header.implicitColumnWidth(i), implicitColumnWidth(i))
-                    sum = sum + iw[i]
-                }
-                if (sum === 0) sum = 1
-                return width * (iw[col] / sum)
-            }
-            function setGoodColumnsWidth() {
-                const iw = []
-                let sum = 0, i = 0
-                for (i=0;i<columns;i++) {
-                    iw[i] = Math.max(header.implicitColumnWidth(i), implicitColumnWidth(i))
-                    sum = sum + iw[i]
-                }
-                if (sum === 0) {
-                    sum = 1
-                }
-                for (i=0;i<columns;i++) {
-                    setColumnWidth(i, width * iw[i] / sum)
-                }
-            }
-
-            onWidthChanged: function() {
-                setGoodColumnsWidth()
-            }
-
-            ScrollBar.vertical: ScrollBar {
-                policy: ScrollBar.AsNeeded
-                active: true
-                onActiveChanged: {
-                    if (!active) {
-                        active = true;
-                    }
-                }
-            }
-
-            delegate: Rectangle {
-                required property bool selected
-
-                implicitWidth: textArea.implicitWidth + 20
-                implicitHeight: 20
-
-                color: selected ? VisualStyle.table.selRowColor : VisualStyle.table.rowColor1
-                border.color: selected ? VisualStyle.borderColor : VisualStyle.table.rowBorderColor2
-                border.width: 1
-
-                Text {
-                    id: textArea
-                    text: display
-                    anchors.centerIn: parent
-                }
-                MouseArea {
-                    anchors.fill: parent
-                    acceptedButtons: Qt.LeftButton | Qt.RightButton
-
-                    onClicked: function(mouse) {
-                        let idx = tableID.model.index(row, 0);
-                        tableID.selectionModel.setCurrentIndex(idx, ItemSelectionModel.Clear
-                                                                    | ItemSelectionModel.Select
-                                                                    | ItemSelectionModel.Rows);
-                    }
-                }
-            }
+            onClicked: rootID.sigClose()
         }
     }
 }

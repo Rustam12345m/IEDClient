@@ -43,12 +43,12 @@ namespace App
         QVariantMap retval;
         if (isConnected()) {
             retval["isConnected"] = true;
-            retval["text"] = QString(tr("Connected to: %1:%2"))
+            retval["text"] = QString(tr("Connected to %1:%2"))
                                     .arg(m_con.m_cred.ip())
                                     .arg(m_con.m_cred.port());
         } else if (!m_con.m_cred.ip().isEmpty()) {
             retval["isConnected"] = false;
-            retval["text"] = QString(tr("Disconnected from: %1:%2"))
+            retval["text"] = QString(tr("Disconnected from %1:%2"))
                                     .arg(m_con.m_cred.ip())
                                     .arg(m_con.m_cred.port());
         } else {

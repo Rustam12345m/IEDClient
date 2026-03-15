@@ -66,9 +66,8 @@ ApplicationWindow
                 left: mainBack.left
                 right: mainBack.right
             }
-            // height: 30 + 4
-            visible: false
-            height: 0
+            visible: true
+            height: 30 + VisualStyle.borderWidth * 2
 
             color: VisualStyle.toolBarColor
             clip: true
@@ -200,24 +199,23 @@ ApplicationWindow
                     color: VisualStyle.modalColor
                 }
                 // Events
-                // ToolBarButton {
-                //     Layout.alignment: Qt.AlignVCenter
-                //     width: toolBar.btnHeight
-                //     height: toolBar.btnHeight
+                ToolBarButton {
+                    Layout.alignment: Qt.AlignVCenter
+                    width: toolBar.btnHeight
+                    height: toolBar.btnHeight
 
-                //     icon: "qrc:/img/icons/terminal.svg"
-                //     prompt: "Event logger"
-                //     visible: presenter.isConnected
+                    icon: "qrc:/img/icons/terminal.svg"
+                    prompt: "Event logger"
+                    visible: presenter.isConnected
 
-                //     onSigClicked: function() {
-                //         console.log("Clickerd: ", prompt)
-                //         openEventLog()
-                //     }
-                //     Shortcut {
-                //         sequence: "Ctrl+E"
-                //         onActivated: openEventLog()
-                //     }
-                // }
+                    onSigClicked: function() {
+                        openEventLog()
+                    }
+                    Shortcut {
+                        sequence: "Ctrl+E"
+                        onActivated: openEventLog()
+                    }
+                }
                 // About
                 ToolBarButton {
                     Layout.alignment: Qt.AlignVCenter
@@ -226,10 +224,8 @@ ApplicationWindow
 
                     icon: "qrc:/img/icons/info.svg"
                     prompt: "About IEDClient"
-                    visible: presenter.isConnected
 
                     onSigClicked: function() {
-                        console.log("Clickerd: ", prompt)
                         rootWindowID.showAbotProgramWindow()
                     }
                 }
@@ -241,10 +237,8 @@ ApplicationWindow
 
                     icon: "qrc:/img/icons/input.svg"
                     prompt: "Exit"
-                    visible: presenter.isConnected
 
                     onSigClicked: function() {
-                        console.log("Clickerd: ", prompt)
                         Qt.quit()
                     }
                 }
@@ -556,6 +550,27 @@ ApplicationWindow
     }
 
     SubWindow {
+        id: eventLogSubWindowID
+        visible: false
+
+        anchors.centerIn: parent
+        width: rootWindowID.width * 0.8
+        height: rootWindowID.height * 0.8
+
+        title: "Event Log"
+        color: VisualStyle.modalColor
+        borderColor: VisualStyle.borderColor
+
+        Home.AppEventViewer {
+            anchors.fill: parent
+
+            onSigClose: function() {
+                eventLogSubWindowID.visible = false
+            }
+        }
+    }
+
+    SubWindow {
         id: aboutSubWindowID
         visible: false
 
@@ -563,16 +578,49 @@ ApplicationWindow
         width: 600
         height: 300
 
-        title: "About Program"
-        color: VisualStyle.modalColor// tabBar.unselColor
+        title: "About IEDClient"
+        color: VisualStyle.modalColor
         borderColor: VisualStyle.borderColor
 
         contentArea: Column {
-            spacing: 10
             anchors.fill: parent
-            Text { text: "Program Name: MyApp" }
-            Text { text: "Version: 1.0.0" }
-            Text { text: "Author: You" }
+            spacing: 6
+
+            readonly property color textColor: VisualStyle.statusBar.textColor
+
+            Repeater {
+                model: [
+                    { key: "Application:", desc: "IEDClient — IEC 61850 Client"  },
+                    { key: "Version:",     desc: appBackend.getAppVersion()       },
+                    { key: "Qt:",          desc: appBackend.getQtVersion()        },
+                    { key: "libiec61850:", desc: appBackend.getLibVersion()       },
+                    { key: "License:",     desc: "GNU General Public License v3"  },
+                    { key: "Author:",      desc: "Rustam Mustafin"                }
+                ]
+
+                delegate: Row {
+                    spacing: 8
+                    leftPadding: 4
+
+                    Text {
+                        width:                 100
+                        text:                  modelData.key
+                        color:                 VisualStyle.statusBar.textColor
+                        font.pixelSize:        12
+                        font.family:           "Monospace"
+                        font.bold:             true
+                        horizontalAlignment:   Text.AlignRight
+                        verticalAlignment:     Text.AlignVCenter
+                    }
+                    Text {
+                        text:           modelData.desc
+                        color:          VisualStyle.statusBar.textColor
+                        font.pixelSize: 12
+                        font.family:    "Monospace"
+                        verticalAlignment: Text.AlignVCenter
+                    }
+                }
+            }
         }
 
         onSigClicked: function() {
@@ -582,9 +630,7 @@ ApplicationWindow
 
     // Common functions
     function openEventLog() {
-        var logsComponent = Qt.createComponent("home/AppEventViewer.qml")
-        var logsWindow = logsComponent.createObject(rootWindowID)
-        logsWindow.show()
+        eventLogSubWindowID.visible = true
     }
     function toFullscreenMode() {
         if (rootWindowID.visibility === Window.Windowed) {

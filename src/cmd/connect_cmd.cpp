@@ -31,11 +31,11 @@ namespace Cmd
     void ConnectCmd::execute(Cmd::Interface::IEC61850_API::ptr t_api)
     {
         emit sigCmdEvent(CmdEvent::StartEvent(m_cred.ip(),
-                QString(tr("Try to connect to %1:%2")).arg(m_cred.ip()).arg(m_cred.port())));
+                QString(tr("Connecting to %1:%2")).arg(m_cred.ip()).arg(m_cred.port())));
 
         if (!t_api->connect(m_cred)) {
             emit sigCmdEvent(CmdEvent::FinishEvent(m_cred.ip(),
-                    QString(tr("Can't connect to %1:%2")).arg(m_cred.ip()).arg(m_cred.port()),
+                    QString(tr("Cannot connect to %1:%2")).arg(m_cred.ip()).arg(m_cred.port()),
                     false));
             return;
         }
@@ -45,7 +45,7 @@ namespace Cmd
 
         m_percProgress = 50;
         emit sigCmdEvent(CmdEvent::ProcessEvent(m_cred.ip(),
-                QString(tr("Successfully connected to %1:%2. Fetch the data model"))
+                QString(tr("Connected to %1:%2. Fetching data model..."))
                         .arg(m_cred.ip()).arg(m_cred.port()), m_percProgress));
 
         Core::DataModelBuilder builder;

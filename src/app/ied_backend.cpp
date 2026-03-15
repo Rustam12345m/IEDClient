@@ -140,12 +140,12 @@ namespace App
 
     QString IED_Backend::dsPageStatus()
     {
-        return "All found DataSets";
+        return "All DataSets";
     }
 
     QString IED_Backend::rcbPageStatus()
     {
-        return "All found RCB";
+        return "All Report Control Blocks";
     }
 
     void IED_Backend::slotConnected(bool t_done)

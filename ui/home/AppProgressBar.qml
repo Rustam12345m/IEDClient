@@ -68,7 +68,7 @@ Rectangle
                     font.pixelSize: 16
                     color: VisualStyle.progress.text
 
-                    text: "Please, wait..."
+                    text: "Please wait..."
                 }
                 ProgressBar {
                     Layout.alignment: Qt.AlignBottom
