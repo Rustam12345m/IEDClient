@@ -40,9 +40,19 @@ namespace
 
 namespace App::Models
 {
-    LN_SignalTable::LN_SignalTable(QObject *t_parent, Core::IED::ptr t_ied)
-        : QAbstractTableModel(t_parent), m_ied(t_ied)
+    LN_SignalTable::LN_SignalTable(QObject *t_parent, Core::IED::ptr t_ied, MatrixType t_type)
+        : QAbstractTableModel(t_parent), m_ied(t_ied), m_type(t_type)
     {
+    }
+
+    Core::LN_SignalMatrix::ptr LN_SignalTable::getMatrix() const
+    {
+        if (!m_lnode) return nullptr;
+        switch (m_type) {
+        case MatrixType::Controls: return m_lnode->getControlsMatrix();
+        case MatrixType::Settings: return m_lnode->getSettingsMatrix();
+        default:                   return m_lnode->getSignalMatrix();
+        }
     }
 
     void LN_SignalTable::setActiveIED(Core::IED::ptr t_ied)
@@ -89,10 +99,8 @@ namespace App::Models
 
     int LN_SignalTable::rowCount(const QModelIndex &t_parent) const
     {
-        if (m_lnode) {
-            return m_lnode->getSignalMatrix()->size();
-        }
-        return 0;
+        auto matrix = getMatrix();
+        return matrix ? matrix->size() : 0;
     }
 
     int LN_SignalTable::columnCount(const QModelIndex &t_parent) const
@@ -102,11 +110,10 @@ namespace App::Models
 
     QVariant LN_SignalTable::data(const QModelIndex &t_index, int t_role) const
     {
-        //qDebug() << "LN_SignalTable: " << QString("index = %1 %2, role = %3").arg(t_index.row()).arg(t_index.column()).arg(t_role);
         int row = t_index.row(), column = t_index.column();
 
-        if (m_lnode) {
-            auto doTable = m_lnode->getSignalMatrix();
+        auto doTable = getMatrix();
+        if (doTable) {
             if (t_role == ComRoles::ROLE_SORT_VALUE) {
                 // for sorting process
                 switch (column) {
@@ -165,7 +172,9 @@ namespace App::Models
         Core::ModelItem *doItem = t_nodes->front();
         qDebug() << "LN_SignalTable: slotDataUpdated, do =" << doItem->getName();
 
-        auto matrix = m_lnode->getSignalMatrix()->getRows();
+        auto matrixPtr = getMatrix();
+        if (!matrixPtr) return;
+        auto matrix = matrixPtr->getRows();
         for (size_t i=0;i<matrix.size();i++) {
             if (matrix[i].base().get() == doItem) {
                 emit dataChanged(index(i, DO_VALUE_COLUMN), index(i, DO_TS_COLUMN));

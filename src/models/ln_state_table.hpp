@@ -44,7 +44,10 @@ namespace App::Models
         };
 
     public:
-        LN_SignalTable(QObject *t_parent, Core::IED::ptr t_ied);
+        enum class MatrixType { State, Controls, Settings };
+
+        LN_SignalTable(QObject *t_parent, Core::IED::ptr t_ied,
+                       MatrixType t_type = MatrixType::State);
 
         void     setActiveIED(Core::IED::ptr t_ied);
         auto     getCurrectLN() const {
@@ -64,8 +67,11 @@ namespace App::Models
         void     slotLNSelected(int t_ld, int t_ln);
 
     private:
+        Core::LN_SignalMatrix::ptr getMatrix() const;
+
         Core::IED::ptr          m_ied;
         Core::LogicalNode::ptr  m_lnode; // currect logical node of this model
         QMetaObject::Connection m_updConnection; // signal from LogicalNode
+        MatrixType              m_type;
     };
 }

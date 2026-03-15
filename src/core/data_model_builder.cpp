@@ -114,7 +114,9 @@ namespace Core
                 auto ln = ld->getItem<LogicalNode>(j);
                 ln->moveToThread(t_guiThread); // GUI thread
 
-                ln->m_sigMatrix = LN_SignalMatrixBuilder::create(ln);
+                ln->m_sigMatrix      = LN_SignalMatrixBuilder::create(ln, {"ST", "MX"});
+                ln->m_coMatrix       = LN_SignalMatrixBuilder::create(ln, {"CO"});
+                ln->m_settingsMatrix = LN_SignalMatrixBuilder::create(ln, {"SP", "SE", "SG"});
             }
         }
 

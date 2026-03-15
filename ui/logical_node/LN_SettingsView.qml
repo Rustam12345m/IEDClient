@@ -21,19 +21,88 @@
 
 import QtQuick
 import QtQuick.Controls
-
-import "qrc:/common/"
+import Qt.labs.qmlmodels
 
 import GlobalVarsModule
 import AppStylesModule
 
-// Page View for all Settings elements of selected LN. SGCB
-FocusScope {
+import "qrc:/common/"
+
+// Read-only table of SP/SE/SG (settings) attributes for the selected Logical Node
+Item
+{
     id: rootID
 
-    Text {
-        anchors.centerIn: parent
+    readonly property int defDelegateHeight: 30
 
-        text: "Settings (SGCB). Not support yet..."
+    SortTableHeader {
+        id: headerID
+
+        anchors {
+            left: tableID.left
+            top: parent.top
+            right: parent.right
+        }
+    }
+
+    TableView {
+        id: tableID
+
+        anchors {
+            left: parent.left
+            right: parent.right
+            top: headerID.bottom
+            bottom: parent.bottom
+        }
+
+        model: iedBackend.getLN_SettingsModel()
+
+        focus: true
+        keyNavigationEnabled: true
+        reuseItems: true
+
+        clip: true
+        interactive: true
+        boundsBehavior: Flickable.StopAtBounds
+
+        columnWidthProvider: function(t_column) {
+            return Globals.columnWidthCalculator(headerID, tableID, t_column)
+        }
+
+        selectionBehavior: TableView.SelectRows
+        selectionModel: ItemSelectionModel {
+            model: tableID.model
+        }
+
+        delegate: TextDelegate {
+            delegateHeight: defDelegateHeight
+            selected: (tableID.currentRow == row)
+
+            textAlign: (column == 0) ? Text.AlignLeft : Text.AlignRight
+            text: model.display
+
+            onSigClick: function(row, col) {
+                Globals.setSelectedRow(tableID, row)
+            }
+        }
+
+        ScrollBar.vertical: ScrollBar {
+            policy: ScrollBar.AsNeeded
+            active: true
+            stepSize: 0.25
+
+            onActiveChanged: {
+                if (!active) { active = true }
+            }
+        }
+        ScrollBar.horizontal: ScrollBar {
+            policy: ScrollBar.AsNeeded
+            active: true
+            stepSize: 0.25
+
+            onActiveChanged: {
+                if (!active) { active = true }
+            }
+        }
     }
 }

@@ -51,8 +51,10 @@ namespace App
         Q_INVOKABLE QAbstractListModel*  getLD_GridModel() const { return m_ldsModel; }
         Q_INVOKABLE QAbstractListModel*  getLD_PropModel() const { return m_ldPropModel; }
         Q_INVOKABLE QAbstractTableModel* getLN_ComModel() const { return m_lnsModel; }
-        Q_INVOKABLE QAbstractItemModel*  getLN_StateModel() const { return m_sortDOModel; }
-        Q_INVOKABLE QAbstractItemModel*  getLN_TreeModel() const { return m_lnTreeModel; }
+        Q_INVOKABLE QAbstractItemModel*  getLN_StateModel()    const { return m_sortDOModel; }
+        Q_INVOKABLE QAbstractItemModel*  getLN_ControlsModel() const { return m_sortControlsModel; }
+        Q_INVOKABLE QAbstractItemModel*  getLN_SettingsModel() const { return m_sortSettingsModel; }
+        Q_INVOKABLE QAbstractItemModel*  getLN_TreeModel()     const { return m_lnTreeModel; }
         Q_INVOKABLE QAbstractListModel*  getDS_ComModel() const { return m_dsComModel; }
         Q_INVOKABLE QAbstractTableModel* getDS_ItemModel() const { return m_dsSigModel; }
         Q_INVOKABLE QAbstractTableModel* getBRCB_ComModel() const { return m_brcbComModel; }
@@ -83,9 +85,13 @@ namespace App
         Models::LD_OverviewGrid*    m_ldsModel = nullptr;
         Models::LD_PropertiesTable* m_ldPropModel = nullptr;
         Models::LN_OverviewTable*   m_lnsModel = nullptr;
-        Models::LN_SignalTable*     m_lnStateModel = nullptr;
-        Models::LN_CommonTree*      m_lnTreeModel = nullptr;
-        Models::SortProxyModel*     m_sortDOModel = nullptr;
+        Models::LN_SignalTable*     m_lnStateModel    = nullptr;
+        Models::LN_SignalTable*     m_lnControlsModel = nullptr;
+        Models::LN_SignalTable*     m_lnSettingsModel = nullptr;
+        Models::LN_CommonTree*      m_lnTreeModel     = nullptr;
+        Models::SortProxyModel*     m_sortDOModel       = nullptr;
+        Models::SortProxyModel*     m_sortControlsModel = nullptr;
+        Models::SortProxyModel*     m_sortSettingsModel = nullptr;
         Models::DS_OverviewTable*    m_dsComModel    = nullptr;
         Models::DS_SignalsTable*     m_dsSigModel    = nullptr;
         Models::RCB_OverviewTable*   m_brcbComModel  = nullptr;

@@ -24,7 +24,8 @@
 
 namespace Core
 {
-    LN_SignalMatrix::ptr LN_SignalMatrixBuilder::create(QSharedPointer< LogicalNode > t_ln)
+    LN_SignalMatrix::ptr LN_SignalMatrixBuilder::create(QSharedPointer< LogicalNode > t_ln,
+                                                         const QList<QString> &t_fcFilter)
     {
         auto matrix = LN_SignalMatrix::ptr::create();
 
@@ -32,7 +33,7 @@ namespace Core
         for (auto item : dataObjList) {
             SignalMatrixRow rowPrototype;
             rowPrototype.m_dataObject = item;
-            recursiveFillMatrix(matrix, t_ln, item, rowPrototype);
+            recursiveFillMatrix(matrix, t_ln, item, rowPrototype, t_fcFilter);
         }
         return matrix;
     }
@@ -40,7 +41,8 @@ namespace Core
     void LN_SignalMatrixBuilder::recursiveFillMatrix(LN_SignalMatrix::ptr t_matrix,
                                                      ModelItem::ptr t_root,
                                                      ModelItem::ptr t_item,
-                                                     SignalMatrixRow t_rowPrototype)
+                                                     SignalMatrixRow t_rowPrototype,
+                                                     const QList<QString> &t_fcFilter)
     {
         // Find Q, TS, Desc elements
         for (size_t i=0;i<t_item->getItemCount();i++) {
@@ -59,7 +61,6 @@ namespace Core
             }
         }
 
-        const QList<QString> FC = { "ST", "MX" };
         const QList<QString> ATTR = { "q", "t", "d" };
 
         // Create signals
@@ -68,8 +69,7 @@ namespace Core
 
             auto da = child.dynamicCast<Core::DataAttribute>();
             if (da) {
-                auto fc = da->fcStr();
-                if (!FC.contains(da->fcStr())) {
+                if (!t_fcFilter.contains(da->fcStr())) {
                     continue;
                 }
                 t_rowPrototype.m_fc = da->fcStr();
@@ -85,7 +85,7 @@ namespace Core
                 t_rowPrototype.m_value = child;
                 t_matrix->m_signals.emplace_back(t_rowPrototype);
             } else {
-                recursiveFillMatrix(t_matrix, t_root, child, t_rowPrototype);
+                recursiveFillMatrix(t_matrix, t_root, child, t_rowPrototype, t_fcFilter);
             }
         }
     }

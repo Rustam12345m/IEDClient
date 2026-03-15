@@ -164,12 +164,14 @@ namespace Core
     class LN_SignalMatrixBuilder
     {
     public:
-        static LN_SignalMatrix::ptr create(QSharedPointer< LogicalNode > t_ln);
+        static LN_SignalMatrix::ptr create(QSharedPointer< LogicalNode > t_ln,
+                                           const QList<QString> &t_fcFilter);
 
     private:
         static void recursiveFillMatrix(LN_SignalMatrix::ptr t_table,
                                         ModelItem::ptr t_root,
                                         ModelItem::ptr t_item,
-                                        SignalMatrixRow t_prototype);
+                                        SignalMatrixRow t_prototype,
+                                        const QList<QString> &t_fcFilter);
     };
 }

@@ -31,7 +31,9 @@ namespace App
         m_ldsModel = new Models::LD_OverviewGrid(this, m_con.m_ied);
         m_ldPropModel = new Models::LD_PropertiesTable(this, m_con.m_ied);
         m_lnsModel = new Models::LN_OverviewTable(this, m_con.m_ied);
-        m_lnStateModel = new Models::LN_SignalTable(this, m_con.m_ied);
+        m_lnStateModel    = new Models::LN_SignalTable(this, m_con.m_ied, Models::LN_SignalTable::MatrixType::State);
+        m_lnControlsModel = new Models::LN_SignalTable(this, m_con.m_ied, Models::LN_SignalTable::MatrixType::Controls);
+        m_lnSettingsModel = new Models::LN_SignalTable(this, m_con.m_ied, Models::LN_SignalTable::MatrixType::Settings);
         m_lnTreeModel = new Models::LN_CommonTree(this, m_con.m_ied);
         m_dsComModel    = new Models::DS_OverviewTable(this, m_con.m_ied);
         m_dsSigModel    = new Models::DS_SignalsTable(this, m_con.m_ied);
@@ -44,11 +46,19 @@ namespace App
         m_sortDOModel = new Models::SortProxyModel(this);
         m_sortDOModel->setSourceModel(m_lnStateModel);
 
+        m_sortControlsModel = new Models::SortProxyModel(this);
+        m_sortControlsModel->setSourceModel(m_lnControlsModel);
+
+        m_sortSettingsModel = new Models::SortProxyModel(this);
+        m_sortSettingsModel->setSourceModel(m_lnSettingsModel);
+
         // Selection process LD -> LN -> DO
         connect(m_ldsModel, &Models::LD_OverviewGrid::sigLDSelected, m_ldPropModel, &Models::LD_PropertiesTable::slotLDSelected);        
         connect(m_ldsModel, &Models::LD_OverviewGrid::sigLDSelected, m_lnsModel, &Models::LN_OverviewTable::slotLDSelected);
-        connect(m_lnsModel, &Models::LN_OverviewTable::sigLNSelected, m_lnStateModel, &Models::LN_SignalTable::slotLNSelected);
-        connect(m_lnsModel, &Models::LN_OverviewTable::sigLNSelected, m_lnTreeModel, &Models::LN_CommonTree::slotLNSelected);
+        connect(m_lnsModel, &Models::LN_OverviewTable::sigLNSelected, m_lnStateModel,    &Models::LN_SignalTable::slotLNSelected);
+        connect(m_lnsModel, &Models::LN_OverviewTable::sigLNSelected, m_lnControlsModel, &Models::LN_SignalTable::slotLNSelected);
+        connect(m_lnsModel, &Models::LN_OverviewTable::sigLNSelected, m_lnSettingsModel, &Models::LN_SignalTable::slotLNSelected);
+        connect(m_lnsModel, &Models::LN_OverviewTable::sigLNSelected, m_lnTreeModel,     &Models::LN_CommonTree::slotLNSelected);
 
         connect(m_dsComModel, &Models::DS_OverviewTable::sigDSSelected, m_dsSigModel, &Models::DS_SignalsTable::slotDataSetSelected);
         connect(m_brcbComModel, &Models::RCB_OverviewTable::sigRCBSelected, m_reportsModel, &Models::ReportsTable::slotRCBSelected);
@@ -144,6 +154,8 @@ namespace App
         m_ldPropModel->setActiveIED(m_con.m_ied);
         m_lnsModel->setActiveIED(m_con.m_ied);
         m_lnStateModel->setActiveIED(m_con.m_ied);
+        m_lnControlsModel->setActiveIED(m_con.m_ied);
+        m_lnSettingsModel->setActiveIED(m_con.m_ied);
         m_lnTreeModel->setActiveIED(m_con.m_ied);
         m_dsComModel->setActiveIED(m_con.m_ied);
         m_dsSigModel->setActiveIED(m_con.m_ied);

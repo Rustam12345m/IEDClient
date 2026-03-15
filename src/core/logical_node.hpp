@@ -78,6 +78,12 @@ namespace Core
         auto&    getSignalMatrix() const {
             return m_sigMatrix;
         }
+        auto&    getControlsMatrix() const {
+            return m_coMatrix;
+        }
+        auto&    getSettingsMatrix() const {
+            return m_settingsMatrix;
+        }
         auto&    getDataSets() const {
             return m_dataSets;
         }
@@ -99,6 +105,8 @@ namespace Core
         DataObject::ptr         m_beh;
         DataObject::ptr         m_health;
         LN_SignalMatrix::ptr    m_sigMatrix;
+        LN_SignalMatrix::ptr    m_coMatrix;
+        LN_SignalMatrix::ptr    m_settingsMatrix;
         QList< DataSet::ptr >           m_dataSets;
         QList< ReportBlock::ptr >       m_rcbs;
         QList< GooseControlBlock::ptr > m_gooses;
