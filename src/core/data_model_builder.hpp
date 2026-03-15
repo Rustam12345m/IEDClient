@@ -40,9 +40,9 @@ namespace Core
 
         DataModelBuilder& createDataSet(const QString &t_name, const QString &t_lnRef, bool t_del);
         DataModelBuilder& createDataSet_Elem(const QString &t_ref, const QString &t_fc);
-        DataModelBuilder& createRCB(const QString &t_name);
-        DataModelBuilder& createGOCB(const QString &t_name);
-        DataModelBuilder& createSVCB(const QString &t_name);
+        DataModelBuilder& createRCB(const QString &t_name, const QString &t_lnRef, bool t_isBuffered);
+        DataModelBuilder& createGOCB(const QString &t_name, const QString &t_lnRef);
+        DataModelBuilder& createSVCB(const QString &t_name, const QString &t_lnRef, bool t_isMulticast);
 
         auto lastLD() const { return m_lastLD; }
         auto lastLN() const { return m_lastLN; }

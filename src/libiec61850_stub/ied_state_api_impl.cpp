@@ -244,7 +244,31 @@ namespace Libiec61850
             return nullptr;
         }
 
-        //ClientDataSet clientDataSet = IedConnection_readDataSetValues(con, &error, "simpleIOGenericIO/LLN0.AnalogueValues", NULL);
-        return nullptr;
+        QString dsRef = t_ds->ref() + "." + t_ds->getName();
+
+        IedClientError retval = IED_ERROR_OK;
+        ClientDataSet clientDataSet = IedConnection_readDataSetValues(
+            m_api.m_libConn, &retval, dsRef.toStdString().data(), nullptr);
+
+        if (retval != IED_ERROR_OK || clientDataSet == nullptr) {
+            return nullptr;
+        }
+
+        auto vals = Core::ModelStateUpdater::ptr::create();
+
+        MmsValue *dataSetValues = ClientDataSet_getValues(clientDataSet);
+        if (dataSetValues != nullptr) {
+            int count = MmsValue_getArraySize(dataSetValues);
+            for (int i = 0; i < count && i < (int)t_ds->getItemCount(); i++) {
+                auto dsItem = t_ds->getItem<Core::DataSetItem>(i);
+                if (dsItem && dsItem->item()) {
+                    MmsValue *itemValue = MmsValue_getElement(dataSetValues, i);
+                    getValuesForItemByMmsValue(dsItem->item(), vals, itemValue);
+                }
+            }
+        }
+
+        ClientDataSet_destroy(clientDataSet);
+        return vals;
     }
 }

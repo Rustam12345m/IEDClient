@@ -41,6 +41,12 @@ set(SOURCES
     rcb_overview_table.hpp
     rcb_overview_table.cpp
 
+    goose_overview_table.hpp
+    goose_overview_table.cpp
+
+    sv_overview_table.hpp
+    sv_overview_table.cpp
+
     reports_table.hpp
     reports_table.cpp
 )

@@ -21,22 +21,57 @@
 
 #pragma once
 
+#include <cstdint>
+
 #include "dataset.hpp"
 
 namespace Core
 {
     /**
-     * @brief Representation a ReportControlBlock of LD
+     * @brief Representation of a Report Control Block (BRCB or URCB)
      */
     class ReportBlock : public ModelItem
     {
     public:
         using ptr = QSharedPointer< ReportBlock >;
 
-        ReportBlock() : ModelItem(nullptr, "")
-        {
-        }
+        ReportBlock(ModelItem *t_parent, const QString &t_name, const QString &t_lnRef, bool t_isBuffered)
+            : ModelItem(t_parent, t_name), m_lnRef{t_lnRef}, m_isBuffered{t_isBuffered}
+        {}
 
-        void print() {}
+        const QString & lnRef()     const { return m_lnRef; }
+        bool     isBuffered()       const { return m_isBuffered; }
+        bool     rptEna()           const { return m_rptEna; }
+        bool     resv()             const { return m_resv; }
+        const QString & rptId()     const { return m_rptId; }
+        const QString & dsRef()     const { return m_dsRef; }
+        int      trgOps()           const { return m_trgOps; }
+        uint32_t confRev()          const { return m_confRev; }
+        uint32_t bufTm()            const { return m_bufTm; }
+        uint32_t intgPd()           const { return m_intgPd; }
+        const QString & owner()     const { return m_owner; }
+
+        void setRptEna(bool t_v)             { m_rptEna  = t_v; }
+        void setResv(bool t_v)               { m_resv    = t_v; }
+        void setRptId(const QString &t_v)    { m_rptId   = t_v; }
+        void setDsRef(const QString &t_v)    { m_dsRef   = t_v; }
+        void setTrgOps(int t_v)              { m_trgOps  = t_v; }
+        void setConfRev(uint32_t t_v)        { m_confRev = t_v; }
+        void setBufTm(uint32_t t_v)          { m_bufTm   = t_v; }
+        void setIntgPd(uint32_t t_v)         { m_intgPd  = t_v; }
+        void setOwner(const QString &t_v)    { m_owner   = t_v; }
+
+    private:
+        QString  m_lnRef;
+        bool     m_isBuffered = false;
+        bool     m_rptEna     = false;
+        bool     m_resv       = false;
+        QString  m_rptId;
+        QString  m_dsRef;
+        int      m_trgOps  = 0;
+        uint32_t m_confRev = 0;
+        uint32_t m_bufTm   = 0;
+        uint32_t m_intgPd  = 0;
+        QString  m_owner;
     };
 }

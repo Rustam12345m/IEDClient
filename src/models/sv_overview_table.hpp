@@ -26,27 +26,27 @@
 
 namespace App::Models
 {
-    class RCB_OverviewTable : public QAbstractTableModel
+    /**
+     * @brief Qt table model for Sampled Values Control Blocks overview
+     */
+    class SV_OverviewTable : public QAbstractTableModel
     {
         Q_OBJECT
         enum ColumnType {
-            RCB_ENA_COLUMN = 0,
-            RCB_RESV_COLUMN,
-            RCB_ID_COLUMN,
-            RCB_OWNER_COLUMN,
-            RCB_DS_COLUMN,
-            RCB_TRIG_COLUMN,
-            RCB_CREV_COLUMN,
-            RCB_BUFF_COLUMN,
-            RCB_INTEGRITY_COLUMN,
+            SV_ENA_COLUMN = 0,
+            SV_TYPE_COLUMN,
+            SV_ID_COLUMN,
+            SV_DS_COLUMN,
+            SV_CREV_COLUMN,
+            SV_SMPRATE_COLUMN,
+            SV_NOASDU_COLUMN,
 
             COLUMN_COUNT
         };
 
     public:
-        RCB_OverviewTable(QObject *t_parent, Core::IED::ptr t_ied, bool t_buffered = true);
+        SV_OverviewTable(QObject *t_parent, Core::IED::ptr t_ied);
 
-        Q_INVOKABLE void setSelectedRCB(int t_inx);
         void        setActiveIED(Core::IED::ptr t_ied);
 
         QVariant    headerData(int t_section, Qt::Orientation t_orientation,
@@ -57,17 +57,10 @@ namespace App::Models
         int         columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
         QVariant    data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
-    signals:
-        void    sigRCBSelected(int t_inx);
-
     public slots:
         void    slotDataUpdated(bool t_done);
 
     private:
-        QList<Core::ReportBlock::ptr> filteredList() const;
-
         Core::IED::ptr m_ied;
-        bool m_buffered    = true;
-        int  m_currentRCB  = -1;
     };
 }

@@ -85,6 +85,7 @@ artifacts/
 .vscode/
 tmp/
 wip/
+squashfs-root*/
 
 # Tmp
 *.dtmp

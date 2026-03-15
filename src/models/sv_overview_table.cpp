@@ -1,0 +1,97 @@
+/*
+ *  Copyright 2023 Rustam Mustafin
+ *
+ *  This file is part of IEDClient.
+ *
+ *  IEDClient is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  IEDClient is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with IEDClient.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  See COPYING file for the complete license text.
+ * */
+
+#include "sv_overview_table.hpp"
+
+namespace App::Models
+{
+    SV_OverviewTable::SV_OverviewTable(QObject *t_parent, Core::IED::ptr t_ied)
+        : QAbstractTableModel(t_parent), m_ied(t_ied)
+    {
+    }
+
+    void SV_OverviewTable::setActiveIED(Core::IED::ptr t_ied)
+    {
+        beginResetModel();
+        m_ied = t_ied;
+        endResetModel();
+    }
+
+    QVariant SV_OverviewTable::headerData(int t_column, Qt::Orientation t_orientation, int t_role) const
+    {
+        if (t_orientation != Qt::Horizontal) return QVariant();
+
+        switch (t_column) {
+        case SV_ENA_COLUMN:    return QVariant(QString("Enabled"));
+        case SV_TYPE_COLUMN:   return QVariant(QString("Type"));
+        case SV_ID_COLUMN:     return QVariant(QString("SV ID"));
+        case SV_DS_COLUMN:     return QVariant(QString("DataSet"));
+        case SV_CREV_COLUMN:   return QVariant(QString("ConfRev"));
+        case SV_SMPRATE_COLUMN:return QVariant(QString("Smp Rate"));
+        case SV_NOASDU_COLUMN: return QVariant(QString("NoASDU"));
+        }
+        return QVariant();
+    }
+
+    QHash<int, QByteArray> SV_OverviewTable::roleNames() const
+    {
+        return { { Qt::DisplayRole, "display" } };
+    }
+
+    int SV_OverviewTable::rowCount(const QModelIndex &t_parent) const
+    {
+        if (!m_ied) return 0;
+        return m_ied->model().getSV_CBList().count();
+    }
+
+    int SV_OverviewTable::columnCount(const QModelIndex &t_parent) const
+    {
+        return COLUMN_COUNT;
+    }
+
+    QVariant SV_OverviewTable::data(const QModelIndex &t_index, int t_role) const
+    {
+        if (t_role != Qt::DisplayRole) return QVariant();
+
+        int row = t_index.row(), column = t_index.column();
+        const auto list = m_ied->model().getSV_CBList();
+        if (row < 0 || row >= list.count()) return QVariant();
+
+        const auto &svcb = list[row];
+
+        switch (column) {
+        case SV_ENA_COLUMN:    return QVariant(svcb->svEna() ? "Yes" : "No");
+        case SV_TYPE_COLUMN:   return QVariant(svcb->isMulticast() ? "MSVCB" : "USVCB");
+        case SV_ID_COLUMN:     return QVariant(svcb->svId().isEmpty() ? svcb->getName() : svcb->svId());
+        case SV_DS_COLUMN:     return QVariant(svcb->datSet());
+        case SV_CREV_COLUMN:   return QVariant(QString::number(svcb->confRev()));
+        case SV_SMPRATE_COLUMN:return QVariant(QString::number(svcb->smpRate()));
+        case SV_NOASDU_COLUMN: return QVariant(QString::number(svcb->noASDU()));
+        }
+        return QVariant();
+    }
+
+    void SV_OverviewTable::slotDataUpdated(bool t_done)
+    {
+        beginResetModel();
+        endResetModel();
+    }
+}

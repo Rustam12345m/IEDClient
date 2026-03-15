@@ -82,6 +82,27 @@ namespace Core
         return *this;
     }
 
+    DataModelBuilder& DataModelBuilder::createRCB(const QString &t_name, const QString &t_lnRef, bool t_isBuffered)
+    {
+        m_lastRCB = ReportBlock::ptr::create(lastLN().get(), t_name, t_lnRef, t_isBuffered);
+        m_model->pushReportCB(m_lastRCB);
+        return *this;
+    }
+
+    DataModelBuilder& DataModelBuilder::createGOCB(const QString &t_name, const QString &t_lnRef)
+    {
+        m_lastGOCB = GooseControlBlock::ptr::create(lastLN().get(), t_name, t_lnRef);
+        m_model->pushGooseCB(m_lastGOCB);
+        return *this;
+    }
+
+    DataModelBuilder& DataModelBuilder::createSVCB(const QString &t_name, const QString &t_lnRef, bool t_isMulticast)
+    {
+        m_lastSVCB = SV_ControlBlock::ptr::create(lastLN().get(), t_name, t_lnRef, t_isMulticast);
+        m_model->pushSV_CB(m_lastSVCB);
+        return *this;
+    }
+
     QSharedPointer<DataModel> DataModelBuilder::build(QThread *t_guiThread)
     {
         m_model->resolveIEDName();

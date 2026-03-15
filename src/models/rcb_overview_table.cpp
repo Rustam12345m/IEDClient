@@ -23,9 +23,30 @@
 
 namespace App::Models
 {
-    RCB_OverviewTable::RCB_OverviewTable(QObject *t_parent, Core::IED::ptr t_ied)
-        : QAbstractTableModel(t_parent), m_ied(t_ied)
+    static QString formatTrgOps(int t_trgOps)
     {
+        QStringList parts;
+        if (t_trgOps & 2)  parts << "dchg";
+        if (t_trgOps & 4)  parts << "qchg";
+        if (t_trgOps & 8)  parts << "dupd";
+        if (t_trgOps & 16) parts << "intg";
+        if (t_trgOps & 32) parts << "gi";
+        return parts.isEmpty() ? "none" : parts.join("|");
+    }
+
+    RCB_OverviewTable::RCB_OverviewTable(QObject *t_parent, Core::IED::ptr t_ied, bool t_buffered)
+        : QAbstractTableModel(t_parent), m_ied(t_ied), m_buffered(t_buffered)
+    {
+    }
+
+    QList<Core::ReportBlock::ptr> RCB_OverviewTable::filteredList() const
+    {
+        QList<Core::ReportBlock::ptr> result;
+        for (const auto &rcb : m_ied->model().getReportCBList()) {
+            if (rcb->isBuffered() == m_buffered)
+                result.append(rcb);
+        }
+        return result;
     }
 
     void RCB_OverviewTable::setSelectedRCB(int t_inx)
@@ -86,7 +107,8 @@ namespace App::Models
 
     int RCB_OverviewTable::rowCount(const QModelIndex &t_parent) const
     {
-        return 7;
+        if (!m_ied) return 0;
+        return filteredList().count();
     }
 
     int RCB_OverviewTable::columnCount(const QModelIndex &t_parent) const
@@ -96,52 +118,40 @@ namespace App::Models
 
     QVariant RCB_OverviewTable::data(const QModelIndex &t_index, int t_role) const
     {
-        //qDebug() << "RCB_OverviewTable: " << QString("index = %1 %2, role = %3").arg(t_index.row()).arg(t_index.column()).arg(t_role);
+        if (t_role != Qt::DisplayRole) return QVariant();
+
         int row = t_index.row(), column = t_index.column();
+        const auto list = filteredList();
+        if (row < 0 || row >= list.count()) return QVariant();
+
+        const auto &rcb = list[row];
 
         switch (column) {
-        case RCB_ENA_COLUMN: {
-            return QVariant(QString("Ena_%1").arg(row));
-            break;
+        case RCB_ENA_COLUMN:
+            return QVariant(rcb->rptEna() ? "Yes" : "No");
+        case RCB_RESV_COLUMN:
+            return QVariant(rcb->resv() ? "Yes" : "No");
+        case RCB_ID_COLUMN:
+            return QVariant(rcb->rptId().isEmpty() ? rcb->getName() : rcb->rptId());
+        case RCB_OWNER_COLUMN:
+            return QVariant(rcb->owner());
+        case RCB_DS_COLUMN:
+            return QVariant(rcb->dsRef());
+        case RCB_TRIG_COLUMN:
+            return QVariant(formatTrgOps(rcb->trgOps()));
+        case RCB_CREV_COLUMN:
+            return QVariant(QString::number(rcb->confRev()));
+        case RCB_BUFF_COLUMN:
+            return QVariant(QString::number(rcb->bufTm()));
+        case RCB_INTEGRITY_COLUMN:
+            return QVariant(QString::number(rcb->intgPd()));
         }
-        case RCB_RESV_COLUMN: {
-            return QVariant(QString("Resv_%1").arg(row));
-            break;
-        }
-        case RCB_ID_COLUMN: {
-            return QVariant(QString("RepID_%1").arg(row));
-            break;
-        }
-        case RCB_OWNER_COLUMN: {
-            return QVariant(QString("192.168.127.%1").arg(row));
-            break;
-        }
-        case RCB_DS_COLUMN: {
-            return QVariant(QString("DS_%1").arg(row));
-            break;
-        }
-        case RCB_TRIG_COLUMN: {
-            return QVariant(QString("TRIG_%1").arg(row));
-            break;
-        }
-        case RCB_CREV_COLUMN: {
-            return QVariant(QString("CRev_%1").arg(row));
-            break;
-        }
-        case RCB_BUFF_COLUMN: {
-            return QVariant(QString("BuffTime_%1").arg(row));
-            break;
-        }
-        case RCB_INTEGRITY_COLUMN: {
-            return QVariant(QString("Integrity_%1").arg(row));
-            break;
-        }
-        }
-        return QVariant(" ? ");
+        return QVariant();
     }
 
     void RCB_OverviewTable::slotDataUpdated(bool t_done)
     {
-        emit dataChanged(index(0, RCB_ENA_COLUMN), index(rowCount() - 1, COLUMN_COUNT));
+        beginResetModel();
+        endResetModel();
     }
 }

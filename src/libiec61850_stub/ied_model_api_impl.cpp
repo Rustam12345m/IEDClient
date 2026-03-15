@@ -212,63 +212,163 @@ namespace Libiec61850
         return 0;
     }
 
-    int IED_ModelAPI_Impl::fetchLN_RCB(Core::DataModelBuilder & t_builder)
+    int IED_ModelAPI_Impl::fetchLN_RCB(Core::DataModelBuilder &t_builder)
     {
         IedClientError retval = IED_ERROR_OK;
-        QString ref = t_builder.lastLN()->getReference();
+        QString lnRef = t_builder.lastLN()->getReference();
 
-        // Unbuffered RCB
-        LinkedList getReportCBList = IedConnection_getLogicalNodeDirectory(m_api.m_libConn, &retval,
-                                        ref.toStdString().data(), ACSI_CLASS_URCB);
+        auto fetchRCBList = [&](ACSIClass t_acsiClass, bool t_isBuffered, const char *t_prefix) {
+            LinkedList rcbList = IedConnection_getLogicalNodeDirectory(m_api.m_libConn, &retval,
+                                     lnRef.toStdString().data(), t_acsiClass);
+            if (retval != IED_ERROR_OK || rcbList == nullptr) {
+                return;
+            }
 
-        LinkedList rcb = LinkedList_getNext(getReportCBList);
-        while (rcb != nullptr) {
-            char* reportName = (char *) rcb->data;
+            LinkedList rcb = LinkedList_getNext(rcbList);
+            while (rcb != nullptr) {
+                QString rcbName = QString::fromLocal8Bit((char *)rcb->data);
+                QString rcbRef  = QString("%1.%2.%3").arg(lnRef, t_prefix, rcbName);
 
-            //printf("    URCB: %s\n", reportName);
+                t_builder.createRCB(rcbName, lnRef, t_isBuffered);
 
-            rcb = LinkedList_getNext(rcb);
-        }
-        LinkedList_destroy(getReportCBList);
+                ClientReportControlBlock clientRcb = IedConnection_getRCBValues(
+                    m_api.m_libConn, &retval, rcbRef.toStdString().data(), nullptr);
 
-        // Buffered RCB
-        getReportCBList = IedConnection_getLogicalNodeDirectory(m_api.m_libConn, &retval,
-                                        ref.toStdString().data(), ACSI_CLASS_BRCB);
+                if (retval == IED_ERROR_OK && clientRcb != nullptr) {
+                    auto rcbItem = t_builder.lastRCB();
 
-        rcb = LinkedList_getNext(getReportCBList);
-        while (rcb != nullptr) {
-            char* reportName = (char *) rcb->data;
+                    rcbItem->setRptEna(ClientReportControlBlock_getRptEna(clientRcb));
+                    rcbItem->setResv(ClientReportControlBlock_getResv(clientRcb));
+                    rcbItem->setTrgOps(ClientReportControlBlock_getTrgOps(clientRcb));
+                    rcbItem->setConfRev(ClientReportControlBlock_getConfRev(clientRcb));
+                    rcbItem->setBufTm(ClientReportControlBlock_getBufTm(clientRcb));
+                    rcbItem->setIntgPd(ClientReportControlBlock_getIntgPd(clientRcb));
 
-            //printf("    BRCB: %s\n", reportName);
+                    const char *rptId = ClientReportControlBlock_getRptId(clientRcb);
+                    if (rptId) rcbItem->setRptId(QString::fromLocal8Bit(rptId));
 
-            rcb = LinkedList_getNext(rcb);
-        }
-        LinkedList_destroy(getReportCBList);
+                    const char *dsRef = ClientReportControlBlock_getDataSetReference(clientRcb);
+                    if (dsRef) rcbItem->setDsRef(QString::fromLocal8Bit(dsRef));
+
+                    MmsValue *owner = ClientReportControlBlock_getOwner(clientRcb);
+                    if (owner != nullptr) {
+                        int size = MmsValue_getOctetStringSize(owner);
+                        QString ownerStr;
+                        for (int i = 0; i < size; i++) {
+                            ownerStr += QString("%1").arg(
+                                MmsValue_getOctetStringOctet(owner, i), 2, 16, QChar('0'));
+                        }
+                        rcbItem->setOwner(ownerStr);
+                    }
+
+                    ClientReportControlBlock_destroy(clientRcb);
+                }
+
+                rcb = LinkedList_getNext(rcb);
+            }
+            LinkedList_destroy(rcbList);
+        };
+
+        fetchRCBList(ACSI_CLASS_URCB, false, "RP");
+        fetchRCBList(ACSI_CLASS_BRCB, true,  "BR");
         return 0;
     }
 
     int IED_ModelAPI_Impl::fetchLN_GOCB(Core::DataModelBuilder &t_builder)
     {
-        // Goose CB
         IedClientError retval = IED_ERROR_OK;
-        QString ref = t_builder.lastLN()->getReference();
-        LinkedList getReportCBList = IedConnection_getLogicalNodeDirectory(m_api.m_libConn, &retval,
-                                            ref.toStdString().data(), ACSI_CLASS_GoCB);
+        QString lnRef = t_builder.lastLN()->getReference();
 
-        LinkedList rcb = LinkedList_getNext(getReportCBList);
-        while (rcb != nullptr) {
-            char* reportName = (char *) rcb->data;
-
-            printf("    GOCB: %s\n", reportName);
-
-            rcb = LinkedList_getNext(rcb);
+        LinkedList gocbList = IedConnection_getLogicalNodeDirectory(m_api.m_libConn, &retval,
+                                  lnRef.toStdString().data(), ACSI_CLASS_GoCB);
+        if (retval != IED_ERROR_OK || gocbList == nullptr) {
+            return 0;
         }
-        LinkedList_destroy(getReportCBList);
+
+        LinkedList gocb = LinkedList_getNext(gocbList);
+        while (gocb != nullptr) {
+            QString name    = QString::fromLocal8Bit((char *)gocb->data);
+            QString gocbRef = QString("%1.GO.%2").arg(lnRef, name);
+
+            t_builder.createGOCB(name, lnRef);
+
+            ClientGooseControlBlock clientGocb = IedConnection_getGoCBValues(
+                m_api.m_libConn, &retval, gocbRef.toStdString().data(), nullptr);
+
+            if (retval == IED_ERROR_OK && clientGocb != nullptr) {
+                auto gocbItem = t_builder.lastGOCB();
+
+                gocbItem->setGoEna(ClientGooseControlBlock_getGoEna(clientGocb));
+                gocbItem->setConfRev(ClientGooseControlBlock_getConfRev(clientGocb));
+                gocbItem->setMinTime(ClientGooseControlBlock_getMinTime(clientGocb));
+                gocbItem->setMaxTime(ClientGooseControlBlock_getMaxTime(clientGocb));
+
+                PhyComAddress dstAddr = ClientGooseControlBlock_getDstAddress(clientGocb);
+                gocbItem->setAppId(dstAddr.appId);
+                gocbItem->setVlanId(dstAddr.vlanId);
+                gocbItem->setVlanPriority(dstAddr.vlanPriority);
+
+                const char *goId = ClientGooseControlBlock_getGoID(clientGocb);
+                if (goId) gocbItem->setGoId(QString::fromLocal8Bit(goId));
+
+                const char *datSet = ClientGooseControlBlock_getDatSet(clientGocb);
+                if (datSet) gocbItem->setDatSet(QString::fromLocal8Bit(datSet));
+
+                ClientGooseControlBlock_destroy(clientGocb);
+            }
+
+            gocb = LinkedList_getNext(gocb);
+        }
+        LinkedList_destroy(gocbList);
         return 0;
     }
 
     int IED_ModelAPI_Impl::fetchLN_SVCB(Core::DataModelBuilder &t_builder)
     {
+        IedClientError retval = IED_ERROR_OK;
+        QString lnRef = t_builder.lastLN()->getReference();
+
+        auto fetchSVCBList = [&](ACSIClass t_acsiClass, bool t_isMulticast, const char *t_prefix) {
+            LinkedList svcbList = IedConnection_getLogicalNodeDirectory(m_api.m_libConn, &retval,
+                                      lnRef.toStdString().data(), t_acsiClass);
+            if (retval != IED_ERROR_OK || svcbList == nullptr) {
+                return;
+            }
+
+            LinkedList svcb = LinkedList_getNext(svcbList);
+            while (svcb != nullptr) {
+                QString name    = QString::fromLocal8Bit((char *)svcb->data);
+                QString svcbRef = QString("%1.%2.%3").arg(lnRef, t_prefix, name);
+
+                t_builder.createSVCB(name, lnRef, t_isMulticast);
+
+                ClientSVControlBlock clientSvcb = ClientSVControlBlock_create(
+                    m_api.m_libConn, svcbRef.toStdString().data());
+
+                if (clientSvcb != nullptr) {
+                    auto svcbItem = t_builder.lastSVCB();
+
+                    svcbItem->setSvEna(ClientSVControlBlock_getSvEna(clientSvcb));
+                    svcbItem->setConfRev(ClientSVControlBlock_getConfRev(clientSvcb));
+                    svcbItem->setSmpRate(ClientSVControlBlock_getSmpRate(clientSvcb));
+                    svcbItem->setNoASDU(ClientSVControlBlock_getNoASDU(clientSvcb));
+
+                    const char *svId = ClientSVControlBlock_getMsvID(clientSvcb);
+                    if (svId) svcbItem->setSvId(QString::fromLocal8Bit(svId));
+
+                    const char *datSet = ClientSVControlBlock_getDatSet(clientSvcb);
+                    if (datSet) svcbItem->setDatSet(QString::fromLocal8Bit(datSet));
+
+                    ClientSVControlBlock_destroy(clientSvcb);
+                }
+
+                svcb = LinkedList_getNext(svcb);
+            }
+            LinkedList_destroy(svcbList);
+        };
+
+        fetchSVCBList(ACSI_CLASS_MSVCB, true,  "MS");
+        fetchSVCBList(ACSI_CLASS_USVCB, false, "US");
         return 0;
     }
 }

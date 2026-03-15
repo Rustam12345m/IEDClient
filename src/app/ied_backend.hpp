@@ -33,6 +33,8 @@
 #include "models/ds_signals_table.hpp"
 #include "models/rcb_overview_table.hpp"
 #include "models/reports_table.hpp"
+#include "models/goose_overview_table.hpp"
+#include "models/sv_overview_table.hpp"
 
 namespace App
 {
@@ -53,8 +55,11 @@ namespace App
         Q_INVOKABLE QAbstractItemModel*  getLN_TreeModel() const { return m_lnTreeModel; }
         Q_INVOKABLE QAbstractListModel*  getDS_ComModel() const { return m_dsComModel; }
         Q_INVOKABLE QAbstractTableModel* getDS_ItemModel() const { return m_dsSigModel; }
-        Q_INVOKABLE QAbstractTableModel* getRCB_ComModel() const { return m_rcbComModel; }
-        Q_INVOKABLE QAbstractTableModel* getReportsModel() const { return m_reportsModel; }
+        Q_INVOKABLE QAbstractTableModel* getBRCB_ComModel() const { return m_brcbComModel; }
+        Q_INVOKABLE QAbstractTableModel* getURCB_ComModel() const { return m_urcbComModel; }
+        Q_INVOKABLE QAbstractTableModel* getGOSE_ComModel() const { return m_gooseComModel; }
+        Q_INVOKABLE QAbstractTableModel* getSV_ComModel()   const { return m_svComModel; }
+        Q_INVOKABLE QAbstractTableModel* getReportsModel()  const { return m_reportsModel; }
 
         // CMD
         Q_INVOKABLE void updateLDs_Status();
@@ -81,9 +86,12 @@ namespace App
         Models::LN_SignalTable*     m_lnStateModel = nullptr;
         Models::LN_CommonTree*      m_lnTreeModel = nullptr;
         Models::SortProxyModel*     m_sortDOModel = nullptr;
-        Models::DS_OverviewTable*   m_dsComModel = nullptr;
-        Models::DS_SignalsTable*    m_dsSigModel = nullptr;
-        Models::RCB_OverviewTable*  m_rcbComModel = nullptr;
-        Models::ReportsTable*       m_reportsModel = nullptr;
+        Models::DS_OverviewTable*    m_dsComModel    = nullptr;
+        Models::DS_SignalsTable*     m_dsSigModel    = nullptr;
+        Models::RCB_OverviewTable*   m_brcbComModel  = nullptr;
+        Models::RCB_OverviewTable*   m_urcbComModel  = nullptr;
+        Models::GOOSE_OverviewTable* m_gooseComModel = nullptr;
+        Models::SV_OverviewTable*    m_svComModel    = nullptr;
+        Models::ReportsTable*        m_reportsModel  = nullptr;
     };
 }

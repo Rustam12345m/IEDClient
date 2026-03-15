@@ -31,6 +31,13 @@ FocusScope
 {
     id: rootID
 
+    property var tabModels: [
+        iedBackend.getBRCB_ComModel(),
+        iedBackend.getURCB_ComModel(),
+        iedBackend.getGOSE_ComModel(),
+        iedBackend.getSV_ComModel()
+    ]
+
     function resizeColumnsOnPage() {
         Globals.resizeColumnsToContent(headerID, tableID)
     }
@@ -66,7 +73,7 @@ FocusScope
             }
 
             onSigTabSelected: function(index) {
-                // lnSignalsStack.currentIndex = index
+                tableID.model = rootID.tabModels[index]
             }
         }
     }
@@ -98,7 +105,7 @@ FocusScope
             bottom: parent.bottom
         }
 
-        model: iedBackend.getRCB_ComModel()
+        model: rootID.tabModels[0]
 
         focus: true
         reuseItems: true
