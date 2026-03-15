@@ -284,13 +284,13 @@ ApplicationWindow
                 // unselectedColor: VisualStyle.tabBar.unselColor
 
                 model: ListModel {
-                    ListElement { title: "Home" }
-                    ListElement { title: "Logical devices" }
-                    ListElement { title: "Logical nodes" }
-                    ListElement { title: "DataSets" }
-                    ListElement { title: "Report blocks" }
-                    ListElement { title: "Tree" }
-                    ListElement { title: "Files" }
+                    ListElement { title: "HOME" }
+                    ListElement { title: "LOGICAL DEVICES" }
+                    ListElement { title: "LOGICAL NODES" }
+                    ListElement { title: "DATASETS" }
+                    ListElement { title: "REPORT BLOCKS" }
+                    ListElement { title: "TREE" }
+                    ListElement { title: "FILES" }
                 }
 
                 onSigTabSelected: function(inx) {
@@ -364,10 +364,6 @@ ApplicationWindow
                             onSigConnectTo: function(con) {
                                 globalProgressBar.startLoad()
                                 presenter.connectTo(con)
-                            }
-                            onSigDumpModel: function(dir, ip, port, tls, user, pass) {
-                                globalProgressBar.startLoad()
-                                presenter.toolDumpModel(dir, ip, port, tls, user, pass)
                             }
                         }
 
@@ -521,73 +517,24 @@ ApplicationWindow
 
         Keys.onPressed: function(event) {
             console.log("Window: Key pressed " + event.key)
-
-            // About
-            if (event.key == Qt.Key_F1) {
-                showAbotProgramWindow()
-                event.accepted = true
-                return
-            }
-
-            // Update
-            if (event.key == Qt.Key_F5) {
-                // console.log("Update data by F5")
-                updateActivePage()
-                event.accepted = true
-                return
-            }
-
-            // Fullscreen
-            if (event.key == Qt.Key_F11) {
-                toFullscreenMode()
-                event.accepted = true
-                return
-            }
-
-            // Alt
-            if (event.modifiers & Qt.AltModifier) {
-                switch (event.key) {
-                case Qt.Key_1: {
-                    rootWindowID.setActivePage(Globals.Page.START)
-                    event.accepted = true
-                    return
-                }
-                case Qt.Key_2: {
-                    rootWindowID.setActivePage(Globals.Page.LD)
-                    event.accepted = true
-                    return
-                }
-                case Qt.Key_3: {
-                    rootWindowID.setActivePage(Globals.Page.LN)
-                    event.accepted = true
-                    return
-                }
-                case Qt.Key_4: {
-                    rootWindowID.setActivePage(Globals.Page.DS)
-                    event.accepted = true
-                    return
-                }
-                case Qt.Key_5: {
-                    rootWindowID.setActivePage(Globals.Page.RCB)
-                    event.accepted = true
-                    return
-                }
-                case Qt.Key_6: {
-                    rootWindowID.setActivePage(Globals.Page.FS)
-                    event.accepted = true
-                    return
-                }
-                }
-            }
-
-            // Ctrl
-            if (event.modifiers & Qt.ControlModifier) {
-                if (event.key == Qt.Key_H) {
-                    rootWindowID.showAbotProgramWindow()
-                }
-            }
         }
     }
+
+    // Window-level shortcuts — fire regardless of which item holds focus.
+    // Keys.onPressed on mainBack is bypassed when a TextField/CheckBox/Button
+    // inside the property panel holds activeFocus (they accept all key events
+    // at the C++ level). Shortcut items are not part of the focus chain and
+    // always work at the ApplicationWindow scope.
+    Shortcut { sequence: "F1";    onActivated: showAbotProgramWindow() }
+    Shortcut { sequence: "F5";    onActivated: updateActivePage()      }
+    Shortcut { sequence: "F11";   onActivated: toFullscreenMode()      }
+    Shortcut { sequence: "Alt+1"; onActivated: setActivePage(Globals.Page.START) }
+    Shortcut { sequence: "Alt+2"; onActivated: setActivePage(Globals.Page.LD)    }
+    Shortcut { sequence: "Alt+3"; onActivated: setActivePage(Globals.Page.LN)    }
+    Shortcut { sequence: "Alt+4"; onActivated: setActivePage(Globals.Page.DS)    }
+    Shortcut { sequence: "Alt+5"; onActivated: setActivePage(Globals.Page.RCB)   }
+    Shortcut { sequence: "Alt+6"; onActivated: setActivePage(Globals.Page.FS)    }
+    Shortcut { sequence: "Ctrl+H"; onActivated: showAbotProgramWindow()          }
 
     // Close modal window timer
     Timer {
