@@ -82,10 +82,9 @@ run_build() {
     # Ensure the container process runs with the same UID/GID as the
     # host user so that all files written to the mounted volume have
     # the correct ownership.
+    run_opts+=(--user "$(id -u):$(id -g)")
     if [ "$(basename "$DOCKER")" = "podman" ]; then
         run_opts+=(--userns=keep-id)
-    else
-        run_opts+=(--user "$(id -u):$(id -g)")
     fi
 
     "$DOCKER" run "${run_opts[@]}" \
