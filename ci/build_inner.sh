@@ -70,7 +70,7 @@ do_build() {
     cmake --build "$BUILD_DIR" -j "$NPROC"
 
     echo "==> Installing to $INSTALL_DIR..."
-    cmake --install "$BUILD_DIR"
+    cmake --install "$BUILD_DIR" > /dev/null
 }
 
 do_appimage() {
@@ -119,7 +119,8 @@ do_appimage() {
         -d "$REPO_DIR/resources/IEDClient.desktop" \
         -i "$icon" \
         --plugin qt \
-        --output appimage
+        --output appimage \
+        > /dev/null
 
     local size
     size="$(du -h "$OUTPUT" | cut -f1)"
@@ -155,7 +156,7 @@ fi
 if $DO_HACK; then
     echo "==> Incremental rebuild..."
     cmake --build "$BUILD_DIR" -j "$NPROC"
-    cmake --install "$BUILD_DIR"
+    cmake --install "$BUILD_DIR" > /dev/null
 elif [ -n "$BUILD_TYPE" ]; then
     case "$BUILD_TYPE" in
         release)

@@ -42,15 +42,19 @@ namespace Libiec61850
             t_rcbRef.toStdString().data());
 
         ClientReportControlBlock_setRptEna(rcb, t_enable);
-        ClientReportControlBlock_setTrgOps(rcb, t_trgOps);
-        ClientReportControlBlock_setBufTm(rcb, t_bufTm);
-        ClientReportControlBlock_setIntgPd(rcb, t_intgPd);
-        ClientReportControlBlock_setRptId(rcb, t_rptId.toStdString().data());
-        ClientReportControlBlock_setDataSetReference(rcb, t_datSet.toStdString().data());
 
-        uint32_t mask = RCB_ELEMENT_RPT_ENA | RCB_ELEMENT_TRG_OPS
-                      | RCB_ELEMENT_BUF_TM | RCB_ELEMENT_INTG_PD
-                      | RCB_ELEMENT_RPT_ID | RCB_ELEMENT_DATSET;
+        uint32_t mask = RCB_ELEMENT_RPT_ENA;
+
+        if (t_enable) {
+            ClientReportControlBlock_setTrgOps(rcb, t_trgOps);
+            ClientReportControlBlock_setBufTm(rcb, t_bufTm);
+            ClientReportControlBlock_setIntgPd(rcb, t_intgPd);
+            ClientReportControlBlock_setRptId(rcb, t_rptId.toStdString().data());
+            ClientReportControlBlock_setDataSetReference(rcb, t_datSet.toStdString().data());
+
+            mask |= RCB_ELEMENT_TRG_OPS | RCB_ELEMENT_BUF_TM
+                  | RCB_ELEMENT_INTG_PD | RCB_ELEMENT_RPT_ID | RCB_ELEMENT_DATSET;
+        }
 
         IedConnection_setRCBValues(m_api.m_libConn, &error, rcb, mask, true);
 

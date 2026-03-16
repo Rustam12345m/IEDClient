@@ -44,11 +44,13 @@ namespace Cmd
                 t_api->control().uninstallReportHandler(rcbRef);
             }
             m_rcb->setRptEna(m_enable);
-            m_rcb->setTrgOps(m_trgOps);
-            m_rcb->setBufTm(m_bufTm);
-            m_rcb->setIntgPd(m_intgPd);
-            m_rcb->setRptId(m_rptId);
-            m_rcb->setDsRef(m_datSet);
+            if (m_enable) {
+                m_rcb->setTrgOps(m_trgOps);
+                m_rcb->setBufTm(m_bufTm);
+                m_rcb->setIntgPd(m_intgPd);
+                m_rcb->setRptId(m_rptId);
+                m_rcb->setDsRef(m_datSet);
+            }
 
             emit sigCmdEvent(CmdEvent::FinishEvent(rcbRef,
                 QString("RCB %1: %2").arg(action, rcbRef), true));
