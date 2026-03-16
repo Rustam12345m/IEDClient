@@ -37,6 +37,18 @@ FocusScope
     readonly property int defDelegateWidth: 60
 
     signal sigLeftOrRightKey()
+    signal sigItemDetail(string doRef, var detail)
+
+    property bool detailPanelOpen: false
+
+    function emitItemDetail(row) {
+        var detail = tableID.model.getItemDetail(row)
+        if (detail && detail.length > 0) {
+            var refIdx = tableID.model.index(row, 1)
+            var doRef = tableID.model.data(refIdx) || ""
+            sigItemDetail(doRef, detail)
+        }
+    }
 
     function resizeColumnsToContent(){
         Globals.resizeColumnsToContent(headerID, tableID)
@@ -99,12 +111,11 @@ FocusScope
             }
             onSigDoubleClick: function(row, col) {
                 Globals.setSelectedRow(tableID, row)
-                var detail = tableID.model.getItemDetail(row)
-                if (detail && detail.length > 0) {
-                    // Get the DO reference from column 1 (Reference column)
-                    var refIdx = tableID.model.index(row, 1)
-                    var doRef = tableID.model.data(refIdx) || ""
-                    itemDetailDialog.showDetail(doRef, detail)
+                detailPanelOpen = !detailPanelOpen
+                if (detailPanelOpen) {
+                    emitItemDetail(row)
+                } else {
+                    sigItemDetail("", [])
                 }
             }
         }
@@ -132,22 +143,16 @@ FocusScope
             }
         }
 
+        onCurrentRowChanged: {
+            if (currentRow >= 0 && detailPanelOpen) {
+                emitItemDetail(currentRow)
+            }
+        }
+
         Keys.onPressed: function(event) {
             if (event.key === Qt.Key_C && (event.modifiers & Qt.ControlModifier)) {
                 Globals.copyRowToClipboard(tableID)
                 event.accepted = true
-                return
-            }
-            if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
-                if (tableID.currentRow >= 0) {
-                    var detail = tableID.model.getItemDetail(tableID.currentRow)
-                    if (detail && detail.length > 0) {
-                        var refIdx = tableID.model.index(tableID.currentRow, 1)
-                        var doRef = tableID.model.data(refIdx) || ""
-                        itemDetailDialog.showDetail(doRef, detail)
-                    }
-                    event.accepted = true
-                }
                 return
             }
             if (event.key == Qt.Key_Left || event.key == Qt.Key_Right || event.key == Qt.Key_Tab) {
@@ -156,130 +161,6 @@ FocusScope
                 return
             }
             event.accepted = false
-        }
-    }
-
-    // Item detail modal for complex [object] values
-    ModalDialog {
-        id: itemDetailDialog
-
-        title: "Data Object Detail"
-        dialogWidth: 600
-        dialogHeight: 400
-
-        property string doReference: ""
-
-        function showDetail(ref, detail) {
-            doReference = ref
-            detailModel.clear()
-            for (var i = 0; i < detail.length; i++) {
-                detailModel.append(detail[i])
-            }
-            open()
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            onClicked: itemDetailDialog.close()
-        }
-
-        Column {
-            anchors {
-                fill: parent
-                margins: 4
-            }
-            spacing: 4
-
-            // DO reference header
-            Row {
-                width: parent.width
-                spacing: 8
-                leftPadding: 4
-
-                Text {
-                    text: "DO:"
-                    color: VisualStyle.statusBar.textColor
-                    font.pixelSize: 12
-                    font.family: "Monospace"
-                    font.bold: true
-                    verticalAlignment: Text.AlignVCenter
-                }
-                Text {
-                    text: itemDetailDialog.doReference
-                    color: VisualStyle.statusBar.textColor
-                    font.pixelSize: 12
-                    font.family: "Monospace"
-                    verticalAlignment: Text.AlignVCenter
-                }
-            }
-
-            Rectangle {
-                width: parent.width
-                height: 1
-                color: "white"
-            }
-
-            // Column headers
-            Row {
-                width: parent.width
-                spacing: 0
-                leftPadding: 4
-
-                Text {
-                    width: parent.width * 0.55
-                    text: "Reference"
-                    color: VisualStyle.statusBar.textColor
-                    font.pixelSize: 11
-                    font.family: "Monospace"
-                    font.bold: true
-                }
-                Text {
-                    width: parent.width * 0.45
-                    text: "Value"
-                    color: VisualStyle.statusBar.textColor
-                    font.pixelSize: 11
-                    font.family: "Monospace"
-                    font.bold: true
-                }
-            }
-
-            ListView {
-                id: detailListID
-                width: parent.width
-                height: parent.height - y
-                clip: true
-                boundsBehavior: Flickable.StopAtBounds
-
-                model: ListModel { id: detailModel }
-
-                delegate: Row {
-                    width: detailListID.width
-                    spacing: 0
-                    leftPadding: 4
-
-                    Text {
-                        width: parent.width * 0.55
-                        text: name
-                        color: VisualStyle.statusBar.textColor
-                        font.pixelSize: 11
-                        font.family: "Monospace"
-                        wrapMode: Text.WrapAnywhere
-                    }
-                    Text {
-                        width: parent.width * 0.45
-                        text: value
-                        color: VisualStyle.statusBar.textColor
-                        font.pixelSize: 11
-                        font.family: "Monospace"
-                        wrapMode: Text.WrapAnywhere
-                    }
-                }
-
-                ScrollBar.vertical: ScrollBar {
-                    policy: ScrollBar.AsNeeded
-                    active: true
-                }
-            }
         }
     }
 }

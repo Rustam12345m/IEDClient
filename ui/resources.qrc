@@ -25,11 +25,13 @@
 
         <file>dataset/DS_OverviewTable.qml</file>
         <file>dataset/DS_StateTable.qml</file>
+        <file>dataset/DS_DetailPanel.qml</file>
         <file>dataset/Page.qml</file>
 
         <file>reports/Page.qml</file>
         <file>reports/RCB_PropertiesPanel.qml</file>
         <file>reports/RCB_ReportsTable.qml</file>
+        <file>reports/ReportDetailPanel.qml</file>
 
         <file>logical_device/Page.qml</file>
         <file>logical_device/LD_GridItem.qml</file>

@@ -33,6 +33,10 @@ FocusScope
 {
     id: rootID
 
+    signal sigReportDetail(var detail)
+
+    property bool detailPanelOpen: false
+
     // Header for Table below
     TableHeader {
         id: headerID
@@ -87,12 +91,16 @@ FocusScope
             onSigClick: function(row, col) {
                 Globals.setSelectedRow(tableID, row)
             }
-
             onSigDoubleClick: function(row, col) {
                 Globals.setSelectedRow(tableID, row)
-                var detail = tableID.model.getReportDetail(row)
-                if (detail && detail.entries) {
-                    reportDetailDialog.showReport(detail)
+                detailPanelOpen = !detailPanelOpen
+                if (detailPanelOpen) {
+                    var detail = tableID.model.getReportDetail(row)
+                    if (detail && detail.entries) {
+                        sigReportDetail(detail)
+                    }
+                } else {
+                    sigReportDetail({})
                 }
             }
         }
@@ -107,20 +115,19 @@ FocusScope
             }
         }
 
+        onCurrentRowChanged: {
+            if (currentRow >= 0 && detailPanelOpen) {
+                var detail = tableID.model.getReportDetail(currentRow)
+                if (detail && detail.entries) {
+                    sigReportDetail(detail)
+                }
+            }
+        }
+
         Keys.onPressed: function(event) {
             if (event.key === Qt.Key_C && (event.modifiers & Qt.ControlModifier)) {
                 Globals.copyRowToClipboard(tableID)
                 event.accepted = true
-                return
-            }
-            if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
-                if (tableID.currentRow >= 0) {
-                    var detail = tableID.model.getReportDetail(tableID.currentRow)
-                    if (detail && detail.entries) {
-                        reportDetailDialog.showReport(detail)
-                    }
-                    event.accepted = true
-                }
             }
         }
     }
@@ -132,165 +139,6 @@ FocusScope
         color: VisualStyle.textColor
         font.pixelSize: 14
         visible: tableID.rows === 0
-    }
-
-    // Report detail modal
-    ModalDialog {
-        id: reportDetailDialog
-
-        title: "Report Detail"
-        dialogWidth: 700
-        dialogHeight: 500
-
-        function showReport(detail) {
-            headerInfoID.detail = detail
-            entriesModel.clear()
-            for (var i = 0; i < detail.entries.length; i++) {
-                entriesModel.append(detail.entries[i])
-            }
-            open()
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            onClicked: reportDetailDialog.close()
-        }
-
-        Column {
-            anchors {
-                fill: parent
-                margins: 8
-            }
-            spacing: 4
-
-            // Report header info
-            Column {
-                id: headerInfoID
-                width: parent.width
-                spacing: 2
-
-                property var detail: ({})
-
-                Repeater {
-                    model: [
-                        { key: "Seq #:",    val: headerInfoID.detail.seqNum || "" },
-                        { key: "Timestamp:", val: headerInfoID.detail.timestamp || "" },
-                        { key: "RCB Ref:",  val: headerInfoID.detail.rcbRef || "" },
-                        { key: "DataSet:",  val: headerInfoID.detail.dataSetRef || "" },
-                        { key: "Reason:",   val: headerInfoID.detail.reason || "" }
-                    ]
-
-                    delegate: Row {
-                        spacing: 8
-                        leftPadding: 4
-
-                        Text {
-                            width: 80
-                            text: modelData.key
-                            color: VisualStyle.statusBar.textColor
-                            font.pixelSize: 12
-                            font.family: "Monospace"
-                            font.bold: true
-                            horizontalAlignment: Text.AlignRight
-                            verticalAlignment: Text.AlignVCenter
-                        }
-                        Text {
-                            text: modelData.val !== undefined ? String(modelData.val) : ""
-                            color: VisualStyle.statusBar.textColor
-                            font.pixelSize: 12
-                            font.family: "Monospace"
-                            verticalAlignment: Text.AlignVCenter
-                        }
-                    }
-                }
-            }
-
-            // Separator
-            Rectangle {
-                width: parent.width
-                height: 1
-                color: "white"
-            }
-
-            // Column headers for entries
-            Row {
-                width: parent.width
-                spacing: 0
-                leftPadding: 4
-
-                Text {
-                    width: parent.width * 0.50
-                    text: "Reference"
-                    color: VisualStyle.statusBar.textColor
-                    font.pixelSize: 11
-                    font.family: "Monospace"
-                    font.bold: true
-                }
-                Text {
-                    width: parent.width * 0.30
-                    text: "Value"
-                    color: VisualStyle.statusBar.textColor
-                    font.pixelSize: 11
-                    font.family: "Monospace"
-                    font.bold: true
-                }
-                Text {
-                    width: parent.width * 0.20
-                    text: "Reason"
-                    color: VisualStyle.statusBar.textColor
-                    font.pixelSize: 11
-                    font.family: "Monospace"
-                    font.bold: true
-                }
-            }
-
-            // Scrollable entries list
-            ListView {
-                id: entriesListID
-                width: parent.width
-                height: parent.height - y
-                clip: true
-                boundsBehavior: Flickable.StopAtBounds
-
-                model: ListModel { id: entriesModel }
-
-                delegate: Row {
-                    width: entriesListID.width
-                    spacing: 0
-                    leftPadding: 4
-
-                    Text {
-                        width: parent.width * 0.50
-                        text: name
-                        color: VisualStyle.statusBar.textColor
-                        font.pixelSize: 11
-                        font.family: "Monospace"
-                        wrapMode: Text.WrapAnywhere
-                    }
-                    Text {
-                        width: parent.width * 0.30
-                        text: value
-                        color: VisualStyle.statusBar.textColor
-                        font.pixelSize: 11
-                        font.family: "Monospace"
-                        wrapMode: Text.WrapAnywhere
-                    }
-                    Text {
-                        width: parent.width * 0.20
-                        text: reason
-                        color: VisualStyle.statusBar.textColor
-                        font.pixelSize: 11
-                        font.family: "Monospace"
-                        elide: Text.ElideRight
-                    }
-                }
-
-                ScrollBar.vertical: ScrollBar {
-                    policy: ScrollBar.AsNeeded
-                    active: true
-                }
-            }
-        }
     }
 
     onVisibleChanged: {

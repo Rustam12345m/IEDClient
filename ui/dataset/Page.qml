@@ -32,6 +32,8 @@ FocusScope
 {
     id: rootID
 
+    signal sigItemDetail(string doRef, var detail)
+
     function resizeColumnsOnPage() {
         tableDS_Val.resizeColumnsToContent()
     }
@@ -84,6 +86,9 @@ FocusScope
                 onSigLeftOrRightKey: function() {
                     tableDS_Info.focus = true
                     tableDS_Val.focus = false
+                }
+                onSigItemDetail: function(doRef, detail) {
+                    rootID.sigItemDetail(doRef, detail)
                 }
             }
         }

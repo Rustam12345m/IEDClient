@@ -409,6 +409,15 @@ ApplicationWindow
                                     focus = false
                                 }
                             }
+
+                            onSigItemDetail: function(doRef, detail) {
+                                if (detail.length > 0) {
+                                    dsDetailPanel.showDetail(doRef, detail)
+                                    setActivePanel(Globals.Panel.DS_DETAIL)
+                                } else {
+                                    setActivePanel(Globals.Panel.HIDE)
+                                }
+                            }
                         }
 
                         RCB.Page {
@@ -429,6 +438,15 @@ ApplicationWindow
                                     rcbPropPanel.rcbModel = rcbPageID.activeModel
                                     rcbPropPanel.loadFromModel()
                                     setActivePanel(Globals.Panel.RCB_PROPERTIES)
+                                } else {
+                                    setActivePanel(Globals.Panel.HIDE)
+                                }
+                            }
+
+                            onSigReportDetail: function(detail) {
+                                if (detail.entries) {
+                                    reportDetailPanel.showReport(detail)
+                                    setActivePanel(Globals.Panel.REPORT_DETAIL)
                                 } else {
                                     setActivePanel(Globals.Panel.HIDE)
                                 }
@@ -508,6 +526,16 @@ ApplicationWindow
                                     rcbPropPanel.loadFromModel()
                                 }
                             }
+                        }
+
+                        // Report detail panel
+                        RCB.ReportDetailPanel {
+                            id: reportDetailPanel
+                        }
+
+                        // Data object detail panel
+                        DS.DS_DetailPanel {
+                            id: dsDetailPanel
                         }
                     }
 
@@ -691,6 +719,14 @@ ApplicationWindow
             }
             case Globals.Panel.RCB_PROPERTIES: {
                 panelStack.currentIndex = 1
+                break
+            }
+            case Globals.Panel.REPORT_DETAIL: {
+                panelStack.currentIndex = 2
+                break
+            }
+            case Globals.Panel.DS_DETAIL: {
+                panelStack.currentIndex = 3
                 break
             }
             }

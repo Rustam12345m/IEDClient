@@ -40,10 +40,11 @@ FocusScope
     property var activeModel: tabModels[rcbTabBarID.currentIndex]
     property bool isRCBTab: rcbTabBarID.currentIndex <= 1
     property bool isBuffered: rcbTabBarID.currentIndex === 0
-    property int selectedRCBIndex: tableID.currentRow
+    property int selectedRCBIndex: -1
     property bool panelVisible: false
 
     signal sigRCBRowSelected(bool isRCB)
+    signal sigReportDetail(var detail)
 
     function resizeColumnsOnPage() {
         Globals.resizeColumnsToContent(headerID, tableID)
@@ -146,7 +147,7 @@ FocusScope
 
                 delegate: TextDelegate {
                     delegateHeight: 30
-                    selected: (tableID.currentRow == row)
+                    selected: (rootID.selectedRCBIndex == row)
 
                     textAlign: Text.AlignHCenter
                     text: model.display
@@ -154,6 +155,7 @@ FocusScope
                     onSigClick: function(row, col) {
                         tableID.focus = true
                         Globals.setSelectedRow(tableID, row)
+                        rootID.selectedRCBIndex = row
                     }
                     onSigDoubleClick: function(row, col) {
                         if (rootID.isRCBTab) {
@@ -185,8 +187,11 @@ FocusScope
                 }
 
                 onCurrentRowChanged: {
-                    if (rootID.isRCBTab && currentRow >= 0) {
-                        tableID.model.setSelectedRCB(currentRow)
+                    if (currentRow >= 0) {
+                        rootID.selectedRCBIndex = currentRow
+                        if (rootID.isRCBTab) {
+                            tableID.model.setSelectedRCB(currentRow)
+                        }
                     }
                 }
 
@@ -209,6 +214,10 @@ FocusScope
             RCB_ReportsTable {
                 id: reportsTableID
                 anchors.fill: parent
+
+                onSigReportDetail: function(detail) {
+                    rootID.sigReportDetail(detail)
+                }
             }
         }
     }

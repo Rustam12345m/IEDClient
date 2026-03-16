@@ -39,7 +39,9 @@ QtObject
     {
         HIDE = 0,
         LD_INFO,
-        RCB_PROPERTIES
+        RCB_PROPERTIES,
+        REPORT_DETAIL,
+        DS_DETAIL
     }
 
     function printObjectToConsole(item)

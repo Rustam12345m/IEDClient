@@ -99,8 +99,8 @@ namespace App::Models
             return reasonToString(report->reasonCode);
         case VALUES_COLUMN: {
             QString val = report->entryValues.join("; ");
-            if (val.size() > 128) {
-                val.truncate(128);
+            if (val.size() > 256) {
+                val.truncate(256);
                 val += "...";
             }
             return val;

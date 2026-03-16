@@ -101,8 +101,8 @@ namespace App::Models
                     auto item = dsItem->item();
                     if (item) {
                         QString val = Core::ModelItemFullValue::get(item);
-                        if (val.size() > 128) {
-                            val.truncate(128);
+                        if (val.size() > 256) {
+                            val.truncate(256);
                             val += "...";
                         }
                         return QVariant(val);
