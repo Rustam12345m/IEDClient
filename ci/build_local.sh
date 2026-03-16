@@ -79,10 +79,13 @@ run_build() {
 
     local run_opts=(--rm -v "$REPO_DIR":"$CONTAINER_WORKDIR" -w "$CONTAINER_WORKDIR")
 
-    # Podman rootless: map host UID/GID into the container so the
-    # builder user can read/write the mounted volume.
+    # Ensure the container process runs with the same UID/GID as the
+    # host user so that all files written to the mounted volume have
+    # the correct ownership.
     if [ "$(basename "$DOCKER")" = "podman" ]; then
         run_opts+=(--userns=keep-id)
+    else
+        run_opts+=(--user "$(id -u):$(id -g)")
     fi
 
     "$DOCKER" run "${run_opts[@]}" \
