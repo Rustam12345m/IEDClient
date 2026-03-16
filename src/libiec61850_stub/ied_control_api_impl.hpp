@@ -34,7 +34,10 @@ namespace Libiec61850
         ~IED_ControlAPI_Impl() override = default;
 
         bool setRCBValues(const QString &t_rcbRef, bool t_enable,
-                          int t_trgOps, uint32_t t_bufTm, uint32_t t_intgPd) override;
+                          int t_trgOps, uint32_t t_bufTm, uint32_t t_intgPd,
+                          const QString &t_rptId, const QString &t_datSet) override;
+
+        bool refreshRCBValues(Core::ReportBlock::ptr t_rcb) override;
 
     private:
         ApiAdapter& m_api;

@@ -24,6 +24,8 @@
 #include <QString>
 #include <cstdint>
 
+#include "core/report_control_block.hpp"
+
 namespace Cmd::Interface
 {
     class IED_ControlAPI
@@ -32,6 +34,9 @@ namespace Cmd::Interface
         virtual ~IED_ControlAPI() {}
 
         virtual bool setRCBValues(const QString &t_rcbRef, bool t_enable,
-                                  int t_trgOps, uint32_t t_bufTm, uint32_t t_intgPd) = 0;
+                                  int t_trgOps, uint32_t t_bufTm, uint32_t t_intgPd,
+                                  const QString &t_rptId, const QString &t_datSet) = 0;
+
+        virtual bool refreshRCBValues(Core::ReportBlock::ptr t_rcb) = 0;
     };
 }

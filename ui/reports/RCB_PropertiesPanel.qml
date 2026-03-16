@@ -39,7 +39,7 @@ Item
 
     property var rcbModel: null
 
-    signal sigEnable(int trgOps, int bufTm, int intgPd)
+    signal sigEnable(int trgOps, int bufTm, int intgPd, string rptId, string datSet)
     signal sigDisable()
 
     function collectTrgOps() {
@@ -56,6 +56,8 @@ Item
         if (!rcbModel) return
         rcbID.text = rcbModel.selectedRptId()
         dataSetID.text = rcbModel.selectedDsRef()
+        bufTmField.text = rcbModel.selectedBufTm()
+        intgPdField.text = rcbModel.selectedIntgPd()
 
         var trg = rcbModel.selectedTrgOps()
         chkDataChange.checked   = (trg & 2) !== 0
@@ -140,6 +142,60 @@ Item
                     text: ""
                     activeFocusOnPress: true
                     selectByMouse: true
+                }
+            }
+            RowLayout {
+                width: parent.width
+                height: defRowHeight + 8
+
+                Text {
+                    Layout.preferredWidth: 60
+                    height: defRowHeight
+
+                    text: "BufTm"
+                    horizontalAlignment: Text.AlignRight
+                    verticalAlignment: Text.AlignVCenter
+                }
+                TextField {
+                    Layout.fillWidth: true
+                    id: bufTmField
+                    height: defRowHeight
+
+                    text: "0"
+                    activeFocusOnPress: true
+                    selectByMouse: true
+                    validator: IntValidator { bottom: 0 }
+                }
+                Text {
+                    text: "ms"
+                    verticalAlignment: Text.AlignVCenter
+                }
+            }
+            RowLayout {
+                width: parent.width
+                height: defRowHeight + 8
+
+                Text {
+                    Layout.preferredWidth: 60
+                    height: defRowHeight
+
+                    text: "IntgPd"
+                    horizontalAlignment: Text.AlignRight
+                    verticalAlignment: Text.AlignVCenter
+                }
+                TextField {
+                    Layout.fillWidth: true
+                    id: intgPdField
+                    height: defRowHeight
+
+                    text: "0"
+                    activeFocusOnPress: true
+                    selectByMouse: true
+                    validator: IntValidator { bottom: 0 }
+                }
+                Text {
+                    text: "ms"
+                    verticalAlignment: Text.AlignVCenter
                 }
             }
         }
@@ -284,8 +340,10 @@ Item
                     text: "Enable"
                     onClicked: {
                         sigEnable(collectTrgOps(),
-                                  rcbModel ? rcbModel.selectedBufTm() : 0,
-                                  rcbModel ? rcbModel.selectedIntgPd() : 0)
+                                  parseInt(bufTmField.text) || 0,
+                                  parseInt(intgPdField.text) || 0,
+                                  rcbID.text,
+                                  dataSetID.text)
                     }
                 }
                 Button {

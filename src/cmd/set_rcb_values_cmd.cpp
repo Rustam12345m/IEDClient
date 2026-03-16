@@ -32,13 +32,16 @@ namespace Cmd
         emit sigCmdEvent(CmdEvent::StartEvent(rcbRef,
             QString("%1 RCB: %2").arg(action, rcbRef)));
 
-        bool ok = t_api->control().setRCBValues(rcbRef, m_enable, m_trgOps, m_bufTm, m_intgPd);
+        bool ok = t_api->control().setRCBValues(rcbRef, m_enable, m_trgOps,
+                                                  m_bufTm, m_intgPd, m_rptId, m_datSet);
 
         if (ok) {
             m_rcb->setRptEna(m_enable);
             m_rcb->setTrgOps(m_trgOps);
             m_rcb->setBufTm(m_bufTm);
             m_rcb->setIntgPd(m_intgPd);
+            m_rcb->setRptId(m_rptId);
+            m_rcb->setDsRef(m_datSet);
 
             emit sigCmdEvent(CmdEvent::FinishEvent(rcbRef,
                 QString("RCB %1: %2").arg(action, rcbRef), true));

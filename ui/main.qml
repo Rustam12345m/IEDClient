@@ -492,13 +492,14 @@ ApplicationWindow
                         RCB.RCB_PropertiesPanel {
                             id: rcbPropPanel
 
-                            onSigEnable: function(trgOps, bufTm, intgPd) {
+                            onSigEnable: function(trgOps, bufTm, intgPd, rptId, datSet) {
                                 iedBackend.setRCBEnable(rcbPageID.isBuffered,
-                                    rcbPageID.selectedRCBIndex, true, trgOps, bufTm, intgPd)
+                                    rcbPageID.selectedRCBIndex, true, trgOps, bufTm, intgPd,
+                                    rptId, datSet)
                             }
                             onSigDisable: {
                                 iedBackend.setRCBEnable(rcbPageID.isBuffered,
-                                    rcbPageID.selectedRCBIndex, false, 0, 0, 0)
+                                    rcbPageID.selectedRCBIndex, false, 0, 0, 0, "", "")
                             }
 
                             Connections {

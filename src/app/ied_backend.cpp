@@ -94,6 +94,15 @@ namespace App
 
         auto cmd = Cmd::UpdateRCBs_Cmd::create(m_con.m_ied);
 
+        connect(cmd.get(), &Cmd::CmdInterface::sigCmdEvent, this,
+                [this](Cmd::CmdEvent ev) {
+                    if (ev.m_type == Cmd::FINISH_EVENT) {
+                        m_brcbComModel->slotDataUpdated(ev.m_result);
+                        m_urcbComModel->slotDataUpdated(ev.m_result);
+                        emit sigRCBUpdated();
+                    }
+                }, Qt::QueuedConnection);
+
         putCmdToQueue(cmd);
     }
 
@@ -128,7 +137,8 @@ namespace App
 
     void IED_Backend::setRCBEnable(bool t_buffered, int t_index,
                                        bool t_enable, int t_trgOps,
-                                       int t_bufTm, int t_intgPd)
+                                       int t_bufTm, int t_intgPd,
+                                       const QString &t_rptId, const QString &t_datSet)
     {
         auto *model = t_buffered ? m_brcbComModel : m_urcbComModel;
         model->setSelectedRCB(t_index);
@@ -140,7 +150,8 @@ namespace App
 
         auto cmd = Cmd::SetRCBValues_Cmd::create(rcb, t_enable, t_trgOps,
                                                   static_cast<uint32_t>(t_bufTm),
-                                                  static_cast<uint32_t>(t_intgPd));
+                                                  static_cast<uint32_t>(t_intgPd),
+                                                  t_rptId, t_datSet);
 
         connect(cmd.get(), &Cmd::CmdInterface::sigCmdEvent, this,
                 [this, model](Cmd::CmdEvent ev) {

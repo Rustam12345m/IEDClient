@@ -73,7 +73,8 @@ namespace App
         Q_INVOKABLE void updateDS_Values();
         Q_INVOKABLE void setRCBEnable(bool t_buffered, int t_index,
                                        bool t_enable, int t_trgOps,
-                                       int t_bufTm, int t_intgPd);
+                                       int t_bufTm, int t_intgPd,
+                                       const QString &t_rptId, const QString &t_datSet);
 
         // Status bar
         Q_INVOKABLE QString ldsPageStatus();

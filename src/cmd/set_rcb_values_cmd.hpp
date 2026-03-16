@@ -31,17 +31,21 @@ namespace Cmd
         Q_OBJECT
     public:
         SetRCBValues_Cmd(Core::ReportBlock::ptr t_rcb, bool t_enable,
-                         int t_trgOps, uint32_t t_bufTm, uint32_t t_intgPd)
+                         int t_trgOps, uint32_t t_bufTm, uint32_t t_intgPd,
+                         const QString &t_rptId, const QString &t_datSet)
             : m_rcb{t_rcb}, m_enable{t_enable},
-              m_trgOps{t_trgOps}, m_bufTm{t_bufTm}, m_intgPd{t_intgPd}
+              m_trgOps{t_trgOps}, m_bufTm{t_bufTm}, m_intgPd{t_intgPd},
+              m_rptId{t_rptId}, m_datSet{t_datSet}
         {}
         ~SetRCBValues_Cmd() override = default;
 
         void execute(Cmd::Interface::IEC61850_API::ptr t_api) override;
 
         static auto create(Core::ReportBlock::ptr t_rcb, bool t_enable,
-                           int t_trgOps, uint32_t t_bufTm, uint32_t t_intgPd) {
-            return QSharedPointer<SetRCBValues_Cmd>::create(t_rcb, t_enable, t_trgOps, t_bufTm, t_intgPd);
+                           int t_trgOps, uint32_t t_bufTm, uint32_t t_intgPd,
+                           const QString &t_rptId, const QString &t_datSet) {
+            return QSharedPointer<SetRCBValues_Cmd>::create(
+                t_rcb, t_enable, t_trgOps, t_bufTm, t_intgPd, t_rptId, t_datSet);
         }
 
     private:
@@ -50,5 +54,7 @@ namespace Cmd
         int      m_trgOps;
         uint32_t m_bufTm;
         uint32_t m_intgPd;
+        QString  m_rptId;
+        QString  m_datSet;
     };
 }
