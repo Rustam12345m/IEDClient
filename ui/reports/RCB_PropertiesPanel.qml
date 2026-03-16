@@ -157,7 +157,7 @@ Item
                     verticalAlignment: Text.AlignVCenter
                 }
                 TextField {
-                    Layout.fillWidth: true
+                    Layout.preferredWidth: 80
                     id: bufTmField
                     height: defRowHeight
 
@@ -167,9 +167,11 @@ Item
                     validator: IntValidator { bottom: 0 }
                 }
                 Text {
+                    Layout.rightMargin: 8
                     text: "ms"
                     verticalAlignment: Text.AlignVCenter
                 }
+                Item { Layout.fillWidth: true }
             }
             RowLayout {
                 width: parent.width
@@ -184,7 +186,7 @@ Item
                     verticalAlignment: Text.AlignVCenter
                 }
                 TextField {
-                    Layout.fillWidth: true
+                    Layout.preferredWidth: 80
                     id: intgPdField
                     height: defRowHeight
 
@@ -194,9 +196,11 @@ Item
                     validator: IntValidator { bottom: 0 }
                 }
                 Text {
+                    Layout.rightMargin: 8
                     text: "ms"
                     verticalAlignment: Text.AlignVCenter
                 }
+                Item { Layout.fillWidth: true }
             }
         }
 
