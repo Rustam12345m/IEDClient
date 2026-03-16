@@ -31,11 +31,29 @@ import "qrc:/common/"
 // RCB Settings
 Item
 {
+    id: rootID
+
     property int defRowHeight: VisualStyle.rowHeight
     property int defTextPadding: 5
     property int defNameWidth: 100
 
-    //anchors.fill: parent
+    property var rcbModel: null
+
+    function loadFromModel() {
+        if (!rcbModel) return
+        rcbID.text = rcbModel.selectedRptId()
+        dataSetID.text = rcbModel.selectedDsRef()
+
+        var trg = rcbModel.selectedTrgOps()
+        chkDataChange.checked   = (trg & 2) !== 0
+        chkQualChange.checked   = (trg & 4) !== 0
+        chkDataUpdate.checked   = (trg & 8) !== 0
+        chkIntegrity.checked    = (trg & 16) !== 0
+        chkGI.checked           = (trg & 32) !== 0
+    }
+
+    onRcbModelChanged: loadFromModel()
+
     clip: true
 
     Column {
@@ -60,7 +78,6 @@ Item
                     anchors.fill: parent
 
                     font.bold: VisualStyle.boldHeaderText
-                    //font.pixelSize: 16
 
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
@@ -74,7 +91,7 @@ Item
 
                 Text {
                     Layout.preferredWidth: 60
-                    
+
                     height: defRowHeight
 
                     text: "ID"
@@ -87,6 +104,7 @@ Item
                     id: rcbID
                     height: defRowHeight
 
+                    readOnly: true
                     text: ""
                 }
             }
@@ -106,6 +124,7 @@ Item
                     id: dataSetID
                     height: defRowHeight
 
+                    readOnly: true
                     text: ""
                 }
             }
@@ -128,7 +147,6 @@ Item
                     anchors.fill: parent
 
                     font.bold: VisualStyle.boldHeaderText
-                    //font.pixelSize: 16
 
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
@@ -195,7 +213,6 @@ Item
                     anchors.fill: parent
 
                     font.bold: VisualStyle.boldHeaderText
-                    //font.pixelSize: 16
 
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
@@ -211,23 +228,23 @@ Item
                 rowSpacing: 0
 
                 CheckBox {
-                    checked: true
+                    id: chkDataChange
                     text: "Data change"
                 }
                 CheckBox {
-                    checked: true
+                    id: chkQualChange
                     text: "Quality change"
                 }
                 CheckBox {
-                    checked: false
+                    id: chkDataUpdate
                     text: "Data update"
                 }
                 CheckBox {
-                    checked: true
+                    id: chkIntegrity
                     text: "Integrity"
                 }
                 CheckBox {
-                    checked: false
+                    id: chkGI
                     text: "General Interrogation"
                 }
             }
@@ -246,27 +263,15 @@ Item
             RowLayout {
                 width: parent.width
                 height: defRowHeight + 12
-                spacing: 0
+                spacing: 4
 
-                Rectangle {
-                    Layout.preferredWidth: parent.width / 2
-                    height: parent.height
-                    color: VisualStyle.button.successBg
-
-                    Button {
-                        anchors.centerIn: parent
-                        text: "Enable"
-                    }
+                Button {
+                    Layout.fillWidth: true
+                    text: "Enable"
                 }
-                Rectangle {
-                    Layout.preferredWidth: parent.width / 2
-                    height: parent.height
-                    color: VisualStyle.button.dangerBg
-
-                    Button {
-                        anchors.centerIn: parent
-                        text: "Disable"
-                    }
+                Button {
+                    Layout.fillWidth: true
+                    text: "Disable"
                 }
             }
         }

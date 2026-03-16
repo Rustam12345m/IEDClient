@@ -417,10 +417,20 @@ ApplicationWindow
                             onVisibleChanged: {
                                 if (visible) {
                                     focus = true
-                                    setActivePanel(Globals.Panel.RCB_PROPERTIES)
+                                    setActivePanel(Globals.Panel.HIDE)
                                     setPageStatusText(iedBackend.rcbPageStatus())
                                 } else {
                                     focus = false
+                                }
+                            }
+
+                            onSigRCBRowSelected: function(isRCB) {
+                                if (isRCB) {
+                                    rcbPropPanel.rcbModel = rcbPageID.activeModel
+                                    rcbPropPanel.loadFromModel()
+                                    setActivePanel(Globals.Panel.RCB_PROPERTIES)
+                                } else {
+                                    setActivePanel(Globals.Panel.HIDE)
                                 }
                             }
                         }
@@ -664,9 +674,10 @@ ApplicationWindow
         if (index == Globals.Panel.HIDE) {
             propertyPanel.visible = false
         } else {
-            propertyPanel.visible = false
-            propertyPanel.SplitView.preferredWidth = 250
-            propertyPanel.visible = true
+            if (!propertyPanel.visible) {
+                propertyPanel.SplitView.preferredWidth = 250
+                propertyPanel.visible = true
+            }
 
             switch (index) {
             case Globals.Panel.LD_INFO: {

@@ -47,6 +47,15 @@ namespace App::Models
         RCB_OverviewTable(QObject *t_parent, Core::IED::ptr t_ied, bool t_buffered = true);
 
         Q_INVOKABLE void setSelectedRCB(int t_inx);
+        Q_INVOKABLE QString selectedRptId() const;
+        Q_INVOKABLE QString selectedDsRef() const;
+        Q_INVOKABLE int     selectedTrgOps() const;
+        Q_INVOKABLE bool    selectedRptEna() const;
+        Q_INVOKABLE bool    selectedResv() const;
+        Q_INVOKABLE uint    selectedConfRev() const;
+        Q_INVOKABLE uint    selectedBufTm() const;
+        Q_INVOKABLE uint    selectedIntgPd() const;
+
         void        setActiveIED(Core::IED::ptr t_ied);
 
         QVariant    headerData(int t_section, Qt::Orientation t_orientation,
@@ -65,6 +74,7 @@ namespace App::Models
 
     private:
         QList<Core::ReportBlock::ptr> filteredList() const;
+        Core::ReportBlock::ptr selectedRCB() const;
 
         Core::IED::ptr m_ied;
         bool m_buffered    = true;

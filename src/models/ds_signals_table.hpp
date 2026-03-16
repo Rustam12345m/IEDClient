@@ -30,7 +30,8 @@ namespace App::Models
     {
         Q_OBJECT
         enum ColumnType {
-            DS_REF_COLUMN = 0,
+            DS_INDEX_COLUMN = 0,
+            DS_REF_COLUMN,
             DS_FC_COLUMN,
             DS_VALUE_COLUMN,
 

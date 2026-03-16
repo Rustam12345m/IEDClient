@@ -44,6 +44,9 @@ namespace App::Models
         }
 
         switch (t_column) {
+        case DS_INDEX_COLUMN: {
+            return QVariant("#");
+        }
         case DS_REF_COLUMN: {
             return QVariant("Reference");
         }
@@ -78,6 +81,10 @@ namespace App::Models
     QVariant DS_SignalsTable::data(const QModelIndex &t_index, int t_role) const
     {
         int row = t_index.row(), column = t_index.column();
+
+        if (column == DS_INDEX_COLUMN) {
+            return QVariant(QString::number(row + 1));
+        }
 
         if (m_dataSet) {
             auto dsItem = m_dataSet->getItem<Core::DataSetItem>(row);

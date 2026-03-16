@@ -37,6 +37,10 @@ FocusScope
         iedBackend.getGOSE_ComModel(),
         iedBackend.getSV_ComModel()
     ]
+    property var activeModel: tabModels[rcbTabBarID.currentIndex]
+    property bool isRCBTab: rcbTabBarID.currentIndex <= 1
+
+    signal sigRCBRowSelected(bool isRCB)
 
     function resizeColumnsOnPage() {
         Globals.resizeColumnsToContent(headerID, tableID)
@@ -74,6 +78,7 @@ FocusScope
 
             onSigTabSelected: function(index) {
                 tableID.model = rootID.tabModels[index]
+                sigRCBRowSelected(index <= 1 && tableID.currentRow >= 0)
             }
         }
     }
@@ -137,7 +142,15 @@ FocusScope
 
             onSigClick: function(row, col) {
                 tableID.focus = true
+                if (selected && rootID.isRCBTab) {
+                    sigRCBRowSelected(false)
+                    return
+                }
                 Globals.setSelectedRow(tableID, row)
+                if (rootID.isRCBTab) {
+                    tableID.model.setSelectedRCB(row)
+                }
+                sigRCBRowSelected(rootID.isRCBTab)
             }
         }
 

@@ -49,10 +49,66 @@ namespace App::Models
         return result;
     }
 
+    Core::ReportBlock::ptr RCB_OverviewTable::selectedRCB() const
+    {
+        const auto list = filteredList();
+        if (m_currentRCB >= 0 && m_currentRCB < list.count())
+            return list[m_currentRCB];
+        return nullptr;
+    }
+
     void RCB_OverviewTable::setSelectedRCB(int t_inx)
     {
         m_currentRCB = t_inx;
         emit sigRCBSelected(m_currentRCB);
+    }
+
+    QString RCB_OverviewTable::selectedRptId() const
+    {
+        auto rcb = selectedRCB();
+        return rcb ? (rcb->rptId().isEmpty() ? rcb->getName() : rcb->rptId()) : QString();
+    }
+
+    QString RCB_OverviewTable::selectedDsRef() const
+    {
+        auto rcb = selectedRCB();
+        return rcb ? rcb->dsRef() : QString();
+    }
+
+    int RCB_OverviewTable::selectedTrgOps() const
+    {
+        auto rcb = selectedRCB();
+        return rcb ? rcb->trgOps() : 0;
+    }
+
+    bool RCB_OverviewTable::selectedRptEna() const
+    {
+        auto rcb = selectedRCB();
+        return rcb ? rcb->rptEna() : false;
+    }
+
+    bool RCB_OverviewTable::selectedResv() const
+    {
+        auto rcb = selectedRCB();
+        return rcb ? rcb->resv() : false;
+    }
+
+    uint RCB_OverviewTable::selectedConfRev() const
+    {
+        auto rcb = selectedRCB();
+        return rcb ? rcb->confRev() : 0;
+    }
+
+    uint RCB_OverviewTable::selectedBufTm() const
+    {
+        auto rcb = selectedRCB();
+        return rcb ? rcb->bufTm() : 0;
+    }
+
+    uint RCB_OverviewTable::selectedIntgPd() const
+    {
+        auto rcb = selectedRCB();
+        return rcb ? rcb->intgPd() : 0;
     }
 
     void RCB_OverviewTable::setActiveIED(Core::IED::ptr t_ied)
