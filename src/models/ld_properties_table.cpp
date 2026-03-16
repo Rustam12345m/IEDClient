@@ -103,12 +103,34 @@ namespace App::Models
             if (ld) {
                 if (m_ldProp[row].obj.isEmpty()) {
                     // LD's common properties like: count of LN, DS or RCB
+                    QString ldRef = ld->getReference();
                     if (m_ldProp[row].name == "Name") {
                         return ld->getName();
                     } else if (m_ldProp[row].name == "LN") {
                         return QVariant(QString::number(ld->getItemCount()));
+                    } else if (m_ldProp[row].name == "DS") {
+                        int count = 0;
+                        for (const auto &ds : m_ied->model().getDataSetList())
+                            if (ds->ref().startsWith(ldRef)) ++count;
+                        return QVariant(QString::number(count));
                     } else if (m_ldProp[row].name == "RCB") {
-                        return QVariant(QString("%1 B / %2 U").arg(7).arg(3));
+                        int brcb = 0, urcb = 0;
+                        for (const auto &rcb : m_ied->model().getReportCBList()) {
+                            if (rcb->lnRef().startsWith(ldRef)) {
+                                if (rcb->isBuffered()) ++brcb; else ++urcb;
+                            }
+                        }
+                        return QVariant(QString("%1 B / %2 U").arg(brcb).arg(urcb));
+                    } else if (m_ldProp[row].name == "GOOSE") {
+                        int count = 0;
+                        for (const auto &gcb : m_ied->model().getGO_CBList())
+                            if (gcb->lnRef().startsWith(ldRef)) ++count;
+                        return QVariant(QString::number(count));
+                    } else if (m_ldProp[row].name == "SV") {
+                        int count = 0;
+                        for (const auto &sv : m_ied->model().getSV_CBList())
+                            if (sv->lnRef().startsWith(ldRef)) ++count;
+                        return QVariant(QString::number(count));
                     }
                 } else {
                     // DataModel LD parameters
