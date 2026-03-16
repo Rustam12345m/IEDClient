@@ -106,9 +106,12 @@ FocusScope
         }
 
         Keys.onPressed: function(event) {
-            console.log("ConHistoryTable: " + event.key)
+            if (event.key === Qt.Key_C && (event.modifiers & Qt.ControlModifier)) {
+                Globals.copyRowToClipboard(tableID)
+                event.accepted = true
+                return
+            }
             if (event.key == Qt.Key_Delete) {
-                // Current row
                 appBackend.lastConnList.removeFromHistory(tableID.currentRow)
                 event.accepted = false
             }

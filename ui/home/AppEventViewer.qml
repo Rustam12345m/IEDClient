@@ -22,6 +22,7 @@
 import QtQuick
 import QtQuick.Controls
 
+import GlobalVarsModule
 import AppStylesModule
 
 // Event log table — embedded as content in a modal SubWindow
@@ -128,6 +129,13 @@ Item
 
             onActiveChanged: {
                 if (!active) active = true
+            }
+        }
+
+        Keys.onPressed: function(event) {
+            if (event.key === Qt.Key_C && (event.modifiers & Qt.ControlModifier)) {
+                Globals.copyRowToClipboard(tableID)
+                event.accepted = true
             }
         }
     }

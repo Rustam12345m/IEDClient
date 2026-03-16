@@ -127,8 +127,11 @@ Item
         }
 
         Keys.onPressed: function(event) {
-            console.log("FS: Key pressed " + event.key)
-
+            if (event.key === Qt.Key_C && (event.modifiers & Qt.ControlModifier)) {
+                Globals.copyRowToClipboard(tableID)
+                event.accepted = true
+                return
+            }
             if (event.key == Qt.Key_Return || event.key == Qt.Key_Enter) {
                 rootID.cmdDownloadFile(tableID.currentRow)
                 event.accepted = true

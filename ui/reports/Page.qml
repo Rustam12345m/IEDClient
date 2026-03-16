@@ -193,6 +193,10 @@ FocusScope
                 }
 
                 Keys.onPressed: function(event) {
+                    if (event.key === Qt.Key_C && (event.modifiers & Qt.ControlModifier)) {
+                        Globals.copyRowToClipboard(tableID)
+                        event.accepted = true
+                    }
                 }
             }
         }

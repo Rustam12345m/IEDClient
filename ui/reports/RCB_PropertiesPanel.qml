@@ -74,7 +74,7 @@ Item
     Column {
         anchors.fill: parent
 
-        spacing: 8
+        spacing: 2
 
         // Main section
         Column {
@@ -102,7 +102,7 @@ Item
             }
             RowLayout {
                 width: parent.width
-                height: defRowHeight + 8
+                height: defRowHeight + 2
 
                 Text {
                     Layout.preferredWidth: 60
@@ -124,7 +124,7 @@ Item
             }
             RowLayout {
                 width: parent.width
-                height: defRowHeight + 8
+                height: defRowHeight + 2
 
                 Text {
                     Layout.preferredWidth: 60
@@ -146,7 +146,7 @@ Item
             }
             RowLayout {
                 width: parent.width
-                height: defRowHeight + 8
+                height: defRowHeight + 2
 
                 Text {
                     Layout.preferredWidth: 60
@@ -175,7 +175,7 @@ Item
             }
             RowLayout {
                 width: parent.width
-                height: defRowHeight + 8
+                height: defRowHeight + 2
 
                 Text {
                     Layout.preferredWidth: 60
@@ -336,7 +336,7 @@ Item
             }
             RowLayout {
                 width: parent.width
-                height: defRowHeight + 12
+                height: defRowHeight + 6
                 spacing: 4
 
                 Button {

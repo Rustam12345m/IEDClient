@@ -118,6 +118,17 @@ QtObject
         return w;
     }
 
+    function copyRowToClipboard(t_tableID) {
+        if (t_tableID.currentRow < 0) return
+        var parts = []
+        var cols = t_tableID.model.columnCount()
+        for (var c = 0; c < cols; c++) {
+            var idx = t_tableID.model.index(t_tableID.currentRow, c)
+            parts.push(t_tableID.model.data(idx))
+        }
+        presenter.copyToClipboard(parts.join(";"))
+    }
+
     function columnWidthCalculator(t_headerID, t_tableID, t_column)
     {
         let lw = t_tableID.columnWidth(t_column)

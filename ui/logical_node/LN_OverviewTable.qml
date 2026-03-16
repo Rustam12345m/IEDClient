@@ -167,6 +167,13 @@ Item
             }
         }
 
+        Keys.onPressed: function(event) {
+            if (event.key === Qt.Key_C && (event.modifiers & Qt.ControlModifier)) {
+                Globals.copyRowToClipboard(tableID)
+                event.accepted = true
+            }
+        }
+
         onVisibleChanged: {
             if (tableID.rows > 0 && tableID.currentRow < 0) {
                 Globals.setSelectedRow(tableID, 0)

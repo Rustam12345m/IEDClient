@@ -108,6 +108,11 @@ FocusScope
         }
 
         Keys.onPressed: function(event) {
+            if (event.key === Qt.Key_C && (event.modifiers & Qt.ControlModifier)) {
+                Globals.copyRowToClipboard(tableID)
+                event.accepted = true
+                return
+            }
             if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
                 if (tableID.currentRow >= 0) {
                     var detail = tableID.model.getReportDetail(tableID.currentRow)
