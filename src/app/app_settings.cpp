@@ -27,6 +27,8 @@
 
 #include <QStandardPaths>
 #include <QCoreApplication>
+#include <QDir>
+#include <QFileInfo>
 
 namespace App
 {
@@ -42,7 +44,8 @@ namespace App
         } else if (QFile::exists(sysAppDirConfig)) {
             m_confFilepath = sysAppDirConfig;
         } else {
-            m_confFilepath = curDirConfig;
+            // Prefer system config dir for new files (writable on all platforms)
+            m_confFilepath = sysAppDirConfig;
         }
     }
 
@@ -124,6 +127,12 @@ namespace App
 
     int AppSettings::writeConfigFile(const QString &t_filepath, const lisHistConnInfo &t_list)
     {
+        // Ensure parent directory exists
+        QDir dir = QFileInfo(t_filepath).absoluteDir();
+        if (!dir.exists()) {
+            dir.mkpath(".");
+        }
+
         QFile file(t_filepath);
         if (!file.open(QFile::WriteOnly | QFile::Text | QFile::Truncate)) {
             return -1;

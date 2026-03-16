@@ -580,8 +580,9 @@ ApplicationWindow
         height: 300
 
         title: "About IEDClient"
-        color: VisualStyle.modalColor
+        color: VisualStyle.borderColor
         borderColor: VisualStyle.borderColor
+        innerColor: VisualStyle.modalColor
 
         contentArea: Column {
             anchors {
@@ -756,6 +757,7 @@ ApplicationWindow
             rootWindowID.setActivePage(Globals.Page.LD)
         } else {
             timerModalWindow.running = true
+            rootWindowID.setActivePage(Globals.Page.START)
         }
     }
     function slotStatusMessage() {

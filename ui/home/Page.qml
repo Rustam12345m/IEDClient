@@ -121,9 +121,9 @@ Item {
 
                         property bool isSelected: historyListID.currentIndex === index
 
-                        color: isSelected ? VisualStyle.borderColor
-                                          : (index % 2 === 0 ? VisualStyle.backgroundColor1
-                                                             : VisualStyle.backgroundColor2)
+                        color: isSelected ? VisualStyle.table.selRowColor
+                                          : (index % 2 === 0 ? VisualStyle.table.rowColor1
+                                                             : VisualStyle.table.rowColor2)
 
                         // Row separator
                         Rectangle {
@@ -149,7 +149,7 @@ Item {
                                 width:          parent.width
                                 text:           "▶  " + rootID.getField(cardID.index, 2) +
                                                 " : " + rootID.getField(cardID.index, 3)
-                                color:          cardID.isSelected ? VisualStyle.statusBar.textColor : VisualStyle.textColor
+                                color:          VisualStyle.textColor
                                 font.pixelSize: 13
                                 font.bold:      true
                                 font.family:    "Monospace"
@@ -161,7 +161,7 @@ Item {
                                 width:          parent.width
                                 text:           "    " + rootID.getField(cardID.index, 1) +
                                                 "  ·  " + rootID.getField(cardID.index, 4)
-                                color:          cardID.isSelected ? "#cccccc" : "#666666"
+                                color:          "#666666"
                                 font.pixelSize: 11
                                 font.family:    "Monospace"
                                 elide:          Text.ElideRight

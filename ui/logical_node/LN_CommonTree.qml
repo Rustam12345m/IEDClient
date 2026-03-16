@@ -94,6 +94,11 @@ FocusScope {
         interactive: true
         boundsBehavior: Flickable.StopAtBounds
 
+        palette.highlight:       VisualStyle.table.selRowColor
+        palette.highlightedText: VisualStyle.textColor
+        palette.base:            VisualStyle.table.rowColor1
+        palette.text:            VisualStyle.textColor
+
         columnWidthProvider: function(t_column) {
             return Globals.columnWidthCalculator(headerID, treeViewID, t_column)
         }
@@ -104,10 +109,6 @@ FocusScope {
         }
 
         delegate: TreeViewDelegate {
-            background: Rectangle {
-                color: selected ? VisualStyle.table.selRowColor : VisualStyle.table.rowColor1
-            }
-
             TapHandler {
                 acceptedButtons: Qt.RightButton
 

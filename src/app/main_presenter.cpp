@@ -108,7 +108,10 @@ namespace App
         case Cmd::FINISH_EVENT: {
             m_iedBackend.slotConnected(t_ev.m_result);
             m_fsBackend.slotConnected(t_ev.m_result);
-            m_appBackend.saveCredsToHistory(m_con.m_cred);
+
+            if (t_ev.m_result) {
+                m_appBackend.saveCredsToHistory(m_con.m_cred);
+            }
 
             emit sigCmdFinished(t_ev.m_result);
             emit sigIEDConChanged(t_ev.m_result);
@@ -123,6 +126,8 @@ namespace App
 
     void MainPresenter::slotConClosed()
     {
+        m_con.m_ied = Core::IED::ptr::create();
+
         m_iedBackend.slotConnected(false);
         m_fsBackend.slotConnected(false);
 

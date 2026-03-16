@@ -33,6 +33,7 @@ FocusScope
     property alias color: subWindowID.color
     default property alias contentArea: contentContainerID.data
     property color borderColor: VisualStyle.borderColor
+    property color innerColor: subWindowID.color
 
     signal sigClicked()
 
@@ -88,7 +89,7 @@ FocusScope
                         fill: parent
                     }
 
-                    color: subWindowID.color
+                    color: rootID.innerColor
 
                     // Content area
                     Item {

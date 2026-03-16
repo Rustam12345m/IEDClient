@@ -80,7 +80,7 @@ bin/
 build*/
 install/
 install-*/
-dist/
+dist/*
 artifacts/
 .vscode/
 tmp/
