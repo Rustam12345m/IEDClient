@@ -64,6 +64,7 @@ namespace App
 
         connect(m_dsComModel, &Models::DS_OverviewTable::sigDSSelected, m_dsSigModel, &Models::DS_SignalsTable::slotDataSetSelected);
         connect(m_brcbComModel, &Models::RCB_OverviewTable::sigRCBSelected, m_reportsModel, &Models::ReportsTable::slotRCBSelected);
+        connect(m_urcbComModel, &Models::RCB_OverviewTable::sigRCBSelected, m_reportsModel, &Models::ReportsTable::slotRCBSelected);
     }
 
     void IED_Backend::updateLDs_Status()
@@ -148,10 +149,17 @@ namespace App
             return;
         }
 
+        Core::ReportStorage *storage = nullptr;
+        if (t_enable) {
+            QString prefix = rcb->isBuffered() ? "BR" : "RP";
+            QString rcbRef = QString("%1.%2.%3").arg(rcb->lnRef(), prefix, rcb->getName());
+            storage = m_con.m_ied->model().getOrCreateReportStorage(rcbRef);
+        }
+
         auto cmd = Cmd::SetRCBValues_Cmd::create(rcb, t_enable, t_trgOps,
                                                   static_cast<uint32_t>(t_bufTm),
                                                   static_cast<uint32_t>(t_intgPd),
-                                                  t_rptId, t_datSet);
+                                                  t_rptId, t_datSet, storage);
 
         connect(cmd.get(), &Cmd::CmdInterface::sigCmdEvent, this,
                 [this, model](Cmd::CmdEvent ev) {

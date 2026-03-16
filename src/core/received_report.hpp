@@ -21,28 +21,26 @@
 
 #pragma once
 
+#include <QSharedPointer>
 #include <QString>
+#include <QStringList>
+#include <QList>
+
 #include <cstdint>
 
-#include "core/report_control_block.hpp"
-#include "core/report_storage.hpp"
-
-namespace Cmd::Interface
+namespace Core
 {
-    class IED_ControlAPI
+    struct ReceivedReport
     {
-    public:
-        virtual ~IED_ControlAPI() {}
+        using ptr = QSharedPointer<ReceivedReport>;
 
-        virtual bool setRCBValues(const QString &t_rcbRef, bool t_enable,
-                                  int t_trgOps, uint32_t t_bufTm, uint32_t t_intgPd,
-                                  const QString &t_rptId, const QString &t_datSet) = 0;
-
-        virtual bool refreshRCBValues(Core::ReportBlock::ptr t_rcb) = 0;
-
-        virtual bool installReportHandler(const QString &t_rcbRef,
-                                          const QString &t_rptId,
-                                          Core::ReportStorage *t_storage) = 0;
-        virtual void uninstallReportHandler(const QString &t_rcbRef) = 0;
+        uint64_t    timestamp = 0;
+        uint16_t    seqNum = 0;
+        QString     rcbRef;
+        QString     dataSetRef;
+        int         reasonCode = 0;
+        QStringList entryNames;
+        QStringList entryValues;
+        QList<int>  entryReasons;
     };
 }

@@ -24,17 +24,20 @@
 #include <QAbstractTableModel>
 
 #include "core/ied.hpp"
+#include "core/report_storage.hpp"
 
 namespace App::Models
 {
+    class RCB_OverviewTable;
+
     class ReportsTable : public QAbstractTableModel
     {
         Q_OBJECT
         enum ColumnType {
-            NameColumn = 0,
-            ModeColumn,
-            BehColumn,
-            HealthColumn,
+            SEQ_COLUMN = 0,
+            TIMESTAMP_COLUMN,
+            REASON_COLUMN,
+            VALUES_COLUMN,
 
             COLUMN_COUNT
         };
@@ -54,9 +57,15 @@ namespace App::Models
     public slots:
         void     slotDataUpdated();
         void     slotRCBSelected(int t_inx);
+        void     slotReportReceived();
 
     private:
+        void     switchStorage(Core::ReportStorage *t_storage);
+        static QString reasonToString(int t_reason);
+        QString  rcbRefForSender(int t_inx) const;
+
         Core::IED::ptr m_ied;
-        int      m_currentRCB = -1;
+        Core::ReportStorage *m_storage = nullptr;
+        QMetaObject::Connection m_storageConn;
     };
 }

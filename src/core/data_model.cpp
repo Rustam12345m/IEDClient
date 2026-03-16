@@ -147,6 +147,17 @@ namespace Core
         m_svcb.push_back(t_cb);
     }
 
+    ReportStorage* DataModel::getOrCreateReportStorage(const QString &t_rcbRef)
+    {
+        auto it = m_reportStorages.find(t_rcbRef);
+        if (it != m_reportStorages.end()) {
+            return it.value();
+        }
+        auto *storage = new ReportStorage(nullptr);
+        m_reportStorages.insert(t_rcbRef, storage);
+        return storage;
+    }
+
     ModelItem::ptr DataModel::recFindModelItem(QStringList &t_names, int t_inx, ModelItem::ptr t_item)
     {
         if (t_item == nullptr) {

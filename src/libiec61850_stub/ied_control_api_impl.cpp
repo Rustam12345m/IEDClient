@@ -22,9 +22,12 @@
 #include "ied_control_api_impl.hpp"
 #include "libiec61850_adapter.hpp"
 
+#include <QDebug>
+
 extern "C"
 {
 #include <iec61850_client.h>
+#include <mms_value.h>
 }
 
 namespace Libiec61850
@@ -95,5 +98,108 @@ namespace Libiec61850
 
         ClientReportControlBlock_destroy(clientRcb);
         return true;
+    }
+
+    void IED_ControlAPI_Impl::staticReportCallback(void *t_param, void *t_report)
+    {
+        auto *storage = static_cast<Core::ReportStorage*>(t_param);
+        auto  report  = static_cast<ClientReport>(t_report);
+        if (!storage || !report) {
+            return;
+        }
+
+        auto rpt = QSharedPointer<Core::ReceivedReport>::create();
+
+        char *rcbRef = ClientReport_getRcbReference(report);
+        if (rcbRef) {
+            rpt->rcbRef = QString::fromUtf8(rcbRef);
+        }
+
+        const char *dsName = ClientReport_getDataSetName(report);
+        if (dsName) {
+            rpt->dataSetRef = QString::fromUtf8(dsName);
+        }
+
+        if (ClientReport_hasTimestamp(report)) {
+            rpt->timestamp = ClientReport_getTimestamp(report);
+        }
+
+        if (ClientReport_hasSeqNum(report)) {
+            rpt->seqNum = ClientReport_getSeqNum(report);
+        }
+
+        MmsValue *dataSetValues = ClientReport_getDataSetValues(report);
+        if (dataSetValues) {
+            int numElements = MmsValue_getArraySize(dataSetValues);
+            bool hasReasons = ClientReport_hasReasonForInclusion(report);
+
+            for (int i = 0; i < numElements; i++) {
+                MmsValue *element = MmsValue_getElement(dataSetValues, i);
+
+                const char *dataRef = ClientReport_getDataReference(report, i);
+                rpt->entryNames.append(dataRef ? QString::fromUtf8(dataRef) : QString::number(i));
+
+                if (element) {
+                    char buf[256];
+                    MmsValue_printToBuffer(element, buf, sizeof(buf));
+                    rpt->entryValues.append(QString::fromUtf8(buf));
+                } else {
+                    rpt->entryValues.append(QString());
+                }
+
+                int reason = 0;
+                if (hasReasons) {
+                    reason = ClientReport_getReasonForInclusion(report, i);
+                }
+                rpt->entryReasons.append(reason);
+                rpt->reasonCode |= reason;
+            }
+        }
+
+        storage->addReport(rpt);
+    }
+
+    bool IED_ControlAPI_Impl::installReportHandler(const QString &t_rcbRef,
+                                                    const QString &t_rptId,
+                                                    Core::ReportStorage *t_storage)
+    {
+        if (!t_storage || !m_api.m_libConn) {
+            return false;
+        }
+
+        IedConnection_installReportHandler(
+            m_api.m_libConn,
+            t_rcbRef.toStdString().c_str(),
+            t_rptId.toStdString().c_str(),
+            reinterpret_cast<ReportCallbackFunction>(&staticReportCallback),
+            t_storage);
+
+        m_activeHandlers.insert(t_rcbRef);
+        return true;
+    }
+
+    void IED_ControlAPI_Impl::uninstallReportHandler(const QString &t_rcbRef)
+    {
+        if (!m_api.m_libConn) {
+            return;
+        }
+
+        IedConnection_uninstallReportHandler(m_api.m_libConn,
+                                              t_rcbRef.toStdString().c_str());
+        m_activeHandlers.remove(t_rcbRef);
+    }
+
+    void IED_ControlAPI_Impl::uninstallAllHandlers()
+    {
+        if (!m_api.m_libConn) {
+            m_activeHandlers.clear();
+            return;
+        }
+
+        for (const auto &ref : m_activeHandlers) {
+            IedConnection_uninstallReportHandler(m_api.m_libConn,
+                                                  ref.toStdString().c_str());
+        }
+        m_activeHandlers.clear();
     }
 }

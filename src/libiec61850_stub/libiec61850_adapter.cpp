@@ -67,6 +67,8 @@ namespace Libiec61850
             return;
         }
 
+        m_control.uninstallAllHandlers();
+
         IedClientError error = IED_ERROR_OK;
         IedConnection_abort(m_libConn, &error);
         IedConnection_destroy(m_libConn);

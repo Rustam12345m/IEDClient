@@ -23,6 +23,7 @@
 
 #include "cmd_interface.hpp"
 #include "core/report_control_block.hpp"
+#include "core/report_storage.hpp"
 
 namespace Cmd
 {
@@ -32,10 +33,11 @@ namespace Cmd
     public:
         SetRCBValues_Cmd(Core::ReportBlock::ptr t_rcb, bool t_enable,
                          int t_trgOps, uint32_t t_bufTm, uint32_t t_intgPd,
-                         const QString &t_rptId, const QString &t_datSet)
+                         const QString &t_rptId, const QString &t_datSet,
+                         Core::ReportStorage *t_storage = nullptr)
             : m_rcb{t_rcb}, m_enable{t_enable},
               m_trgOps{t_trgOps}, m_bufTm{t_bufTm}, m_intgPd{t_intgPd},
-              m_rptId{t_rptId}, m_datSet{t_datSet}
+              m_rptId{t_rptId}, m_datSet{t_datSet}, m_storage{t_storage}
         {}
         ~SetRCBValues_Cmd() override = default;
 
@@ -43,9 +45,10 @@ namespace Cmd
 
         static auto create(Core::ReportBlock::ptr t_rcb, bool t_enable,
                            int t_trgOps, uint32_t t_bufTm, uint32_t t_intgPd,
-                           const QString &t_rptId, const QString &t_datSet) {
+                           const QString &t_rptId, const QString &t_datSet,
+                           Core::ReportStorage *t_storage = nullptr) {
             return QSharedPointer<SetRCBValues_Cmd>::create(
-                t_rcb, t_enable, t_trgOps, t_bufTm, t_intgPd, t_rptId, t_datSet);
+                t_rcb, t_enable, t_trgOps, t_bufTm, t_intgPd, t_rptId, t_datSet, t_storage);
         }
 
     private:
@@ -56,5 +59,6 @@ namespace Cmd
         uint32_t m_intgPd;
         QString  m_rptId;
         QString  m_datSet;
+        Core::ReportStorage *m_storage = nullptr;
     };
 }

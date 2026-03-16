@@ -69,9 +69,6 @@ FocusScope
             cellWidth: 30
             color: VisualStyle.toolBarColor
 
-            //selectedColor: "white"
-            //unselectedColor: VisualStyle.toolBarColor
-
             model: ListModel {
                 ListElement { title: "BRCB" }
                 ListElement { title: "URCB" }
@@ -86,101 +83,131 @@ FocusScope
         }
     }
 
-    // Header for Table below
-    TableHeader {
-        id: headerID
+    SplitView {
+        id: splitViewID
 
-        defDelegateWidth: 60
-        defDelegateHeight: 30
+        orientation: Qt.Vertical
 
         anchors {
             left: rectRcbViewTabBar.right
             right: parent.right
             top: parent.top
-        }
-
-        // resizableColumns: false
-    }
-
-    // Table of RCB on the IED
-    TableView {
-        id: tableID
-
-        anchors {
-            left: rectRcbViewTabBar.right
-            right: parent.right
-            top: headerID.bottom
             bottom: parent.bottom
         }
 
-        model: rootID.tabModels[0]
+        // Top pane: RCB overview
+        Item {
+            id: topPane
+            SplitView.preferredHeight: splitViewID.height * 0.5
+            SplitView.minimumHeight: 80
 
-        focus: true
-        reuseItems: true
-        keyNavigationEnabled: true
+            // Header for Table below
+            TableHeader {
+                id: headerID
 
-        clip: true
-        interactive: true
-        boundsBehavior: Flickable.StopAtBounds
+                defDelegateWidth: 60
+                defDelegateHeight: 30
 
-        selectionBehavior: TableView.SelectRows
-        selectionModel: ItemSelectionModel {
-            model: tableID.model
-            /*
-            onCurrentChanged: {
-                console.log(currentIndex)
-            }
-            */
-        }
-        columnWidthProvider: function(t_column) {
-            return Globals.columnWidthCalculator(headerID, tableID, t_column)
-        }
-
-        delegate: TextDelegate {
-            delegateHeight: 30
-            selected: (tableID.currentRow == row)
-
-            textAlign: Text.AlignHCenter
-            text: model.display
-
-            onSigClick: function(row, col) {
-                tableID.focus = true
-                if (selected && rootID.isRCBTab) {
-                    rootID.panelVisible = !rootID.panelVisible
-                    sigRCBRowSelected(rootID.panelVisible)
-                    return
-                }
-                Globals.setSelectedRow(tableID, row)
-                if (rootID.isRCBTab) {
-                    tableID.model.setSelectedRCB(row)
-                    rootID.panelVisible = true
-                }
-                sigRCBRowSelected(rootID.isRCBTab)
-            }
-        }
-
-        ScrollBar.vertical: ScrollBar {
-            policy: ScrollBar.AsNeeded
-            active: true
-
-            onActiveChanged: {
-                if (!active) {
-                    active = true;
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    top: parent.top
                 }
             }
-        }
-        ScrollBar.horizontal: ScrollBar {
-            policy: ScrollBar.AsNeeded
-            active: true
 
-            onActiveChanged: {
-                if (!active) {
-                    active = true;
+            // Table of RCB on the IED
+            TableView {
+                id: tableID
+
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    top: headerID.bottom
+                    bottom: parent.bottom
+                }
+
+                model: rootID.tabModels[0]
+
+                focus: true
+                reuseItems: true
+                keyNavigationEnabled: true
+
+                clip: true
+                interactive: true
+                boundsBehavior: Flickable.StopAtBounds
+
+                selectionBehavior: TableView.SelectRows
+                selectionModel: ItemSelectionModel {
+                    model: tableID.model
+                }
+                columnWidthProvider: function(t_column) {
+                    return Globals.columnWidthCalculator(headerID, tableID, t_column)
+                }
+
+                delegate: TextDelegate {
+                    delegateHeight: 30
+                    selected: (tableID.currentRow == row)
+
+                    textAlign: Text.AlignHCenter
+                    text: model.display
+
+                    onSigClick: function(row, col) {
+                        tableID.focus = true
+                        if (selected && rootID.isRCBTab) {
+                            rootID.panelVisible = !rootID.panelVisible
+                            sigRCBRowSelected(rootID.panelVisible)
+                            return
+                        }
+                        Globals.setSelectedRow(tableID, row)
+                        sigRCBRowSelected(rootID.isRCBTab)
+                    }
+                }
+
+                ScrollBar.vertical: ScrollBar {
+                    policy: ScrollBar.AsNeeded
+                    active: true
+
+                    onActiveChanged: {
+                        if (!active) {
+                            active = true;
+                        }
+                    }
+                }
+                ScrollBar.horizontal: ScrollBar {
+                    policy: ScrollBar.AsNeeded
+                    active: true
+
+                    onActiveChanged: {
+                        if (!active) {
+                            active = true;
+                        }
+                    }
+                }
+
+                onCurrentRowChanged: {
+                    if (rootID.isRCBTab && currentRow >= 0) {
+                        tableID.model.setSelectedRCB(currentRow)
+                        rootID.panelVisible = true
+                        sigRCBRowSelected(true)
+                    }
+                }
+
+                Keys.onPressed: function(event) {
                 }
             }
         }
 
-        Keys.onPressed: function(event) {
+        // Bottom pane: Received reports for selected RCB
+        Item {
+            id: bottomPane
+            SplitView.fillHeight: true
+            SplitView.minimumHeight: 60
+            visible: rootID.isRCBTab
+
+            RCB_ReportsTable {
+                id: reportsTableID
+                anchors.fill: parent
+            }
         }
     }
 

@@ -28,6 +28,10 @@ set(CORE_SOURCES
 
     fs_model.hpp
 
+    received_report.hpp
+    report_storage.hpp
+    report_storage.cpp
+
     data_model.hpp
     data_model.cpp
     data_model_builder.hpp

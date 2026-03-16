@@ -18,6 +18,15 @@ namespace UnitTests
         MOCK_METHOD(bool, refreshRCBValues,
                     (Core::ReportBlock::ptr t_rcb),
                     (override));
+
+        MOCK_METHOD(bool, installReportHandler,
+                    (const QString &t_rcbRef, const QString &t_rptId,
+                     Core::ReportStorage *t_storage),
+                    (override));
+
+        MOCK_METHOD(void, uninstallReportHandler,
+                    (const QString &t_rcbRef),
+                    (override));
     };
 
     class MockStateAPI : public Cmd::Interface::IED_StateAPI

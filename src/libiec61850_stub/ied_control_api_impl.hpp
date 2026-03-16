@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include <QSet>
+
 #include "cmd/interface/ied_control_api.hpp"
 
 namespace Libiec61850
@@ -39,7 +41,16 @@ namespace Libiec61850
 
         bool refreshRCBValues(Core::ReportBlock::ptr t_rcb) override;
 
+        bool installReportHandler(const QString &t_rcbRef,
+                                  const QString &t_rptId,
+                                  Core::ReportStorage *t_storage) override;
+        void uninstallReportHandler(const QString &t_rcbRef) override;
+        void uninstallAllHandlers();
+
     private:
+        static void staticReportCallback(void *t_param, void *t_report);
+
         ApiAdapter& m_api;
+        QSet<QString> m_activeHandlers;
     };
 };

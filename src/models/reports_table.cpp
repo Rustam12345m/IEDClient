@@ -20,6 +20,9 @@
  * */
 
 #include "reports_table.hpp"
+#include "rcb_overview_table.hpp"
+
+#include <QDateTime>
 
 namespace App::Models
 {
@@ -32,20 +35,23 @@ namespace App::Models
     {
         beginResetModel();
         m_ied = t_ied;
+        switchStorage(nullptr);
         endResetModel();
     }
 
     QVariant ReportsTable::headerData(int t_section, Qt::Orientation t_orientation, int t_role) const
     {
+        if (t_role != Qt::DisplayRole) {
+            return QVariant();
+        }
+
         switch (t_orientation) {
         case Qt::Horizontal: {
-            const char* labels[] = { "Name", "Mode", "Beh", "Health" };
-
+            const char* labels[] = { "#", "Timestamp", "Reason", "Values" };
             return QVariant(labels[t_section % COLUMN_COUNT]);
         }
-        case Qt::Vertical: {
+        case Qt::Vertical:
             break;
-        }
         }
         return QVariant();
     }
@@ -57,30 +63,120 @@ namespace App::Models
 
     int ReportsTable::rowCount(const QModelIndex &t_parent) const
     {
-        return 0;
+        Q_UNUSED(t_parent);
+        return m_storage ? m_storage->count() : 0;
     }
 
     int ReportsTable::columnCount(const QModelIndex &t_parent) const
     {
+        Q_UNUSED(t_parent);
         return COLUMN_COUNT;
     }
 
     QVariant ReportsTable::data(const QModelIndex &t_index, int t_role) const
     {
-        return QVariant(" ? ");
+        if (t_role != Qt::DisplayRole || !m_storage) {
+            return QVariant();
+        }
+
+        int row = t_index.row();
+        // Show newest reports first
+        int storageIndex = m_storage->count() - 1 - row;
+        auto report = m_storage->getReport(storageIndex);
+        if (!report) {
+            return QVariant();
+        }
+
+        switch (t_index.column()) {
+        case SEQ_COLUMN:
+            return report->seqNum;
+        case TIMESTAMP_COLUMN:
+            if (report->timestamp > 0) {
+                return QDateTime::fromMSecsSinceEpoch(report->timestamp).toString("hh:mm:ss.zzz");
+            }
+            return "-";
+        case REASON_COLUMN:
+            return reasonToString(report->reasonCode);
+        case VALUES_COLUMN: {
+            QStringList parts;
+            int count = qMin(report->entryValues.size(), 3);
+            for (int i = 0; i < count; i++) {
+                if (!report->entryValues[i].isEmpty()) {
+                    parts.append(report->entryValues[i]);
+                }
+            }
+            if (report->entryValues.size() > 3) {
+                parts.append("...");
+            }
+            return parts.join(", ");
+        }
+        }
+        return QVariant();
     }
 
     void ReportsTable::slotDataUpdated()
     {
-        emit dataChanged(index(0, ModeColumn), index(rowCount() - 1, HealthColumn));
+        beginResetModel();
+        endResetModel();
     }
 
     void ReportsTable::slotRCBSelected(int t_inx)
     {
-        if (m_currentRCB != t_inx) {
-            beginResetModel();
-            m_currentRCB = t_inx;
-            endResetModel();
+        beginResetModel();
+
+        Core::ReportStorage *newStorage = nullptr;
+
+        if (m_ied && t_inx >= 0) {
+            // Determine which overview table sent the signal
+            auto *overviewTable = qobject_cast<RCB_OverviewTable*>(sender());
+            if (overviewTable) {
+                auto rcb = overviewTable->getSelectedReportBlock();
+                if (rcb) {
+                    QString prefix = rcb->isBuffered() ? "BR" : "RP";
+                    QString rcbRef = QString("%1.%2.%3").arg(rcb->lnRef(), prefix, rcb->getName());
+                    newStorage = m_ied->model().getOrCreateReportStorage(rcbRef);
+                }
+            }
         }
+
+        switchStorage(newStorage);
+        endResetModel();
+    }
+
+    void ReportsTable::slotReportReceived()
+    {
+        if (!m_storage) {
+            return;
+        }
+        int newRow = 0; // Newest at top
+        beginInsertRows(QModelIndex(), newRow, newRow);
+        endInsertRows();
+    }
+
+    void ReportsTable::switchStorage(Core::ReportStorage *t_storage)
+    {
+        if (m_storageConn) {
+            disconnect(m_storageConn);
+        }
+        m_storage = t_storage;
+        if (m_storage) {
+            m_storageConn = connect(m_storage, &Core::ReportStorage::sigReportReceived,
+                                    this, &ReportsTable::slotReportReceived,
+                                    Qt::QueuedConnection);
+        }
+    }
+
+    QString ReportsTable::reasonToString(int t_reason)
+    {
+        QStringList parts;
+        if (t_reason & 1)  parts.append("DataChange");
+        if (t_reason & 2)  parts.append("QualityChange");
+        if (t_reason & 4)  parts.append("DataUpdate");
+        if (t_reason & 8)  parts.append("Integrity");
+        if (t_reason & 16) parts.append("GI");
+        if (parts.isEmpty()) {
+            return "Unknown";
+        }
+        return parts.join("|");
     }
 }

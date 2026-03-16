@@ -22,6 +22,7 @@
 #pragma once
 
 #include "logical_device.hpp"
+#include "report_storage.hpp"
 
 namespace Core
 {
@@ -53,6 +54,8 @@ namespace Core
         void pushGooseCB(GooseControlBlock::ptr t_cb);
         void pushSV_CB(SV_ControlBlock::ptr t_cb);
 
+        ReportStorage* getOrCreateReportStorage(const QString &t_rcbRef);
+
         void print();
 
     private:
@@ -64,6 +67,7 @@ namespace Core
         QList< ReportBlock::ptr >         m_rcb;
         QList< GooseControlBlock::ptr >   m_gocb;
         QList< SV_ControlBlock::ptr >     m_svcb;
+        QMap<QString, ReportStorage*>     m_reportStorages;
     
     friend class DataModelBuilder;
     };

@@ -21,28 +21,35 @@
 
 #pragma once
 
-#include <QString>
-#include <cstdint>
+#include <QObject>
+#include <QMutex>
 
-#include "core/report_control_block.hpp"
-#include "core/report_storage.hpp"
+#include <array>
 
-namespace Cmd::Interface
+#include "received_report.hpp"
+
+namespace Core
 {
-    class IED_ControlAPI
+    class ReportStorage : public QObject
     {
+        Q_OBJECT
     public:
-        virtual ~IED_ControlAPI() {}
+        static constexpr int Capacity = 100;
 
-        virtual bool setRCBValues(const QString &t_rcbRef, bool t_enable,
-                                  int t_trgOps, uint32_t t_bufTm, uint32_t t_intgPd,
-                                  const QString &t_rptId, const QString &t_datSet) = 0;
+        explicit ReportStorage(QObject *t_parent = nullptr);
 
-        virtual bool refreshRCBValues(Core::ReportBlock::ptr t_rcb) = 0;
+        void addReport(ReceivedReport::ptr t_report);
+        ReceivedReport::ptr getReport(int t_index) const;
+        int  count() const;
+        void clear();
 
-        virtual bool installReportHandler(const QString &t_rcbRef,
-                                          const QString &t_rptId,
-                                          Core::ReportStorage *t_storage) = 0;
-        virtual void uninstallReportHandler(const QString &t_rcbRef) = 0;
+    signals:
+        void sigReportReceived();
+
+    private:
+        mutable QMutex                                  m_lock;
+        std::array<ReceivedReport::ptr, Capacity>       m_buffer{};
+        int                                             m_head = 0;
+        int                                             m_count = 0;
     };
 }

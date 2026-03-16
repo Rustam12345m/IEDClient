@@ -45,11 +45,9 @@ FocusScope
             top: parent.top
             right: parent.right
         }
-
-        // resizableColumns: false
     }
 
-    // Table of files on the IED
+    // Table of received reports
     TableView {
         id: tableID
 
@@ -77,11 +75,6 @@ FocusScope
         selectionBehavior: TableView.SelectRows
         selectionModel: ItemSelectionModel {
             model: tableID.model
-            /*
-            onCurrentChanged: {
-                console.log(currentIndex)
-            }
-            */
         }
 
         delegate: TextDelegate {
@@ -108,6 +101,15 @@ FocusScope
 
         Keys.onPressed: function(event) {
         }
+    }
+
+    // Empty state placeholder
+    Text {
+        anchors.centerIn: parent
+        text: "No reports received"
+        color: VisualStyle.textColor
+        font.pixelSize: 14
+        visible: tableID.rows === 0
     }
 
     onVisibleChanged: {

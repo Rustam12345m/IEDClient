@@ -32,10 +32,17 @@ namespace Cmd
         emit sigCmdEvent(CmdEvent::StartEvent(rcbRef,
             QString("%1 RCB: %2").arg(action, rcbRef)));
 
+        if (m_enable && m_storage) {
+            t_api->control().installReportHandler(rcbRef, m_rptId, m_storage);
+        }
+
         bool ok = t_api->control().setRCBValues(rcbRef, m_enable, m_trgOps,
                                                   m_bufTm, m_intgPd, m_rptId, m_datSet);
 
         if (ok) {
+            if (!m_enable) {
+                t_api->control().uninstallReportHandler(rcbRef);
+            }
             m_rcb->setRptEna(m_enable);
             m_rcb->setTrgOps(m_trgOps);
             m_rcb->setBufTm(m_bufTm);
@@ -46,6 +53,9 @@ namespace Cmd
             emit sigCmdEvent(CmdEvent::FinishEvent(rcbRef,
                 QString("RCB %1: %2").arg(action, rcbRef), true));
         } else {
+            if (m_enable && m_storage) {
+                t_api->control().uninstallReportHandler(rcbRef);
+            }
             emit sigCmdEvent(CmdEvent::FinishEvent(rcbRef,
                 QString("Failed to %1 RCB: %2").arg(action.toLower(), rcbRef), false));
         }
