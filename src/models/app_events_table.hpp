@@ -23,6 +23,10 @@
 
 #include <QAbstractTableModel>
 
+#include <array>
+
+#include "cmd/cmd_event.hpp"
+
 namespace App::Models
 {
     class AppEventsTable : public QAbstractTableModel
@@ -36,6 +40,8 @@ namespace App::Models
         };
 
     public:
+        static constexpr int Capacity = 256;
+
         explicit AppEventsTable(QObject *parent = nullptr);
         ~AppEventsTable() = default;
 
@@ -49,5 +55,13 @@ namespace App::Models
                                         int t_role = Qt::DisplayRole) const override;
 
         QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
+
+    public slots:
+        void addEvent(Cmd::CmdEvent t_event);
+
+    private:
+        std::array<Cmd::CmdEvent, Capacity> m_buffer{};
+        int m_head = 0;
+        int m_count = 0;
     };
 }

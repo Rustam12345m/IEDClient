@@ -24,6 +24,8 @@
 #include <QObject>
 #include <QMutex>
 
+#include <array>
+
 #include "cmd/cmd_event.hpp"
 
 namespace App
@@ -32,6 +34,8 @@ namespace App
     {
         Q_OBJECT
     public:
+        static constexpr int Capacity = 256;
+
         EventStorage() = default;
 
         QString getLastMessage();
@@ -39,10 +43,12 @@ namespace App
         void    putEventToStorage(Cmd::CmdEvent t_event);
 
     signals:
-        void    sigNewEvent();
+        void    sigNewEvent(Cmd::CmdEvent t_event);
 
     private:
-        QMutex                  m_lock;
-        QList<Cmd::CmdEvent>    m_events;
+        mutable QMutex                              m_lock;
+        std::array<Cmd::CmdEvent, Capacity>         m_buffer{};
+        int                                         m_head = 0;
+        int                                         m_count = 0;
     };
 }

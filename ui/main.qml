@@ -277,6 +277,7 @@ ApplicationWindow
                 // color: VisualStyle.toolBarColor
                 // selectedColor: VisualStyle.tabBar.selColor
                 // unselectedColor: VisualStyle.tabBar.unselColor
+                showOnlyFirst: !presenter.isConnected
 
                 model: ListModel {
                     ListElement { title: "HOME" }
@@ -523,11 +524,11 @@ ApplicationWindow
     Shortcut { sequence: "F5";    onActivated: updateActivePage()      }
     Shortcut { sequence: "F11";   onActivated: toFullscreenMode()      }
     Shortcut { sequence: "Alt+1"; onActivated: setActivePage(Globals.Page.START) }
-    Shortcut { sequence: "Alt+2"; onActivated: setActivePage(Globals.Page.LD)    }
-    Shortcut { sequence: "Alt+3"; onActivated: setActivePage(Globals.Page.LN)    }
-    Shortcut { sequence: "Alt+4"; onActivated: setActivePage(Globals.Page.DS)    }
-    Shortcut { sequence: "Alt+5"; onActivated: setActivePage(Globals.Page.RCB)   }
-    Shortcut { sequence: "Alt+6"; onActivated: setActivePage(Globals.Page.FS)    }
+    Shortcut { sequence: "Alt+2"; enabled: presenter.isConnected; onActivated: setActivePage(Globals.Page.LD)    }
+    Shortcut { sequence: "Alt+3"; enabled: presenter.isConnected; onActivated: setActivePage(Globals.Page.LN)    }
+    Shortcut { sequence: "Alt+4"; enabled: presenter.isConnected; onActivated: setActivePage(Globals.Page.DS)    }
+    Shortcut { sequence: "Alt+5"; enabled: presenter.isConnected; onActivated: setActivePage(Globals.Page.RCB)   }
+    Shortcut { sequence: "Alt+6"; enabled: presenter.isConnected; onActivated: setActivePage(Globals.Page.FS)    }
     Shortcut { sequence: "Ctrl+H"; onActivated: showAbotProgramWindow()          }
 
     // Close modal window timer
@@ -581,7 +582,7 @@ ApplicationWindow
 
         title: "About IEDClient"
         color: VisualStyle.borderColor
-        borderColor: VisualStyle.borderColor
+        borderColor: VisualStyle.modalColor
         innerColor: VisualStyle.modalColor
 
         contentArea: Column {
@@ -652,6 +653,9 @@ ApplicationWindow
 
     // Active Page + Panel
     function setActivePage(page) {
+        if (page !== Globals.Page.START && !presenter.isConnected) {
+            return
+        }
         mainStackID.currentIndex = page
         mainTabBarID.currentIndex = page
     }

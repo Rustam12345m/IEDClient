@@ -53,94 +53,95 @@ Item {
         anchors.fill: parent
 
         border.width: rootID.borderWidth
-        border.color: labelRectID.color
+        border.color: selected ? VisualStyle.borderColor : VisualStyle.ldGrid.borderColor
+        color: "transparent"
 
-        // Label
-        Rectangle {
-            id: labelRectID
+        Column {
+            anchors.fill: parent
+            anchors.margins: rootID.borderWidth
 
-            anchors {
-                top: parent.top
-                left: parent.left
-                right: parent.right
+            // Label
+            Rectangle {
+                id: labelRectID
 
-                margins: rootID.borderWidth
-                bottomMargin: 0
+                width: parent.width
+                height: rootID.cellEdge
+
+                color: selected ? VisualStyle.borderColor : VisualStyle.ldGrid.color
+
+                Text {
+                    id: ldName
+
+                    anchors.fill: parent
+
+                    horizontalAlignment: Text.AlignLeft
+                    verticalAlignment: Text.AlignVCenter
+                    padding: 6
+
+                    wrapMode: Text.Wrap
+                    elide: Text.ElideRight
+
+                    font.bold: VisualStyle.boldHeaderText
+                    font.pointSize: 12
+                    color: selected ? "#ffffff" : VisualStyle.textColor
+
+                    text: "LD: " + ld_object.name
+                }
             }
-            height: rootID.cellEdge
 
-            color: selected ? VisualStyle.borderColor : VisualStyle.ldGrid.color
-
-            Text {
-                id: ldName
-
-                anchors.fill: parent
-
-                horizontalAlignment: Text.AlignLeft
-                verticalAlignment: Text.AlignVCenter
-                padding: 6
-
-                wrapMode: Text.Wrap
-                elide: Text.ElideRight
-
-                font.bold: VisualStyle.boldHeaderText
-                font.pointSize: 12
-                color: selected ? VisualStyle.statusBar.textColor : VisualStyle.textColor
-
-                text: "LD: " + ld_object.name
+            // Divider (same width as outer border)
+            Rectangle {
+                width: parent.width
+                height: rootID.borderWidth
+                color: selected ? VisualStyle.borderColor : VisualStyle.ldGrid.borderColor
             }
-        }
-        // Values
-        Rectangle {
-            anchors {
-                top: labelRectID.bottom
-                bottom: parent.bottom
-                left: parent.left
-                right: parent.right
 
-                margins: rootID.borderWidth
-                topMargin: 0
-            }
-            color: VisualStyle.input.bg
+            // Values
+            Rectangle {
+                width: parent.width
+                height: parent.height - labelRectID.height - rootID.borderWidth
 
-            ListView {
-                anchors.fill: parent
+                color: VisualStyle.input.bg
 
-                model: rootID.ldValsModel
+                ListView {
+                    anchors.fill: parent
 
-                delegate: Rectangle {
-                    height: 20
+                    model: rootID.ldValsModel
 
-                    RowLayout {
-                        anchors.fill: parent
+                    delegate: Rectangle {
+                        height: 20
 
-                        Text {
-                            Layout.preferredWidth: 50
-                            padding: 6
+                        RowLayout {
+                            anchors.fill: parent
 
-                            text: model.param
+                            Text {
+                                Layout.preferredWidth: 50
+                                padding: 6
 
-                            font.pointSize: 10
-                        }
-                        Text {
-                            padding: 6
+                                text: model.param
 
-                            text: model.value
-                            color: model.color
+                                font.pointSize: 10
+                            }
+                            Text {
+                                padding: 6
 
-                            font.pointSize: 10
-                            font.bold: VisualStyle.boldHeaderText
+                                text: model.value
+                                color: model.color
+
+                                font.pointSize: 10
+                                font.bold: VisualStyle.boldHeaderText
+                            }
                         }
                     }
-                }
 
-                Component.onCompleted: {
-                    rootID.ldValsModel.append({ param: "Mod:",    value: ld_object.mod.text, color: ld_object.mod.color })
-                    rootID.ldValsModel.append({ param: "Beh:",    value: ld_object.beh.text, color: ld_object.beh.color })
-                    rootID.ldValsModel.append({ param: "Health:", value: ld_object.health.text, color: ld_object.health.color })
-                    rootID.ldValsModel.append({ param: "",        value: "", color: "" })
-                    rootID.ldValsModel.append({ param: "Sim:",    value: ld_object.sim.text, color: ld_object.sim.color })
-                    rootID.ldValsModel.append({ param: "Blk:",    value: ld_object.blk.text, color: ld_object.blk.color })
+                    Component.onCompleted: {
+                        rootID.ldValsModel.append({ param: "Mod:",    value: ld_object.mod.text, color: ld_object.mod.color })
+                        rootID.ldValsModel.append({ param: "Beh:",    value: ld_object.beh.text, color: ld_object.beh.color })
+                        rootID.ldValsModel.append({ param: "Health:", value: ld_object.health.text, color: ld_object.health.color })
+                        rootID.ldValsModel.append({ param: "",        value: "", color: "" })
+                        rootID.ldValsModel.append({ param: "Sim:",    value: ld_object.sim.text, color: ld_object.sim.color })
+                        rootID.ldValsModel.append({ param: "Blk:",    value: ld_object.blk.text, color: ld_object.blk.color })
+                    }
                 }
             }
         }

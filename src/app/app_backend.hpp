@@ -53,8 +53,6 @@ namespace App
 
     signals:
         void sigNewStatusMsg();
-    public slots:
-        void slotNewStatusMessage();
 
     protected:
         AppSettings m_settings;

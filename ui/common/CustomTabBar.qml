@@ -42,6 +42,7 @@ Rectangle
 
     property color selectedColor: VisualStyle.tabBar.selColor
     property color unselectedColor: VisualStyle.tabBar.unselColor
+    property bool showOnlyFirst: false
 
     signal sigTabSelected(int index)
 
@@ -70,9 +71,11 @@ Rectangle
             required property int index
             required property string title
             property bool selected: (listViewID.currentIndex === index)
+            property bool tabVisible: index === 0 || !rootID.showOnlyFirst
 
-            implicitHeight: rootID.horizontalBar ? rootID.height : rootID.cellHeight
-            implicitWidth: rootID.horizontalBar ? rootID.cellWidth : rootID.width
+            visible: tabVisible
+            implicitHeight: tabVisible ? (rootID.horizontalBar ? rootID.height : rootID.cellHeight) : 0
+            implicitWidth: tabVisible ? (rootID.horizontalBar ? rootID.cellWidth : rootID.width) : 0
 
             Rectangle {
                 id: btnRectID

@@ -29,11 +29,17 @@ namespace App::Models
 
     int AppEventsTable::rowCount(const QModelIndex &t_parent) const
     {
-        return 50;
+        if (t_parent.isValid()) {
+            return 0;
+        }
+        return m_count;
     }
 
     int AppEventsTable::columnCount(const QModelIndex &t_parent) const
     {
+        if (t_parent.isValid()) {
+            return 0;
+        }
         return COLUMN_COUNT;
     }
 
@@ -54,21 +60,47 @@ namespace App::Models
         }
 
         switch (t_section) {
-        case DATE_COLUMN: {
-            return "Date and Time";
+        case DATE_COLUMN:   return "Date and Time";
+        case SOURCE_COLUMN: return "Source";
+        case DESC_COLUMN:   return "Description";
         }
-        case SOURCE_COLUMN: {
-            return "Source";
-        }
-        case DESC_COLUMN: {
-            return "Description";
-        }
-        }
-        return QVariant("");
+        return QVariant();
     }
 
     QVariant AppEventsTable::data(const QModelIndex &t_index, int t_role) const
     {
-        return QString("Events (%1, %2)").arg(t_index.column()).arg(t_index.row());
+        if (t_role != Qt::DisplayRole || !t_index.isValid()) {
+            return QVariant();
+        }
+
+        // Newest events first: row 0 = most recent
+        int logicalIndex = m_count - 1 - t_index.row();
+        int pos = (m_head + logicalIndex) % Capacity;
+        const auto &ev = m_buffer[pos];
+
+        switch (t_index.column()) {
+        case DATE_COLUMN:
+            return ev.m_time.toString("yyyy-MM-dd hh:mm:ss");
+        case SOURCE_COLUMN:
+            return ev.m_ip;
+        case DESC_COLUMN:
+            return ev.m_msg;
+        }
+        return QVariant();
+    }
+
+    void AppEventsTable::addEvent(Cmd::CmdEvent t_event)
+    {
+        if (m_count < Capacity) {
+            beginInsertRows(QModelIndex(), 0, 0);
+            int pos = (m_head + m_count) % Capacity;
+            m_buffer[pos] = std::move(t_event);
+            ++m_count;
+            endInsertRows();
+        } else {
+            m_buffer[m_head] = std::move(t_event);
+            m_head = (m_head + 1) % Capacity;
+            emit dataChanged(index(0, 0), index(m_count - 1, COLUMN_COUNT - 1));
+        }
     }
 }

@@ -23,6 +23,7 @@
 
 #include <QString>
 #include <QDateTime>
+#include <QMetaType>
 
 namespace Cmd
 {
@@ -65,3 +66,5 @@ namespace Cmd
         int             m_perc = 0;
     };
 }
+
+Q_DECLARE_METATYPE(Cmd::CmdEvent)

@@ -49,7 +49,8 @@ namespace App
         Q_INVOKABLE void connectTo(const QVariantMap &t_data);
         Q_INVOKABLE void disconnectFrom();
         Q_INVOKABLE void toolDumpModel(const QVariantMap &t_data);
-        Q_INVOKABLE bool isConnected() { return m_con.isConnected(); }
+        Q_PROPERTY(bool isConnected READ isConnected NOTIFY sigIEDConChanged)
+        bool isConnected() const { return m_con.isConnected(); }
 
     public slots:
         void slotCmdEvent(Cmd::CmdEvent t_ev);

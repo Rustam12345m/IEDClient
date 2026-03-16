@@ -91,7 +91,7 @@ FocusScope
             delegateHeight: defDelegateHeight
             selected: (tableID.currentRow == row)
 
-            textAlign: (column == 0) ? Text.AlignLeft : Text.AlignHCenter
+            textAlign: Text.AlignLeft
             text: model.display
 
             onSigClick: function(row, col) {

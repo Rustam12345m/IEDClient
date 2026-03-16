@@ -21,27 +21,32 @@
 
 #include "event_storage.hpp"
 
-#include <QDebug>
-
 namespace App
 {
     QString EventStorage::getLastMessage()
     {
-        QString retval;
-        m_lock.lock();
-        if (!m_events.empty()) {
-            retval = m_events.back().m_msg;
+        QMutexLocker locker(&m_lock);
+        if (m_count == 0) {
+            return {};
         }
-        m_lock.unlock();
-        return retval;
+        int last = (m_head + m_count - 1) % Capacity;
+        return m_buffer[last].m_msg;
     }
 
     void EventStorage::putEventToStorage(Cmd::CmdEvent t_event)
     {
-        m_lock.lock();
-        m_events.push_back(t_event);
-        m_lock.unlock();
+        {
+            QMutexLocker locker(&m_lock);
+            int pos = (m_head + m_count) % Capacity;
+            m_buffer[pos] = t_event;
 
-        emit sigNewEvent();
+            if (m_count < Capacity) {
+                ++m_count;
+            } else {
+                m_head = (m_head + 1) % Capacity;
+            }
+        }
+
+        emit sigNewEvent(t_event);
     }
 }

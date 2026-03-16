@@ -32,7 +32,10 @@ namespace App
         m_eventsModel = new Models::AppEventsTable(this);
         m_lastConnModel = new Models::HistConTable(this, m_settings);
 
-        connect(&m_events, &EventStorage::sigNewEvent, this, &AppBackend::slotNewStatusMessage);
+        connect(&m_events, &EventStorage::sigNewEvent, this, [this](Cmd::CmdEvent) {
+            emit sigNewStatusMsg();
+        });
+        connect(&m_events, &EventStorage::sigNewEvent, m_eventsModel, &Models::AppEventsTable::addEvent);
     }
 
     QString AppBackend::getAppVersion()
@@ -53,11 +56,6 @@ namespace App
     QString AppBackend::getLastStatusMsg()
     {
         return m_events.getLastMessage();
-    }
-
-    void AppBackend::slotNewStatusMessage()
-    {
-        emit sigNewStatusMsg();
     }
 
     void AppBackend::saveCredsToHistory(const Cmd::IEDCredentials &t_cred)
