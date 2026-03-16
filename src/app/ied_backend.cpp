@@ -20,6 +20,7 @@
  * */
 
 #include "ied_backend.hpp"
+#include "cmd/set_rcb_values_cmd.hpp"
 
 #include <QCoreApplication>
 
@@ -42,6 +43,7 @@ namespace App
         m_gooseComModel = new Models::GOOSE_OverviewTable(this, m_con.m_ied);
         m_svComModel    = new Models::SV_OverviewTable(this, m_con.m_ied);
         m_reportsModel  = new Models::ReportsTable(this, m_con.m_ied);
+        m_iedTreeModel  = new Models::IED_ModelTree(this, m_con.m_ied);
 
         m_sortDOModel = new Models::SortProxyModel(this);
         m_sortDOModel->setSourceModel(m_lnStateModel);
@@ -124,6 +126,33 @@ namespace App
         putCmdToQueue(cmd);
     }
 
+    void IED_Backend::setRCBEnable(bool t_buffered, int t_index,
+                                       bool t_enable, int t_trgOps,
+                                       int t_bufTm, int t_intgPd)
+    {
+        auto *model = t_buffered ? m_brcbComModel : m_urcbComModel;
+        model->setSelectedRCB(t_index);
+        auto rcb = model->getSelectedReportBlock();
+        if (!rcb) {
+            qDebug() << "IED_Backend: No RCB selected";
+            return;
+        }
+
+        auto cmd = Cmd::SetRCBValues_Cmd::create(rcb, t_enable, t_trgOps,
+                                                  static_cast<uint32_t>(t_bufTm),
+                                                  static_cast<uint32_t>(t_intgPd));
+
+        connect(cmd.get(), &Cmd::CmdInterface::sigCmdEvent, this,
+                [this, model](Cmd::CmdEvent ev) {
+                    if (ev.m_type == Cmd::FINISH_EVENT) {
+                        model->slotDataUpdated(ev.m_result);
+                        emit sigRCBUpdated();
+                    }
+                }, Qt::QueuedConnection);
+
+        putCmdToQueue(cmd);
+    }
+
     QString IED_Backend::ldsPageStatus()
     {
         return "IED: " + m_con.m_ied->model().getName();
@@ -164,6 +193,7 @@ namespace App
         m_gooseComModel->setActiveIED(m_con.m_ied);
         m_svComModel->setActiveIED(m_con.m_ied);
         m_reportsModel->setActiveIED(m_con.m_ied);
+        m_iedTreeModel->setActiveIED(m_con.m_ied);
     }
 
     void IED_Backend::slotUpdateItems(Core::ModelStateUpdater::ptr t_vals)

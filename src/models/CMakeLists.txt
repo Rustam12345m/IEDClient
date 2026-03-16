@@ -26,6 +26,9 @@ set(SOURCES
     ln_common_tree.hpp
     ln_common_tree.cpp
 
+    ied_model_tree.hpp
+    ied_model_tree.cpp
+
     sort_proxy_model.hpp
     sort_proxy_model.cpp
 

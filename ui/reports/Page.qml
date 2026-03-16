@@ -39,6 +39,9 @@ FocusScope
     ]
     property var activeModel: tabModels[rcbTabBarID.currentIndex]
     property bool isRCBTab: rcbTabBarID.currentIndex <= 1
+    property bool isBuffered: rcbTabBarID.currentIndex === 0
+    property int selectedRCBIndex: tableID.currentRow
+    property bool panelVisible: false
 
     signal sigRCBRowSelected(bool isRCB)
 
@@ -143,12 +146,14 @@ FocusScope
             onSigClick: function(row, col) {
                 tableID.focus = true
                 if (selected && rootID.isRCBTab) {
-                    sigRCBRowSelected(false)
+                    rootID.panelVisible = !rootID.panelVisible
+                    sigRCBRowSelected(rootID.panelVisible)
                     return
                 }
                 Globals.setSelectedRow(tableID, row)
                 if (rootID.isRCBTab) {
                     tableID.model.setSelectedRCB(row)
+                    rootID.panelVisible = true
                 }
                 sigRCBRowSelected(rootID.isRCBTab)
             }

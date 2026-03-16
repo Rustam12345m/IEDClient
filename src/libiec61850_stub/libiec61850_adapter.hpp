@@ -37,7 +37,7 @@ namespace Libiec61850
     public:
         using ptr = QSharedPointer< ApiAdapter >;
 
-        ApiAdapter() : m_model(*this), m_state(*this), m_fs(*this) {}
+        ApiAdapter() : m_model(*this), m_state(*this), m_control(*this), m_fs(*this) {}
         ~ApiAdapter() override {}
 
         bool    connect(const Cmd::IEDCredentials &t_creds) override;

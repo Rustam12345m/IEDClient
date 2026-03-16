@@ -35,6 +35,9 @@ set(SOURCES
     update_rcbs_cmd.hpp
     update_rcbs_cmd.cpp
 
+    set_rcb_values_cmd.hpp
+    set_rcb_values_cmd.cpp
+
     get_filelist_cmd.hpp
     get_filelist_cmd.cpp
 

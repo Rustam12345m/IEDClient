@@ -29,6 +29,7 @@
 #include "models/ln_overview_table.hpp"
 #include "models/ln_state_table.hpp"
 #include "models/ln_common_tree.hpp"
+#include "models/ied_model_tree.hpp"
 #include "models/ds_overview_table.hpp"
 #include "models/ds_signals_table.hpp"
 #include "models/rcb_overview_table.hpp"
@@ -55,6 +56,7 @@ namespace App
         Q_INVOKABLE QAbstractItemModel*  getLN_ControlsModel() const { return m_sortControlsModel; }
         Q_INVOKABLE QAbstractItemModel*  getLN_SettingsModel() const { return m_sortSettingsModel; }
         Q_INVOKABLE QAbstractItemModel*  getLN_TreeModel()     const { return m_lnTreeModel; }
+        Q_INVOKABLE QAbstractItemModel*  getIED_TreeModel()    const { return m_iedTreeModel; }
         Q_INVOKABLE QAbstractListModel*  getDS_ComModel() const { return m_dsComModel; }
         Q_INVOKABLE QAbstractTableModel* getDS_ItemModel() const { return m_dsSigModel; }
         Q_INVOKABLE QAbstractTableModel* getBRCB_ComModel() const { return m_brcbComModel; }
@@ -69,12 +71,18 @@ namespace App
         Q_INVOKABLE void updateRCBs_Status();
         Q_INVOKABLE void updateLN_TreeValues();
         Q_INVOKABLE void updateDS_Values();
+        Q_INVOKABLE void setRCBEnable(bool t_buffered, int t_index,
+                                       bool t_enable, int t_trgOps,
+                                       int t_bufTm, int t_intgPd);
 
         // Status bar
         Q_INVOKABLE QString ldsPageStatus();
         Q_INVOKABLE QString lnsPageStatus();
         Q_INVOKABLE QString dsPageStatus();
         Q_INVOKABLE QString rcbPageStatus();
+
+    signals:
+        void sigRCBUpdated();
 
     public slots:
         void slotConnected(bool t_done) override;
@@ -99,5 +107,6 @@ namespace App
         Models::GOOSE_OverviewTable* m_gooseComModel = nullptr;
         Models::SV_OverviewTable*    m_svComModel    = nullptr;
         Models::ReportsTable*        m_reportsModel  = nullptr;
+        Models::IED_ModelTree*       m_iedTreeModel  = nullptr;
     };
 }

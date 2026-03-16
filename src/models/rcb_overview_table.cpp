@@ -57,6 +57,11 @@ namespace App::Models
         return nullptr;
     }
 
+    Core::ReportBlock::ptr RCB_OverviewTable::getSelectedReportBlock() const
+    {
+        return selectedRCB();
+    }
+
     void RCB_OverviewTable::setSelectedRCB(int t_inx)
     {
         m_currentRCB = t_inx;

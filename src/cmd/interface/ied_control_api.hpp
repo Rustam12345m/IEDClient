@@ -21,7 +21,8 @@
 
 #pragma once
 
-#include "core/data_model.hpp"
+#include <QString>
+#include <cstdint>
 
 namespace Cmd::Interface
 {
@@ -29,5 +30,8 @@ namespace Cmd::Interface
     {
     public:
         virtual ~IED_ControlAPI() {}
+
+        virtual bool setRCBValues(const QString &t_rcbRef, bool t_enable,
+                                  int t_trgOps, uint32_t t_bufTm, uint32_t t_intgPd) = 0;
     };
 }

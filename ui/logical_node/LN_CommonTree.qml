@@ -128,6 +128,13 @@ FocusScope {
             }
         }
 
+        Connections {
+            target: treeViewID.model
+            function onModelReset() {
+                Qt.callLater(treeViewID.expandRecursively)
+            }
+        }
+
         ScrollBar.vertical: ScrollBar {
             policy: ScrollBar.AsNeeded
             active: true

@@ -39,6 +39,19 @@ Item
 
     property var rcbModel: null
 
+    signal sigEnable(int trgOps, int bufTm, int intgPd)
+    signal sigDisable()
+
+    function collectTrgOps() {
+        var trg = 0
+        if (chkDataChange.checked) trg |= 2
+        if (chkQualChange.checked) trg |= 4
+        if (chkDataUpdate.checked) trg |= 8
+        if (chkIntegrity.checked)  trg |= 16
+        if (chkGI.checked)         trg |= 32
+        return trg
+    }
+
     function loadFromModel() {
         if (!rcbModel) return
         rcbID.text = rcbModel.selectedRptId()
@@ -91,7 +104,6 @@ Item
 
                 Text {
                     Layout.preferredWidth: 60
-
                     height: defRowHeight
 
                     text: "ID"
@@ -100,16 +112,17 @@ Item
                 }
                 TextField {
                     Layout.fillWidth: true
-
                     id: rcbID
                     height: defRowHeight
 
-                    readOnly: true
                     text: ""
+                    activeFocusOnPress: true
+                    selectByMouse: true
                 }
             }
             RowLayout {
                 width: parent.width
+                height: defRowHeight + 8
 
                 Text {
                     Layout.preferredWidth: 60
@@ -124,8 +137,9 @@ Item
                     id: dataSetID
                     height: defRowHeight
 
-                    readOnly: true
                     text: ""
+                    activeFocusOnPress: true
+                    selectByMouse: true
                 }
             }
         }
@@ -268,10 +282,16 @@ Item
                 Button {
                     Layout.fillWidth: true
                     text: "Enable"
+                    onClicked: {
+                        sigEnable(collectTrgOps(),
+                                  rcbModel ? rcbModel.selectedBufTm() : 0,
+                                  rcbModel ? rcbModel.selectedIntgPd() : 0)
+                    }
                 }
                 Button {
                     Layout.fillWidth: true
                     text: "Disable"
+                    onClicked: sigDisable()
                 }
             }
         }

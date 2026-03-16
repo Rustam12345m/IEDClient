@@ -21,7 +21,6 @@
 
 import QtQuick
 import QtQuick.Controls
-import Qt.labs.qmlmodels
 
 import GlobalVarsModule
 import AppStylesModule
@@ -29,10 +28,102 @@ import AppStylesModule
 import "qrc:/common/"
 
 // Main IED's tree page
-Item
-{
+FocusScope {
     id: rootID
 
+    // Header
+    HorizontalHeaderView {
+        id: headerID
+
+        anchors {
+            left: treeViewID.left
+            top: parent.top
+            right: parent.right
+        }
+        boundsBehavior: Flickable.StopAtBounds
+
+        syncView: treeViewID
+
+        delegate: Rectangle {
+            implicitWidth: labelID.implicitWidth + 24 + 10
+            implicitHeight: 30
+
+            color: VisualStyle.section.bg
+            border.color: VisualStyle.section.border
+
+            Label {
+                id: labelID
+
+                anchors.centerIn: parent
+                text: model.display
+                color: VisualStyle.section.text
+            }
+        }
+    }
+
+    // Full IED data model tree
+    TreeView {
+        id: treeViewID
+
+        anchors {
+            left: parent.left
+            right: parent.right
+            top: headerID.bottom
+            bottom: parent.bottom
+        }
+
+        model: iedBackend.getIED_TreeModel()
+
+        focus: true
+        clip: true
+        interactive: true
+        boundsBehavior: Flickable.StopAtBounds
+
+        palette.highlight:       VisualStyle.table.selRowColor
+        palette.highlightedText: VisualStyle.textColor
+        palette.base:            VisualStyle.table.rowColor1
+        palette.text:            VisualStyle.textColor
+
+        columnWidthProvider: function(t_column) {
+            return Globals.columnWidthCalculator(headerID, treeViewID, t_column)
+        }
+
+        selectionBehavior: TableView.SelectRows
+        selectionModel: ItemSelectionModel {
+            model: treeViewID.model
+        }
+
+        delegate: TreeViewDelegate {
+            TapHandler {
+                acceptedModifiers: Qt.ControlModifier
+                onTapped: {
+                    if (treeViewID.isExpanded(row))
+                        treeViewID.collapseRecursively(row)
+                    else
+                        treeViewID.expandRecursively(row)
+                }
+            }
+        }
+
+        Connections {
+            target: treeViewID.model
+            function onModelReset() {
+                Qt.callLater(treeViewID.expandRecursively)
+            }
+        }
+
+        ScrollBar.vertical: ScrollBar {
+            policy: ScrollBar.AsNeeded
+            active: true
+            onActiveChanged: {
+                if (!active) {
+                    active = true;
+                }
+            }
+        }
+    }
+
     onVisibleChanged: {
+        treeViewID.focus = visible
     }
 }

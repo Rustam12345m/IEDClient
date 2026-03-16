@@ -25,7 +25,18 @@
 
 namespace Libiec61850
 {
+    class ApiAdapter;
+
     class IED_ControlAPI_Impl : public Cmd::Interface::IED_ControlAPI
     {
+    public:
+        IED_ControlAPI_Impl(ApiAdapter &t_api) : m_api(t_api) {}
+        ~IED_ControlAPI_Impl() override = default;
+
+        bool setRCBValues(const QString &t_rcbRef, bool t_enable,
+                          int t_trgOps, uint32_t t_bufTm, uint32_t t_intgPd) override;
+
+    private:
+        ApiAdapter& m_api;
     };
 };

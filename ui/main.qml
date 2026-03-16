@@ -491,6 +491,22 @@ ApplicationWindow
                         // Selected RCB's settings & controls
                         RCB.RCB_PropertiesPanel {
                             id: rcbPropPanel
+
+                            onSigEnable: function(trgOps, bufTm, intgPd) {
+                                iedBackend.setRCBEnable(rcbPageID.isBuffered,
+                                    rcbPageID.selectedRCBIndex, true, trgOps, bufTm, intgPd)
+                            }
+                            onSigDisable: {
+                                iedBackend.setRCBEnable(rcbPageID.isBuffered,
+                                    rcbPageID.selectedRCBIndex, false, 0, 0, 0)
+                            }
+
+                            Connections {
+                                target: iedBackend
+                                function onSigRCBUpdated() {
+                                    rcbPropPanel.loadFromModel()
+                                }
+                            }
                         }
                     }
 

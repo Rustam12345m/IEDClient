@@ -26,60 +26,36 @@
 
 namespace App::Models
 {
-    class RCB_OverviewTable : public QAbstractTableModel
+    class IED_ModelTree : public QAbstractItemModel
     {
         Q_OBJECT
         enum ColumnType {
-            RCB_ENA_COLUMN = 0,
-            RCB_RESV_COLUMN,
-            RCB_ID_COLUMN,
-            RCB_OWNER_COLUMN,
-            RCB_DS_COLUMN,
-            RCB_TRIG_COLUMN,
-            RCB_CREV_COLUMN,
-            RCB_BUFF_COLUMN,
-            RCB_INTEGRITY_COLUMN,
+            NAME_COLUMN = 0,
+            VALUE_COLUMN,
+            FC_COLUMN,
 
             COLUMN_COUNT
         };
 
     public:
-        RCB_OverviewTable(QObject *t_parent, Core::IED::ptr t_ied, bool t_buffered = true);
-
-        Q_INVOKABLE void setSelectedRCB(int t_inx);
-        Q_INVOKABLE QString selectedRptId() const;
-        Q_INVOKABLE QString selectedDsRef() const;
-        Q_INVOKABLE int     selectedTrgOps() const;
-        Q_INVOKABLE bool    selectedRptEna() const;
-        Q_INVOKABLE bool    selectedResv() const;
-        Q_INVOKABLE uint    selectedConfRev() const;
-        Q_INVOKABLE uint    selectedBufTm() const;
-        Q_INVOKABLE uint    selectedIntgPd() const;
-
-        Core::ReportBlock::ptr getSelectedReportBlock() const;
+        IED_ModelTree(QObject *t_parent, Core::IED::ptr t_ied);
 
         void        setActiveIED(Core::IED::ptr t_ied);
 
-        QVariant    headerData(int t_section, Qt::Orientation t_orientation,
+        QVariant    headerData(int t_sect, Qt::Orientation t_orient,
                                int t_role = Qt::DisplayRole) const override;
-        QHash<int, QByteArray> roleNames() const override;
 
         int         rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
         int         columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
+        QModelIndex index(int t_row, int t_column, const QModelIndex &t_parent = QModelIndex()) const override;
+        QModelIndex parent(const QModelIndex &t_index) const override;
         QVariant    data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
-    signals:
-        void    sigRCBSelected(int t_inx);
-
-    public slots:
-        void    slotDataUpdated(bool t_done);
+    private:
+        Core::ModelItem* rootItem() const;
+        int              findRow(Core::ModelItem *t_item) const;
 
     private:
-        QList<Core::ReportBlock::ptr> filteredList() const;
-        Core::ReportBlock::ptr selectedRCB() const;
-
-        Core::IED::ptr m_ied;
-        bool m_buffered    = true;
-        int  m_currentRCB  = -1;
+        Core::IED::ptr   m_ied;
     };
 }
