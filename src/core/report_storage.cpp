@@ -28,6 +28,33 @@ namespace Core
     {
     }
 
+    void ReportStorage::setMemberNames(const QStringList &t_names)
+    {
+        QMutexLocker locker(&m_lock);
+        m_memberNames = t_names;
+    }
+
+    QString ReportStorage::memberName(int t_index) const
+    {
+        QMutexLocker locker(&m_lock);
+        if (t_index >= 0 && t_index < m_memberNames.size()) {
+            return m_memberNames[t_index];
+        }
+        return QString::number(t_index);
+    }
+
+    void ReportStorage::setDataSetRef(const QString &t_ref)
+    {
+        QMutexLocker locker(&m_lock);
+        m_dataSetRef = t_ref;
+    }
+
+    QString ReportStorage::dataSetRef() const
+    {
+        QMutexLocker locker(&m_lock);
+        return m_dataSetRef;
+    }
+
     void ReportStorage::addReport(ReceivedReport::ptr t_report)
     {
         {

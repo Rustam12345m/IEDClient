@@ -21,6 +21,7 @@
 
 #include "ds_signals_table.hpp"
 #include "core/model_item_value.hpp"
+#include "core/model_item.hpp"
 
 namespace App::Models
 {
@@ -99,7 +100,12 @@ namespace App::Models
                 case DS_VALUE_COLUMN: {
                     auto item = dsItem->item();
                     if (item) {
-                        return Core::ModelItemFullValue::get(item);
+                        QString val = Core::ModelItemFullValue::get(item);
+                        if (val.size() > 128) {
+                            val.truncate(128);
+                            val += "...";
+                        }
+                        return QVariant(val);
                     }
                     break;
                 }
@@ -107,6 +113,52 @@ namespace App::Models
             }
         }
         return QVariant(" ? ");
+    }
+
+    namespace
+    {
+        void collectLeaves(Core::ModelItem::ptr t_root, Core::ModelItem::ptr t_item, QVariantList &t_out)
+        {
+            if (t_item->getItemCount() == 0) {
+                QVariantMap entry;
+                entry["name"] = t_item->getReference(t_root.get());
+                entry["value"] = t_item->getValue();
+                t_out.append(entry);
+                return;
+            }
+            for (auto &sub : t_item->getItemList()) {
+                collectLeaves(t_root, sub, t_out);
+            }
+        }
+    }
+
+    QVariantList DS_SignalsTable::getItemDetail(int t_row) const
+    {
+        QVariantList result;
+        if (!m_dataSet || t_row < 0 || t_row >= m_dataSet->getItemCount()) {
+            return result;
+        }
+
+        auto dsItem = m_dataSet->getItem<Core::DataSetItem>(t_row);
+        if (!dsItem) {
+            return result;
+        }
+
+        auto item = dsItem->item();
+        if (!item) {
+            return result;
+        }
+
+        if (item->getItemCount() == 0) {
+            QVariantMap entry;
+            entry["name"] = dsItem->getName();
+            entry["value"] = item->getValue();
+            result.append(entry);
+        } else {
+            collectLeaves(item, item, result);
+        }
+
+        return result;
     }
 
     void DS_SignalsTable::slotDataUpdated(QList<Core::ModelItem::ptr> t_items)

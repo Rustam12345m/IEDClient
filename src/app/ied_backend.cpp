@@ -21,6 +21,7 @@
 
 #include "ied_backend.hpp"
 #include "cmd/set_rcb_values_cmd.hpp"
+#include "core/dataset.hpp"
 
 #include <QCoreApplication>
 
@@ -154,6 +155,25 @@ namespace App
             QString prefix = rcb->isBuffered() ? "BR" : "RP";
             QString rcbRef = QString("%1.%2.%3").arg(rcb->lnRef(), prefix, rcb->getName());
             storage = m_con.m_ied->model().getOrCreateReportStorage(rcbRef);
+
+            storage->setDataSetRef(t_datSet);
+
+            // Pre-populate member names from the DataSet
+            for (auto &ds : m_con.m_ied->model().getDataSetList()) {
+                // t_datSet may be full ref like "LD0/LLN0$ds1" — match against
+                // both the short name and the composed full reference
+                QString fullRef = ds->ref() + "$" + ds->getName();
+                if (ds->getName() == t_datSet || fullRef == t_datSet
+                    || t_datSet.endsWith(ds->getName())) {
+                    QStringList names;
+                    for (size_t i = 0; i < ds->getItemCount(); i++) {
+                        auto dsItem = ds->getItem<Core::DataSetItem>(i);
+                        names.append(dsItem ? dsItem->getName() : QString::number(i));
+                    }
+                    storage->setMemberNames(names);
+                    break;
+                }
+            }
         }
 
         auto cmd = Cmd::SetRCBValues_Cmd::create(rcb, t_enable, t_trgOps,

@@ -38,6 +38,12 @@ namespace Core
 
         explicit ReportStorage(QObject *t_parent = nullptr);
 
+        void setMemberNames(const QStringList &t_names);
+        QString memberName(int t_index) const;
+
+        void setDataSetRef(const QString &t_ref);
+        QString dataSetRef() const;
+
         void addReport(ReceivedReport::ptr t_report);
         ReceivedReport::ptr getReport(int t_index) const;
         int  count() const;
@@ -51,5 +57,7 @@ namespace Core
         std::array<ReceivedReport::ptr, Capacity>       m_buffer{};
         int                                             m_head = 0;
         int                                             m_count = 0;
+        QStringList                                     m_memberNames;
+        QString                                         m_dataSetRef;
     };
 }

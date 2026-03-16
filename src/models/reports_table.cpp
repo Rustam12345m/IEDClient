@@ -98,17 +98,12 @@ namespace App::Models
         case REASON_COLUMN:
             return reasonToString(report->reasonCode);
         case VALUES_COLUMN: {
-            QStringList parts;
-            int count = qMin(report->entryValues.size(), 3);
-            for (int i = 0; i < count; i++) {
-                if (!report->entryValues[i].isEmpty()) {
-                    parts.append(report->entryValues[i]);
-                }
+            QString val = report->entryValues.join("; ");
+            if (val.size() > 128) {
+                val.truncate(128);
+                val += "...";
             }
-            if (report->entryValues.size() > 3) {
-                parts.append("...");
-            }
-            return parts.join(", ");
+            return val;
         }
         }
         return QVariant();

@@ -153,13 +153,13 @@ FocusScope
 
                     onSigClick: function(row, col) {
                         tableID.focus = true
-                        if (selected && rootID.isRCBTab) {
+                        Globals.setSelectedRow(tableID, row)
+                    }
+                    onSigDoubleClick: function(row, col) {
+                        if (rootID.isRCBTab) {
                             rootID.panelVisible = !rootID.panelVisible
                             sigRCBRowSelected(rootID.panelVisible)
-                            return
                         }
-                        Globals.setSelectedRow(tableID, row)
-                        sigRCBRowSelected(rootID.isRCBTab)
                     }
                 }
 
@@ -187,8 +187,6 @@ FocusScope
                 onCurrentRowChanged: {
                     if (rootID.isRCBTab && currentRow >= 0) {
                         tableID.model.setSelectedRCB(currentRow)
-                        rootID.panelVisible = true
-                        sigRCBRowSelected(true)
                     }
                 }
 

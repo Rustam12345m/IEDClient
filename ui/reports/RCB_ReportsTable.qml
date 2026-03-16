@@ -151,6 +151,11 @@ FocusScope
             open()
         }
 
+        MouseArea {
+            anchors.fill: parent
+            onClicked: reportDetailDialog.close()
+        }
+
         Column {
             anchors {
                 fill: parent
@@ -214,7 +219,7 @@ FocusScope
                 leftPadding: 4
 
                 Text {
-                    width: parent.width * 0.45
+                    width: parent.width * 0.50
                     text: "Reference"
                     color: VisualStyle.statusBar.textColor
                     font.pixelSize: 11
@@ -222,7 +227,7 @@ FocusScope
                     font.bold: true
                 }
                 Text {
-                    width: parent.width * 0.35
+                    width: parent.width * 0.30
                     text: "Value"
                     color: VisualStyle.statusBar.textColor
                     font.pixelSize: 11
@@ -255,20 +260,20 @@ FocusScope
                     leftPadding: 4
 
                     Text {
-                        width: parent.width * 0.45
+                        width: parent.width * 0.50
                         text: name
                         color: VisualStyle.statusBar.textColor
                         font.pixelSize: 11
                         font.family: "Monospace"
-                        elide: Text.ElideRight
+                        wrapMode: Text.WrapAnywhere
                     }
                     Text {
-                        width: parent.width * 0.35
+                        width: parent.width * 0.30
                         text: value
                         color: VisualStyle.statusBar.textColor
                         font.pixelSize: 11
                         font.family: "Monospace"
-                        elide: Text.ElideRight
+                        wrapMode: Text.WrapAnywhere
                     }
                     Text {
                         width: parent.width * 0.20

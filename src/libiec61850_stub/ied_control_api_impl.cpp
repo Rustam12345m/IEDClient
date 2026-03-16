@@ -104,6 +104,44 @@ namespace Libiec61850
         return true;
     }
 
+    namespace
+    {
+        void flattenMmsValue(const QString &t_baseName, MmsValue *t_value, int t_reason,
+                             QStringList &t_names, QStringList &t_values, QList<int> &t_reasons)
+        {
+            if (!t_value) {
+                t_names.append(t_baseName);
+                t_values.append(QString());
+                t_reasons.append(t_reason);
+                return;
+            }
+
+            MmsType type = MmsValue_getType(t_value);
+
+            if (type == MMS_STRUCTURE) {
+                int count = MmsValue_getArraySize(t_value);
+                for (int i = 0; i < count; i++) {
+                    MmsValue *child = MmsValue_getElement(t_value, i);
+                    QString childName = QString("%1.%2").arg(t_baseName).arg(i);
+                    flattenMmsValue(childName, child, t_reason, t_names, t_values, t_reasons);
+                }
+            } else if (type == MMS_ARRAY) {
+                int count = MmsValue_getArraySize(t_value);
+                for (int i = 0; i < count; i++) {
+                    MmsValue *child = MmsValue_getElement(t_value, i);
+                    QString childName = QString("%1[%2]").arg(t_baseName).arg(i);
+                    flattenMmsValue(childName, child, t_reason, t_names, t_values, t_reasons);
+                }
+            } else {
+                char buf[256];
+                MmsValue_printToBuffer(t_value, buf, sizeof(buf));
+                t_names.append(t_baseName);
+                t_values.append(QString::fromUtf8(buf));
+                t_reasons.append(t_reason);
+            }
+        }
+    }
+
     void IED_ControlAPI_Impl::staticReportCallback(void *t_param, void *t_report)
     {
         auto *storage = static_cast<Core::ReportStorage*>(t_param);
@@ -122,6 +160,8 @@ namespace Libiec61850
         const char *dsName = ClientReport_getDataSetName(report);
         if (dsName) {
             rpt->dataSetRef = QString::fromUtf8(dsName);
+        } else {
+            rpt->dataSetRef = storage->dataSetRef();
         }
 
         if (ClientReport_hasTimestamp(report)) {
@@ -141,22 +181,17 @@ namespace Libiec61850
                 MmsValue *element = MmsValue_getElement(dataSetValues, i);
 
                 const char *dataRef = ClientReport_getDataReference(report, i);
-                rpt->entryNames.append(dataRef ? QString::fromUtf8(dataRef) : QString::number(i));
-
-                if (element) {
-                    char buf[256];
-                    MmsValue_printToBuffer(element, buf, sizeof(buf));
-                    rpt->entryValues.append(QString::fromUtf8(buf));
-                } else {
-                    rpt->entryValues.append(QString());
-                }
+                QString entryName = dataRef ? QString::fromUtf8(dataRef)
+                                            : storage->memberName(i);
 
                 int reason = 0;
                 if (hasReasons) {
                     reason = ClientReport_getReasonForInclusion(report, i);
                 }
-                rpt->entryReasons.append(reason);
                 rpt->reasonCode |= reason;
+
+                flattenMmsValue(entryName, element, reason,
+                                rpt->entryNames, rpt->entryValues, rpt->entryReasons);
             }
         }
 
