@@ -22,6 +22,9 @@
 #include "main_presenter.hpp"
 #include "tools/dump_model.hpp"
 
+#include <QGuiApplication>
+#include <QClipboard>
+
 namespace App
 {
     MainPresenter::MainPresenter(): m_appBackend(m_con, m_events),
@@ -94,6 +97,11 @@ namespace App
 
         // dump->init(t_dir, t_ip, t_port, t_tls, t_name, t_pass);
         // dump->start();
+    }
+
+    void MainPresenter::copyToClipboard(const QString &t_text)
+    {
+        QGuiApplication::clipboard()->setText(t_text);
     }
 
     void MainPresenter::slotCmdEvent(Cmd::CmdEvent t_ev)

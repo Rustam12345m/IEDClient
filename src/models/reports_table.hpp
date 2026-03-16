@@ -54,6 +54,8 @@ namespace App::Models
 
         QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
 
+        Q_INVOKABLE QVariantMap getReportDetail(int t_row) const;
+
     public slots:
         void     slotDataUpdated();
         void     slotRCBSelected(int t_inx);

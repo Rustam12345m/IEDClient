@@ -117,6 +117,21 @@ Item
             }
         }
 
+        Keys.onPressed: function(event) {
+            if (event.key === Qt.Key_C && (event.modifiers & Qt.ControlModifier)) {
+                if (tableID.currentRow >= 0) {
+                    var parts = []
+                    var cols = tableID.model.columnCount()
+                    for (var c = 0; c < cols; c++) {
+                        var idx = tableID.model.index(tableID.currentRow, c)
+                        parts.push(tableID.model.data(idx))
+                    }
+                    presenter.copyToClipboard(parts.join(";"))
+                    event.accepted = true
+                }
+            }
+        }
+
         Connections {
             target: iedBackend.getLN_StateModel()
 

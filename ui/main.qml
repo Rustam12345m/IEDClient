@@ -599,27 +599,19 @@ ApplicationWindow
         }
     }
 
-    SubWindow {
+    ModalDialog {
         id: aboutSubWindowID
-        visible: false
-
-        anchors.centerIn: parent
-        width: 600
-        height: 300
 
         title: "About IEDClient"
-        color: VisualStyle.borderColor
-        borderColor: VisualStyle.modalColor
-        innerColor: VisualStyle.modalColor
+        dialogWidth: 600
+        dialogHeight: 300
 
-        contentArea: Column {
+        Column {
             anchors {
                 fill: parent
                 margins: 12
             }
             spacing: 6
-
-            readonly property color textColor: VisualStyle.statusBar.textColor
 
             Repeater {
                 model: [
@@ -655,10 +647,6 @@ ApplicationWindow
                 }
             }
         }
-
-        onSigClicked: function() {
-            aboutSubWindowID.visible = false
-        }
     }
 
     // Common functions
@@ -675,7 +663,7 @@ ApplicationWindow
         }
     }
     function showAbotProgramWindow() {
-        aboutSubWindowID.visible = true
+        aboutSubWindowID.open()
     }
 
     // Active Page + Panel

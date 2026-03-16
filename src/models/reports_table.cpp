@@ -114,6 +114,44 @@ namespace App::Models
         return QVariant();
     }
 
+    QVariantMap ReportsTable::getReportDetail(int t_row) const
+    {
+        QVariantMap result;
+        if (!m_storage) {
+            return result;
+        }
+
+        int storageIndex = m_storage->count() - 1 - t_row;
+        auto report = m_storage->getReport(storageIndex);
+        if (!report) {
+            return result;
+        }
+
+        result["seqNum"] = report->seqNum;
+        result["rcbRef"] = report->rcbRef;
+        result["dataSetRef"] = report->dataSetRef;
+        result["reason"] = reasonToString(report->reasonCode);
+
+        if (report->timestamp > 0) {
+            result["timestamp"] = QDateTime::fromMSecsSinceEpoch(report->timestamp)
+                                      .toString("yyyy-MM-dd hh:mm:ss.zzz");
+        } else {
+            result["timestamp"] = "-";
+        }
+
+        QVariantList entries;
+        for (int i = 0; i < report->entryNames.size(); i++) {
+            QVariantMap entry;
+            entry["name"] = report->entryNames[i];
+            entry["value"] = i < report->entryValues.size() ? report->entryValues[i] : QString();
+            entry["reason"] = i < report->entryReasons.size() ? reasonToString(report->entryReasons[i]) : QString();
+            entries.append(entry);
+        }
+        result["entries"] = entries;
+
+        return result;
+    }
+
     void ReportsTable::slotDataUpdated()
     {
         beginResetModel();

@@ -38,6 +38,6 @@ target_link_libraries(app_lib PUBLIC
     models_lib
     tools_lib
 )
-target_link_libraries(app_lib PUBLIC Qt::Qml)
+target_link_libraries(app_lib PUBLIC Qt::Qml Qt::Gui)
 
 target_include_directories(app_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

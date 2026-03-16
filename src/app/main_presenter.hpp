@@ -49,6 +49,7 @@ namespace App
         Q_INVOKABLE void connectTo(const QVariantMap &t_data);
         Q_INVOKABLE void disconnectFrom();
         Q_INVOKABLE void toolDumpModel(const QVariantMap &t_data);
+        Q_INVOKABLE void copyToClipboard(const QString &t_text);
         Q_PROPERTY(bool isConnected READ isConnected NOTIFY sigIEDConChanged)
         bool isConnected() const { return m_con.isConnected(); }
 
