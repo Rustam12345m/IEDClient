@@ -25,178 +25,172 @@ import QtQuick.Layouts
 
 import AppStylesModule
 
-// Report detail panel — shown in the right-side property panel
+// Report detail panel — styled like LD_PropertiesPanel
 Item
 {
     id: rootID
 
+    property int defRowHeight: 30
+    property int defTextPadding: 5
+    property int defNameWidth: 100
+
     function showReport(detail) {
-        headerInfoID.detail = detail
-        entriesModel.clear()
+        reportModel.clear()
+
+        var headerFields = [
+            { section: "Report info",  name: "Seq #",   value: detail.seqNum !== undefined ? String(detail.seqNum) : "" },
+            { section: "Report info",  name: "Time",    value: detail.timestamp || "" },
+            { section: "Report info",  name: "RCB",     value: detail.rcbRef || "" },
+            { section: "Report info",  name: "DataSet", value: detail.dataSetRef || "" },
+            { section: "Report info",  name: "Reason",  value: detail.reason || "" }
+        ]
+
+        var maxWidth = 80
+        for (var i = 0; i < headerFields.length; i++) {
+            reportModel.append(headerFields[i])
+            nameMetrics.text = headerFields[i].name
+            var w = nameMetrics.advanceWidth + defTextPadding * 2 + 4
+            if (w > maxWidth) maxWidth = w
+        }
+
         if (detail.entries) {
-            for (var i = 0; i < detail.entries.length; i++) {
-                entriesModel.append(detail.entries[i])
+            for (var j = 0; j < detail.entries.length; j++) {
+                var entry = detail.entries[j]
+                var val = entry.value || ""
+                if (entry.reason && entry.reason.length > 0) {
+                    val += " [" + entry.reason + "]"
+                }
+                var item = { section: "Data entries", name: entry.name || "", value: val }
+                reportModel.append(item)
+
+                nameMetrics.text = item.name
+                var nw = nameMetrics.advanceWidth + defTextPadding * 2 + 4
+                if (nw > maxWidth) maxWidth = nw
             }
         }
+
+        defNameWidth = Math.min(maxWidth, rootID.width * 0.6)
     }
 
     function clear() {
-        headerInfoID.detail = ({})
-        entriesModel.clear()
+        reportModel.clear()
     }
 
-    Column {
-        anchors {
-            fill: parent
-            margins: 4
-        }
-        spacing: 2
+    TextMetrics {
+        id: nameMetrics
+        font.pixelSize: 13
+    }
 
-        // Section header
-        Rectangle {
-            width: parent.width
-            height: VisualStyle.rowHeight
-            color: VisualStyle.section.bg
-            border.width: 1
-            border.color: VisualStyle.section.border
+    ListView {
+        id: reportListID
 
-            Text {
-                anchors.fill: parent
-                font.bold: VisualStyle.boldHeaderText
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                text: qsTr("Report detail")
-            }
-        }
+        anchors.fill: parent
+        boundsBehavior: Flickable.StopAtBounds
+        clip: true
 
-        // Report header info
-        Column {
-            id: headerInfoID
-            width: parent.width
-            spacing: 1
+        property int selectedIndex: -1
 
-            property var detail: ({})
+        model: ListModel { id: reportModel }
 
-            Repeater {
-                model: [
-                    { key: "Seq #:",    val: headerInfoID.detail.seqNum || "" },
-                    { key: "Time:",     val: headerInfoID.detail.timestamp || "" },
-                    { key: "RCB:",      val: headerInfoID.detail.rcbRef || "" },
-                    { key: "DataSet:",  val: headerInfoID.detail.dataSetRef || "" },
-                    { key: "Reason:",   val: headerInfoID.detail.reason || "" }
-                ]
+        section.property: "section"
+        section.delegate: Rectangle {
+            width: reportListID.width
+            height: defRowHeight
+            color: VisualStyle.table.headerColor
+            border.color: VisualStyle.table.rowBorderColor2
 
-                delegate: Row {
-                    spacing: 4
-                    leftPadding: 2
-
-                    Text {
-                        width: 55
-                        text: modelData.key
-                        color: VisualStyle.textColor
-                        font.pixelSize: 11
-                        font.family: "Monospace"
-                        font.bold: true
-                        horizontalAlignment: Text.AlignRight
-                        verticalAlignment: Text.AlignVCenter
-                    }
-                    Text {
-                        width: rootID.width - 65
-                        text: modelData.val !== undefined ? String(modelData.val) : ""
-                        color: VisualStyle.textColor
-                        font.pixelSize: 11
-                        font.family: "Monospace"
-                        verticalAlignment: Text.AlignVCenter
-                        wrapMode: Text.WrapAnywhere
-                    }
-                }
-            }
-        }
-
-        // Separator
-        Rectangle {
-            width: parent.width
-            height: 1
-            color: VisualStyle.section.border
-        }
-
-        // Column headers for entries
-        Row {
-            width: parent.width
-            spacing: 0
-            leftPadding: 2
-
-            Text {
-                width: parent.width * 0.55
-                text: "Reference"
-                color: VisualStyle.textColor
-                font.pixelSize: 11
-                font.family: "Monospace"
-                font.bold: true
-            }
-            Text {
-                width: parent.width * 0.25
-                text: "Value"
-                color: VisualStyle.textColor
-                font.pixelSize: 11
-                font.family: "Monospace"
-                font.bold: true
-            }
-            Text {
-                width: parent.width * 0.20
-                text: "Reason"
-                color: VisualStyle.textColor
-                font.pixelSize: 11
-                font.family: "Monospace"
-                font.bold: true
-            }
-        }
-
-        // Scrollable entries list
-        ListView {
-            id: entriesListID
-            width: parent.width
-            height: parent.height - y
             clip: true
-            boundsBehavior: Flickable.StopAtBounds
 
-            model: ListModel { id: entriesModel }
+            Text {
+                text: section
+                anchors.centerIn: parent
+                font.bold: VisualStyle.boldHeaderText
+            }
+        }
 
-            delegate: Row {
-                width: entriesListID.width
-                spacing: 0
-                leftPadding: 2
+        delegate: Item {
+            width: reportListID.width
+            height: defRowHeight
 
-                Text {
-                    width: parent.width * 0.55
-                    text: name
-                    color: VisualStyle.textColor
-                    font.pixelSize: 11
-                    font.family: "Monospace"
-                    wrapMode: Text.WrapAnywhere
+            Rectangle {
+                anchors.fill: parent
+                clip: true
+
+                RowLayout {
+                    anchors.fill: parent
+                    spacing: 0
+
+                    Rectangle {
+                        Layout.preferredWidth: defNameWidth
+                        width: defNameWidth
+                        height: defRowHeight
+
+                        border.width: 1
+                        border.color: VisualStyle.table.rowBorderColor2
+                        color: (index === reportListID.selectedIndex)
+                               ? VisualStyle.table.selRowColor
+                               : VisualStyle.table.rowColor1
+
+                        Text {
+                            anchors.fill: parent
+
+                            horizontalAlignment: Text.AlignLeft
+                            verticalAlignment: Text.AlignVCenter
+                            elide: Text.ElideRight
+                            leftPadding: defTextPadding
+                            rightPadding: defTextPadding
+
+                            text: name
+                        }
+                    }
+                    Rectangle {
+                        border.width: 1
+                        border.color: VisualStyle.table.rowBorderColor2
+
+                        color: (index === reportListID.selectedIndex)
+                               ? VisualStyle.table.selRowColor
+                               : VisualStyle.table.rowColor1
+                        clip: true
+
+                        Layout.fillWidth: true
+                        height: defRowHeight
+
+                        Text {
+                            anchors.fill: parent
+
+                            horizontalAlignment: Text.AlignLeft
+                            verticalAlignment: Text.AlignVCenter
+                            elide: Text.ElideRight
+                            leftPadding: defTextPadding
+                            rightPadding: defTextPadding
+
+                            text: value
+                        }
+                    }
                 }
-                Text {
-                    width: parent.width * 0.25
-                    text: value
-                    color: VisualStyle.textColor
-                    font.pixelSize: 11
-                    font.family: "Monospace"
-                    wrapMode: Text.WrapAnywhere
-                }
-                Text {
-                    width: parent.width * 0.20
-                    text: reason
-                    color: VisualStyle.textColor
-                    font.pixelSize: 11
-                    font.family: "Monospace"
-                    elide: Text.ElideRight
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        reportListID.selectedIndex = index
+                    }
                 }
             }
+        }
 
-            ScrollBar.vertical: ScrollBar {
-                policy: ScrollBar.AsNeeded
-                active: true
-            }
+        focus: true
+        Keys.onUpPressed: {
+            if (selectedIndex > 0)
+                selectedIndex--;
+        }
+        Keys.onDownPressed: {
+            if (selectedIndex < count - 1)
+                selectedIndex++;
+        }
+
+        ScrollBar.vertical: ScrollBar {
+            policy: ScrollBar.AsNeeded
+            active: true
         }
     }
 }

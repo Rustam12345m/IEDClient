@@ -25,19 +25,30 @@ import QtQuick.Layouts
 
 import AppStylesModule
 
-// Data object detail panel — shown in the right-side property panel
+// Data object detail panel — styled like LD_PropertiesPanel
 Item
 {
     id: rootID
+
+    property int defRowHeight: 30
+    property int defTextPadding: 5
+    property int defNameWidth: 100
 
     property string doReference: ""
 
     function showDetail(ref, detail) {
         doReference = ref
         detailModel.clear()
+        var maxWidth = 80
         for (var i = 0; i < detail.length; i++) {
             detailModel.append(detail[i])
+            nameMetrics.text = detail[i].name
+            var w = nameMetrics.advanceWidth + defTextPadding * 2 + 4
+            if (w > maxWidth) {
+                maxWidth = w
+            }
         }
+        defNameWidth = Math.min(maxWidth, rootID.width * 0.6)
     }
 
     function clear() {
@@ -45,123 +56,128 @@ Item
         detailModel.clear()
     }
 
-    Column {
+    TextMetrics {
+        id: nameMetrics
+        font.pixelSize: 13
+    }
+
+    // Section header with DO reference
+    Rectangle {
+        id: headerID
+        width: parent.width
+        height: defRowHeight
+        color: VisualStyle.table.headerColor
+        border.color: VisualStyle.table.rowBorderColor2
+
+        clip: true
+
+        Text {
+            anchors.centerIn: parent
+            font.bold: VisualStyle.boldHeaderText
+            text: rootID.doReference || qsTr("Data object detail")
+        }
+    }
+
+    ListView {
+        id: detailListID
+
         anchors {
-            fill: parent
-            margins: 4
+            top: headerID.bottom
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
         }
-        spacing: 2
 
-        // Section header
-        Rectangle {
-            width: parent.width
-            height: VisualStyle.rowHeight
-            color: VisualStyle.section.bg
-            border.width: 1
-            border.color: VisualStyle.section.border
+        boundsBehavior: Flickable.StopAtBounds
+        clip: true
 
-            Text {
+        property int selectedIndex: -1
+
+        model: ListModel { id: detailModel }
+
+        delegate: Item {
+            width: detailListID.width
+            height: defRowHeight
+
+            Rectangle {
                 anchors.fill: parent
-                font.bold: VisualStyle.boldHeaderText
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                text: qsTr("Data object detail")
-            }
-        }
+                clip: true
 
-        // DO reference
-        Row {
-            width: parent.width
-            spacing: 4
-            leftPadding: 2
+                RowLayout {
+                    anchors.fill: parent
+                    spacing: 0
 
-            Text {
-                text: "DO:"
-                color: VisualStyle.textColor
-                font.pixelSize: 11
-                font.family: "Monospace"
-                font.bold: true
-                verticalAlignment: Text.AlignVCenter
-            }
-            Text {
-                width: rootID.width - 40
-                text: rootID.doReference
-                color: VisualStyle.textColor
-                font.pixelSize: 11
-                font.family: "Monospace"
-                verticalAlignment: Text.AlignVCenter
-                wrapMode: Text.WrapAnywhere
-            }
-        }
+                    Rectangle {
+                        Layout.preferredWidth: defNameWidth
+                        width: defNameWidth
+                        height: defRowHeight
 
-        // Separator
-        Rectangle {
-            width: parent.width
-            height: 1
-            color: VisualStyle.section.border
-        }
+                        border.width: 1
+                        border.color: VisualStyle.table.rowBorderColor2
+                        color: (index === detailListID.selectedIndex)
+                               ? VisualStyle.table.selRowColor
+                               : VisualStyle.table.rowColor1
 
-        // Column headers
-        Row {
-            width: parent.width
-            spacing: 0
-            leftPadding: 2
+                        Text {
+                            anchors.fill: parent
 
-            Text {
-                width: parent.width * 0.55
-                text: "Reference"
-                color: VisualStyle.textColor
-                font.pixelSize: 11
-                font.family: "Monospace"
-                font.bold: true
-            }
-            Text {
-                width: parent.width * 0.45
-                text: "Value"
-                color: VisualStyle.textColor
-                font.pixelSize: 11
-                font.family: "Monospace"
-                font.bold: true
-            }
-        }
+                            horizontalAlignment: Text.AlignLeft
+                            verticalAlignment: Text.AlignVCenter
+                            elide: Text.ElideRight
+                            leftPadding: defTextPadding
+                            rightPadding: defTextPadding
 
-        // Scrollable entries
-        ListView {
-            id: detailListID
-            width: parent.width
-            height: parent.height - y
-            clip: true
-            boundsBehavior: Flickable.StopAtBounds
+                            text: name
+                        }
+                    }
+                    Rectangle {
+                        border.width: 1
+                        border.color: VisualStyle.table.rowBorderColor2
 
-            model: ListModel { id: detailModel }
+                        color: (index === detailListID.selectedIndex)
+                               ? VisualStyle.table.selRowColor
+                               : VisualStyle.table.rowColor1
+                        clip: true
 
-            delegate: Row {
-                width: detailListID.width
-                spacing: 0
-                leftPadding: 2
+                        Layout.fillWidth: true
+                        height: defRowHeight
 
-                Text {
-                    width: parent.width * 0.55
-                    text: name
-                    color: VisualStyle.textColor
-                    font.pixelSize: 11
-                    font.family: "Monospace"
-                    wrapMode: Text.WrapAnywhere
+                        Text {
+                            anchors.fill: parent
+
+                            horizontalAlignment: Text.AlignLeft
+                            verticalAlignment: Text.AlignVCenter
+                            elide: Text.ElideRight
+                            leftPadding: defTextPadding
+                            rightPadding: defTextPadding
+
+                            text: value
+                        }
+                    }
                 }
-                Text {
-                    width: parent.width * 0.45
-                    text: value
-                    color: VisualStyle.textColor
-                    font.pixelSize: 11
-                    font.family: "Monospace"
-                    wrapMode: Text.WrapAnywhere
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        detailListID.selectedIndex = index
+                    }
                 }
             }
+        }
 
-            ScrollBar.vertical: ScrollBar {
-                policy: ScrollBar.AsNeeded
-                active: true
-            }
+        focus: true
+        Keys.onUpPressed: {
+            if (selectedIndex > 0)
+                selectedIndex--;
+        }
+        Keys.onDownPressed: {
+            if (selectedIndex < count - 1)
+                selectedIndex++;
+        }
+
+        ScrollBar.vertical: ScrollBar {
+            policy: ScrollBar.AsNeeded
+            active: true
         }
     }
 }

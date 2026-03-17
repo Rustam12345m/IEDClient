@@ -399,11 +399,12 @@ ApplicationWindow
                         DS.Page {
                             id: dsPageID
 
+                            property int lastPanel: Globals.Panel.HIDE
+
                             onVisibleChanged: {
                                 if (visible) {
                                     focus = true
-
-                                    setActivePanel(Globals.Panel.HIDE)
+                                    setActivePanel(lastPanel)
                                     setPageStatusText(iedBackend.dsPageStatus())
                                 } else {
                                     focus = false
@@ -413,9 +414,11 @@ ApplicationWindow
                             onSigItemDetail: function(doRef, detail) {
                                 if (detail.length > 0) {
                                     dsDetailPanel.showDetail(doRef, detail)
-                                    setActivePanel(Globals.Panel.DS_DETAIL)
+                                    lastPanel = Globals.Panel.DS_DETAIL
+                                    setActivePanel(lastPanel)
                                 } else {
-                                    setActivePanel(Globals.Panel.HIDE)
+                                    lastPanel = Globals.Panel.HIDE
+                                    setActivePanel(lastPanel)
                                 }
                             }
                         }
@@ -423,10 +426,12 @@ ApplicationWindow
                         RCB.Page {
                             id: rcbPageID
 
+                            property int lastPanel: Globals.Panel.HIDE
+
                             onVisibleChanged: {
                                 if (visible) {
                                     focus = true
-                                    setActivePanel(Globals.Panel.HIDE)
+                                    setActivePanel(lastPanel)
                                     setPageStatusText(iedBackend.rcbPageStatus())
                                 } else {
                                     focus = false
@@ -437,18 +442,22 @@ ApplicationWindow
                                 if (isRCB) {
                                     rcbPropPanel.rcbModel = rcbPageID.activeModel
                                     rcbPropPanel.loadFromModel()
-                                    setActivePanel(Globals.Panel.RCB_PROPERTIES)
+                                    lastPanel = Globals.Panel.RCB_PROPERTIES
+                                    setActivePanel(lastPanel)
                                 } else {
-                                    setActivePanel(Globals.Panel.HIDE)
+                                    lastPanel = Globals.Panel.HIDE
+                                    setActivePanel(lastPanel)
                                 }
                             }
 
                             onSigReportDetail: function(detail) {
                                 if (detail.entries) {
                                     reportDetailPanel.showReport(detail)
-                                    setActivePanel(Globals.Panel.REPORT_DETAIL)
+                                    lastPanel = Globals.Panel.REPORT_DETAIL
+                                    setActivePanel(lastPanel)
                                 } else {
-                                    setActivePanel(Globals.Panel.HIDE)
+                                    lastPanel = Globals.Panel.HIDE
+                                    setActivePanel(lastPanel)
                                 }
                             }
                         }
@@ -606,23 +615,18 @@ ApplicationWindow
         windowShadeColor: VisualStyle.progress.shade
     }
 
-    SubWindow {
+    ModalDialog {
         id: eventLogSubWindowID
-        visible: false
-
-        anchors.centerIn: parent
-        width: rootWindowID.width * 0.8
-        height: rootWindowID.height * 0.8
 
         title: "Event Log"
-        color: VisualStyle.modalColor
-        borderColor: VisualStyle.borderColor
+        dialogWidth: rootWindowID.width * 0.8
+        dialogHeight: rootWindowID.height * 0.8
 
         Home.AppEventViewer {
             anchors.fill: parent
 
             onSigClose: function() {
-                eventLogSubWindowID.visible = false
+                eventLogSubWindowID.close()
             }
         }
     }
@@ -679,7 +683,7 @@ ApplicationWindow
 
     // Common functions
     function openEventLog() {
-        eventLogSubWindowID.visible = true
+        eventLogSubWindowID.open()
     }
     function toFullscreenMode() {
         if (rootWindowID.visibility === Window.Windowed) {
