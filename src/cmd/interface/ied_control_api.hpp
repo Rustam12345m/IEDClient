@@ -24,6 +24,7 @@
 #include <QString>
 #include <cstdint>
 
+#include "control_types.hpp"
 #include "core/report_control_block.hpp"
 #include "core/report_storage.hpp"
 
@@ -44,5 +45,13 @@ namespace Cmd::Interface
                                           const QString &t_rptId,
                                           Core::ReportStorage *t_storage) = 0;
         virtual void uninstallReportHandler(const QString &t_rcbRef) = 0;
+
+        // Direct Control / SBO
+        virtual ControlInfo getControlInfo(const QString &t_objRef) = 0;
+        virtual bool controlOperate(const QString &t_objRef, CtlModel t_model,
+                                    CtlValType t_valType, const QVariant &t_value) = 0;
+        virtual bool controlSelect(const QString &t_objRef, CtlModel t_model,
+                                   CtlValType t_valType, const QVariant &t_value) = 0;
+        virtual bool controlCancel(const QString &t_objRef) = 0;
     };
 }

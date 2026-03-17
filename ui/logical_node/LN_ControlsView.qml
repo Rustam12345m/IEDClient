@@ -28,7 +28,7 @@ import AppStylesModule
 
 import "qrc:/common/"
 
-// Read-only table of CO (control) attributes for the selected Logical Node
+// Table of CO (control) attributes for the selected Logical Node
 Item
 {
     id: rootID
@@ -84,6 +84,14 @@ Item
             onSigClick: function(row, col) {
                 Globals.setSelectedRow(tableID, row)
             }
+            onSigDoubleClick: function(row, col) {
+                Globals.setSelectedRow(tableID, row)
+                var ref = iedBackend.getControlObjectRef(row)
+                if (ref.length > 0) {
+                    controlDialog.openControl(ref)
+                    iedBackend.queryControlInfo(ref)
+                }
+            }
         }
 
         ScrollBar.vertical: ScrollBar {
@@ -109,6 +117,35 @@ Item
             if (event.key === Qt.Key_C && (event.modifiers & Qt.ControlModifier)) {
                 Globals.copyRowToClipboard(tableID)
                 event.accepted = true
+            }
+        }
+    }
+
+    // Control operation dialog
+    DiaControlOperate {
+        id: controlDialog
+
+        onSigOperate: function(ref, model, valType, value) {
+            iedBackend.controlOperate(ref, model, valType, value)
+        }
+        onSigSelect: function(ref, model, valType, value) {
+            iedBackend.controlSelect(ref, model, valType, value)
+        }
+        onSigCancel: function(ref) {
+            iedBackend.controlCancel(ref)
+        }
+    }
+
+    Connections {
+        target: iedBackend
+        function onSigControlInfo(objRef, ctlModel, ctlValType) {
+            if (controlDialog.objectRef === objRef) {
+                controlDialog.setControlInfo(ctlModel, ctlValType)
+            }
+        }
+        function onSigControlResult(objRef, success, message) {
+            if (controlDialog.objectRef === objRef) {
+                controlDialog.setResult(success, message)
             }
         }
     }

@@ -45,6 +45,7 @@
         <file>logical_node/LN_ControlsView.qml</file>
         <file>logical_node/LN_SettingsView.qml</file>
         <file>logical_node/DiaChangeValue.qml</file>
+        <file>logical_node/DiaControlOperate.qml</file>
 
         <file>iedtree/Page.qml</file>
 

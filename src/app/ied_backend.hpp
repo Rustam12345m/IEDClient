@@ -23,6 +23,7 @@
 
 #include "backend_interface.hpp"
 
+#include "cmd/control_cmd.hpp"
 #include "models/sort_proxy_model.hpp"
 #include "models/ld_overview_grid.hpp"
 #include "models/ld_properties_table.hpp"
@@ -76,6 +77,15 @@ namespace App
                                        int t_bufTm, int t_intgPd,
                                        const QString &t_rptId, const QString &t_datSet);
 
+        // Control operations
+        Q_INVOKABLE QString getControlObjectRef(int t_proxyRow);
+        Q_INVOKABLE void queryControlInfo(const QString &t_objRef);
+        Q_INVOKABLE void controlOperate(const QString &t_objRef, int t_ctlModel,
+                                         int t_valType, const QVariant &t_value);
+        Q_INVOKABLE void controlSelect(const QString &t_objRef, int t_ctlModel,
+                                        int t_valType, const QVariant &t_value);
+        Q_INVOKABLE void controlCancel(const QString &t_objRef);
+
         // Status bar
         Q_INVOKABLE QString ldsPageStatus();
         Q_INVOKABLE QString lnsPageStatus();
@@ -84,6 +94,8 @@ namespace App
 
     signals:
         void sigRCBUpdated();
+        void sigControlInfo(QString objRef, int ctlModel, int ctlValType);
+        void sigControlResult(QString objRef, bool success, QString message);
 
     public slots:
         void slotConnected(bool t_done) override;

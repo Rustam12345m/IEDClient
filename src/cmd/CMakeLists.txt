@@ -5,6 +5,7 @@ set(SOURCES
     interface/ied_state_api.hpp
     interface/ied_fs_api.hpp
     interface/ied_control_api.hpp
+    interface/control_types.hpp
     interface/iec61850_api.hpp
 
     cmd_interface.hpp
@@ -37,6 +38,9 @@ set(SOURCES
 
     set_rcb_values_cmd.hpp
     set_rcb_values_cmd.cpp
+
+    control_cmd.hpp
+    control_cmd.cpp
 
     get_filelist_cmd.hpp
     get_filelist_cmd.cpp

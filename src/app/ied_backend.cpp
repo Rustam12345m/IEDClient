@@ -192,6 +192,77 @@ namespace App
         putCmdToQueue(cmd);
     }
 
+    // ── Control operations ──────────────────────────────────────────
+
+    QString IED_Backend::getControlObjectRef(int t_proxyRow)
+    {
+        QModelIndex proxyIdx = m_sortControlsModel->index(t_proxyRow, 0);
+        QModelIndex sourceIdx = m_sortControlsModel->mapToSource(proxyIdx);
+        int sourceRow = sourceIdx.row();
+
+        auto matrix = m_lnControlsModel->getCurrectLN()
+                          ? m_lnControlsModel->getCurrectLN()->getControlsMatrix()
+                          : nullptr;
+
+        if (!matrix || sourceRow < 0 || sourceRow >= matrix->size()) {
+            return {};
+        }
+
+        auto base = matrix->getRows()[sourceRow].base();
+        return base ? base->getReference() : QString();
+    }
+
+    void IED_Backend::queryControlInfo(const QString &t_objRef)
+    {
+        auto cmd = Cmd::GetControlInfo_Cmd::create(t_objRef);
+        connect(cmd.get(), &Cmd::GetControlInfo_Cmd::sigControlInfo,
+                this, &IED_Backend::sigControlInfo, Qt::QueuedConnection);
+        putCmdToQueue(cmd);
+    }
+
+    void IED_Backend::controlOperate(const QString &t_objRef, int t_ctlModel,
+                                      int t_valType, const QVariant &t_value)
+    {
+        auto cmd = Cmd::ControlOperate_Cmd::create(
+            t_objRef, Cmd::ControlOperate_Cmd::Action::Operate,
+            static_cast<Cmd::Interface::CtlModel>(t_ctlModel),
+            static_cast<Cmd::Interface::CtlValType>(t_valType),
+            t_value);
+
+        connect(cmd.get(), &Cmd::ControlOperate_Cmd::sigControlResult,
+                this, &IED_Backend::sigControlResult, Qt::QueuedConnection);
+        putCmdToQueue(cmd);
+    }
+
+    void IED_Backend::controlSelect(const QString &t_objRef, int t_ctlModel,
+                                     int t_valType, const QVariant &t_value)
+    {
+        auto cmd = Cmd::ControlOperate_Cmd::create(
+            t_objRef, Cmd::ControlOperate_Cmd::Action::Select,
+            static_cast<Cmd::Interface::CtlModel>(t_ctlModel),
+            static_cast<Cmd::Interface::CtlValType>(t_valType),
+            t_value);
+
+        connect(cmd.get(), &Cmd::ControlOperate_Cmd::sigControlResult,
+                this, &IED_Backend::sigControlResult, Qt::QueuedConnection);
+        putCmdToQueue(cmd);
+    }
+
+    void IED_Backend::controlCancel(const QString &t_objRef)
+    {
+        auto cmd = Cmd::ControlOperate_Cmd::create(
+            t_objRef, Cmd::ControlOperate_Cmd::Action::Cancel,
+            Cmd::Interface::CtlModel::StatusOnly,
+            Cmd::Interface::CtlValType::Unknown,
+            QVariant());
+
+        connect(cmd.get(), &Cmd::ControlOperate_Cmd::sigControlResult,
+                this, &IED_Backend::sigControlResult, Qt::QueuedConnection);
+        putCmdToQueue(cmd);
+    }
+
+    // ── Status bar ────────────────────────────────────────────────
+
     QString IED_Backend::ldsPageStatus()
     {
         return "IED: " + m_con.m_ied->model().getName();

@@ -27,6 +27,24 @@ namespace UnitTests
         MOCK_METHOD(void, uninstallReportHandler,
                     (const QString &t_rcbRef),
                     (override));
+
+        MOCK_METHOD(Cmd::Interface::ControlInfo, getControlInfo,
+                    (const QString &t_objRef),
+                    (override));
+
+        MOCK_METHOD(bool, controlOperate,
+                    (const QString &t_objRef, Cmd::Interface::CtlModel t_model,
+                     Cmd::Interface::CtlValType t_valType, const QVariant &t_value),
+                    (override));
+
+        MOCK_METHOD(bool, controlSelect,
+                    (const QString &t_objRef, Cmd::Interface::CtlModel t_model,
+                     Cmd::Interface::CtlValType t_valType, const QVariant &t_value),
+                    (override));
+
+        MOCK_METHOD(bool, controlCancel,
+                    (const QString &t_objRef),
+                    (override));
     };
 
     class MockStateAPI : public Cmd::Interface::IED_StateAPI

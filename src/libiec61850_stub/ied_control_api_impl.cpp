@@ -241,4 +241,129 @@ namespace Libiec61850
         }
         m_activeHandlers.clear();
     }
+
+    // ── Direct Control / SBO ──────────────────────────────────────────
+
+    namespace
+    {
+        Cmd::Interface::CtlValType mmsTypeToCtlValType(MmsType t_type)
+        {
+            switch (t_type) {
+            case MMS_BOOLEAN:  return Cmd::Interface::CtlValType::Boolean;
+            case MMS_INTEGER:  return Cmd::Interface::CtlValType::Integer;
+            case MMS_UNSIGNED: return Cmd::Interface::CtlValType::Unsigned;
+            case MMS_FLOAT:    return Cmd::Interface::CtlValType::Float;
+            default:           return Cmd::Interface::CtlValType::Unknown;
+            }
+        }
+
+        MmsValue *createCtlVal(Cmd::Interface::CtlValType t_type, const QVariant &t_value)
+        {
+            using VT = Cmd::Interface::CtlValType;
+            switch (t_type) {
+            case VT::Boolean:  return MmsValue_newBoolean(t_value.toBool());
+            case VT::Integer:  return MmsValue_newIntegerFromInt32(t_value.toInt());
+            case VT::Unsigned: return MmsValue_newUnsignedFromUint32(static_cast<uint32_t>(t_value.toUInt()));
+            case VT::Float:    return MmsValue_newFloat(t_value.toFloat());
+            default:           return nullptr;
+            }
+        }
+    }
+
+    Cmd::Interface::ControlInfo IED_ControlAPI_Impl::getControlInfo(const QString &t_objRef)
+    {
+        using namespace Cmd::Interface;
+        ControlInfo info;
+
+        if (!m_api.m_libConn) {
+            return info;
+        }
+
+        auto ref = t_objRef.toStdString();
+        ControlObjectClient client = ControlObjectClient_create(ref.c_str(), m_api.m_libConn);
+        if (!client) {
+            return info;
+        }
+
+        info.model = static_cast<CtlModel>(ControlObjectClient_getControlModel(client));
+        info.valType = mmsTypeToCtlValType(ControlObjectClient_getCtlValType(client));
+
+        ControlObjectClient_destroy(client);
+        return info;
+    }
+
+    bool IED_ControlAPI_Impl::controlOperate(const QString &t_objRef, Cmd::Interface::CtlModel t_model,
+                                              Cmd::Interface::CtlValType t_valType, const QVariant &t_value)
+    {
+        if (!m_api.m_libConn) {
+            return false;
+        }
+
+        auto ref = t_objRef.toStdString();
+        ControlObjectClient client = ControlObjectClient_create(ref.c_str(), m_api.m_libConn);
+        if (!client) {
+            return false;
+        }
+
+        ControlObjectClient_setControlModel(client, static_cast<ControlModel>(static_cast<int>(t_model)));
+
+        MmsValue *val = createCtlVal(t_valType, t_value);
+        if (!val) {
+            ControlObjectClient_destroy(client);
+            return false;
+        }
+
+        bool ok = ControlObjectClient_operate(client, val, 0);
+
+        MmsValue_delete(val);
+        ControlObjectClient_destroy(client);
+        return ok;
+    }
+
+    bool IED_ControlAPI_Impl::controlSelect(const QString &t_objRef, Cmd::Interface::CtlModel t_model,
+                                             Cmd::Interface::CtlValType t_valType, const QVariant &t_value)
+    {
+        if (!m_api.m_libConn) {
+            return false;
+        }
+
+        auto ref = t_objRef.toStdString();
+        ControlObjectClient client = ControlObjectClient_create(ref.c_str(), m_api.m_libConn);
+        if (!client) {
+            return false;
+        }
+
+        ControlObjectClient_setControlModel(client, static_cast<ControlModel>(static_cast<int>(t_model)));
+
+        bool ok = false;
+        if (t_model == Cmd::Interface::CtlModel::SBOEnhanced) {
+            MmsValue *val = createCtlVal(t_valType, t_value);
+            if (val) {
+                ok = ControlObjectClient_selectWithValue(client, val);
+                MmsValue_delete(val);
+            }
+        } else {
+            ok = ControlObjectClient_select(client);
+        }
+
+        ControlObjectClient_destroy(client);
+        return ok;
+    }
+
+    bool IED_ControlAPI_Impl::controlCancel(const QString &t_objRef)
+    {
+        if (!m_api.m_libConn) {
+            return false;
+        }
+
+        auto ref = t_objRef.toStdString();
+        ControlObjectClient client = ControlObjectClient_create(ref.c_str(), m_api.m_libConn);
+        if (!client) {
+            return false;
+        }
+
+        bool ok = ControlObjectClient_cancel(client);
+        ControlObjectClient_destroy(client);
+        return ok;
+    }
 }

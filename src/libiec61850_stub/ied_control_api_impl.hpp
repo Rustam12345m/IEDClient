@@ -47,6 +47,14 @@ namespace Libiec61850
         void uninstallReportHandler(const QString &t_rcbRef) override;
         void uninstallAllHandlers();
 
+        // Direct Control / SBO
+        Cmd::Interface::ControlInfo getControlInfo(const QString &t_objRef) override;
+        bool controlOperate(const QString &t_objRef, Cmd::Interface::CtlModel t_model,
+                            Cmd::Interface::CtlValType t_valType, const QVariant &t_value) override;
+        bool controlSelect(const QString &t_objRef, Cmd::Interface::CtlModel t_model,
+                           Cmd::Interface::CtlValType t_valType, const QVariant &t_value) override;
+        bool controlCancel(const QString &t_objRef) override;
+
     private:
         static void staticReportCallback(void *t_param, void *t_report);
 
