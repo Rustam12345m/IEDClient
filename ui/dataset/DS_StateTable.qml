@@ -149,6 +149,14 @@ FocusScope
             }
         }
 
+        Connections {
+            target: tableID.model
+
+            function onDataChanged() {
+                tableID.forceLayout()
+            }
+        }
+
         Keys.onPressed: function(event) {
             if (event.key === Qt.Key_C && (event.modifiers & Qt.ControlModifier)) {
                 Globals.copyRowToClipboard(tableID)

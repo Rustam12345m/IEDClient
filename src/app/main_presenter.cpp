@@ -119,6 +119,8 @@ namespace App
 
             if (t_ev.m_result) {
                 m_appBackend.saveCredsToHistory(m_con.m_cred);
+            } else {
+                emit sigConnectionError(t_ev.m_msg);
             }
 
             emit sigCmdFinished(t_ev.m_result);

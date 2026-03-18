@@ -112,4 +112,12 @@ Item
             }
         }
     }
+
+    Text {
+        anchors.centerIn: parent
+        text: "No settings"
+        color: VisualStyle.textColor
+        font.pixelSize: 14
+        visible: tableID.rows === 0
+    }
 }

@@ -61,6 +61,7 @@ namespace App
         void sigCmdProgress(int t_perc, QString t_msg);
         void sigCmdFinished(bool t_done);
         void sigIEDConChanged(bool t_done);
+        void sigConnectionError(QString t_msg);
 
     protected:
         IEDConContainer m_con; // Complex component of IED's stub

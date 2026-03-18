@@ -681,6 +681,32 @@ ApplicationWindow
         }
     }
 
+    ModalDialog {
+        id: connectionErrorDialog
+
+        title: "Connection Error"
+        dialogWidth: 500
+        dialogHeight: 200
+        bgColor: VisualStyle.errorModalColor
+
+        Text {
+            id: errorMessageText
+
+            anchors.fill: parent
+            anchors.margins: 10
+
+            wrapMode: Text.Wrap
+            color: VisualStyle.statusBar.textColor
+            font.pixelSize: 14
+            text: ""
+        }
+
+        function showError(t_msg) {
+            errorMessageText.text = t_msg
+            open()
+        }
+    }
+
     // Common functions
     function openEventLog() {
         eventLogSubWindowID.open()
@@ -816,7 +842,7 @@ ApplicationWindow
             globalProgressBar.finishLoad()
             rootWindowID.setActivePage(Globals.Page.LD)
         } else {
-            timerModalWindow.running = true
+            globalProgressBar.finishLoad()
             rootWindowID.setActivePage(Globals.Page.START)
         }
     }
@@ -829,6 +855,9 @@ ApplicationWindow
         presenter.sigIEDConChanged.connect(slotOnConnected)
         presenter.sigCmdProgress.connect(slotOnProgress)
         presenter.sigCmdFinished.connect(slotOnFinished)
+        presenter.sigConnectionError.connect(function(msg) {
+            connectionErrorDialog.showError(msg)
+        })
         appBackend.sigNewStatusMsg.connect(slotStatusMessage)
 
         // Backends to GUI

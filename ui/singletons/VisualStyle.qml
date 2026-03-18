@@ -38,6 +38,7 @@ QtObject
 
     // Modal
     property color modalColor:              "#0087af"
+    property color errorModalColor:         "#8b0000"
 
     // Overlay (modal backdrop, navigation grid shade)
     property color overlayColor:            "#2a2a2a"
@@ -98,7 +99,7 @@ QtObject
 
     // LD grid styles
     property QtObject ldGrid: QtObject {
-        property color color:               "#ffffff"
+        property color color:               "#b0b0b0"
         property color borderColor:         "#b0b0b0"
         property color selColor:            "#595959"
     }

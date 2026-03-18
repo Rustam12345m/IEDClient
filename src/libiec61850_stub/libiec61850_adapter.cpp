@@ -39,7 +39,24 @@ namespace Libiec61850
         }
     }
 
-    bool ApiAdapter::connect(const Cmd::IEDCredentials &t_creds)
+    namespace
+    {
+        QString iedErrorToString(IedClientError t_err)
+        {
+            switch (t_err) {
+            case IED_ERROR_TIMEOUT:              return "Connection timed out";
+            case IED_ERROR_CONNECTION_REJECTED:   return "Connection rejected by server";
+            case IED_ERROR_ACCESS_DENIED:         return "Access denied";
+            case IED_ERROR_CONNECTION_LOST:       return "Connection lost";
+            case IED_ERROR_SERVICE_NOT_SUPPORTED: return "Service not supported";
+            case IED_ERROR_NOT_CONNECTED:         return "Unable to establish connection";
+            default:
+                return QString("Connection failed (error code: %1)").arg(static_cast<int>(t_err));
+            }
+        }
+    }
+
+    QString ApiAdapter::connect(const Cmd::IEDCredentials &t_creds)
     {
         IedClientError retval = IED_ERROR_OK;
 
@@ -52,13 +69,13 @@ namespace Libiec61850
             IedConnection_getDeviceModelFromServer(m_libConn, &retval);
             if (retval != IED_ERROR_OK) {
                 qDebug() << "!!! ERROR !!!: Connect, get model with error = " << retval;
-            }            
+            }
         } else {
             IedConnection_destroy(m_libConn);
             m_libConn = nullptr;
-            return false;
+            return iedErrorToString(retval);
         }
-        return true;
+        return {};
     }
 
     void ApiAdapter::disconnect()

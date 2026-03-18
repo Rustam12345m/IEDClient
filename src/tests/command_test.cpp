@@ -235,7 +235,7 @@ namespace UnitTests
         QSignalSpy spy(cmd.get(), &Cmd::CmdInterface::sigCmdEvent);
 
         auto api = makeMockAPI();
-        EXPECT_CALL(*api, connect(_)).WillOnce(Return(false));
+        EXPECT_CALL(*api, connect(_)).WillOnce(Return(QString("Connection timed out")));
         // fetchDataModel should NOT be called when connect fails
         EXPECT_CALL(api->mockModel(), fetchDataModel(_)).Times(0);
 

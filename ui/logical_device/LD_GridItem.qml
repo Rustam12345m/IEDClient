@@ -110,9 +110,11 @@ Item {
 
                     delegate: Rectangle {
                         height: 20
+                        visible: model.param !== ""
 
                         RowLayout {
                             anchors.fill: parent
+                            spacing: 0
 
                             Text {
                                 Layout.preferredWidth: 50
@@ -122,11 +124,18 @@ Item {
 
                                 font.pointSize: 10
                             }
+                            Led {
+                                Layout.preferredWidth: 16
+                                Layout.preferredHeight: 16
+                                Layout.alignment: Qt.AlignVCenter
+                                color: model.color
+                                visible: model.color !== ""
+                            }
                             Text {
-                                padding: 6
+                                padding: 4
 
                                 text: model.value
-                                color: model.color
+                                color: VisualStyle.textColor
 
                                 font.pointSize: 10
                                 font.bold: VisualStyle.boldHeaderText

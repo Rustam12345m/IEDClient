@@ -132,7 +132,12 @@ namespace App
         Core::DataSet::ptr ds = m_dsSigModel->getDataSet();
         auto cmd = Cmd::UpdateDataSet_Cmd::create(m_con.m_ied, ds);
         connect(cmd.get(), &Cmd::UpdateDataSet_Cmd::sigModelValues, this,
-                &IED_Backend::slotUpdateItems, Qt::QueuedConnection);
+                [this](Core::ModelStateUpdater::ptr t_vals) {
+                    if (t_vals) {
+                        auto updated = t_vals->update();
+                        m_dsSigModel->slotDataUpdated(updated);
+                    }
+                }, Qt::QueuedConnection);
 
         putCmdToQueue(cmd);
     }

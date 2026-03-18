@@ -141,6 +141,14 @@ Item
         }
     }
 
+    Text {
+        anchors.centerIn: parent
+        text: "No files available"
+        color: VisualStyle.textColor
+        font.pixelSize: 14
+        visible: tableID.rows === 0
+    }
+
     onVisibleChanged: {
         if (visible) {
             tableID.forceActiveFocus()

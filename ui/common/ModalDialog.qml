@@ -33,6 +33,7 @@ Popup
     property string title: ""
     property alias dialogWidth: rootID.width
     property alias dialogHeight: rootID.height
+    property color bgColor: VisualStyle.modalColor
     default property alias contentArea: contentContainerID.data
 
     modal: true
@@ -56,7 +57,7 @@ Popup
     Rectangle {
         id: bgID
         anchors.fill: parent
-        color: VisualStyle.modalColor
+        color: rootID.bgColor
 
         // Outer border
         Rectangle {
@@ -65,7 +66,7 @@ Popup
                 fill: parent
                 margins: 8
             }
-            color: VisualStyle.modalColor
+            color: rootID.bgColor
             border.color: "white"
             border.width: 2
 
@@ -75,7 +76,7 @@ Popup
                     fill: parent
                     margins: 6
                 }
-                color: VisualStyle.modalColor
+                color: rootID.bgColor
                 border.color: "white"
                 border.width: 2
 
@@ -101,7 +102,7 @@ Popup
             width: titleText.width + 30
             height: 24
             z: 100500
-            color: VisualStyle.modalColor
+            color: rootID.bgColor
 
             Text {
                 id: titleText

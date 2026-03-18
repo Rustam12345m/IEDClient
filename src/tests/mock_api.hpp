@@ -85,7 +85,7 @@ namespace UnitTests
             : m_mockControl{}, m_mockState{}, m_mockModel{}, m_mockFS{}
         {}
 
-        MOCK_METHOD(bool, connect, (const Cmd::IEDCredentials &t_creds), (override));
+        MOCK_METHOD(QString, connect, (const Cmd::IEDCredentials &t_creds), (override));
         MOCK_METHOD(void, disconnect, (), (override));
         MOCK_METHOD(bool, isConnected, (), (const, override));
         MOCK_METHOD(QString, getVersion, (), (const, override));

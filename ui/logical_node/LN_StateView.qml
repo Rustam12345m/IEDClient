@@ -134,4 +134,12 @@ Item
             }
         }
     }
+
+    Text {
+        anchors.centerIn: parent
+        text: "No data objects"
+        color: VisualStyle.textColor
+        font.pixelSize: 14
+        visible: tableID.rows === 0
+    }
 }

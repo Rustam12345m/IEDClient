@@ -42,7 +42,7 @@ namespace Cmd::Interface
 
         virtual ~IEC61850_API() {}
 
-        virtual bool connect(const Cmd::IEDCredentials &t_creds) = 0;
+        virtual QString connect(const Cmd::IEDCredentials &t_creds) = 0;
         virtual void disconnect() = 0;
         virtual bool isConnected() const = 0;
 

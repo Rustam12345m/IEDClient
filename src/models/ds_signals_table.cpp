@@ -163,7 +163,9 @@ namespace App::Models
 
     void DS_SignalsTable::slotDataUpdated(QList<Core::ModelItem::ptr> t_items)
     {
-        emit dataChanged(index(0, DS_VALUE_COLUMN), index(rowCount() - 1, COLUMN_COUNT));
+        if (rowCount() > 0) {
+            emit dataChanged(index(0, DS_VALUE_COLUMN), index(rowCount() - 1, COLUMN_COUNT - 1));
+        }
     }
 
     void DS_SignalsTable::slotDataSetSelected(int t_ds)
