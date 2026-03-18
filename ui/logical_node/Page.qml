@@ -57,20 +57,17 @@ FocusScope
             pressed: SplitHandle.pressed
         }
 
-        // Area for LogicalNode's table
+        // Area for LogicalNode's list (all LDs)
         Rectangle {
             SplitView.preferredWidth: 300
             SplitView.fillWidth: false
 
             color: VisualStyle.input.bg
 
-            // Table
-            LN_OverviewTable {
+            LN_AllOverviewList {
                 id: tableLN
 
-                anchors {
-                    fill: parent
-                }
+                anchors.fill: parent
 
                 onSigSelectedNewLN: function() {
                     // console.log("LN_Page: Resize columns")

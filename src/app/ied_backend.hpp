@@ -28,6 +28,7 @@
 #include "models/ld_overview_grid.hpp"
 #include "models/ld_properties_table.hpp"
 #include "models/ln_overview_table.hpp"
+#include "models/ln_all_overview_table.hpp"
 #include "models/ln_state_table.hpp"
 #include "models/ln_common_tree.hpp"
 #include "models/ied_model_tree.hpp"
@@ -53,6 +54,7 @@ namespace App
         Q_INVOKABLE QAbstractListModel*  getLD_GridModel() const { return m_ldsModel; }
         Q_INVOKABLE QAbstractListModel*  getLD_PropModel() const { return m_ldPropModel; }
         Q_INVOKABLE QAbstractTableModel* getLN_ComModel() const { return m_lnsModel; }
+        Q_INVOKABLE QAbstractListModel*  getLN_AllModel() const { return m_lnAllModel; }
         Q_INVOKABLE QAbstractItemModel*  getLN_StateModel()    const { return m_sortDOModel; }
         Q_INVOKABLE QAbstractItemModel*  getLN_ControlsModel() const { return m_sortControlsModel; }
         Q_INVOKABLE QAbstractItemModel*  getLN_SettingsModel() const { return m_sortSettingsModel; }
@@ -106,6 +108,7 @@ namespace App
         Models::LD_OverviewGrid*    m_ldsModel = nullptr;
         Models::LD_PropertiesTable* m_ldPropModel = nullptr;
         Models::LN_OverviewTable*   m_lnsModel = nullptr;
+        Models::LN_AllOverviewTable* m_lnAllModel = nullptr;
         Models::LN_SignalTable*     m_lnStateModel    = nullptr;
         Models::LN_SignalTable*     m_lnControlsModel = nullptr;
         Models::LN_SignalTable*     m_lnSettingsModel = nullptr;

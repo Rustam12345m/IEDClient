@@ -33,6 +33,7 @@ namespace App
         m_ldsModel = new Models::LD_OverviewGrid(this, m_con.m_ied);
         m_ldPropModel = new Models::LD_PropertiesTable(this, m_con.m_ied);
         m_lnsModel = new Models::LN_OverviewTable(this, m_con.m_ied);
+        m_lnAllModel = new Models::LN_AllOverviewTable(this, m_con.m_ied);
         m_lnStateModel    = new Models::LN_SignalTable(this, m_con.m_ied, Models::LN_SignalTable::MatrixType::State);
         m_lnControlsModel = new Models::LN_SignalTable(this, m_con.m_ied, Models::LN_SignalTable::MatrixType::Controls);
         m_lnSettingsModel = new Models::LN_SignalTable(this, m_con.m_ied, Models::LN_SignalTable::MatrixType::Settings);
@@ -62,6 +63,11 @@ namespace App
         connect(m_lnsModel, &Models::LN_OverviewTable::sigLNSelected, m_lnControlsModel, &Models::LN_SignalTable::slotLNSelected);
         connect(m_lnsModel, &Models::LN_OverviewTable::sigLNSelected, m_lnSettingsModel, &Models::LN_SignalTable::slotLNSelected);
         connect(m_lnsModel, &Models::LN_OverviewTable::sigLNSelected, m_lnTreeModel,     &Models::LN_CommonTree::slotLNSelected);
+
+        connect(m_lnAllModel, &Models::LN_AllOverviewTable::sigLNSelected, m_lnStateModel,    &Models::LN_SignalTable::slotLNSelected);
+        connect(m_lnAllModel, &Models::LN_AllOverviewTable::sigLNSelected, m_lnControlsModel, &Models::LN_SignalTable::slotLNSelected);
+        connect(m_lnAllModel, &Models::LN_AllOverviewTable::sigLNSelected, m_lnSettingsModel, &Models::LN_SignalTable::slotLNSelected);
+        connect(m_lnAllModel, &Models::LN_AllOverviewTable::sigLNSelected, m_lnTreeModel,     &Models::LN_CommonTree::slotLNSelected);
 
         connect(m_dsComModel, &Models::DS_OverviewTable::sigDSSelected, m_dsSigModel, &Models::DS_SignalsTable::slotDataSetSelected);
         connect(m_brcbComModel, &Models::RCB_OverviewTable::sigRCBSelected, m_reportsModel, &Models::ReportsTable::slotRCBSelected);
@@ -297,6 +303,7 @@ namespace App
         m_ldsModel->setActiveIED(m_con.m_ied);
         m_ldPropModel->setActiveIED(m_con.m_ied);
         m_lnsModel->setActiveIED(m_con.m_ied);
+        m_lnAllModel->setActiveIED(m_con.m_ied);
         m_lnStateModel->setActiveIED(m_con.m_ied);
         m_lnControlsModel->setActiveIED(m_con.m_ied);
         m_lnSettingsModel->setActiveIED(m_con.m_ied);

@@ -39,6 +39,7 @@
 
         <file>logical_node/Page.qml</file>
         <file>logical_node/LN_OverviewTable.qml</file>
+        <file>logical_node/LN_AllOverviewList.qml</file>
         <file>logical_node/ModBehHealthDelegate.qml</file>
         <file>logical_node/LN_StateView.qml</file>
         <file>logical_node/LN_CommonTree.qml</file>

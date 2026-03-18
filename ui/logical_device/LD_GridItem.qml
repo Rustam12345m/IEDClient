@@ -53,7 +53,7 @@ Item {
         anchors.fill: parent
 
         border.width: rootID.borderWidth
-        border.color: selected ? VisualStyle.borderColor : VisualStyle.ldGrid.borderColor
+        border.color: selected ? VisualStyle.borderColor : VisualStyle.table.rowBorderColor2
         color: "transparent"
 
         Column {
@@ -67,7 +67,7 @@ Item {
                 width: parent.width
                 height: rootID.cellEdge
 
-                color: selected ? VisualStyle.borderColor : VisualStyle.ldGrid.color
+                color: selected ? VisualStyle.borderColor : VisualStyle.table.headerColor
 
                 Text {
                     id: ldName
@@ -93,7 +93,7 @@ Item {
             Rectangle {
                 width: parent.width
                 height: rootID.borderWidth
-                color: selected ? VisualStyle.borderColor : VisualStyle.ldGrid.borderColor
+                color: selected ? VisualStyle.borderColor : VisualStyle.table.rowBorderColor2
             }
 
             // Values

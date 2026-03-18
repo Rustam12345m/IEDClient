@@ -23,6 +23,9 @@ set(SOURCES
     ln_overview_table.hpp
     ln_overview_table.cpp
 
+    ln_all_overview_table.hpp
+    ln_all_overview_table.cpp
+
     ln_common_tree.hpp
     ln_common_tree.cpp
 
