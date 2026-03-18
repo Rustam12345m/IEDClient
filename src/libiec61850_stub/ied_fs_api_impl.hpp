@@ -34,7 +34,7 @@ namespace Libiec61850
         ~IED_FS_API_Impl() override = default;
 
         int     getFileList(Core::DirOn &t_dir) override;
-        void    download(const QString &t_filename) override;
+        bool    download(const QString &t_filename, const QString &t_localPath) override;
         int     remove(const QString &t_filename) override;
 
     private:

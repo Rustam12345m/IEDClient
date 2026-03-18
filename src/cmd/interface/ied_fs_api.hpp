@@ -32,7 +32,7 @@ namespace Cmd::Interface
         virtual ~IED_FS_API() {}
 
         virtual int  getFileList(Core::DirOn &t_dir) = 0;
-        virtual void download(const QString &t_filename) = 0;
+        virtual bool download(const QString &t_filename, const QString &t_localPath) = 0;
         virtual int  remove(const QString &t_filename) = 0;
     };
 }

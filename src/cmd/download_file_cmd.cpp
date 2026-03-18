@@ -20,14 +20,43 @@
  * */
 
 #include "download_file_cmd.hpp"
+
 #include <QDebug>
+#include <QDir>
+#include <QFileInfo>
+#include <QStandardPaths>
 
 namespace Cmd
 {
     void DownloadFileCmd::execute(Cmd::Interface::IEC61850_API::ptr t_api)
     {
-        qDebug() << "CMD: DownloadFileCmd " << m_filename;
+        qDebug() << "CMD: DownloadFileCmd" << m_filename;
 
-        t_api->fs().download(m_filename);
+        emit sigCmdEvent(CmdEvent::StartEvent("",
+                QString("Downloading file: %1").arg(m_filename)));
+
+        emit sigCmdEvent(CmdEvent::ProcessEvent("",
+                QString("Downloading: %1").arg(m_filename), 50));
+
+        QString downloadDir = QStandardPaths::writableLocation(QStandardPaths::DownloadLocation);
+        if (downloadDir.isEmpty()) {
+            downloadDir = QDir::currentPath();
+        }
+
+        QString localName = QFileInfo(m_filename).fileName();
+        if (localName.isEmpty()) {
+            localName = m_filename;
+        }
+        QString localPath = downloadDir + "/" + localName;
+
+        bool ok = t_api->fs().download(m_filename, localPath);
+
+        if (ok) {
+            emit sigCmdEvent(CmdEvent::FinishEvent("",
+                    QString("File saved: %1").arg(localPath), true));
+        } else {
+            emit sigCmdEvent(CmdEvent::FinishEvent("",
+                    QString("Failed to download: %1").arg(m_filename), false));
+        }
     }
 }

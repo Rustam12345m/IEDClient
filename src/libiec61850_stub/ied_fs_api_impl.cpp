@@ -22,6 +22,8 @@
 #include "ied_fs_api_impl.hpp"
 #include "libiec61850_adapter.hpp"
 
+#include <QFile>
+
 extern "C"
 {
 #include <iec61850_client.h>
@@ -29,19 +31,16 @@ extern "C"
 
 namespace Libiec61850
 {
-    namespace 
+    namespace
     {
-        bool     getFileAsyncHandler(uint32_t invokeId, void* parameter, IedClientError err, uint32_t originalInvokeId,
-                                    uint8_t* buffer, uint32_t bytesRead, bool moreFollows)
+        bool downloadHandler(void *parameter, uint8_t *buffer, uint32_t bytesRead)
         {
-            if ((err != IED_ERROR_OK) || (moreFollows == false)) {
-                if (err == IED_ERROR_OK) {
-                    printf("Received %d bytes\n", bytesRead);
+            FILE *fp = static_cast<FILE *>(parameter);
+            if (bytesRead > 0) {
+                if (fwrite(buffer, bytesRead, 1, fp) != 1) {
+                    qDebug() << "FS download: failed to write local file";
+                    return false;
                 }
-                printf("File transfer complete (err:%d)\n", err);
-            }
-            else {
-                printf("Received %d bytes\n", bytesRead);
             }
             return true;
         }
@@ -79,15 +78,29 @@ namespace Libiec61850
         return 0;
     }
 
-    void IED_FS_API_Impl::download(const QString &t_filename)
+    bool IED_FS_API_Impl::download(const QString &t_filename, const QString &t_localPath)
     {
         if (!m_api.isConnected()) {
-            return;
+            return false;
+        }
+
+        FILE *fp = fopen(t_localPath.toStdString().c_str(), "wb");
+        if (!fp) {
+            qDebug() << "FS download: cannot open local file" << t_localPath;
+            return false;
         }
 
         IedClientError error = IED_ERROR_OK;
-        uint32_t id = IedConnection_getFileAsync(m_api.m_libConn, &error, t_filename.toStdString().c_str(),
-                                                getFileAsyncHandler, nullptr);
+        IedConnection_getFile(m_api.m_libConn, &error, t_filename.toStdString().c_str(),
+                              downloadHandler, static_cast<void *>(fp));
+        fclose(fp);
+
+        if (error != IED_ERROR_OK) {
+            qDebug() << "FS download: error" << error << "for" << t_filename;
+            QFile::remove(t_localPath);
+            return false;
+        }
+        return true;
     }
 
     int IED_FS_API_Impl::remove(const QString &t_filename)
