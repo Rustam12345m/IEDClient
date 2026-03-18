@@ -59,6 +59,7 @@ namespace App
         // Selection process LD -> LN -> DO
         connect(m_ldsModel, &Models::LD_OverviewGrid::sigLDSelected, m_ldPropModel, &Models::LD_PropertiesTable::slotLDSelected);        
         connect(m_ldsModel, &Models::LD_OverviewGrid::sigLDSelected, m_lnsModel, &Models::LN_OverviewTable::slotLDSelected);
+        connect(m_ldsModel, &Models::LD_OverviewGrid::sigLDSelected, m_lnAllModel, &Models::LN_AllOverviewTable::slotLDSelected);
         connect(m_lnsModel, &Models::LN_OverviewTable::sigLNSelected, m_lnStateModel,    &Models::LN_SignalTable::slotLNSelected);
         connect(m_lnsModel, &Models::LN_OverviewTable::sigLNSelected, m_lnControlsModel, &Models::LN_SignalTable::slotLNSelected);
         connect(m_lnsModel, &Models::LN_OverviewTable::sigLNSelected, m_lnSettingsModel, &Models::LN_SignalTable::slotLNSelected);

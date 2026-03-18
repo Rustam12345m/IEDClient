@@ -43,7 +43,7 @@ Item
         for (var i = 0; i < detail.length; i++) {
             detailModel.append(detail[i])
             nameMetrics.text = detail[i].name
-            var w = nameMetrics.advanceWidth + defTextPadding * 2 + 4
+            var w = nameMetrics.advanceWidth + defTextPadding * 2 + 10
             if (w > maxWidth) {
                 maxWidth = w
             }
@@ -58,7 +58,6 @@ Item
 
     TextMetrics {
         id: nameMetrics
-        font.pixelSize: 13
     }
 
     // Section header with DO reference

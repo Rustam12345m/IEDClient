@@ -51,6 +51,13 @@ FocusScope
 
         currentIndex: -1
 
+        Connections {
+            target: listView.model
+            function onSigSelectRow(row) {
+                listView.currentIndex = row
+            }
+        }
+
         onCurrentIndexChanged: {
             if (currentIndex >= 0) {
                 model.selectLN(currentIndex)

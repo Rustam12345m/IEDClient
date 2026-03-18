@@ -163,6 +163,17 @@ FocusScope
                 event.accepted = true
                 return
             }
+            if ((event.key === Qt.Key_Return || event.key === Qt.Key_Enter)
+                    && currentRow >= 0) {
+                detailPanelOpen = !detailPanelOpen
+                if (detailPanelOpen) {
+                    emitItemDetail(currentRow)
+                } else {
+                    sigItemDetail("", [])
+                }
+                event.accepted = true
+                return
+            }
             if (event.key == Qt.Key_Left || event.key == Qt.Key_Right || event.key == Qt.Key_Tab) {
                 sigLeftOrRightKey()
                 event.accepted = true

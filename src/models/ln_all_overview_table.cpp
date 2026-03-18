@@ -110,6 +110,16 @@ namespace App::Models
         }
     }
 
+    void LN_AllOverviewTable::slotLDSelected(int t_ld)
+    {
+        for (int i = 0; i < m_entries.size(); i++) {
+            if (m_entries[i].ldIndex == t_ld) {
+                emit sigSelectRow(i);
+                return;
+            }
+        }
+    }
+
     void LN_AllOverviewTable::rebuildFlatList()
     {
         m_entries.clear();

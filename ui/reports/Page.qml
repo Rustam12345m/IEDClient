@@ -149,7 +149,7 @@ FocusScope
                     delegateHeight: 30
                     selected: (rootID.selectedRCBIndex == row)
 
-                    textAlign: Text.AlignHCenter
+                    textAlign: (column === 4 || column === 5) ? Text.AlignLeft : Text.AlignHCenter
                     text: model.display
 
                     onSigClick: function(row, col) {
@@ -191,6 +191,9 @@ FocusScope
                         rootID.selectedRCBIndex = currentRow
                         if (rootID.isRCBTab) {
                             tableID.model.setSelectedRCB(currentRow)
+                            if (rootID.panelVisible) {
+                                sigRCBRowSelected(true)
+                            }
                         }
                     }
                 }
@@ -199,6 +202,19 @@ FocusScope
                     if (event.key === Qt.Key_C && (event.modifiers & Qt.ControlModifier)) {
                         Globals.copyRowToClipboard(tableID)
                         event.accepted = true
+                        return
+                    }
+                    if ((event.key === Qt.Key_Return || event.key === Qt.Key_Enter)
+                            && rootID.isRCBTab && currentRow >= 0) {
+                        rootID.panelVisible = !rootID.panelVisible
+                        if (rootID.panelVisible) {
+                            tableID.model.setSelectedRCB(currentRow)
+                            sigRCBRowSelected(true)
+                        } else {
+                            sigRCBRowSelected(false)
+                        }
+                        event.accepted = true
+                        return
                     }
                 }
             }

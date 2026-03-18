@@ -99,8 +99,8 @@ QtObject
 
     // LD grid styles
     property QtObject ldGrid: QtObject {
-        property color color:               "#b0b0b0"
-        property color borderColor:         "#b0b0b0"
+        property color color:               "#999999"
+        property color borderColor:         "#999999"
         property color selColor:            "#595959"
     }
 

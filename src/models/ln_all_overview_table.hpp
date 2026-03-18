@@ -57,9 +57,11 @@ namespace App::Models
 
     signals:
         void sigLNSelected(int t_ld, int t_ln);
+        void sigSelectRow(int t_row);
 
     public slots:
         void slotDataUpdated(Core::ModelItem::ptrList t_nodes);
+        void slotLDSelected(int t_ld);
 
     private:
         struct FlatEntry
