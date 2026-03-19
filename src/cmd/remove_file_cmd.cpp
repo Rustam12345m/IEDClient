@@ -30,10 +30,10 @@ namespace Cmd
         if (rc == 0) {
             emit sigFileRemoved(m_fileIndex);
             emit sigCmdEvent(CmdEvent::FinishEvent("",
-                    QString("File deleted: %1").arg(m_filename), true));
+                    QString("Delete file: %1 removed").arg(m_filename), true));
         } else {
             emit sigCmdEvent(CmdEvent::FinishEvent("",
-                    QString("Failed to delete: %1").arg(m_filename), false));
+                    QString("Delete file: failed to remove %1").arg(m_filename), false));
         }
     }
 }

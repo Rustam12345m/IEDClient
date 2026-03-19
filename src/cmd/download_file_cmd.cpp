@@ -33,10 +33,10 @@ namespace Cmd
         qDebug() << "CMD: DownloadFileCmd" << m_filename;
 
         emit sigCmdEvent(CmdEvent::StartEvent("",
-                QString("Downloading file: %1").arg(m_filename)));
+                QString("Download file: %1").arg(m_filename)));
 
         emit sigCmdEvent(CmdEvent::ProcessEvent("",
-                QString("Downloading: %1").arg(m_filename), 50));
+                QString("Download file: %1 in progress").arg(m_filename), 50));
 
         QString downloadDir = QStandardPaths::writableLocation(QStandardPaths::DownloadLocation);
         if (downloadDir.isEmpty()) {
@@ -53,10 +53,10 @@ namespace Cmd
 
         if (ok) {
             emit sigCmdEvent(CmdEvent::FinishEvent("",
-                    QString("File saved: %1").arg(localPath), true));
+                    QString("Download file: saved to %1").arg(localPath), true));
         } else {
             emit sigCmdEvent(CmdEvent::FinishEvent("",
-                    QString("Failed to download: %1").arg(m_filename), false));
+                    QString("Download file: failed to download %1").arg(m_filename), false));
         }
     }
 }

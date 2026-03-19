@@ -30,12 +30,12 @@ namespace Cmd
             // Update process must to be finished in the GUI thread
             emit sigModelValues(vals);
 
-            emit sigCmdEvent(CmdEvent::FinishEvent("IP?",
-                    QString("Values of %1 received").arg(m_lnode->getName()),
+            emit sigCmdEvent(CmdEvent::FinishEvent("",
+                    QString("Update LN: %1 values received").arg(m_lnode->getName()),
                     true));
         } else {
-            emit sigCmdEvent(CmdEvent::FinishEvent("IP?",
-                    QString("Cannot get values of %1").arg(m_lnode->getName()),
+            emit sigCmdEvent(CmdEvent::FinishEvent("",
+                    QString("Update LN: failed to get values of %1").arg(m_lnode->getName()),
                     false));
         }
     }

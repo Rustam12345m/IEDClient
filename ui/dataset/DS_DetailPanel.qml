@@ -33,22 +33,33 @@ Item
     property int defRowHeight: 30
     property int defTextPadding: 5
     property int defNameWidth: 100
+    property int defValueWidth: 100
 
     property string doReference: ""
 
     function showDetail(ref, detail) {
         doReference = ref
         detailModel.clear()
-        var maxWidth = 80
+
+        var maxNameW = 80
+        var maxValW = 80
+
         for (var i = 0; i < detail.length; i++) {
             detailModel.append(detail[i])
+
             nameMetrics.text = detail[i].name
-            var w = nameMetrics.advanceWidth + defTextPadding * 2 + 10
-            if (w > maxWidth) {
-                maxWidth = w
-            }
+            var nw = nameMetrics.advanceWidth + defTextPadding * 2 + 10
+            if (nw > maxNameW)
+                maxNameW = nw
+
+            valueMetrics.text = detail[i].value
+            var vw = valueMetrics.advanceWidth + defTextPadding * 2 + 10
+            if (vw > maxValW)
+                maxValW = vw
         }
-        defNameWidth = Math.min(maxWidth, rootID.width * 0.6)
+
+        defNameWidth = maxNameW
+        defValueWidth = maxValW
     }
 
     function clear() {
@@ -56,9 +67,8 @@ Item
         detailModel.clear()
     }
 
-    TextMetrics {
-        id: nameMetrics
-    }
+    TextMetrics { id: nameMetrics }
+    TextMetrics { id: valueMetrics }
 
     // Section header with DO reference
     Rectangle {
@@ -77,8 +87,9 @@ Item
         }
     }
 
-    ListView {
-        id: detailListID
+    // Flickable provides horizontal scrolling when rows are wider than the panel
+    Flickable {
+        id: flickID
 
         anchors {
             top: headerID.bottom
@@ -87,27 +98,35 @@ Item
             bottom: parent.bottom
         }
 
-        boundsBehavior: Flickable.StopAtBounds
         clip: true
+        boundsBehavior: Flickable.StopAtBounds
 
-        property int selectedIndex: -1
+        contentWidth: Math.max(defNameWidth + defValueWidth, width)
+        contentHeight: detailListID.contentHeight
 
-        model: ListModel { id: detailModel }
+        flickableDirection: Flickable.AutoFlickDirection
 
-        delegate: Item {
-            width: detailListID.width
-            height: defRowHeight
+        ListView {
+            id: detailListID
 
-            Rectangle {
-                anchors.fill: parent
-                clip: true
+            width: flickID.contentWidth
+            height: flickID.contentHeight
 
-                RowLayout {
-                    anchors.fill: parent
+            interactive: false
+            boundsBehavior: Flickable.StopAtBounds
+
+            property int selectedIndex: -1
+
+            model: ListModel { id: detailModel }
+
+            delegate: Item {
+                width: flickID.contentWidth
+                height: defRowHeight
+
+                Row {
                     spacing: 0
 
                     Rectangle {
-                        Layout.preferredWidth: defNameWidth
                         width: defNameWidth
                         height: defRowHeight
 
@@ -122,7 +141,6 @@ Item
 
                             horizontalAlignment: Text.AlignLeft
                             verticalAlignment: Text.AlignVCenter
-                            elide: Text.ElideRight
                             leftPadding: defTextPadding
                             rightPadding: defTextPadding
 
@@ -130,23 +148,20 @@ Item
                         }
                     }
                     Rectangle {
+                        width: Math.max(defValueWidth, flickID.contentWidth - defNameWidth)
+                        height: defRowHeight
+
                         border.width: 1
                         border.color: VisualStyle.table.rowBorderColor2
-
                         color: (index === detailListID.selectedIndex)
                                ? VisualStyle.table.selRowColor
                                : VisualStyle.table.rowColor1
-                        clip: true
-
-                        Layout.fillWidth: true
-                        height: defRowHeight
 
                         Text {
                             anchors.fill: parent
 
                             horizontalAlignment: Text.AlignLeft
                             verticalAlignment: Text.AlignVCenter
-                            elide: Text.ElideRight
                             leftPadding: defTextPadding
                             rightPadding: defTextPadding
 
@@ -162,19 +177,23 @@ Item
                     }
                 }
             }
-        }
 
-        focus: true
-        Keys.onUpPressed: {
-            if (selectedIndex > 0)
-                selectedIndex--;
-        }
-        Keys.onDownPressed: {
-            if (selectedIndex < count - 1)
-                selectedIndex++;
+            focus: true
+            Keys.onUpPressed: {
+                if (selectedIndex > 0)
+                    selectedIndex--;
+            }
+            Keys.onDownPressed: {
+                if (selectedIndex < count - 1)
+                    selectedIndex++;
+            }
         }
 
         ScrollBar.vertical: ScrollBar {
+            policy: ScrollBar.AsNeeded
+            active: true
+        }
+        ScrollBar.horizontal: ScrollBar {
             policy: ScrollBar.AsNeeded
             active: true
         }

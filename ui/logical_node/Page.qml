@@ -38,13 +38,6 @@ FocusScope
         tableDO.resizeColumnsToContent()
     }
 
-    // Window for setting a new value for DA/SDA
-    DiaChangeValue {
-        id: diaChangeValue
-
-        anchors.centerIn: parent
-    }
-
     // LN CommonTable | Delimiter | DataTable
     SplitView {
         id: splitView
@@ -118,10 +111,6 @@ FocusScope
                 // Tree DO signals
                 LN_CommonTree {
                     id: treeDO
-
-                    onSigValueClicked: function(t_ref, t_msg, t_value) {
-                        diaChangeValue.open(t_ref, t_msg, t_value)
-                    }
                 }
             }
 

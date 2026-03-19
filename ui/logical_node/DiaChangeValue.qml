@@ -23,88 +23,95 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-Item {
+import AppStylesModule
+
+import "qrc:/common/"
+
+ModalDialog {
     id: rootID
 
-    property string doReference: "" 
+    property string doReference: ""
     property alias text: msgText.text
     property alias value: valueBox.text
 
     signal sigResult(bool t_user, string t_ref, string t_value)
 
-    Dialog {
-        id: diaID
+    title: "Change Value"
+    dialogWidth: 450
+    dialogHeight: 200
+    closePolicy: Popup.CloseOnEscape
 
-        anchors.centerIn: parent
+    ColumnLayout {
+        anchors.fill: parent
+        spacing: 10
 
-        width: Math.max(400, msgText.implicitWidth + 50)
-        height: 150
+        Label {
+            id: msgText
 
-        modal: true
-        closePolicy: Dialog.NoAutoClose
-        visible: false
+            Layout.fillWidth: true
+            Layout.topMargin: 10
 
-        ColumnLayout {
-            anchors.fill: parent
+            horizontalAlignment: Text.AlignHCenter
+            color: VisualStyle.statusBar.textColor
+            font.pixelSize: 14
 
-            Label {
-                Layout.alignment: Qt.AlignHCenter
+            text: ""
+        }
 
-                id: msgText
+        TextField {
+            id: valueBox
 
-                text: ""
+            Layout.fillWidth: true
+            Layout.leftMargin: 10
+            Layout.rightMargin: 10
+
+            verticalAlignment: Text.AlignVCenter
+            focus: true
+            font.pixelSize: 14
+
+            text: ""
+
+            Keys.onReturnPressed: {
+                sigResult(true, rootID.doReference, valueBox.text)
+                rootID.close()
             }
-
-            TextField {
-                Layout.alignment: Qt.AlignHCenter
-
-                id: valueBox
-
-                width: 100
-                height: 30
-
-                verticalAlignment: Text.AlignVCenter
-                focus: true
-
-                font.pixelSize: 14
-
-                text: qsTr("100500.100500")
+            Keys.onEnterPressed: {
+                sigResult(true, rootID.doReference, valueBox.text)
+                rootID.close()
             }
         }
 
-        footer: DialogButtonBox {
+        Item { Layout.fillHeight: true }
+
+        RowLayout {
+            Layout.alignment: Qt.AlignHCenter
+            Layout.bottomMargin: 5
+            spacing: 20
+
             Button {
                 text: "Ok"
                 onClicked: {
-                    console.log("Ok Button Clicked!")
-                    diaID.close()
-
-                    sigResult(true)
+                    sigResult(true, rootID.doReference, valueBox.text)
+                    rootID.close()
                 }
             }
-
             Button {
                 text: "Cancel"
                 onClicked: {
-                    console.log("Cancel Button Clicked!")
-                    diaID.close()
+                    rootID.close()
                 }
             }
         }
     }
 
     function isActive() {
-        return diaID.visible
+        return rootID.visible
     }
 
     function open(t_ref, t_msg, t_value) {
         rootID.doReference = t_ref
         msgText.text = t_msg
         valueBox.text = t_value
-        diaID.visible = true;
-    }
-
-    function close() {
-        diaID.visible = false;
+        rootID.open()
     }
 }

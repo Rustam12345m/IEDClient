@@ -7,7 +7,6 @@
         <file>home/AppEventViewer.qml</file>
         <file>home/AboutProgram.qml</file>
         <file>home/AppProgressBar.qml</file>
-        <file>home/NavigationGrid.qml</file>
 
         <file>singletons/Globals.qml</file>
         <file>singletons/VisualStyle.qml</file>

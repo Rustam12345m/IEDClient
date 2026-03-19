@@ -26,7 +26,7 @@ namespace Cmd
 {
     void UpdateRCBs_Cmd::execute(Cmd::Interface::IEC61850_API::ptr t_api)
     {
-        emit sigCmdEvent(CmdEvent::StartEvent("RCB", "Refreshing all RCB values"));
+        emit sigCmdEvent(CmdEvent::StartEvent("", "Update RCB: refreshing all values"));
 
         const auto &rcbList = m_ied->model().getReportCBList();
         int updated = 0;
@@ -37,8 +37,8 @@ namespace Cmd
             }
         }
 
-        emit sigCmdEvent(CmdEvent::FinishEvent("RCB",
-            QString("Refreshed %1 of %2 RCBs").arg(updated).arg(rcbList.size()),
+        emit sigCmdEvent(CmdEvent::FinishEvent("",
+            QString("Update RCB: refreshed %1 of %2").arg(updated).arg(rcbList.size()),
             updated > 0));
     }
 }

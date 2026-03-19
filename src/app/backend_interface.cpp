@@ -32,6 +32,10 @@ namespace App
 
     void BackendInterface::slotCmdEvent(Cmd::CmdEvent t_ev)
     {
+        if (t_ev.m_ip.isEmpty() || t_ev.m_ip == "IP?") {
+            t_ev.m_ip = m_con.m_cred.ip();
+        }
+
         m_events.putEventToStorage(t_ev);
 
         switch (t_ev.m_type) {

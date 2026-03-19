@@ -25,99 +25,75 @@ import QtQuick.Layouts
 
 import AppStylesModule
 
-Rectangle
+import "qrc:/common/"
+
+ModalDialog
 {
-    property var windowColor: VisualStyle.progress.bg
-    property var windowShadeColor: VisualStyle.progress.shade
-
     id: rootID
-    anchors.fill: parent
 
-    color: windowShadeColor
-    opacity: 0.8
-    z: 100500
-    visible: false
+    title: "Please wait..."
+    dialogWidth: 500
+    dialogHeight: 150
+    closePolicy: Popup.NoAutoClose
 
-    Dialog {
-        id: dialogID
+    ColumnLayout {
+        anchors.fill: parent
+        spacing: 10
 
-        anchors.centerIn: parent
-        z: 100501
+        Text {
+            id: progressText
 
-        width: Math.max(600, progressText.implicitWidth + 50)
-        height: 150
+            Layout.fillWidth: true
+            Layout.topMargin: 10
 
-        modal: true
-        closePolicy: Dialog.NoAutoClose
-        visible: false
+            horizontalAlignment: Text.AlignHCenter
+            font.bold: VisualStyle.boldHeaderText
+            font.pixelSize: 14
+            color: VisualStyle.statusBar.textColor
 
-        Rectangle {
-            color: rootID.windowColor
-            anchors.fill: parent
+            text: "Please wait..."
+        }
 
-            ColumnLayout {
-                anchors.fill: parent
+        ProgressBar {
+            id: progressBar
 
-                Text {
-                    Layout.alignment: Qt.AlignCenter
-                    Layout.fillWidth: true
-                    horizontalAlignment: Text.AlignHCenter
+            Layout.fillWidth: true
+            Layout.leftMargin: 10
+            Layout.rightMargin: 10
 
-                    id: progressText
-                    font.bold: VisualStyle.boldHeaderText
-                    font.pixelSize: 16
-                    color: VisualStyle.progress.text
+            from: 0.0
+            to: 100.0
+            value: 0.0
 
-                    text: "Please wait..."
-                }
-                ProgressBar {
-                    Layout.alignment: Qt.AlignBottom
-                    Layout.fillWidth: true
+            Text {
+                id: progressValue
 
-                    id: progressBar
-                    width: 100
-                    height: 30
+                anchors.centerIn: parent
+                z: 1
 
-                    from: 0.0
-                    to: 100.0
-                    value: 0.0
-
-                    Text {
-                        id: progressValue
-
-                        anchors.centerIn: parent
-                        z: 1
-
-                        text: ""
-                        color: VisualStyle.progress.text
-                    }
-                }
+                text: ""
+                color: VisualStyle.statusBar.textColor
             }
         }
+
+        Item { Layout.fillHeight: true }
     }
 
     function isActive() {
-        return dialogID.visible
+        return rootID.visible
     }
     function startLoad() {
-        //console.log("ModalProgressBar: startLoad")
-        parent.enabled = false
-
         progressBar.value = 0
-        rootID.visible = true
-        dialogID.visible = true
+        progressText.text = "Please wait..."
+        progressValue.text = ""
+        rootID.open()
     }
     function finishLoad() {
-        //console.log("ModalProgressBar: finishLoad")
-        rootID.visible = false
-        dialogID.visible = false
-
-        parent.enabled = true
+        rootID.close()
     }
     function updateLoad(t_perc, t_msg) {
         progressBar.value = t_perc
         progressValue.text = t_perc + " %"
-
         progressText.text = t_msg
     }
 }

@@ -30,9 +30,9 @@ namespace Cmd
         if (vals) {
             emit sigModelValues(vals);
 
-            emit sigCmdEvent(Cmd::CmdEvent::FinishEvent("", "All LN statuses updated", true));
+            emit sigCmdEvent(Cmd::CmdEvent::FinishEvent("", "Update LN status: all statuses received", true));
         } else {
-            emit sigCmdEvent(Cmd::CmdEvent::FinishEvent("", "Cannot get LN statuses", false));
+            emit sigCmdEvent(Cmd::CmdEvent::FinishEvent("", "Update LN status: failed to get statuses", false));
         }
     }
 }

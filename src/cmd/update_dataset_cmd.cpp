@@ -29,9 +29,11 @@ namespace Cmd
         if (vals) {
             emit sigModelValues(vals);
 
-            emit sigCmdEvent(Cmd::CmdEvent::FinishEvent("", "DataSet values updated", true));
+            emit sigCmdEvent(Cmd::CmdEvent::FinishEvent("",
+                    QString("Update DataSet: values of %1 received").arg(m_dataset->getName()), true));
         } else {
-            emit sigCmdEvent(Cmd::CmdEvent::FinishEvent("", "Cannot get information about this dataset", false));
+            emit sigCmdEvent(Cmd::CmdEvent::FinishEvent("",
+                    QString("Update DataSet: failed to get values of %1").arg(m_dataset->getName()), false));
         }
     }
 }

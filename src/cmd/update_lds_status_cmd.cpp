@@ -32,12 +32,12 @@ namespace Cmd
             // Update process must to be finished in the GUI thread
             emit sigModelValues(vals);
 
-            emit sigCmdEvent(CmdEvent::FinishEvent("IP?",
-                    QString("Received %1 signal values for LD").arg(vals->count()),
+            emit sigCmdEvent(CmdEvent::FinishEvent("",
+                    QString("Update LD status: received %1 values").arg(vals->count()),
                     true));
         } else {
-            emit sigCmdEvent(CmdEvent::FinishEvent("IP?",
-                    QString("Cannot get values for LD"),
+            emit sigCmdEvent(CmdEvent::FinishEvent("",
+                    QString("Update LD status: failed to get values"),
                     false));
         }
     }

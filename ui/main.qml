@@ -497,10 +497,10 @@ ApplicationWindow
                 // Property panel
                 Rectangle {
                     id: propertyPanel
-                    width: 250
+                    width: 350
 
                     SplitView.fillWidth: false
-                    SplitView.preferredWidth: 250
+                    SplitView.preferredWidth: 350
 
                     color: VisualStyle.backgroundColor1
 
@@ -611,9 +611,6 @@ ApplicationWindow
     }
     Home.AppProgressBar {
         id: globalProgressBar
-
-        windowColor: VisualStyle.progress.bg
-        windowShadeColor: VisualStyle.progress.shade
     }
 
     ModalDialog {
