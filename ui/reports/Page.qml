@@ -21,6 +21,7 @@
 
 import QtQuick
 import QtQuick.Controls
+import Qt.labs.qmlmodels
 
 import GlobalVarsModule
 import AppStylesModule
@@ -145,22 +146,78 @@ FocusScope
                     return Globals.columnWidthCalculator(headerID, tableID, t_column)
                 }
 
-                delegate: TextDelegate {
-                    delegateHeight: 30
-                    selected: (rootID.selectedRCBIndex == row)
+                delegate: DelegateChooser {
+                    // Enabled column with LED indicator
+                    DelegateChoice {
+                        column: 0
 
-                    textAlign: (column === 4 || column === 5) ? Text.AlignLeft : Text.AlignHCenter
-                    text: model.display
+                        delegate: Item {
+                            implicitWidth: 60
+                            implicitHeight: 30
 
-                    onSigClick: function(row, col) {
-                        tableID.focus = true
-                        Globals.setSelectedRow(tableID, row)
-                        rootID.selectedRCBIndex = row
+                            required property bool selected
+
+                            Rectangle {
+                                anchors.fill: parent
+                                border.color: VisualStyle.table.rowBorderColor2
+                                color: (rootID.selectedRCBIndex == row)
+                                       ? VisualStyle.table.selRowColor
+                                       : VisualStyle.table.rowColor1
+
+                                Row {
+                                    anchors.centerIn: parent
+                                    spacing: 5
+
+                                    Rectangle {
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        width: 12; height: 12; radius: 6
+                                        color: model.display === "Yes" ? "#4CAF50" : "gray"
+                                    }
+                                    Text {
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        text: model.display
+                                        color: VisualStyle.textColor
+                                    }
+                                }
+                            }
+
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    tableID.focus = true
+                                    Globals.setSelectedRow(tableID, row)
+                                    rootID.selectedRCBIndex = row
+                                }
+                                onDoubleClicked: {
+                                    if (rootID.isRCBTab) {
+                                        rootID.panelVisible = !rootID.panelVisible
+                                        sigRCBRowSelected(rootID.panelVisible)
+                                    }
+                                }
+                            }
+                        }
                     }
-                    onSigDoubleClick: function(row, col) {
-                        if (rootID.isRCBTab) {
-                            rootID.panelVisible = !rootID.panelVisible
-                            sigRCBRowSelected(rootID.panelVisible)
+
+                    // All other columns
+                    DelegateChoice {
+                        delegate: TextDelegate {
+                            delegateHeight: 30
+                            selected: (rootID.selectedRCBIndex == row)
+
+                            textAlign: (column === 4 || column === 5) ? Text.AlignLeft : Text.AlignHCenter
+                            text: model.display
+
+                            onSigClick: function(row, col) {
+                                tableID.focus = true
+                                Globals.setSelectedRow(tableID, row)
+                                rootID.selectedRCBIndex = row
+                            }
+                            onSigDoubleClick: function(row, col) {
+                                if (rootID.isRCBTab) {
+                                    rootID.panelVisible = !rootID.panelVisible
+                                    sigRCBRowSelected(rootID.panelVisible)
+                                }
+                            }
                         }
                     }
                 }

@@ -33,6 +33,7 @@ Item
     property int defRowHeight: 30
     property int defTextPadding: 5
     property int defNameWidth: 100
+    property int defValueWidth: 100
 
     function showReport(detail) {
         reportModel.clear()
@@ -45,12 +46,18 @@ Item
             { section: "Report info",  name: "Reason",  value: detail.reason || "" }
         ]
 
-        var maxWidth = 80
+        var maxNameW = 80
+        var maxValW = 80
+
         for (var i = 0; i < headerFields.length; i++) {
             reportModel.append(headerFields[i])
             nameMetrics.text = headerFields[i].name
-            var w = nameMetrics.advanceWidth + defTextPadding * 2 + 4
-            if (w > maxWidth) maxWidth = w
+            var nw = nameMetrics.advanceWidth + defTextPadding * 2 + 10
+            if (nw > maxNameW) maxNameW = nw
+
+            valueMetrics.text = headerFields[i].value
+            var vw = valueMetrics.advanceWidth + defTextPadding * 2 + 10
+            if (vw > maxValW) maxValW = vw
         }
 
         if (detail.entries) {
@@ -64,64 +71,76 @@ Item
                 reportModel.append(item)
 
                 nameMetrics.text = item.name
-                var nw = nameMetrics.advanceWidth + defTextPadding * 2 + 4
-                if (nw > maxWidth) maxWidth = nw
+                var enw = nameMetrics.advanceWidth + defTextPadding * 2 + 10
+                if (enw > maxNameW) maxNameW = enw
+
+                valueMetrics.text = item.value
+                var evw = valueMetrics.advanceWidth + defTextPadding * 2 + 10
+                if (evw > maxValW) maxValW = evw
             }
         }
 
-        defNameWidth = Math.min(maxWidth, rootID.width * 0.6)
+        defNameWidth = maxNameW
+        defValueWidth = maxValW
     }
 
     function clear() {
         reportModel.clear()
     }
 
-    TextMetrics {
-        id: nameMetrics
-        font.pixelSize: 13
-    }
+    TextMetrics { id: nameMetrics; font.pixelSize: 13 }
+    TextMetrics { id: valueMetrics; font.pixelSize: 13 }
 
-    ListView {
-        id: reportListID
+    Flickable {
+        id: flickID
 
         anchors.fill: parent
-        boundsBehavior: Flickable.StopAtBounds
+
         clip: true
+        boundsBehavior: Flickable.StopAtBounds
 
-        property int selectedIndex: -1
+        contentWidth: Math.max(defNameWidth + defValueWidth, width)
+        contentHeight: reportListID.contentHeight
 
-        model: ListModel { id: reportModel }
+        flickableDirection: Flickable.AutoFlickDirection
 
-        section.property: "section"
-        section.delegate: Rectangle {
-            width: reportListID.width
-            height: defRowHeight
-            color: VisualStyle.table.headerColor
-            border.color: VisualStyle.table.rowBorderColor2
+        ListView {
+            id: reportListID
 
-            clip: true
+            width: flickID.contentWidth
+            height: flickID.contentHeight
 
-            Text {
-                text: section
-                anchors.centerIn: parent
-                font.bold: VisualStyle.boldHeaderText
-            }
-        }
+            interactive: false
+            boundsBehavior: Flickable.StopAtBounds
 
-        delegate: Item {
-            width: reportListID.width
-            height: defRowHeight
+            property int selectedIndex: -1
 
-            Rectangle {
-                anchors.fill: parent
+            model: ListModel { id: reportModel }
+
+            section.property: "section"
+            section.delegate: Rectangle {
+                width: flickID.contentWidth
+                height: defRowHeight
+                color: VisualStyle.table.headerColor
+                border.color: VisualStyle.table.rowBorderColor2
+
                 clip: true
 
-                RowLayout {
-                    anchors.fill: parent
+                Text {
+                    text: section
+                    anchors.centerIn: parent
+                    font.bold: VisualStyle.boldHeaderText
+                }
+            }
+
+            delegate: Item {
+                width: flickID.contentWidth
+                height: defRowHeight
+
+                Row {
                     spacing: 0
 
                     Rectangle {
-                        Layout.preferredWidth: defNameWidth
                         width: defNameWidth
                         height: defRowHeight
 
@@ -136,7 +155,6 @@ Item
 
                             horizontalAlignment: Text.AlignLeft
                             verticalAlignment: Text.AlignVCenter
-                            elide: Text.ElideRight
                             leftPadding: defTextPadding
                             rightPadding: defTextPadding
 
@@ -144,23 +162,20 @@ Item
                         }
                     }
                     Rectangle {
+                        width: Math.max(defValueWidth, flickID.contentWidth - defNameWidth)
+                        height: defRowHeight
+
                         border.width: 1
                         border.color: VisualStyle.table.rowBorderColor2
-
                         color: (index === reportListID.selectedIndex)
                                ? VisualStyle.table.selRowColor
                                : VisualStyle.table.rowColor1
-                        clip: true
-
-                        Layout.fillWidth: true
-                        height: defRowHeight
 
                         Text {
                             anchors.fill: parent
 
                             horizontalAlignment: Text.AlignLeft
                             verticalAlignment: Text.AlignVCenter
-                            elide: Text.ElideRight
                             leftPadding: defTextPadding
                             rightPadding: defTextPadding
 
@@ -176,19 +191,23 @@ Item
                     }
                 }
             }
-        }
 
-        focus: true
-        Keys.onUpPressed: {
-            if (selectedIndex > 0)
-                selectedIndex--;
-        }
-        Keys.onDownPressed: {
-            if (selectedIndex < count - 1)
-                selectedIndex++;
+            focus: true
+            Keys.onUpPressed: {
+                if (selectedIndex > 0)
+                    selectedIndex--;
+            }
+            Keys.onDownPressed: {
+                if (selectedIndex < count - 1)
+                    selectedIndex++;
+            }
         }
 
         ScrollBar.vertical: ScrollBar {
+            policy: ScrollBar.AsNeeded
+            active: true
+        }
+        ScrollBar.horizontal: ScrollBar {
             policy: ScrollBar.AsNeeded
             active: true
         }

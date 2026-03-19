@@ -67,7 +67,7 @@ namespace App::Models
             return QVariant(getDataSetList[row]->getName());
         }
         case VALUE_ROLE: {
-            return QVariant(QString::number(getDataSetList[row]->getItemCount()));
+            return QVariant(QString("# %1").arg(getDataSetList[row]->getItemCount()));
         }
         }
         return QVariant("??");

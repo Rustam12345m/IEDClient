@@ -7,6 +7,7 @@
 #include "cmd/update_rcbs_cmd.hpp"
 #include "cmd/connect_cmd.hpp"
 #include "cmd/disconnect_cmd.hpp"
+#include "cmd/remove_file_cmd.hpp"
 
 using ::testing::_;
 using ::testing::Return;
@@ -258,5 +259,73 @@ namespace UnitTests
         EXPECT_CALL(*api, disconnect()).Times(1);
 
         cmd->execute(api);
+    }
+
+    // ─── RemoveFileCMD ───────────────────────────────────────────────
+
+    TEST(RemoveFileCMD, Remove_Success)
+    {
+        auto cmd = Cmd::RemoveFileCMD::create("testfile.cfg", 3);
+
+        QSignalSpy eventSpy(cmd.get(), &Cmd::CmdInterface::sigCmdEvent);
+        QSignalSpy removedSpy(cmd.get(), &Cmd::RemoveFileCMD::sigFileRemoved);
+
+        auto api = makeMockAPI();
+        EXPECT_CALL(api->mockFS(), remove(QString("testfile.cfg")))
+            .WillOnce(Return(0));
+
+        cmd->execute(api);
+
+        // sigFileRemoved must be emitted with the correct row index
+        ASSERT_EQ(removedSpy.count(), 1);
+        EXPECT_EQ(removedSpy.at(0).at(0).toInt(), 3);
+
+        // CmdEvent: FINISH with success
+        ASSERT_EQ(eventSpy.count(), 1);
+        auto ev = eventSpy.at(0).at(0).value<Cmd::CmdEvent>();
+        EXPECT_EQ(ev.m_type, Cmd::FINISH_EVENT);
+        EXPECT_TRUE(ev.m_result);
+        EXPECT_TRUE(ev.m_msg.contains("testfile.cfg"));
+    }
+
+    TEST(RemoveFileCMD, Remove_Failure)
+    {
+        auto cmd = Cmd::RemoveFileCMD::create("protected.dat", 5);
+
+        QSignalSpy eventSpy(cmd.get(), &Cmd::CmdInterface::sigCmdEvent);
+        QSignalSpy removedSpy(cmd.get(), &Cmd::RemoveFileCMD::sigFileRemoved);
+
+        auto api = makeMockAPI();
+        EXPECT_CALL(api->mockFS(), remove(QString("protected.dat")))
+            .WillOnce(Return(1));
+
+        cmd->execute(api);
+
+        // sigFileRemoved must NOT be emitted on failure
+        EXPECT_EQ(removedSpy.count(), 0);
+
+        // CmdEvent: FINISH with failure
+        ASSERT_EQ(eventSpy.count(), 1);
+        auto ev = eventSpy.at(0).at(0).value<Cmd::CmdEvent>();
+        EXPECT_EQ(ev.m_type, Cmd::FINISH_EVENT);
+        EXPECT_FALSE(ev.m_result);
+        EXPECT_TRUE(ev.m_msg.contains("protected.dat"));
+    }
+
+    TEST(RemoveFileCMD, Remove_PreservesRowIndex)
+    {
+        // Verify that different row indices are correctly passed through
+        for (int row : {0, 1, 42, 99}) {
+            auto cmd = Cmd::RemoveFileCMD::create("file.txt", row);
+            QSignalSpy removedSpy(cmd.get(), &Cmd::RemoveFileCMD::sigFileRemoved);
+
+            auto api = makeMockAPI();
+            EXPECT_CALL(api->mockFS(), remove(_)).WillOnce(Return(0));
+
+            cmd->execute(api);
+
+            ASSERT_EQ(removedSpy.count(), 1);
+            EXPECT_EQ(removedSpy.at(0).at(0).toInt(), row);
+        }
     }
 }
