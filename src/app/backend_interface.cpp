@@ -41,6 +41,9 @@ namespace App
         }
         case Cmd::FINISH_EVENT: {
             emit sigCmdFinished(t_ev.m_result);
+            if (!t_ev.m_result) {
+                emit sigCmdError(t_ev.m_msg);
+            }
             break;
         }
         case Cmd::START_EVENT:

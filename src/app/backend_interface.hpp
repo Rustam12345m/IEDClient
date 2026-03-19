@@ -60,6 +60,7 @@ namespace App
     signals:
         void    sigCmdProgress(int t_perc, QString t_msg);
         void    sigCmdFinished(bool t_done);
+        void    sigCmdError(QString t_msg);
 
     public slots:
         void         slotCmdEvent(Cmd::CmdEvent t_ev);

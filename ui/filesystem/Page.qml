@@ -26,6 +26,8 @@ import Qt.labs.qmlmodels
 import GlobalVarsModule
 import AppStylesModule
 
+import QtQuick.Layouts
+
 import "qrc:/common/"
 
 // Filesystem page
@@ -101,16 +103,35 @@ Item
             return Globals.columnWidthCalculator(headerID, tableID, t_column)
         }
 
-        delegate: TextDelegate {
-            delegateHeight: 30
-            selected: (tableID.currentRow == row)
-            text: model.display
+        delegate: DelegateChooser {
+            DelegateChoice {
+                column: 4
 
-            onSigClick: function(t_row) {
-                Globals.setSelectedRow(tableID, t_row)
+                delegate: FS_ControlDelegate {
+                    selected: (tableID.currentRow == row)
+
+                    onSigDownloadFile: function(t_row) {
+                        rootID.cmdDownloadFile(t_row)
+                    }
+                    onSigRemoveFile: function(t_row) {
+                        Globals.setSelectedRow(tableID, t_row)
+                        deleteConfirmDialog.askDelete(t_row)
+                    }
+                }
             }
-            onSigDoubleClick: function(t_row) {
-                rootID.cmdDownloadFile(t_row)
+            DelegateChoice {
+                delegate: TextDelegate {
+                    delegateHeight: 30
+                    selected: (tableID.currentRow == row)
+                    text: model.display
+
+                    onSigClick: function(t_row) {
+                        Globals.setSelectedRow(tableID, t_row)
+                    }
+                    onSigDoubleClick: function(t_row) {
+                        rootID.cmdDownloadFile(t_row)
+                    }
+                }
             }
         }
 
@@ -137,6 +158,11 @@ Item
                 event.accepted = true
                 return
             }
+            if (event.key === Qt.Key_Delete) {
+                deleteConfirmDialog.askDelete(tableID.currentRow)
+                event.accepted = true
+                return
+            }
             event.accepted = false
         }
     }
@@ -147,6 +173,61 @@ Item
         color: VisualStyle.textColor
         font.pixelSize: 14
         visible: tableID.rows === 0
+    }
+
+    // Delete confirmation dialog
+    ModalDialog {
+        id: deleteConfirmDialog
+
+        property int pendingRow: -1
+
+        title: "Delete File"
+        dialogWidth: 420
+        dialogHeight: 180
+
+        function askDelete(t_row) {
+            pendingRow = t_row
+            deleteFileNameText.text = "Delete \"" + getFilename(t_row) + "\"?"
+            open()
+        }
+
+        ColumnLayout {
+            anchors.fill: parent
+            spacing: 10
+
+            Text {
+                id: deleteFileNameText
+
+                Layout.fillWidth: true
+                Layout.topMargin: 10
+
+                wrapMode: Text.Wrap
+                horizontalAlignment: Text.AlignHCenter
+                color: VisualStyle.statusBar.textColor
+                font.pixelSize: 14
+            }
+
+            Item { Layout.fillHeight: true }
+
+            RowLayout {
+                Layout.alignment: Qt.AlignHCenter
+                spacing: 20
+
+                Button {
+                    text: "Delete"
+                    onClicked: {
+                        rootID.cmdRemoveFile(deleteConfirmDialog.pendingRow)
+                        deleteConfirmDialog.close()
+                    }
+                }
+                Button {
+                    text: "Cancel"
+                    onClicked: {
+                        deleteConfirmDialog.close()
+                    }
+                }
+            }
+        }
     }
 
     onVisibleChanged: {

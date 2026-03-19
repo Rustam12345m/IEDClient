@@ -867,6 +867,9 @@ ApplicationWindow
 
         fsBackend.sigCmdProgress.connect(slotOnProgress)
         fsBackend.sigCmdFinished.connect(slotOnFinished)
+        fsBackend.sigCmdError.connect(function(msg) {
+            connectionErrorDialog.showError(msg)
+        })
 
         // Start status
         setPageStatusText(appBackend.getAppVersion())

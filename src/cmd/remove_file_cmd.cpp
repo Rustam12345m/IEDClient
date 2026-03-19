@@ -25,8 +25,15 @@ namespace Cmd
 {
     void RemoveFileCMD::execute(Cmd::Interface::IEC61850_API::ptr t_api)
     {
-        t_api->fs().remove(m_filename);
+        int rc = t_api->fs().remove(m_filename);
 
-        emit sigFileRemoved(m_fileIndex);
+        if (rc == 0) {
+            emit sigFileRemoved(m_fileIndex);
+            emit sigCmdEvent(CmdEvent::FinishEvent("",
+                    QString("File deleted: %1").arg(m_filename), true));
+        } else {
+            emit sigCmdEvent(CmdEvent::FinishEvent("",
+                    QString("Failed to delete: %1").arg(m_filename), false));
+        }
     }
 }

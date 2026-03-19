@@ -32,7 +32,7 @@ Item
     signal sigRemoveFile(int row)
 
     id: rootID
-    implicitWidth: downloadBtn.width + progressBar.width + removeBtn.width + 5
+    implicitWidth: downloadBtn.width + progressBar.width + removeBtn.width + 20
 
     Rectangle {
         anchors.fill: parent
