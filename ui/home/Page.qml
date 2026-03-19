@@ -512,7 +512,8 @@ Item {
                             { key: "Alt+3",  desc: "Logical nodes"        },
                             { key: "Alt+4",  desc: "DataSets"             },
                             { key: "Alt+5",  desc: "Report blocks"        },
-                            { key: "Alt+6",  desc: "Files"                },
+                            { key: "Alt+6",  desc: "Tree"                 },
+                            { key: "Alt+7",  desc: "Files"                },
                             { key: "Ctrl+C", desc: "Copy selected row"    }
                         ]
 

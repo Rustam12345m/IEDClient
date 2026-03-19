@@ -285,7 +285,7 @@ ApplicationWindow
                     ListElement { title: "LOGICAL NODES" }
                     ListElement { title: "DATASETS" }
                     ListElement { title: "REPORT BLOCKS" }
-                    ListElement { title: "MODEL" }
+                    ListElement { title: "TREE" }
                     ListElement { title: "FILES" }
                 }
 
@@ -592,7 +592,8 @@ ApplicationWindow
     Shortcut { sequence: "Alt+3"; enabled: presenter.isConnected; onActivated: setActivePage(Globals.Page.LN)    }
     Shortcut { sequence: "Alt+4"; enabled: presenter.isConnected; onActivated: setActivePage(Globals.Page.DS)    }
     Shortcut { sequence: "Alt+5"; enabled: presenter.isConnected; onActivated: setActivePage(Globals.Page.RCB)   }
-    Shortcut { sequence: "Alt+6"; enabled: presenter.isConnected; onActivated: setActivePage(Globals.Page.FS)    }
+    Shortcut { sequence: "Alt+6"; enabled: presenter.isConnected; onActivated: setActivePage(Globals.Page.IED_TREE) }
+    Shortcut { sequence: "Alt+7"; enabled: presenter.isConnected; onActivated: setActivePage(Globals.Page.FS)       }
     Shortcut { sequence: "Ctrl+H"; onActivated: showAbotProgramWindow()          }
 
     // Close modal window timer

@@ -31,95 +31,130 @@ import "qrc:/common/"
 FocusScope {
     id: rootID
 
-    // Header
-    HorizontalHeaderView {
-        id: headerID
-
-        anchors {
-            left: treeViewID.left
-            top: parent.top
-            right: parent.right
-        }
-        boundsBehavior: Flickable.StopAtBounds
-
-        syncView: treeViewID
-
-        delegate: Rectangle {
-            implicitWidth: labelID.implicitWidth + 24 + 10
-            implicitHeight: 30
-
-            color: VisualStyle.section.bg
-            border.color: VisualStyle.section.border
-
-            Label {
-                id: labelID
-
-                anchors.centerIn: parent
-                text: model.display
-                color: VisualStyle.section.text
-            }
-        }
-    }
-
-    // Full IED data model tree
-    TreeView {
-        id: treeViewID
-
-        anchors {
-            left: parent.left
-            right: parent.right
-            top: headerID.bottom
-            bottom: parent.bottom
-        }
-
-        model: iedBackend.getIED_TreeModel()
+    SplitView {
+        id: splitView
 
         focus: true
-        clip: true
-        interactive: true
-        boundsBehavior: Flickable.StopAtBounds
+        anchors.fill: parent
 
-        palette.highlight:       VisualStyle.table.selRowColor
-        palette.highlightedText: VisualStyle.textColor
-        palette.base:            VisualStyle.table.rowColor1
-        palette.text:            VisualStyle.textColor
-
-        columnWidthProvider: function(t_column) {
-            return Globals.columnWidthCalculator(headerID, treeViewID, t_column)
+        // Delimiter
+        handle: SplitDelimeter {
+            height: splitView.height
+            pressed: SplitHandle.pressed
         }
 
-        selectionBehavior: TableView.SelectRows
-        selectionModel: ItemSelectionModel {
-            model: treeViewID.model
-        }
+        // Left pane: IED tree
+        Rectangle {
+            SplitView.preferredWidth: splitView.width * 0.5
+            SplitView.minimumWidth: 300
+            SplitView.fillWidth: false
 
-        delegate: TreeViewDelegate {
-            TapHandler {
-                acceptedModifiers: Qt.ControlModifier
-                onTapped: {
-                    if (treeViewID.isExpanded(row))
-                        treeViewID.collapseRecursively(row)
-                    else
-                        treeViewID.expandRecursively(row)
+            color: VisualStyle.input.bg
+
+            // Header
+            HorizontalHeaderView {
+                id: headerID
+
+                anchors {
+                    left: treeViewID.left
+                    top: parent.top
+                    right: parent.right
+                }
+                boundsBehavior: Flickable.StopAtBounds
+
+                syncView: treeViewID
+
+                delegate: Rectangle {
+                    implicitWidth: labelID.implicitWidth + 24 + 10
+                    implicitHeight: 30
+
+                    color: VisualStyle.section.bg
+                    border.color: VisualStyle.section.border
+
+                    Label {
+                        id: labelID
+
+                        anchors.centerIn: parent
+                        text: model.display
+                        color: VisualStyle.section.text
+                    }
+                }
+            }
+
+            // Full IED data model tree
+            TreeView {
+                id: treeViewID
+
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    top: headerID.bottom
+                    bottom: parent.bottom
+                }
+
+                model: iedBackend.getIED_TreeModel()
+
+                focus: true
+                clip: true
+                interactive: true
+                boundsBehavior: Flickable.StopAtBounds
+
+                palette.highlight:       VisualStyle.table.selRowColor
+                palette.highlightedText: VisualStyle.textColor
+                palette.base:            VisualStyle.table.rowColor1
+                palette.text:            VisualStyle.textColor
+
+                columnWidthProvider: function(t_column) {
+                    return Globals.columnWidthCalculator(headerID, treeViewID, t_column)
+                }
+
+                selectionBehavior: TableView.SelectRows
+                selectionModel: ItemSelectionModel {
+                    model: treeViewID.model
+                }
+
+                delegate: TreeViewDelegate {
+                    TapHandler {
+                        acceptedModifiers: Qt.ControlModifier
+                        onTapped: {
+                            if (treeViewID.isExpanded(row))
+                                treeViewID.collapseRecursively(row)
+                            else
+                                treeViewID.expandRecursively(row)
+                        }
+                    }
+                }
+
+                Connections {
+                    target: treeViewID.model
+                    function onModelReset() {
+                        Qt.callLater(function() {
+                            for (var i = 0; i < treeViewID.rows; i++) {
+                                if (treeViewID.depth(i) === 0)
+                                    treeViewID.expand(i)
+                            }
+                        })
+                    }
+                }
+
+                ScrollBar.vertical: ScrollBar {
+                    policy: ScrollBar.AsNeeded
+                    active: true
+                    onActiveChanged: {
+                        if (!active) {
+                            active = true;
+                        }
+                    }
                 }
             }
         }
 
-        Connections {
-            target: treeViewID.model
-            function onModelReset() {
-                Qt.callLater(treeViewID.expandRecursively)
-            }
-        }
+        // Right pane: empty placeholder for future features
+        Rectangle {
+            SplitView.minimumWidth: 200
+            SplitView.fillWidth: true
 
-        ScrollBar.vertical: ScrollBar {
-            policy: ScrollBar.AsNeeded
-            active: true
-            onActiveChanged: {
-                if (!active) {
-                    active = true;
-                }
-            }
+            color: VisualStyle.input.bg
         }
     }
 
