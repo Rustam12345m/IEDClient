@@ -43,13 +43,13 @@ Item
         return tableID.model.data(idx, "display")
     }
     function cmdDownloadFile(t_row) {
-        console.log("FS_Table: Download file N" + t_row)
+        // console.log("FS_Table: Download file N" + t_row)
 
         Globals.setSelectedRow(tableID, t_row)
         fsBackend.downloadFile(getFilename(t_row))
     }
     function cmdRemoveFile(t_row) {
-        console.log("Control: Remove file N" + t_row)
+        // console.log("Control: Remove file N" + t_row)
 
         fsBackend.removeFile(getFilename(t_row), t_row)
     }

@@ -575,7 +575,7 @@ ApplicationWindow
         }
 
         Keys.onPressed: function(event) {
-            console.log("Window: Key pressed " + event.key)
+            // console.log("Window: Key pressed " + event.key)
         }
     }
 
@@ -882,7 +882,7 @@ ApplicationWindow
         repeat: true
 
         onTriggered: {
-            console.log("Currently focused item:", rootWindowID.activeFocusItem)
+            // console.log("Currently focused item:", rootWindowID.activeFocusItem)
         }
     }
 }

@@ -34,7 +34,7 @@ FocusScope
     id: rootID
 
     function resizeColumnsOnPage() {
-        console.log("LN_Page: resizeColumnsOnPage")
+        // console.log("LN_Page: resizeColumnsOnPage")
         tableDO.resizeColumnsToContent()
     }
 

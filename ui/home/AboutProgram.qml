@@ -140,7 +140,7 @@ Window
                             horizontalAlignment: TextEdit.AlignLeft    
 
                             onLinkActivated: {
-                                console.log("Clicked: " + web)
+                                // console.log("Clicked: " + web)
                                 Qt.openUrlExternally(web)
                             }
                         }
