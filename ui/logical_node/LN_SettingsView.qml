@@ -69,20 +69,35 @@ Item
             return Globals.columnWidthCalculator(headerID, tableID, t_column)
         }
 
+        property int selVer: 0
+        property bool multiSelect: false
+
         selectionBehavior: TableView.SelectRows
         selectionModel: ItemSelectionModel {
             model: tableID.model
+            onSelectionChanged: tableID.selVer++
+        }
+
+        onCurrentRowChanged: {
+            if (currentRow >= 0 && !multiSelect) {
+                Globals.setSelectedRow(tableID, currentRow)
+            }
         }
 
         delegate: TextDelegate {
             delegateHeight: defDelegateHeight
-            selected: (tableID.currentRow == row)
+            selected: { tableID.selVer; return tableID.selectionModel.isSelected(tableID.model.index(row, 0)) }
 
             textAlign: (column == 0) ? Text.AlignLeft : Text.AlignRight
             text: model.display
 
             onSigClick: function(row, col) {
                 Globals.setSelectedRow(tableID, row)
+            }
+            onSigCtrlClick: function(row, col) {
+                tableID.multiSelect = true
+                Globals.toggleSelectedRow(tableID, row)
+                tableID.multiSelect = false
             }
         }
 
@@ -107,9 +122,20 @@ Item
 
         Keys.onPressed: function(event) {
             if (event.key === Qt.Key_C && (event.modifiers & Qt.ControlModifier)) {
-                Globals.copyRowToClipboard(tableID)
+                Globals.copySelectedRowsToClipboard(tableID)
                 event.accepted = true
+                return
             }
+            if (event.key === Qt.Key_A && (event.modifiers & Qt.ControlModifier)) {
+                for (var i = 0; i < tableID.rows; i++) {
+                    tableID.selectionModel.select(
+                        tableID.model.index(i, 0),
+                        ItemSelectionModel.Select | ItemSelectionModel.Rows)
+                }
+                event.accepted = true
+                return
+            }
+            event.accepted = false
         }
     }
 

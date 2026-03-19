@@ -88,20 +88,22 @@ FocusScope
         interactive: true
         boundsBehavior: Flickable.StopAtBounds
 
+        property int selVer: 0
+        property bool multiSelect: false
+
         selectionBehavior: TableView.SelectRows
         selectionModel: ItemSelectionModel {
             model: tableID.model
-
-            // onCurrentChanged: {
-            // }
+            onSelectionChanged: tableID.selVer++
         }
+
         columnWidthProvider: function(t_column) {
             return Globals.columnWidthCalculator(headerID, tableID, t_column)
         }
 
         delegate: TextDelegate {
             delegateHeight: defDelegateHeight
-            selected: (tableID.currentRow == row)
+            selected: { tableID.selVer; return tableID.selectionModel.isSelected(tableID.model.index(row, 0)) }
 
             textAlign: Text.AlignLeft
             text: model.display
@@ -109,7 +111,13 @@ FocusScope
             onSigClick: function(row, col) {
                 Globals.setSelectedRow(tableID, row)
             }
+            onSigCtrlClick: function(row, col) {
+                tableID.multiSelect = true
+                Globals.toggleSelectedRow(tableID, row)
+                tableID.multiSelect = false
+            }
             onSigDoubleClick: function(row, col) {
+                if (Globals.selectedRowCount(tableID) > 1) return
                 Globals.setSelectedRow(tableID, row)
                 detailPanelOpen = !detailPanelOpen
                 if (detailPanelOpen) {
@@ -144,6 +152,9 @@ FocusScope
         }
 
         onCurrentRowChanged: {
+            if (currentRow >= 0 && !multiSelect) {
+                Globals.setSelectedRow(tableID, currentRow)
+            }
             if (currentRow >= 0 && detailPanelOpen) {
                 emitItemDetail(currentRow)
             }
@@ -159,12 +170,21 @@ FocusScope
 
         Keys.onPressed: function(event) {
             if (event.key === Qt.Key_C && (event.modifiers & Qt.ControlModifier)) {
-                Globals.copyRowToClipboard(tableID)
+                Globals.copySelectedRowsToClipboard(tableID)
+                event.accepted = true
+                return
+            }
+            if (event.key === Qt.Key_A && (event.modifiers & Qt.ControlModifier)) {
+                for (var i = 0; i < tableID.rows; i++) {
+                    tableID.selectionModel.select(
+                        tableID.model.index(i, 0),
+                        ItemSelectionModel.Select | ItemSelectionModel.Rows)
+                }
                 event.accepted = true
                 return
             }
             if ((event.key === Qt.Key_Return || event.key === Qt.Key_Enter)
-                    && currentRow >= 0) {
+                    && currentRow >= 0 && Globals.selectedRowCount(tableID) <= 1) {
                 detailPanelOpen = !detailPanelOpen
                 if (detailPanelOpen) {
                     emitItemDetail(currentRow)

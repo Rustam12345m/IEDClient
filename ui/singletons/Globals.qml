@@ -44,16 +44,6 @@ QtObject
         DS_DETAIL
     }
 
-    function printObjectToConsole(item)
-    {
-        for (var p in item) {
-            if (typeof item[p] != "function") {
-                if (p != "objectName") {
-                    console.log(p + ":" + item[p]);
-                }
-            }
-        }
-    }
 
     function setSelectedRow(t_tableID, t_row)
     {
@@ -64,6 +54,14 @@ QtObject
         let idx = t_tableID.model.index(t_row, 0);
         t_tableID.selectionModel.setCurrentIndex(idx, ItemSelectionModel.Clear
                                                     | ItemSelectionModel.Select
+                                                    | ItemSelectionModel.Rows);
+        t_tableID.forceActiveFocus()
+    }
+
+    function toggleSelectedRow(t_tableID, t_row)
+    {
+        let idx = t_tableID.model.index(t_row, 0);
+        t_tableID.selectionModel.setCurrentIndex(idx, ItemSelectionModel.Toggle
                                                     | ItemSelectionModel.Rows);
         t_tableID.forceActiveFocus()
     }
@@ -129,6 +127,40 @@ QtObject
             parts.push(t_tableID.model.data(idx))
         }
         presenter.copyToClipboard(parts.join(";"))
+    }
+
+    function copySelectedRowsToClipboard(t_tableID) {
+        var indexes = t_tableID.selectionModel.selectedIndexes
+        if (indexes.length === 0) return
+
+        // Collect unique selected rows
+        var rowSet = {}
+        for (var i = 0; i < indexes.length; i++) {
+            rowSet[indexes[i].row] = true
+        }
+        var rows = Object.keys(rowSet).map(Number).sort(function(a, b) { return a - b })
+
+        var lines = []
+        var cols = t_tableID.model.columnCount()
+        for (var r = 0; r < rows.length; r++) {
+            var parts = []
+            for (var c = 0; c < cols; c++) {
+                var idx = t_tableID.model.index(rows[r], c)
+                parts.push(t_tableID.model.data(idx))
+            }
+            lines.push(parts.join(";"))
+        }
+        presenter.copyToClipboard(lines.join("\n"))
+    }
+
+    function selectedRowCount(t_tableID) {
+        var indexes = t_tableID.selectionModel.selectedIndexes
+        if (indexes.length === 0) return 0
+        var rowSet = {}
+        for (var i = 0; i < indexes.length; i++) {
+            rowSet[indexes[i].row] = true
+        }
+        return Object.keys(rowSet).length
     }
 
     function columnWidthCalculator(t_headerID, t_tableID, t_column)

@@ -33,6 +33,7 @@ Item {
     implicitHeight: delegateHeight
 
     signal sigClick(int row, int col)
+    signal sigCtrlClick(int row, int col)
     signal sigDoubleClick(int row, int col)
 
     Rectangle {
@@ -60,7 +61,10 @@ Item {
         acceptedButtons: Qt.LeftButton | Qt.RightButton
 
         onClicked: function(mouse) {
-            sigClick(row, 1)
+            if (mouse.modifiers & Qt.ControlModifier)
+                sigCtrlClick(row, 1)
+            else
+                sigClick(row, 1)
         }
         onDoubleClicked: function(mouse) {
             sigDoubleClick(row, 1)
