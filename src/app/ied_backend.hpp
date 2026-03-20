@@ -28,6 +28,7 @@
 #include "cmd/update_sv_cbs_cmd.hpp"
 #include "cmd/set_goose_enable_cmd.hpp"
 #include "cmd/set_sv_enable_cmd.hpp"
+#include "cmd/mms_dump_cmd.hpp"
 #include "models/sort_proxy_model.hpp"
 #include "models/ld_overview_grid.hpp"
 #include "models/ld_properties_table.hpp"
@@ -97,6 +98,7 @@ namespace App
         // GOOSE / SV enable
         Q_INVOKABLE void setGOOSEEnable(int t_index, bool t_enable);
         Q_INVOKABLE void setSVEnable(int t_index, bool t_enable);
+        Q_INVOKABLE void dumpMmsModel(const QString &t_ip, int t_port);
 
         // Status bar
         Q_INVOKABLE QString ldsPageStatus();

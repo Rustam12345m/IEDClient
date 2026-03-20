@@ -434,7 +434,7 @@ Item {
                             }
                         }
 
-                        // Connect button
+                        // Connect and MMS Dump buttons
                         RowLayout {
                             Layout.fillWidth:    true
                             Layout.topMargin:    4
@@ -459,6 +459,18 @@ Item {
                                         connectNow()
                                         event.accepted = true
                                     }
+                                }
+                            }
+
+                            Button {
+                                text:           qsTr("MMS Dump")
+                                font.pixelSize: 13
+                                font.bold:      VisualStyle.boldHeaderText
+                                icon.source:    "qrc:/img/icons/code.svg"
+
+                                onClicked: {
+                                    iedBackend.dumpMmsModel(ipAddrInput.text,
+                                                            parseInt(portInput.text) || 102)
                                 }
                             }
 

@@ -193,6 +193,13 @@ namespace App
         putCmdToQueue(cmd);
     }
 
+    void IED_Backend::dumpMmsModel(const QString &t_ip, int t_port)
+    {
+        Cmd::IEDCredentials cred(t_ip, t_port, false, "", "");
+        auto cmd = Cmd::MmsDumpCmd::create(cred);
+        putCmdToQueue(cmd);
+    }
+
     void IED_Backend::updateLN_TreeValues()
     {
         // qDebug() << "IED_Backend: Update LN command";

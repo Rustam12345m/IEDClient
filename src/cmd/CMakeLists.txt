@@ -62,10 +62,21 @@ set(SOURCES
 
     remove_file_cmd.hpp
     remove_file_cmd.cpp
+
+    mms_dump_cmd.hpp
+    mms_dump_cmd.cpp
 )
 
 qt_add_library(cmd_lib STATIC ${SOURCES})
 
 target_link_libraries(cmd_lib PRIVATE Qt6::Core)
+target_link_libraries(cmd_lib PRIVATE iec61850)
 
 target_include_directories(cmd_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(cmd_lib PRIVATE
+    ${CMAKE_SOURCE_DIR}/3rdparty/libiec61850/config/
+    ${CMAKE_SOURCE_DIR}/3rdparty/libiec61850/hal/inc/
+    ${CMAKE_SOURCE_DIR}/3rdparty/libiec61850/src/iec61850/inc/
+    ${CMAKE_SOURCE_DIR}/3rdparty/libiec61850/src/common/inc/
+    ${CMAKE_SOURCE_DIR}/3rdparty/libiec61850/src/mms/inc/
+)
