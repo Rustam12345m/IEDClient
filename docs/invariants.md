@@ -87,8 +87,47 @@ Rules and patterns established during development that must be maintained.
 - **`MainPresenter::sigConnectionError(QString)`** carries the error message to QML. The error dialog (`connectionErrorDialog`) shows a dark-red modal with the reason.
 - **Connection failure closes the progress bar immediately** — no timer delay. The error modal replaces the old 3-second silent timeout.
 
+## GOOSE/SV Control Blocks
+
+- **libiec61850 object reference format**: `getGoCBValues` and `ClientSVControlBlock_create` expect `LD/LN.name` (e.g., `LD/LLN0.gcbEvents`). They internally insert `$GO$` or `$MS$`/`$US$`. Never pass `LD/LN.GO.name` — that causes double-prefix (`LLN0$GO$GO$name`) and fails with error 99.
+- **libiec61850 v1.6.x lacks MSVCB/USVCB discovery**: `IedConnection_getLogicalNodeDirectory` doesn't handle `ACSI_CLASS_MSVCB`/`ACSI_CLASS_USVCB`. Patched in `ied_connection.c` to add FC codes "MS"/"US".
+- **`setGOOSEEnable`/`setSVEnable` return `QString`**: empty on success, error message on failure (using `IedClientError_toString`). Not `bool`.
+- **Empty control block lists are not errors**: Update commands treat 0-of-0 as success (`bool ok = (list.size() == 0) || (updated > 0)`).
+- **GOOSE panel**: GoID and DataSet are editable (writable via libiec61850 API). ConfRev, MinTime, MaxTime, network params are read-only.
+- **SV panel**: Only SvEna is writable. All other fields (SvID, DataSet, ConfRev, SmpRate, NoASDU) are read-only per libiec61850 API.
+
+## RCB Owner Field
+
+- **Owner is an octet string**: 4 bytes = IPv4 address (format as `a.b.c.d`), other lengths = colon-separated hex.
+- **Re-read after enable/disable**: `SetRCBValues_Cmd` calls `refreshRCBValues()` after success to get server-set fields (owner, resv, confRev).
+
+## Multi-Row Selection in Tables
+
+- **`selVer` counter pattern**: QML `selectionModel.isSelected()` is not reactive. Use `property int selVer: 0` on the TableView, increment in `onSelectionChanged`, reference in binding: `selected: { tableID.selVer; return tableID.selectionModel.isSelected(...) }`.
+- **`multiSelect` flag**: Set `true` before `toggleSelectedRow`, `false` after. Prevents `onCurrentRowChanged` from clearing multi-selection via `setSelectedRow`.
+- **Arrow keys clear multi-select**: `onCurrentRowChanged` calls `setSelectedRow` (Clear+Select) when `!multiSelect`.
+- **Block operations on multi-select**: Double-click control/detail handlers check `Globals.selectedRowCount(tableID) > 1` and return early.
+- **`TextDelegate.sigCtrlClick`**: Emitted on Ctrl+Click, handlers call `Globals.toggleSelectedRow`.
+
+## File Download Progress
+
+- **libiec61850 `IedClientGetFileHandler` callback**: Called per data block. `DownloadContext` struct tracks `bytesTotal`/`fileSize` and emits `sigDownloadProgress(perc)`.
+- **Signal chain**: `IED_FS_API::sigDownloadProgress` → `DownloadFileCmd::sigDownloadProgress` → `IED_FS_Backend::sigDownloadProgress` → QML.
+- **Per-row progress**: `downloadingRow` tracks active download, `completedRows` map persists 100% for finished downloads.
+
+## Event Log
+
+- **Arrow keys need explicit handlers**: `keyNavigationEnabled` on TableView changes `currentRow` but doesn't update `selectionModel`. Use `Keys.onPressed` with `Globals.setSelectedRow` for Up/Down.
+- **Focus in ModalDialog**: Use `FocusScope` as root + `onVisibleChanged: tableID.forceActiveFocus()` to grab keyboard focus from the Popup.
+
+## BackendInterface Error Signal
+
+- **`sigCmdError(QString)`**: Emitted by `BackendInterface::slotCmdEvent` on any `FINISH_EVENT` with `m_result == false`. Connected to `connectionErrorDialog.showError()` in main.qml for both `iedBackend` and `fsBackend`.
+- **IP auto-fill**: `slotCmdEvent` fills empty or `"IP?"` IP fields from `m_con.m_cred.ip()` before storing events.
+
 ## C++ Conventions
 
 - **`t_` prefix** for function parameters, **`m_` prefix** for members.
 - **Command pattern**: all async IED operations go through `CmdThread` with `CmdInterface` commands.
 - **`Q_INVOKABLE`** for methods called from QML.
+- **No `qDebug()` in production code**: All debug output commented out. Use event log for user-visible messages.
