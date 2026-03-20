@@ -31,6 +31,8 @@
         <file>reports/RCB_PropertiesPanel.qml</file>
         <file>reports/RCB_ReportsTable.qml</file>
         <file>reports/ReportDetailPanel.qml</file>
+        <file>reports/GOOSE_PropertiesPanel.qml</file>
+        <file>reports/SV_PropertiesPanel.qml</file>
 
         <file>logical_device/Page.qml</file>
         <file>logical_device/LD_GridItem.qml</file>

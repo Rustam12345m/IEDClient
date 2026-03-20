@@ -41,7 +41,9 @@ QtObject
         LD_INFO,
         RCB_PROPERTIES,
         REPORT_DETAIL,
-        DS_DETAIL
+        DS_DETAIL,
+        GOOSE_PROPERTIES,
+        SV_PROPERTIES
     }
 
 

@@ -40,11 +40,15 @@ FocusScope
     ]
     property var activeModel: tabModels[rcbTabBarID.currentIndex]
     property bool isRCBTab: rcbTabBarID.currentIndex <= 1
+    property bool isGOOSETab: rcbTabBarID.currentIndex === 2
+    property bool isSVTab: rcbTabBarID.currentIndex === 3
     property bool isBuffered: rcbTabBarID.currentIndex === 0
     property int selectedRCBIndex: -1
     property bool panelVisible: false
 
     signal sigRCBRowSelected(bool isRCB)
+    signal sigGOOSERowSelected(bool isGOOSE)
+    signal sigSVRowSelected(bool isSV)
     signal sigReportDetail(var detail)
 
     function resizeColumnsOnPage() {
@@ -80,7 +84,14 @@ FocusScope
 
             onSigTabSelected: function(index) {
                 tableID.model = rootID.tabModels[index]
-                sigRCBRowSelected(index <= 1 && tableID.currentRow >= 0)
+                rootID.panelVisible = false
+                if (index <= 1) {
+                    sigRCBRowSelected(false)
+                } else if (index === 2) {
+                    sigGOOSERowSelected(false)
+                } else if (index === 3) {
+                    sigSVRowSelected(false)
+                }
             }
         }
     }
@@ -189,9 +200,13 @@ FocusScope
                                     rootID.selectedRCBIndex = row
                                 }
                                 onDoubleClicked: {
+                                    rootID.panelVisible = !rootID.panelVisible
                                     if (rootID.isRCBTab) {
-                                        rootID.panelVisible = !rootID.panelVisible
                                         sigRCBRowSelected(rootID.panelVisible)
+                                    } else if (rootID.isGOOSETab) {
+                                        sigGOOSERowSelected(rootID.panelVisible)
+                                    } else if (rootID.isSVTab) {
+                                        sigSVRowSelected(rootID.panelVisible)
                                     }
                                 }
                             }
@@ -213,9 +228,13 @@ FocusScope
                                 rootID.selectedRCBIndex = row
                             }
                             onSigDoubleClick: function(row, col) {
+                                rootID.panelVisible = !rootID.panelVisible
                                 if (rootID.isRCBTab) {
-                                    rootID.panelVisible = !rootID.panelVisible
                                     sigRCBRowSelected(rootID.panelVisible)
+                                } else if (rootID.isGOOSETab) {
+                                    sigGOOSERowSelected(rootID.panelVisible)
+                                } else if (rootID.isSVTab) {
+                                    sigSVRowSelected(rootID.panelVisible)
                                 }
                             }
                         }
@@ -251,6 +270,16 @@ FocusScope
                             if (rootID.panelVisible) {
                                 sigRCBRowSelected(true)
                             }
+                        } else if (rootID.isGOOSETab) {
+                            tableID.model.setSelectedGOOSE(currentRow)
+                            if (rootID.panelVisible) {
+                                sigGOOSERowSelected(true)
+                            }
+                        } else if (rootID.isSVTab) {
+                            tableID.model.setSelectedSV(currentRow)
+                            if (rootID.panelVisible) {
+                                sigSVRowSelected(true)
+                            }
                         }
                     }
                 }
@@ -262,13 +291,29 @@ FocusScope
                         return
                     }
                     if ((event.key === Qt.Key_Return || event.key === Qt.Key_Enter)
-                            && rootID.isRCBTab && currentRow >= 0) {
+                            && currentRow >= 0) {
                         rootID.panelVisible = !rootID.panelVisible
-                        if (rootID.panelVisible) {
-                            tableID.model.setSelectedRCB(currentRow)
-                            sigRCBRowSelected(true)
-                        } else {
-                            sigRCBRowSelected(false)
+                        if (rootID.isRCBTab) {
+                            if (rootID.panelVisible) {
+                                tableID.model.setSelectedRCB(currentRow)
+                                sigRCBRowSelected(true)
+                            } else {
+                                sigRCBRowSelected(false)
+                            }
+                        } else if (rootID.isGOOSETab) {
+                            if (rootID.panelVisible) {
+                                tableID.model.setSelectedGOOSE(currentRow)
+                                sigGOOSERowSelected(true)
+                            } else {
+                                sigGOOSERowSelected(false)
+                            }
+                        } else if (rootID.isSVTab) {
+                            if (rootID.panelVisible) {
+                                tableID.model.setSelectedSV(currentRow)
+                                sigSVRowSelected(true)
+                            } else {
+                                sigSVRowSelected(false)
+                            }
                         }
                         event.accepted = true
                         return

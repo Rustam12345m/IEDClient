@@ -450,6 +450,30 @@ ApplicationWindow
                                 }
                             }
 
+                            onSigGOOSERowSelected: function(isGOOSE) {
+                                if (isGOOSE) {
+                                    goosePropPanel.gooseModel = rcbPageID.activeModel
+                                    goosePropPanel.loadFromModel()
+                                    lastPanel = Globals.Panel.GOOSE_PROPERTIES
+                                    setActivePanel(lastPanel)
+                                } else {
+                                    lastPanel = Globals.Panel.HIDE
+                                    setActivePanel(lastPanel)
+                                }
+                            }
+
+                            onSigSVRowSelected: function(isSV) {
+                                if (isSV) {
+                                    svPropPanel.svModel = rcbPageID.activeModel
+                                    svPropPanel.loadFromModel()
+                                    lastPanel = Globals.Panel.SV_PROPERTIES
+                                    setActivePanel(lastPanel)
+                                } else {
+                                    lastPanel = Globals.Panel.HIDE
+                                    setActivePanel(lastPanel)
+                                }
+                            }
+
                             onSigReportDetail: function(detail) {
                                 if (detail.entries) {
                                     reportDetailPanel.showReport(detail)
@@ -545,6 +569,44 @@ ApplicationWindow
                         // Data object detail panel
                         DS.DS_DetailPanel {
                             id: dsDetailPanel
+                        }
+
+                        // GOOSE control block properties
+                        RCB.GOOSE_PropertiesPanel {
+                            id: goosePropPanel
+
+                            onSigEnable: function(goId, datSet) {
+                                iedBackend.setGOOSEEnable(rcbPageID.selectedRCBIndex, true)
+                            }
+                            onSigDisable: {
+                                iedBackend.setGOOSEEnable(rcbPageID.selectedRCBIndex, false)
+                            }
+
+                            Connections {
+                                target: iedBackend
+                                function onSigGOOSE_SVUpdated() {
+                                    goosePropPanel.loadFromModel()
+                                }
+                            }
+                        }
+
+                        // SV control block properties
+                        RCB.SV_PropertiesPanel {
+                            id: svPropPanel
+
+                            onSigEnable: {
+                                iedBackend.setSVEnable(rcbPageID.selectedRCBIndex, true)
+                            }
+                            onSigDisable: {
+                                iedBackend.setSVEnable(rcbPageID.selectedRCBIndex, false)
+                            }
+
+                            Connections {
+                                target: iedBackend
+                                function onSigGOOSE_SVUpdated() {
+                                    svPropPanel.loadFromModel()
+                                }
+                            }
                         }
                     }
 
@@ -757,6 +819,14 @@ ApplicationWindow
                 panelStack.currentIndex = 3
                 break
             }
+            case Globals.Panel.GOOSE_PROPERTIES: {
+                panelStack.currentIndex = 4
+                break
+            }
+            case Globals.Panel.SV_PROPERTIES: {
+                panelStack.currentIndex = 5
+                break
+            }
             }
         }
     }
@@ -861,6 +931,9 @@ ApplicationWindow
         // Backends to GUI
         iedBackend.sigCmdProgress.connect(slotOnProgress)
         iedBackend.sigCmdFinished.connect(slotOnFinished)
+        iedBackend.sigCmdError.connect(function(msg) {
+            connectionErrorDialog.showError(msg)
+        })
 
         fsBackend.sigCmdProgress.connect(slotOnProgress)
         fsBackend.sigCmdFinished.connect(slotOnFinished)
