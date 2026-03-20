@@ -30,13 +30,12 @@ namespace Cmd
 {
     void DownloadFileCmd::execute(Cmd::Interface::IEC61850_API::ptr t_api)
     {
-        qDebug() << "CMD: DownloadFileCmd" << m_filename;
-
         emit sigCmdEvent(CmdEvent::StartEvent("",
                 QString("Download file: %1").arg(m_filename)));
 
-        emit sigCmdEvent(CmdEvent::ProcessEvent("",
-                QString("Download file: %1 in progress").arg(m_filename), 50));
+        // Forward per-block progress from the FS API
+        connect(&t_api->fs(), &Cmd::Interface::IED_FS_API::sigDownloadProgress,
+                this, &DownloadFileCmd::sigDownloadProgress);
 
         QString downloadDir = QStandardPaths::writableLocation(QStandardPaths::DownloadLocation);
         if (downloadDir.isEmpty()) {
@@ -49,7 +48,7 @@ namespace Cmd
         }
         QString localPath = downloadDir + "/" + localName;
 
-        bool ok = t_api->fs().download(m_filename, localPath);
+        bool ok = t_api->fs().download(m_filename, localPath, m_fileSize);
 
         if (ok) {
             emit sigCmdEvent(CmdEvent::FinishEvent("",

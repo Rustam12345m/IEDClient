@@ -35,6 +35,25 @@ Item
 {
     id: rootID
 
+    property int downloadingRow: -1
+    property real downloadProgress: 0
+    property var completedRows: ({})
+
+    Connections {
+        target: fsBackend
+        function onSigDownloadProgress(perc) {
+            rootID.downloadProgress = perc
+        }
+        function onSigCmdFinished(done) {
+            if (rootID.downloadingRow >= 0) {
+                var rows = rootID.completedRows
+                rows[rootID.downloadingRow] = done ? 100 : -1
+                rootID.completedRows = rows
+                rootID.downloadProgress = done ? 100 : 0
+            }
+        }
+    }
+
     function resizeColumnsOnPage() {
         Globals.resizeColumnsToContent(headerID, tableID)
     }
@@ -42,11 +61,15 @@ Item
         let idx = tableID.model.index(t_row, 2)
         return tableID.model.data(idx, "display")
     }
+    function getFileSize(t_row) {
+        let idx = tableID.model.index(t_row, 3)
+        return tableID.model.data(idx, "sort_value")
+    }
     function cmdDownloadFile(t_row) {
-        // console.log("FS_Table: Download file N" + t_row)
-
+        downloadingRow = t_row
+        downloadProgress = 0
         Globals.setSelectedRow(tableID, t_row)
-        fsBackend.downloadFile(getFilename(t_row))
+        fsBackend.downloadFile(getFilename(t_row), getFileSize(t_row))
     }
     function cmdRemoveFile(t_row) {
         // console.log("Control: Remove file N" + t_row)
@@ -109,6 +132,9 @@ Item
 
                 delegate: FS_ControlDelegate {
                     selected: (tableID.currentRow == row)
+                    progress: (rootID.downloadingRow === row)
+                             ? rootID.downloadProgress
+                             : (rootID.completedRows[row] !== undefined ? rootID.completedRows[row] : 0)
 
                     onSigDownloadFile: function(t_row) {
                         rootID.cmdDownloadFile(t_row)

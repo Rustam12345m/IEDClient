@@ -47,10 +47,13 @@ namespace App
         // API for QML
         Q_INVOKABLE QString fsPageStatus();
         Q_INVOKABLE void updateFilesDirectory(const QString &t_path);
-        Q_INVOKABLE void downloadFile(const QString &t_filename);
+        Q_INVOKABLE void downloadFile(const QString &t_filename, uint32_t t_fileSize);
         Q_INVOKABLE void removeFile(const QString &t_filename, int t_row);
 
         void slotConnected(bool t_done) override;
+
+    signals:
+        void sigDownloadProgress(int t_perc);
 
     protected:
         Models::IED_FileTable*  m_fsModel = nullptr;

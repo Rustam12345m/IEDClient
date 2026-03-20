@@ -89,7 +89,7 @@ namespace UnitTests
         Q_OBJECT
     public:
         MOCK_METHOD(int, getFileList, (Core::DirOn &t_dir), (override));
-        MOCK_METHOD(bool, download, (const QString &t_filename, const QString &t_localPath), (override));
+        MOCK_METHOD(bool, download, (const QString &t_filename, const QString &t_localPath, uint32_t t_fileSize), (override));
         MOCK_METHOD(int, remove, (const QString &t_filename), (override));
     };
 

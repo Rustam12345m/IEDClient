@@ -27,6 +27,7 @@ import AppStylesModule
 Item
 {
     required property bool selected
+    property real progress: 0.0
 
     signal sigDownloadFile(int row)
     signal sigRemoveFile(int row)
@@ -70,7 +71,7 @@ Item
 
                 from: 0.0
                 to: 100.0
-                value: 0.0
+                value: rootID.progress
 
                 Text {
                     anchors.centerIn: parent

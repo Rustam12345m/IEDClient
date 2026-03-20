@@ -31,15 +31,33 @@ extern "C"
 
 namespace Libiec61850
 {
+    struct DownloadContext
+    {
+        FILE *fp = nullptr;
+        IED_FS_API_Impl *api = nullptr;
+        uint32_t fileSize = 0;
+        uint32_t bytesTotal = 0;
+        int lastPerc = 0;
+    };
+
     namespace
     {
         bool downloadHandler(void *parameter, uint8_t *buffer, uint32_t bytesRead)
         {
-            FILE *fp = static_cast<FILE *>(parameter);
+            auto *ctx = static_cast<DownloadContext *>(parameter);
             if (bytesRead > 0) {
-                if (fwrite(buffer, bytesRead, 1, fp) != 1) {
-                    qDebug() << "FS download: failed to write local file";
+                if (fwrite(buffer, bytesRead, 1, ctx->fp) != 1) {
                     return false;
+                }
+                ctx->bytesTotal += bytesRead;
+                if (ctx->fileSize > 0) {
+                    int perc = static_cast<int>(
+                        static_cast<uint64_t>(ctx->bytesTotal) * 100 / ctx->fileSize);
+                    if (perc > 100) perc = 100;
+                    if (perc != ctx->lastPerc) {
+                        ctx->lastPerc = perc;
+                        emit ctx->api->sigDownloadProgress(perc);
+                    }
                 }
             }
             return true;
@@ -54,7 +72,7 @@ namespace Libiec61850
             IedClientError retval = IED_ERROR_OK;
             LinkedList dirRoot = IedConnection_getFileDirectory(m_api.m_libConn, &retval, path.c_str());
             if (retval != IED_ERROR_OK) {
-                qDebug() << "ApiAdapter: Error getFileDirectory " << QString::fromStdString(path) << ", retval = " << retval;
+                // qDebug() << "ApiAdapter: Error getFileDirectory " << QString::fromStdString(path) << ", retval = " << retval;
                 return -1;
             }
 
@@ -78,7 +96,8 @@ namespace Libiec61850
         return 0;
     }
 
-    bool IED_FS_API_Impl::download(const QString &t_filename, const QString &t_localPath)
+    bool IED_FS_API_Impl::download(const QString &t_filename, const QString &t_localPath,
+                                    uint32_t t_fileSize)
     {
         if (!m_api.isConnected()) {
             return false;
@@ -86,17 +105,20 @@ namespace Libiec61850
 
         FILE *fp = fopen(t_localPath.toStdString().c_str(), "wb");
         if (!fp) {
-            qDebug() << "FS download: cannot open local file" << t_localPath;
             return false;
         }
 
+        DownloadContext ctx;
+        ctx.fp = fp;
+        ctx.api = this;
+        ctx.fileSize = t_fileSize;
+
         IedClientError error = IED_ERROR_OK;
         IedConnection_getFile(m_api.m_libConn, &error, t_filename.toStdString().c_str(),
-                              downloadHandler, static_cast<void *>(fp));
+                              downloadHandler, static_cast<void *>(&ctx));
         fclose(fp);
 
         if (error != IED_ERROR_OK) {
-            qDebug() << "FS download: error" << error << "for" << t_filename;
             QFile::remove(t_localPath);
             return false;
         }

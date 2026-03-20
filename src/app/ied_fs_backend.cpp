@@ -47,16 +47,19 @@ namespace App
         putCmdToQueue(cmd);
     }
 
-    void IED_FS_Backend::downloadFile(const QString &t_filename)
+    void IED_FS_Backend::downloadFile(const QString &t_filename, uint32_t t_fileSize)
     {
-        qDebug() << "IED_FS_Backend: Download file " << t_filename;
-        auto cmd = Cmd::DownloadFileCmd::create(t_filename);
+        auto cmd = Cmd::DownloadFileCmd::create(t_filename, t_fileSize);
+
+        connect(cmd.get(), &Cmd::DownloadFileCmd::sigDownloadProgress,
+                this, &IED_FS_Backend::sigDownloadProgress);
+
         putCmdToQueue(cmd);
     }
 
     void IED_FS_Backend::removeFile(const QString &t_filename, int t_row)
     {
-        qDebug() << "IED_FS_Backend: Remove file " << t_filename;
+        // qDebug() << "IED_FS_Backend: Remove file " << t_filename;
         auto cmd = Cmd::RemoveFileCMD::create(t_filename, t_row);
 
         connect(cmd.get(), &Cmd::RemoveFileCMD::sigFileRemoved, m_fsModel, &Models::IED_FileTable::slotRemoveFile);
