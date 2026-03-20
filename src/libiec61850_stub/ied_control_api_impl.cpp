@@ -92,12 +92,26 @@ namespace Libiec61850
         MmsValue *owner = ClientReportControlBlock_getOwner(clientRcb);
         if (owner != nullptr) {
             int size = MmsValue_getOctetStringSize(owner);
-            QString ownerStr;
-            for (int i = 0; i < size; i++) {
-                ownerStr += QString("%1").arg(
-                    MmsValue_getOctetStringOctet(owner, i), 2, 16, QChar('0'));
+
+            if (size == 4) {
+                // IPv4 address
+                t_rcb->setOwner(QString("%1.%2.%3.%4")
+                    .arg(MmsValue_getOctetStringOctet(owner, 0))
+                    .arg(MmsValue_getOctetStringOctet(owner, 1))
+                    .arg(MmsValue_getOctetStringOctet(owner, 2))
+                    .arg(MmsValue_getOctetStringOctet(owner, 3)));
+            } else if (size > 0) {
+                // Other format — show as hex
+                QString ownerStr;
+                for (int i = 0; i < size; i++) {
+                    if (i > 0) ownerStr += ":";
+                    ownerStr += QString("%1").arg(
+                        MmsValue_getOctetStringOctet(owner, i), 2, 16, QChar('0'));
+                }
+                t_rcb->setOwner(ownerStr);
+            } else {
+                t_rcb->setOwner("");
             }
-            t_rcb->setOwner(ownerStr);
         }
 
         ClientReportControlBlock_destroy(clientRcb);

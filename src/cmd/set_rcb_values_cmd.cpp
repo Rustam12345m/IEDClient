@@ -43,14 +43,9 @@ namespace Cmd
             if (!m_enable) {
                 t_api->control().uninstallReportHandler(rcbRef);
             }
-            m_rcb->setRptEna(m_enable);
-            if (m_enable) {
-                m_rcb->setTrgOps(m_trgOps);
-                m_rcb->setBufTm(m_bufTm);
-                m_rcb->setIntgPd(m_intgPd);
-                m_rcb->setRptId(m_rptId);
-                m_rcb->setDsRef(m_datSet);
-            }
+
+            // Re-read all values from the server to get updated owner, resv, etc.
+            t_api->control().refreshRCBValues(m_rcb);
 
             emit sigCmdEvent(CmdEvent::FinishEvent(rcbRef,
                 QString("RCB %1: %2").arg(action, rcbRef), true));

@@ -23,6 +23,7 @@
 #include "libiec61850_adapter.hpp"
 
 #include <QDateTime>
+#include <algorithm>
 
 extern "C"
 {
@@ -50,12 +51,9 @@ namespace
         case MMS_STRUCTURE: {
             int count = MmsValue_getArraySize(t_mmsValue);
             int items = t_item->getItemCount();
-            if (count != items) {
-                t_vals->push(t_item, Core::ModelItemValue::ptr::create("Mismatch number of elements"));
-                break;
-            }
+            int common = std::min(count, items);
 
-            for (int i=0;i<count;i++) {
+            for (int i = 0; i < common; i++) {
                 MmsValue *subMmsValue = (MmsValue *)MmsValue_getElement(t_mmsValue, i);
                 Core::ModelItem::ptr subItem = t_item->getItem(i);
 
