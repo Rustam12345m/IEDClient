@@ -19,27 +19,33 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "update_rcbs_cmd.hpp"
-#include <QDebug>
+#pragma once
+
+#include "cmd_interface.hpp"
+#include "core/sv_control_block.hpp"
 
 namespace Cmd
 {
-    void UpdateRCBs_Cmd::execute(Cmd::Interface::IEC61850_API::ptr t_api)
+    /**
+     * @brief Command to enable or disable a Sampled Values Control Block
+     */
+    class SetSVEnable_Cmd : public CmdInterface
     {
-        emit sigCmdEvent(CmdEvent::StartEvent("", "Update RCB: refreshing all values"));
+        Q_OBJECT
+    public:
+        SetSVEnable_Cmd(Core::SV_ControlBlock::ptr t_svcb, bool t_enable)
+            : m_svcb{t_svcb}, m_enable{t_enable}
+        {}
+        ~SetSVEnable_Cmd() override = default;
 
-        const auto &rcbList = m_ied->model().getReportCBList();
-        int updated = 0;
+        void execute(Cmd::Interface::IEC61850_API::ptr t_api) override;
 
-        for (const auto &rcb : rcbList) {
-            if (t_api->control().refreshRCBValues(rcb)) {
-                ++updated;
-            }
+        static auto create(Core::SV_ControlBlock::ptr t_svcb, bool t_enable) {
+            return QSharedPointer<SetSVEnable_Cmd>::create(t_svcb, t_enable);
         }
 
-        bool ok = (rcbList.size() == 0) || (updated > 0);
-        emit sigCmdEvent(CmdEvent::FinishEvent("",
-            QString("Update RCB: refreshed %1 of %2").arg(updated).arg(rcbList.size()),
-            ok));
-    }
+    private:
+        Core::SV_ControlBlock::ptr m_svcb;
+        bool m_enable;
+    };
 }

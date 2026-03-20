@@ -39,6 +39,18 @@ set(SOURCES
     set_rcb_values_cmd.hpp
     set_rcb_values_cmd.cpp
 
+    update_goose_cbs_cmd.hpp
+    update_goose_cbs_cmd.cpp
+
+    update_sv_cbs_cmd.hpp
+    update_sv_cbs_cmd.cpp
+
+    set_goose_enable_cmd.hpp
+    set_goose_enable_cmd.cpp
+
+    set_sv_enable_cmd.hpp
+    set_sv_enable_cmd.cpp
+
     control_cmd.hpp
     control_cmd.cpp
 

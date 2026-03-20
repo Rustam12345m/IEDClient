@@ -115,6 +115,84 @@ namespace App
         putCmdToQueue(cmd);
     }
 
+    void IED_Backend::updateGOOSE_Status()
+    {
+        qDebug() << "IED_Backend: Update GOOSE CBs";
+
+        auto cmd = Cmd::UpdateGooseCBs_Cmd::create(m_con.m_ied);
+
+        connect(cmd.get(), &Cmd::CmdInterface::sigCmdEvent, this,
+                [this](Cmd::CmdEvent ev) {
+                    if (ev.m_type == Cmd::FINISH_EVENT) {
+                        m_gooseComModel->slotDataUpdated(ev.m_result);
+                        emit sigGOOSE_SVUpdated();
+                    }
+                }, Qt::QueuedConnection);
+
+        putCmdToQueue(cmd);
+    }
+
+    void IED_Backend::updateSV_Status()
+    {
+        qDebug() << "IED_Backend: Update SV CBs";
+
+        auto cmd = Cmd::UpdateSVCBs_Cmd::create(m_con.m_ied);
+
+        connect(cmd.get(), &Cmd::CmdInterface::sigCmdEvent, this,
+                [this](Cmd::CmdEvent ev) {
+                    if (ev.m_type == Cmd::FINISH_EVENT) {
+                        m_svComModel->slotDataUpdated(ev.m_result);
+                        emit sigGOOSE_SVUpdated();
+                    }
+                }, Qt::QueuedConnection);
+
+        putCmdToQueue(cmd);
+    }
+
+    void IED_Backend::setGOOSEEnable(int t_index, bool t_enable)
+    {
+        const auto &gocbList = m_con.m_ied->model().getGO_CBList();
+        if (t_index < 0 || t_index >= gocbList.size()) {
+            qDebug() << "IED_Backend: Invalid GOOSE index" << t_index;
+            return;
+        }
+
+        auto gocb = gocbList[t_index];
+        auto cmd = Cmd::SetGooseEnable_Cmd::create(gocb, t_enable);
+
+        connect(cmd.get(), &Cmd::CmdInterface::sigCmdEvent, this,
+                [this](Cmd::CmdEvent ev) {
+                    if (ev.m_type == Cmd::FINISH_EVENT) {
+                        m_gooseComModel->slotDataUpdated(ev.m_result);
+                        emit sigGOOSE_SVUpdated();
+                    }
+                }, Qt::QueuedConnection);
+
+        putCmdToQueue(cmd);
+    }
+
+    void IED_Backend::setSVEnable(int t_index, bool t_enable)
+    {
+        const auto &svcbList = m_con.m_ied->model().getSV_CBList();
+        if (t_index < 0 || t_index >= svcbList.size()) {
+            qDebug() << "IED_Backend: Invalid SV index" << t_index;
+            return;
+        }
+
+        auto svcb = svcbList[t_index];
+        auto cmd = Cmd::SetSVEnable_Cmd::create(svcb, t_enable);
+
+        connect(cmd.get(), &Cmd::CmdInterface::sigCmdEvent, this,
+                [this](Cmd::CmdEvent ev) {
+                    if (ev.m_type == Cmd::FINISH_EVENT) {
+                        m_svComModel->slotDataUpdated(ev.m_result);
+                        emit sigGOOSE_SVUpdated();
+                    }
+                }, Qt::QueuedConnection);
+
+        putCmdToQueue(cmd);
+    }
+
     void IED_Backend::updateLN_TreeValues()
     {
         qDebug() << "IED_Backend: Update LN command";

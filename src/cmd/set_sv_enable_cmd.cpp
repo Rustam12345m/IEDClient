@@ -19,27 +19,27 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "update_rcbs_cmd.hpp"
-#include <QDebug>
+#include "set_sv_enable_cmd.hpp"
 
 namespace Cmd
 {
-    void UpdateRCBs_Cmd::execute(Cmd::Interface::IEC61850_API::ptr t_api)
+    void SetSVEnable_Cmd::execute(Cmd::Interface::IEC61850_API::ptr t_api)
     {
-        emit sigCmdEvent(CmdEvent::StartEvent("", "Update RCB: refreshing all values"));
+        QString svcbRef = QString("%1.%2").arg(m_svcb->lnRef(), m_svcb->getName());
+        QString action = m_enable ? "Enable" : "Disable";
 
-        const auto &rcbList = m_ied->model().getReportCBList();
-        int updated = 0;
+        emit sigCmdEvent(CmdEvent::StartEvent(svcbRef,
+            QString("%1 SV: %2").arg(action, svcbRef)));
 
-        for (const auto &rcb : rcbList) {
-            if (t_api->control().refreshRCBValues(rcb)) {
-                ++updated;
-            }
+        QString err = t_api->control().setSVEnable(svcbRef, m_enable);
+
+        if (err.isEmpty()) {
+            m_svcb->setSvEna(m_enable);
+            emit sigCmdEvent(CmdEvent::FinishEvent(svcbRef,
+                QString("SV %1: %2").arg(action, svcbRef), true));
+        } else {
+            emit sigCmdEvent(CmdEvent::FinishEvent(svcbRef,
+                QString("Failed to %1 SV %2: %3").arg(action.toLower(), svcbRef, err), false));
         }
-
-        bool ok = (rcbList.size() == 0) || (updated > 0);
-        emit sigCmdEvent(CmdEvent::FinishEvent("",
-            QString("Update RCB: refreshed %1 of %2").arg(updated).arg(rcbList.size()),
-            ok));
     }
 }

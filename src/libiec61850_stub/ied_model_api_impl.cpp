@@ -281,6 +281,7 @@ namespace Libiec61850
 
         LinkedList gocbList = IedConnection_getLogicalNodeDirectory(m_api.m_libConn, &retval,
                                   lnRef.toStdString().data(), ACSI_CLASS_GoCB);
+
         if (retval != IED_ERROR_OK || gocbList == nullptr) {
             return 0;
         }
@@ -288,7 +289,7 @@ namespace Libiec61850
         LinkedList gocb = LinkedList_getNext(gocbList);
         while (gocb != nullptr) {
             QString name    = QString::fromLocal8Bit((char *)gocb->data);
-            QString gocbRef = QString("%1.GO.%2").arg(lnRef, name);
+            QString gocbRef = QString("%1.%2").arg(lnRef, name);
 
             t_builder.createGOCB(name, lnRef);
 
@@ -338,7 +339,7 @@ namespace Libiec61850
             LinkedList svcb = LinkedList_getNext(svcbList);
             while (svcb != nullptr) {
                 QString name    = QString::fromLocal8Bit((char *)svcb->data);
-                QString svcbRef = QString("%1.%2.%3").arg(lnRef, t_prefix, name);
+                QString svcbRef = QString("%1.%2").arg(lnRef, name);
 
                 t_builder.createSVCB(name, lnRef, t_isMulticast);
 

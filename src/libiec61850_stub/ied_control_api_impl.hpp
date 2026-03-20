@@ -41,6 +41,14 @@ namespace Libiec61850
 
         bool refreshRCBValues(Core::ReportBlock::ptr t_rcb) override;
 
+        // GOOSE Control Block
+        bool refreshGOOSEValues(Core::GooseControlBlock::ptr t_gocb) override;
+        QString setGOOSEEnable(const QString &t_gocbRef, bool t_enable) override;
+
+        // SV Control Block
+        bool refreshSVValues(Core::SV_ControlBlock::ptr t_svcb) override;
+        QString setSVEnable(const QString &t_svcbRef, bool t_enable) override;
+
         bool installReportHandler(const QString &t_rcbRef,
                                   const QString &t_rptId,
                                   Core::ReportStorage *t_storage) override;

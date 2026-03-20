@@ -28,6 +28,61 @@ namespace App::Models
     {
     }
 
+    void SV_OverviewTable::setSelectedSV(int t_row)
+    {
+        m_selectedRow = t_row;
+    }
+
+    QString SV_OverviewTable::selectedSvId() const
+    {
+        const auto list = m_ied->model().getSV_CBList();
+        if (m_selectedRow < 0 || m_selectedRow >= list.count()) return {};
+        const auto &svcb = list[m_selectedRow];
+        return svcb->svId().isEmpty() ? svcb->getName() : svcb->svId();
+    }
+
+    QString SV_OverviewTable::selectedDatSet() const
+    {
+        const auto list = m_ied->model().getSV_CBList();
+        if (m_selectedRow < 0 || m_selectedRow >= list.count()) return {};
+        return list[m_selectedRow]->datSet();
+    }
+
+    bool SV_OverviewTable::selectedSvEna() const
+    {
+        const auto list = m_ied->model().getSV_CBList();
+        if (m_selectedRow < 0 || m_selectedRow >= list.count()) return false;
+        return list[m_selectedRow]->svEna();
+    }
+
+    bool SV_OverviewTable::selectedIsMulticast() const
+    {
+        const auto list = m_ied->model().getSV_CBList();
+        if (m_selectedRow < 0 || m_selectedRow >= list.count()) return false;
+        return list[m_selectedRow]->isMulticast();
+    }
+
+    uint32_t SV_OverviewTable::selectedConfRev() const
+    {
+        const auto list = m_ied->model().getSV_CBList();
+        if (m_selectedRow < 0 || m_selectedRow >= list.count()) return 0;
+        return list[m_selectedRow]->confRev();
+    }
+
+    uint32_t SV_OverviewTable::selectedSmpRate() const
+    {
+        const auto list = m_ied->model().getSV_CBList();
+        if (m_selectedRow < 0 || m_selectedRow >= list.count()) return 0;
+        return list[m_selectedRow]->smpRate();
+    }
+
+    int SV_OverviewTable::selectedNoASDU() const
+    {
+        const auto list = m_ied->model().getSV_CBList();
+        if (m_selectedRow < 0 || m_selectedRow >= list.count()) return 0;
+        return list[m_selectedRow]->noASDU();
+    }
+
     void SV_OverviewTable::setActiveIED(Core::IED::ptr t_ied)
     {
         beginResetModel();

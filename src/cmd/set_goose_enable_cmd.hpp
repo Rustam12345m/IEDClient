@@ -19,27 +19,33 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "update_rcbs_cmd.hpp"
-#include <QDebug>
+#pragma once
+
+#include "cmd_interface.hpp"
+#include "core/goose_control_block.hpp"
 
 namespace Cmd
 {
-    void UpdateRCBs_Cmd::execute(Cmd::Interface::IEC61850_API::ptr t_api)
+    /**
+     * @brief Command to enable or disable a GOOSE Control Block
+     */
+    class SetGooseEnable_Cmd : public CmdInterface
     {
-        emit sigCmdEvent(CmdEvent::StartEvent("", "Update RCB: refreshing all values"));
+        Q_OBJECT
+    public:
+        SetGooseEnable_Cmd(Core::GooseControlBlock::ptr t_gocb, bool t_enable)
+            : m_gocb{t_gocb}, m_enable{t_enable}
+        {}
+        ~SetGooseEnable_Cmd() override = default;
 
-        const auto &rcbList = m_ied->model().getReportCBList();
-        int updated = 0;
+        void execute(Cmd::Interface::IEC61850_API::ptr t_api) override;
 
-        for (const auto &rcb : rcbList) {
-            if (t_api->control().refreshRCBValues(rcb)) {
-                ++updated;
-            }
+        static auto create(Core::GooseControlBlock::ptr t_gocb, bool t_enable) {
+            return QSharedPointer<SetGooseEnable_Cmd>::create(t_gocb, t_enable);
         }
 
-        bool ok = (rcbList.size() == 0) || (updated > 0);
-        emit sigCmdEvent(CmdEvent::FinishEvent("",
-            QString("Update RCB: refreshed %1 of %2").arg(updated).arg(rcbList.size()),
-            ok));
-    }
+    private:
+        Core::GooseControlBlock::ptr m_gocb;
+        bool m_enable;
+    };
 }

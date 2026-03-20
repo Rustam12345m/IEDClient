@@ -104,6 +104,130 @@ namespace Libiec61850
         return true;
     }
 
+    // ── GOOSE Control Block ────────────────────────────────────────
+
+    bool IED_ControlAPI_Impl::refreshGOOSEValues(Core::GooseControlBlock::ptr t_gocb)
+    {
+        IedClientError error = IED_ERROR_OK;
+        QString gocbRef = QString("%1.%2").arg(t_gocb->lnRef(), t_gocb->getName());
+        QByteArray refUtf8 = gocbRef.toUtf8();
+
+        ClientGooseControlBlock clientGocb = IedConnection_getGoCBValues(
+            m_api.m_libConn, &error, refUtf8.constData(), nullptr);
+
+        if (error != IED_ERROR_OK || clientGocb == nullptr) {
+            return false;
+        }
+
+        t_gocb->setGoEna(ClientGooseControlBlock_getGoEna(clientGocb));
+        t_gocb->setConfRev(ClientGooseControlBlock_getConfRev(clientGocb));
+        t_gocb->setMinTime(ClientGooseControlBlock_getMinTime(clientGocb));
+        t_gocb->setMaxTime(ClientGooseControlBlock_getMaxTime(clientGocb));
+
+        PhyComAddress dstAddr = ClientGooseControlBlock_getDstAddress(clientGocb);
+        t_gocb->setAppId(dstAddr.appId);
+        t_gocb->setVlanId(dstAddr.vlanId);
+        t_gocb->setVlanPriority(dstAddr.vlanPriority);
+
+        const char *goId = ClientGooseControlBlock_getGoID(clientGocb);
+        if (goId && goId[0] != '\0') t_gocb->setGoId(QString::fromLocal8Bit(goId));
+
+        const char *datSet = ClientGooseControlBlock_getDatSet(clientGocb);
+        if (datSet && datSet[0] != '\0') t_gocb->setDatSet(QString::fromLocal8Bit(datSet));
+
+        ClientGooseControlBlock_destroy(clientGocb);
+        return true;
+    }
+
+    QString IED_ControlAPI_Impl::setGOOSEEnable(const QString &t_gocbRef, bool t_enable)
+    {
+        if (!m_api.isConnected()) {
+            return QString("Not connected");
+        }
+
+        IedClientError error = IED_ERROR_OK;
+        QByteArray refUtf8 = t_gocbRef.toUtf8();
+
+        ClientGooseControlBlock clientGocb = IedConnection_getGoCBValues(
+            m_api.m_libConn, &error, refUtf8.constData(), nullptr);
+
+        if (error != IED_ERROR_OK) {
+            return QString("Failed to read GoCB: %1 (error %2)")
+                .arg(IedClientError_toString(error)).arg(static_cast<int>(error));
+        }
+        if (clientGocb == nullptr) {
+            return QString("GoCB object not found: %1").arg(t_gocbRef);
+        }
+
+        ClientGooseControlBlock_setGoEna(clientGocb, t_enable);
+
+        IedConnection_setGoCBValues(m_api.m_libConn, &error, clientGocb,
+            GOCB_ELEMENT_GO_ENA, true);
+
+        ClientGooseControlBlock_destroy(clientGocb);
+
+        if (error != IED_ERROR_OK) {
+            return QString("Failed to write GoCB: %1 (error %2)")
+                .arg(IedClientError_toString(error)).arg(static_cast<int>(error));
+        }
+        return {};
+    }
+
+    // ── SV Control Block ─────────────────────────────────────────
+
+    bool IED_ControlAPI_Impl::refreshSVValues(Core::SV_ControlBlock::ptr t_svcb)
+    {
+        QString svcbRef = QString("%1.%2").arg(t_svcb->lnRef(), t_svcb->getName());
+
+        ClientSVControlBlock clientSvcb = ClientSVControlBlock_create(
+            m_api.m_libConn, svcbRef.toStdString().data());
+
+        if (clientSvcb == nullptr) {
+            return false;
+        }
+
+        t_svcb->setSvEna(ClientSVControlBlock_getSvEna(clientSvcb));
+        t_svcb->setConfRev(ClientSVControlBlock_getConfRev(clientSvcb));
+        t_svcb->setSmpRate(ClientSVControlBlock_getSmpRate(clientSvcb));
+        t_svcb->setNoASDU(ClientSVControlBlock_getNoASDU(clientSvcb));
+
+        const char *svId = ClientSVControlBlock_getMsvID(clientSvcb);
+        if (svId) t_svcb->setSvId(QString::fromLocal8Bit(svId));
+
+        const char *datSet = ClientSVControlBlock_getDatSet(clientSvcb);
+        if (datSet) t_svcb->setDatSet(QString::fromLocal8Bit(datSet));
+
+        ClientSVControlBlock_destroy(clientSvcb);
+        return true;
+    }
+
+    QString IED_ControlAPI_Impl::setSVEnable(const QString &t_svcbRef, bool t_enable)
+    {
+        if (!m_api.isConnected()) {
+            return QString("Not connected");
+        }
+
+        QByteArray refUtf8 = t_svcbRef.toUtf8();
+
+        ClientSVControlBlock clientSvcb = ClientSVControlBlock_create(
+            m_api.m_libConn, refUtf8.constData());
+
+        if (clientSvcb == nullptr) {
+            return QString("SVCB object not found: %1").arg(t_svcbRef);
+        }
+
+        bool ok = ClientSVControlBlock_setSvEna(clientSvcb, t_enable);
+
+        ClientSVControlBlock_destroy(clientSvcb);
+
+        if (!ok) {
+            return QString("Failed to set SvEna on %1").arg(t_svcbRef);
+        }
+        return {};
+    }
+
+    // ── Report handling ──────────────────────────────────────────
+
     namespace
     {
         void flattenMmsValue(const QString &t_baseName, MmsValue *t_value, int t_reason,

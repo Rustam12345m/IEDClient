@@ -47,6 +47,16 @@ namespace App::Models
     public:
         SV_OverviewTable(QObject *t_parent, Core::IED::ptr t_ied);
 
+        Q_INVOKABLE void setSelectedSV(int t_row);
+
+        Q_INVOKABLE QString  selectedSvId() const;
+        Q_INVOKABLE QString  selectedDatSet() const;
+        Q_INVOKABLE bool     selectedSvEna() const;
+        Q_INVOKABLE bool     selectedIsMulticast() const;
+        Q_INVOKABLE uint32_t selectedConfRev() const;
+        Q_INVOKABLE uint32_t selectedSmpRate() const;
+        Q_INVOKABLE int      selectedNoASDU() const;
+
         void        setActiveIED(Core::IED::ptr t_ied);
 
         QVariant    headerData(int t_section, Qt::Orientation t_orientation,
@@ -62,5 +72,6 @@ namespace App::Models
 
     private:
         Core::IED::ptr m_ied;
+        int m_selectedRow = -1;
     };
 }

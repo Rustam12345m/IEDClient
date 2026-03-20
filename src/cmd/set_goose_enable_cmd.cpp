@@ -19,27 +19,27 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "update_rcbs_cmd.hpp"
-#include <QDebug>
+#include "set_goose_enable_cmd.hpp"
 
 namespace Cmd
 {
-    void UpdateRCBs_Cmd::execute(Cmd::Interface::IEC61850_API::ptr t_api)
+    void SetGooseEnable_Cmd::execute(Cmd::Interface::IEC61850_API::ptr t_api)
     {
-        emit sigCmdEvent(CmdEvent::StartEvent("", "Update RCB: refreshing all values"));
+        QString gocbRef = QString("%1.%2").arg(m_gocb->lnRef(), m_gocb->getName());
+        QString action = m_enable ? "Enable" : "Disable";
 
-        const auto &rcbList = m_ied->model().getReportCBList();
-        int updated = 0;
+        emit sigCmdEvent(CmdEvent::StartEvent(gocbRef,
+            QString("%1 GOOSE: %2").arg(action, gocbRef)));
 
-        for (const auto &rcb : rcbList) {
-            if (t_api->control().refreshRCBValues(rcb)) {
-                ++updated;
-            }
+        QString err = t_api->control().setGOOSEEnable(gocbRef, m_enable);
+
+        if (err.isEmpty()) {
+            m_gocb->setGoEna(m_enable);
+            emit sigCmdEvent(CmdEvent::FinishEvent(gocbRef,
+                QString("GOOSE %1: %2").arg(action, gocbRef), true));
+        } else {
+            emit sigCmdEvent(CmdEvent::FinishEvent(gocbRef,
+                QString("Failed to %1 GOOSE %2: %3").arg(action.toLower(), gocbRef, err), false));
         }
-
-        bool ok = (rcbList.size() == 0) || (updated > 0);
-        emit sigCmdEvent(CmdEvent::FinishEvent("",
-            QString("Update RCB: refreshed %1 of %2").arg(updated).arg(rcbList.size()),
-            ok));
     }
 }

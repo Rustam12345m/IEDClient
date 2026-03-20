@@ -49,6 +49,18 @@ namespace App::Models
     public:
         GOOSE_OverviewTable(QObject *t_parent, Core::IED::ptr t_ied);
 
+        Q_INVOKABLE void setSelectedGOOSE(int t_row);
+
+        Q_INVOKABLE QString  selectedGoId() const;
+        Q_INVOKABLE QString  selectedDatSet() const;
+        Q_INVOKABLE bool     selectedGoEna() const;
+        Q_INVOKABLE uint32_t selectedConfRev() const;
+        Q_INVOKABLE uint32_t selectedMinTime() const;
+        Q_INVOKABLE uint32_t selectedMaxTime() const;
+        Q_INVOKABLE uint16_t selectedAppId() const;
+        Q_INVOKABLE uint16_t selectedVlanId() const;
+        Q_INVOKABLE uint8_t  selectedVlanPriority() const;
+
         void        setActiveIED(Core::IED::ptr t_ied);
 
         QVariant    headerData(int t_section, Qt::Orientation t_orientation,
@@ -64,5 +76,6 @@ namespace App::Models
 
     private:
         Core::IED::ptr m_ied;
+        int m_selectedRow = -1;
     };
 }

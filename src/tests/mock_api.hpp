@@ -19,6 +19,22 @@ namespace UnitTests
                     (Core::ReportBlock::ptr t_rcb),
                     (override));
 
+        MOCK_METHOD(bool, refreshGOOSEValues,
+                    (Core::GooseControlBlock::ptr t_gocb),
+                    (override));
+
+        MOCK_METHOD(QString, setGOOSEEnable,
+                    (const QString &t_gocbRef, bool t_enable),
+                    (override));
+
+        MOCK_METHOD(bool, refreshSVValues,
+                    (Core::SV_ControlBlock::ptr t_svcb),
+                    (override));
+
+        MOCK_METHOD(QString, setSVEnable,
+                    (const QString &t_svcbRef, bool t_enable),
+                    (override));
+
         MOCK_METHOD(bool, installReportHandler,
                     (const QString &t_rcbRef, const QString &t_rptId,
                      Core::ReportStorage *t_storage),

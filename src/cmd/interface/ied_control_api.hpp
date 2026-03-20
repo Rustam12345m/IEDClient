@@ -27,6 +27,8 @@
 #include "control_types.hpp"
 #include "core/report_control_block.hpp"
 #include "core/report_storage.hpp"
+#include "core/goose_control_block.hpp"
+#include "core/sv_control_block.hpp"
 
 namespace Cmd::Interface
 {
@@ -40,6 +42,14 @@ namespace Cmd::Interface
                                   const QString &t_rptId, const QString &t_datSet) = 0;
 
         virtual bool refreshRCBValues(Core::ReportBlock::ptr t_rcb) = 0;
+
+        // GOOSE Control Block
+        virtual bool refreshGOOSEValues(Core::GooseControlBlock::ptr t_gocb) = 0;
+        virtual QString setGOOSEEnable(const QString &t_gocbRef, bool t_enable) = 0;
+
+        // SV Control Block
+        virtual bool refreshSVValues(Core::SV_ControlBlock::ptr t_svcb) = 0;
+        virtual QString setSVEnable(const QString &t_svcbRef, bool t_enable) = 0;
 
         virtual bool installReportHandler(const QString &t_rcbRef,
                                           const QString &t_rptId,

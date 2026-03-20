@@ -19,27 +19,27 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "update_rcbs_cmd.hpp"
+#include "update_sv_cbs_cmd.hpp"
 #include <QDebug>
 
 namespace Cmd
 {
-    void UpdateRCBs_Cmd::execute(Cmd::Interface::IEC61850_API::ptr t_api)
+    void UpdateSVCBs_Cmd::execute(Cmd::Interface::IEC61850_API::ptr t_api)
     {
-        emit sigCmdEvent(CmdEvent::StartEvent("", "Update RCB: refreshing all values"));
+        emit sigCmdEvent(CmdEvent::StartEvent("", "Update SV: refreshing all values"));
 
-        const auto &rcbList = m_ied->model().getReportCBList();
+        const auto &svcbList = m_ied->model().getSV_CBList();
         int updated = 0;
 
-        for (const auto &rcb : rcbList) {
-            if (t_api->control().refreshRCBValues(rcb)) {
+        for (const auto &svcb : svcbList) {
+            if (t_api->control().refreshSVValues(svcb)) {
                 ++updated;
             }
         }
 
-        bool ok = (rcbList.size() == 0) || (updated > 0);
+        bool ok = (svcbList.size() == 0) || (updated > 0);
         emit sigCmdEvent(CmdEvent::FinishEvent("",
-            QString("Update RCB: refreshed %1 of %2").arg(updated).arg(rcbList.size()),
+            QString("Update SV: refreshed %1 of %2").arg(updated).arg(svcbList.size()),
             ok));
     }
 }

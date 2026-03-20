@@ -28,6 +28,75 @@ namespace App::Models
     {
     }
 
+    void GOOSE_OverviewTable::setSelectedGOOSE(int t_row)
+    {
+        m_selectedRow = t_row;
+    }
+
+    QString GOOSE_OverviewTable::selectedGoId() const
+    {
+        const auto list = m_ied->model().getGO_CBList();
+        if (m_selectedRow < 0 || m_selectedRow >= list.count()) return {};
+        const auto &gocb = list[m_selectedRow];
+        return gocb->goId().isEmpty() ? gocb->getName() : gocb->goId();
+    }
+
+    QString GOOSE_OverviewTable::selectedDatSet() const
+    {
+        const auto list = m_ied->model().getGO_CBList();
+        if (m_selectedRow < 0 || m_selectedRow >= list.count()) return {};
+        return list[m_selectedRow]->datSet();
+    }
+
+    bool GOOSE_OverviewTable::selectedGoEna() const
+    {
+        const auto list = m_ied->model().getGO_CBList();
+        if (m_selectedRow < 0 || m_selectedRow >= list.count()) return false;
+        return list[m_selectedRow]->goEna();
+    }
+
+    uint32_t GOOSE_OverviewTable::selectedConfRev() const
+    {
+        const auto list = m_ied->model().getGO_CBList();
+        if (m_selectedRow < 0 || m_selectedRow >= list.count()) return 0;
+        return list[m_selectedRow]->confRev();
+    }
+
+    uint32_t GOOSE_OverviewTable::selectedMinTime() const
+    {
+        const auto list = m_ied->model().getGO_CBList();
+        if (m_selectedRow < 0 || m_selectedRow >= list.count()) return 0;
+        return list[m_selectedRow]->minTime();
+    }
+
+    uint32_t GOOSE_OverviewTable::selectedMaxTime() const
+    {
+        const auto list = m_ied->model().getGO_CBList();
+        if (m_selectedRow < 0 || m_selectedRow >= list.count()) return 0;
+        return list[m_selectedRow]->maxTime();
+    }
+
+    uint16_t GOOSE_OverviewTable::selectedAppId() const
+    {
+        const auto list = m_ied->model().getGO_CBList();
+        if (m_selectedRow < 0 || m_selectedRow >= list.count()) return 0;
+        return list[m_selectedRow]->appId();
+    }
+
+    uint16_t GOOSE_OverviewTable::selectedVlanId() const
+    {
+        const auto list = m_ied->model().getGO_CBList();
+        if (m_selectedRow < 0 || m_selectedRow >= list.count()) return 0;
+        return list[m_selectedRow]->vlanId();
+    }
+
+    uint8_t GOOSE_OverviewTable::selectedVlanPriority() const
+    {
+        const auto list = m_ied->model().getGO_CBList();
+        if (m_selectedRow < 0 || m_selectedRow >= list.count()) return 0;
+        return list[m_selectedRow]->vlanPriority();
+    }
+
     void GOOSE_OverviewTable::setActiveIED(Core::IED::ptr t_ied)
     {
         beginResetModel();

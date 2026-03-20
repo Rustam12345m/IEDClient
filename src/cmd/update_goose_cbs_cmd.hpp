@@ -19,27 +19,33 @@
  *  See COPYING file for the complete license text.
  * */
 
-#include "update_rcbs_cmd.hpp"
-#include <QDebug>
+#pragma once
+
+#include "cmd_interface.hpp"
+#include "core/ied.hpp"
 
 namespace Cmd
 {
-    void UpdateRCBs_Cmd::execute(Cmd::Interface::IEC61850_API::ptr t_api)
+    /**
+     * @brief Command to refresh all GOOSE Control Block values from the IED
+     */
+    class UpdateGooseCBs_Cmd : public CmdInterface
     {
-        emit sigCmdEvent(CmdEvent::StartEvent("", "Update RCB: refreshing all values"));
+        Q_OBJECT
+    public:
+        UpdateGooseCBs_Cmd(Core::IED::ptr t_ied) : m_ied{t_ied}
+        {
+        }
+        ~UpdateGooseCBs_Cmd() = default;
 
-        const auto &rcbList = m_ied->model().getReportCBList();
-        int updated = 0;
+        void    execute(Cmd::Interface::IEC61850_API::ptr t_api) override;
 
-        for (const auto &rcb : rcbList) {
-            if (t_api->control().refreshRCBValues(rcb)) {
-                ++updated;
-            }
+        // Create new command like Builder pattern
+        static auto create(Core::IED::ptr t_ied) {
+            return QSharedPointer<UpdateGooseCBs_Cmd>::create(t_ied);
         }
 
-        bool ok = (rcbList.size() == 0) || (updated > 0);
-        emit sigCmdEvent(CmdEvent::FinishEvent("",
-            QString("Update RCB: refreshed %1 of %2").arg(updated).arg(rcbList.size()),
-            ok));
-    }
+    private:
+        Core::IED::ptr m_ied;
+    };
 }

@@ -24,6 +24,10 @@
 #include "backend_interface.hpp"
 
 #include "cmd/control_cmd.hpp"
+#include "cmd/update_goose_cbs_cmd.hpp"
+#include "cmd/update_sv_cbs_cmd.hpp"
+#include "cmd/set_goose_enable_cmd.hpp"
+#include "cmd/set_sv_enable_cmd.hpp"
 #include "models/sort_proxy_model.hpp"
 #include "models/ld_overview_grid.hpp"
 #include "models/ld_properties_table.hpp"
@@ -72,6 +76,8 @@ namespace App
         Q_INVOKABLE void updateLDs_Status();
         Q_INVOKABLE void updateLNs_Status();
         Q_INVOKABLE void updateRCBs_Status();
+        Q_INVOKABLE void updateGOOSE_Status();
+        Q_INVOKABLE void updateSV_Status();
         Q_INVOKABLE void updateLN_TreeValues();
         Q_INVOKABLE void updateDS_Values();
         Q_INVOKABLE void setRCBEnable(bool t_buffered, int t_index,
@@ -88,6 +94,10 @@ namespace App
                                         int t_valType, const QVariant &t_value);
         Q_INVOKABLE void controlCancel(const QString &t_objRef);
 
+        // GOOSE / SV enable
+        Q_INVOKABLE void setGOOSEEnable(int t_index, bool t_enable);
+        Q_INVOKABLE void setSVEnable(int t_index, bool t_enable);
+
         // Status bar
         Q_INVOKABLE QString ldsPageStatus();
         Q_INVOKABLE QString lnsPageStatus();
@@ -96,6 +106,7 @@ namespace App
 
     signals:
         void sigRCBUpdated();
+        void sigGOOSE_SVUpdated();
         void sigControlInfo(QString objRef, int ctlModel, int ctlValType);
         void sigControlResult(QString objRef, bool success, QString message);
 
