@@ -26,11 +26,15 @@ import GlobalVarsModule
 import AppStylesModule
 
 // Event log table — embedded as content in a modal SubWindow
-Item
+FocusScope
 {
     id: rootID
 
     signal sigClose()
+
+    onVisibleChanged: {
+        if (visible) tableID.forceActiveFocus()
+    }
 
     // Column header synced to the table below
     HorizontalHeaderView {
@@ -73,8 +77,10 @@ Item
 
         model: appBackend.appLogsModel
 
+        focus: true
         clip: true
         interactive: true
+        keyNavigationEnabled: true
         boundsBehavior: Flickable.StopAtBounds
 
         selectionBehavior: TableView.SelectRows
@@ -84,9 +90,8 @@ Item
 
         columnWidthProvider: function(col) {
             if (col === 0) return 160
-            if (col === 1) return 120
-            // Last column (Description) fills remaining space
-            return Math.max(50, tableID.width - 280)
+            if (col === 1) return 140
+            return Math.max(200, tableID.width - 300)
         }
 
         onWidthChanged: forceLayout()
@@ -115,9 +120,7 @@ Item
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    let idx = tableID.model.index(row, 0)
-                    tableID.selectionModel.setCurrentIndex(idx,
-                        ItemSelectionModel.Clear | ItemSelectionModel.Select | ItemSelectionModel.Rows)
+                    Globals.setSelectedRow(tableID, row)
                 }
             }
         }
@@ -136,6 +139,21 @@ Item
             if (event.key === Qt.Key_C && (event.modifiers & Qt.ControlModifier)) {
                 Globals.copyRowToClipboard(tableID)
                 event.accepted = true
+                return
+            }
+            if (event.key === Qt.Key_Up) {
+                if (tableID.currentRow > 0) {
+                    Globals.setSelectedRow(tableID, tableID.currentRow - 1)
+                }
+                event.accepted = true
+                return
+            }
+            if (event.key === Qt.Key_Down) {
+                if (tableID.currentRow < tableID.rows - 1) {
+                    Globals.setSelectedRow(tableID, tableID.currentRow + 1)
+                }
+                event.accepted = true
+                return
             }
         }
     }
