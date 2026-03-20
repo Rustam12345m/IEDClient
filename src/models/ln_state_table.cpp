@@ -170,7 +170,7 @@ namespace App::Models
         }
 
         Core::ModelItem *doItem = t_nodes->front();
-        qDebug() << "LN_SignalTable: slotDataUpdated, do =" << doItem->getName();
+        // qDebug() << "LN_SignalTable: slotDataUpdated, do =" << doItem->getName();
 
         auto matrixPtr = getMatrix();
         if (!matrixPtr) return;

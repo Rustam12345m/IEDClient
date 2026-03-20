@@ -68,7 +68,7 @@ namespace Libiec61850
 
             IedConnection_getDeviceModelFromServer(m_libConn, &retval);
             if (retval != IED_ERROR_OK) {
-                qDebug() << "!!! ERROR !!!: Connect, get model with error = " << retval;
+                // qDebug() << "!!! ERROR !!!: Connect, get model with error = " << retval;
             }
         } else {
             IedConnection_destroy(m_libConn);

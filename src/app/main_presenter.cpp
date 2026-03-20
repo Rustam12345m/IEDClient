@@ -63,7 +63,7 @@ namespace App
 
     void MainPresenter::connectTo(const QVariantMap &t_data)
     {
-        qDebug() << "MainPresenter: Connect cmd";
+        // qDebug() << "MainPresenter: Connect cmd";
 
         Cmd::IEDCredentials cred(t_data);
         m_con.createNewConnection(cred);
@@ -77,7 +77,7 @@ namespace App
 
     void MainPresenter::disconnectFrom()
     {
-        qDebug() << "MainPresenter: Disconnect cmd";
+        // qDebug() << "MainPresenter: Disconnect cmd";
 
         auto cmd = Cmd::DisConnectCmd::create(m_con.m_ied);
         m_con.m_cmdThread->putCommand(cmd);

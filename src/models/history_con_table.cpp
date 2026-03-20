@@ -79,7 +79,7 @@ namespace App::Models
 
     void HistConTable::removeFromHistory(int t_index)
     {
-        qDebug() << "Remove from history index: " << t_index;
+        // qDebug() << "Remove from history index: " << t_index;
 
         if (t_index >= 0 && t_index < m_con.size()) {
             beginResetModel();

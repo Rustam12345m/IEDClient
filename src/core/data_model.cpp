@@ -31,7 +31,7 @@ namespace Core
         {
             auto &nodeList = t_item->getItemList();
             for (auto node : nodeList) {
-                qDebug().noquote() << t_prefix << node->getName();
+                // qDebug().noquote() << t_prefix << node->getName();
 
                 printTree(t_prefix + "  ", node);
             }
@@ -118,11 +118,11 @@ namespace Core
 
     void DataModel::print()
     {
-        qDebug() << "IED: " << m_name;
+        // qDebug() << "IED: " << m_name;
 
         auto &ldList = m_items;
         for (auto ld : ldList) {
-            qDebug() << "  LD: " << ld->getName();
+            // qDebug() << "  LD: " << ld->getName();
             printTree("    ", ld);
         }
     }
