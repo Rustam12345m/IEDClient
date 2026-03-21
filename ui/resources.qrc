@@ -119,5 +119,7 @@
         <file>icons/horizontal_distribute.svg</file>
         <file>icons/settings_ethernet.svg</file>
         <file>icons/view_comfy_alt.svg</file>
+        <file>icons/unfold_less.svg</file>
+        <file>icons/unfold_more.svg</file>
     </qresource>
 </RCC>

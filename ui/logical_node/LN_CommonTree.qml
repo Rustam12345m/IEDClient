@@ -100,8 +100,15 @@ FocusScope {
         columnWidthProvider: function(t_column) {
             var w = Globals.columnWidthCalculator(headerID, treeViewID, t_column)
             if (t_column === 0) w = Math.max(w, 160)       // Name
-            else if (t_column === 1) w = Math.max(w, 120)  // Value
+            else if (t_column === 1) w = Math.max(w, 180)  // Value: fit "11:11:11 11.11.1970"
             return w
+        }
+
+        Keys.onPressed: function(event) {
+            if (event.key === Qt.Key_C && (event.modifiers & Qt.ControlModifier)) {
+                Globals.copyRowToClipboard(treeViewID)
+                event.accepted = true
+            }
         }
 
         selectionBehavior: TableView.SelectRows
