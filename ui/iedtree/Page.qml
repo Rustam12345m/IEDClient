@@ -89,7 +89,7 @@ FocusScope {
                     left: parent.left
                     right: parent.right
                     top: headerID.bottom
-                    bottom: parent.bottom
+                    bottom: filterBar.top
                 }
 
                 model: iedBackend.getIED_TreeModel()
@@ -98,6 +98,7 @@ FocusScope {
                 clip: true
                 interactive: true
                 boundsBehavior: Flickable.StopAtBounds
+                flickDeceleration: 100000
 
                 palette.highlight:       VisualStyle.table.selRowColor
                 palette.highlightedText: VisualStyle.textColor
@@ -145,6 +146,53 @@ FocusScope {
                             active = true;
                         }
                     }
+                }
+            }
+
+            // Filter bar at the bottom
+            Row {
+                id: filterBar
+
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    bottom: parent.bottom
+                    margins: 2
+                }
+                height: 28
+                spacing: 2
+
+                TextField {
+                    id: filterInput
+
+                    width: parent.width - btnFold.width - btnUnfold.width - parent.spacing * 2
+                    height: parent.height
+
+                    placeholderText: "Filter by path, e.g. mag.f or LLN0.Mod"
+                    font.pixelSize: 12
+
+                    onTextChanged: {
+                        iedBackend.setTreeFilter(text)
+                        if (text.length > 0) {
+                            Qt.callLater(function() { treeViewID.expandRecursively() })
+                        }
+                    }
+                }
+                Button {
+                    id: btnFold
+                    width: 28
+                    height: parent.height
+                    icon.source: "qrc:/img/icons/unfold_less.svg"
+                    focusPolicy: Qt.NoFocus
+                    onClicked: treeViewID.collapseRecursively()
+                }
+                Button {
+                    id: btnUnfold
+                    width: 28
+                    height: parent.height
+                    icon.source: "qrc:/img/icons/unfold_more.svg"
+                    focusPolicy: Qt.NoFocus
+                    onClicked: treeViewID.expandRecursively()
                 }
             }
         }

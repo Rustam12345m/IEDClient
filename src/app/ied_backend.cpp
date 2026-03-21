@@ -46,6 +46,8 @@ namespace App
         m_svComModel    = new Models::SV_OverviewTable(this, m_con.m_ied);
         m_reportsModel  = new Models::ReportsTable(this, m_con.m_ied);
         m_iedTreeModel  = new Models::IED_ModelTree(this, m_con.m_ied);
+        m_iedTreeFilter = new Models::TreeFilterProxy(this);
+        m_iedTreeFilter->setSourceModel(m_iedTreeModel);
 
         m_sortDOModel = new Models::SortProxyModel(this);
         m_sortDOModel->setSourceModel(m_lnStateModel);

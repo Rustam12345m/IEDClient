@@ -37,6 +37,7 @@
 #include "models/ln_state_table.hpp"
 #include "models/ln_common_tree.hpp"
 #include "models/ied_model_tree.hpp"
+#include "models/tree_filter_proxy.hpp"
 #include "models/ds_overview_table.hpp"
 #include "models/ds_signals_table.hpp"
 #include "models/rcb_overview_table.hpp"
@@ -64,7 +65,8 @@ namespace App
         Q_INVOKABLE QAbstractItemModel*  getLN_ControlsModel() const { return m_sortControlsModel; }
         Q_INVOKABLE QAbstractItemModel*  getLN_SettingsModel() const { return m_sortSettingsModel; }
         Q_INVOKABLE QAbstractItemModel*  getLN_TreeModel()     const { return m_lnTreeModel; }
-        Q_INVOKABLE QAbstractItemModel*  getIED_TreeModel()    const { return m_iedTreeModel; }
+        Q_INVOKABLE QAbstractItemModel*  getIED_TreeModel()    const { return m_iedTreeFilter; }
+        Q_INVOKABLE void setTreeFilter(const QString &text) { m_iedTreeFilter->setFilter(text); }
         Q_INVOKABLE QAbstractListModel*  getDS_ComModel() const { return m_dsComModel; }
         Q_INVOKABLE QAbstractTableModel* getDS_ItemModel() const { return m_dsSigModel; }
         Q_INVOKABLE QAbstractTableModel* getBRCB_ComModel() const { return m_brcbComModel; }
@@ -137,5 +139,6 @@ namespace App
         Models::SV_OverviewTable*    m_svComModel    = nullptr;
         Models::ReportsTable*        m_reportsModel  = nullptr;
         Models::IED_ModelTree*       m_iedTreeModel  = nullptr;
+        Models::TreeFilterProxy*     m_iedTreeFilter = nullptr;
     };
 }

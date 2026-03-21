@@ -55,6 +55,9 @@ set(SOURCES
 
     reports_table.hpp
     reports_table.cpp
+
+    tree_filter_proxy.hpp
+    tree_filter_proxy.cpp
 )
 
 qt_add_library(models_lib STATIC ${SOURCES})

@@ -529,6 +529,7 @@ ApplicationWindow
                 Rectangle {
                     id: propertyPanel
                     width: 480
+                    clip: true
 
                     SplitView.fillWidth: false
                     SplitView.preferredWidth: 480

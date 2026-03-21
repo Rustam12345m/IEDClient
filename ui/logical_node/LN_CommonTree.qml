@@ -98,7 +98,10 @@ FocusScope {
         palette.text:            VisualStyle.textColor
 
         columnWidthProvider: function(t_column) {
-            return Globals.columnWidthCalculator(headerID, treeViewID, t_column)
+            var w = Globals.columnWidthCalculator(headerID, treeViewID, t_column)
+            if (t_column === 0) w = Math.max(w, 160)       // Name
+            else if (t_column === 1) w = Math.max(w, 120)  // Value
+            return w
         }
 
         selectionBehavior: TableView.SelectRows
@@ -121,12 +124,7 @@ FocusScope {
         Connections {
             target: treeViewID.model
             function onModelReset() {
-                Qt.callLater(function() {
-                    for (var i = 0; i < treeViewID.rows; i++) {
-                        if (treeViewID.depth(i) === 0)
-                            treeViewID.expand(i)
-                    }
-                })
+                // All nodes folded by default — user expands manually or via Ctrl+Click
             }
         }
 

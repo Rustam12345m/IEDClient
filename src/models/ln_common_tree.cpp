@@ -104,16 +104,29 @@ namespace App::Models
             return QModelIndex();
         }
 
-        Core::ModelItem *parentItem = nullptr;
-        Core::ModelItem *item = static_cast<Core::ModelItem*>(index.internalPointer());
-        if (item != nullptr) {
-            parentItem = item->getParent();
-        }
-
-        if (parentItem == m_lnode.get()) {
+        auto *item = static_cast<Core::ModelItem*>(index.internalPointer());
+        if (!item) {
             return QModelIndex();
         }
-        return createIndex(parentItem->getItemCount(), 0, parentItem);
+
+        Core::ModelItem *parentItem = item->getParent();
+        if (!parentItem || parentItem == m_lnode.get()) {
+            return QModelIndex();
+        }
+
+        // Find the row of parentItem within its own parent
+        Core::ModelItem *grandParent = parentItem->getParent();
+        if (!grandParent) {
+            return QModelIndex();
+        }
+
+        const auto &siblings = grandParent->getItemList();
+        for (int i = 0; i < siblings.size(); i++) {
+            if (siblings[i].get() == parentItem) {
+                return createIndex(i, 0, parentItem);
+            }
+        }
+        return QModelIndex();
     }
 
     QVariant LN_CommonTree::data(const QModelIndex &index, int role) const
@@ -136,7 +149,10 @@ namespace App::Models
                 return QVariant("");
             }
             case VALUE_COLUMN: {
-                return QVariant(item->getValue());
+                if (item->getItemCount() == 0) {
+                    return QVariant(item->getValue());
+                }
+                return QVariant("");
             }
             }
         }
@@ -145,8 +161,9 @@ namespace App::Models
 
     void LN_CommonTree::slotDataUpdated(Core::ModelItem::ptrList nodes)
     {
-        //qDebug() << "LN_CommonTree: slotDataUpdated";
-        // emit dataChanged(index(0, 0), index(rowCount() - 1, VALUE_COLUMN));
+        if (rowCount() > 0) {
+            emit dataChanged(index(0, VALUE_COLUMN), index(rowCount() - 1, VALUE_COLUMN));
+        }
     }
 
     void LN_CommonTree::slotLNSelected(int ld, int ln)
