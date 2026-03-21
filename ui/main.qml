@@ -528,10 +528,10 @@ ApplicationWindow
                 // Property panel
                 Rectangle {
                     id: propertyPanel
-                    width: 350
+                    width: 480
 
                     SplitView.fillWidth: false
-                    SplitView.preferredWidth: 350
+                    SplitView.preferredWidth: 480
 
                     color: VisualStyle.backgroundColor1
 
@@ -731,7 +731,7 @@ ApplicationWindow
                         text:                  modelData.key
                         color:                 VisualStyle.statusBar.textColor
                         font.pixelSize:        12
-                        font.family:           "Monospace"
+                        font.family:           VisualStyle.fontFamily
                         font.bold:             true
                         horizontalAlignment:   Text.AlignRight
                         verticalAlignment:     Text.AlignVCenter
@@ -740,7 +740,7 @@ ApplicationWindow
                         text:           modelData.desc
                         color:          VisualStyle.statusBar.textColor
                         font.pixelSize: 12
-                        font.family:    "Monospace"
+                        font.family:    VisualStyle.fontFamily
                         verticalAlignment: Text.AlignVCenter
                     }
                 }

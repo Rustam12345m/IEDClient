@@ -26,6 +26,8 @@
 #include <QQmlContext>
 #include <QStandardPaths>
 #include <QDir>
+#include <QFont>
+#include <QFontDatabase>
 
 #include <QQuickStyle>
 #include <iostream>
@@ -55,6 +57,11 @@ int main(int argc, char *argv[])
                                           true, -1);
 
     QGuiApplication app(argc, argv);
+
+    // Embed Noto Sans Mono as the application-wide font
+    QFontDatabase::addApplicationFont(":/fonts/NotoSansMono-Regular.ttf");
+    QFontDatabase::addApplicationFont(":/fonts/NotoSansMono-Bold.ttf");
+    app.setFont(QFont("Noto Sans Mono", 10));
 
     QCoreApplication::setOrganizationName("OSI");
     QCoreApplication::setOrganizationDomain("opensource.org");

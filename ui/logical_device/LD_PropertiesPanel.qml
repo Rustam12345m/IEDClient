@@ -33,7 +33,7 @@ Item
 {
     property int defRowHeight: 30
     property int defTextPadding: 5
-    property int defNameWidth: 100
+    property int defNameWidth: 120
 
     ListView {
         id: ldPropertyList

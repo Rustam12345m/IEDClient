@@ -81,7 +81,7 @@ Item {
                     wrapMode: Text.Wrap
                     elide: Text.ElideRight
 
-                    font.bold: VisualStyle.boldHeaderText
+                    font.bold: selected
                     font.pointSize: 12
                     color: selected ? "#ffffff" : VisualStyle.textColor
 
@@ -117,7 +117,7 @@ Item {
                             spacing: 0
 
                             Text {
-                                Layout.preferredWidth: 50
+                                Layout.preferredWidth: 70
                                 padding: 6
 
                                 text: model.param

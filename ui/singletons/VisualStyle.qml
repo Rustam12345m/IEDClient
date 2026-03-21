@@ -25,6 +25,12 @@ import QtQuick
 
 QtObject
 {
+    // Font
+    readonly property string fontFamily:    "Noto Sans Mono"
+    readonly property int fontSizeSmall:    11
+    readonly property int fontSizeNormal:   13
+    readonly property int fontSizeLarge:    16
+
     // Window & Common
     property color backgroundColor1:        "#eeeeee"
     property color backgroundColor2:        "#dddddd"

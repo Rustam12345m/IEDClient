@@ -121,7 +121,12 @@ FocusScope {
         Connections {
             target: treeViewID.model
             function onModelReset() {
-                Qt.callLater(treeViewID.expandRecursively)
+                Qt.callLater(function() {
+                    for (var i = 0; i < treeViewID.rows; i++) {
+                        if (treeViewID.depth(i) === 0)
+                            treeViewID.expand(i)
+                    }
+                })
             }
         }
 

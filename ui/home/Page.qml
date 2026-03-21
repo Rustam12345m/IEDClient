@@ -92,9 +92,9 @@ Item {
                         anchors.centerIn: parent
                         text:             "RECENT CONNECTIONS"
                         color:            VisualStyle.statusBar.textColor
-                        font.pixelSize:   11
+                        font.pixelSize:   14
                         font.bold:        true
-                        font.family:      "Monospace"
+                        font.family:      VisualStyle.fontFamily
                     }
                 }
 
@@ -151,8 +151,7 @@ Item {
                                                 " : " + rootID.getField(cardID.index, 3)
                                 color:          VisualStyle.textColor
                                 font.pixelSize: 13
-                                font.bold:      true
-                                font.family:    "Monospace"
+                                font.family:    VisualStyle.fontFamily
                                 elide:          Text.ElideRight
                             }
 
@@ -163,7 +162,7 @@ Item {
                                                 "  ·  " + rootID.getField(cardID.index, 4)
                                 color:          "#666666"
                                 font.pixelSize: 11
-                                font.family:    "Monospace"
+                                font.family:    VisualStyle.fontFamily
                                 elide:          Text.ElideRight
                             }
                         }
@@ -211,8 +210,7 @@ Item {
             // ── QUICK CONNECT ─────────────────────────────────────────────
             Rectangle {
                 Layout.fillWidth:       true
-                Layout.preferredHeight: quickConnectLayout.implicitHeight +
-                                        VisualStyle.borderWidth * 2
+                Layout.fillHeight:      true
 
                 color:        VisualStyle.input.bg
                 border.color: VisualStyle.borderColor
@@ -236,9 +234,9 @@ Item {
                             anchors.centerIn: parent
                             text:             "QUICK CONNECT"
                             color:            VisualStyle.statusBar.textColor
-                            font.pixelSize:   11
+                            font.pixelSize:   14
                             font.bold:        true
-                            font.family:      "Monospace"
+                            font.family:      VisualStyle.fontFamily
                         }
                     }
 
@@ -264,7 +262,7 @@ Item {
                                 text:                  "IP"
                                 color:                 VisualStyle.textColor
                                 font.pixelSize:        13
-                                font.family:           "Monospace"
+                                font.family:           VisualStyle.fontFamily
                             }
                             Rectangle {
                                 Layout.fillWidth: true
@@ -281,7 +279,7 @@ Item {
                                     placeholderText:      "IED address"
                                     placeholderTextColor: VisualStyle.input.placeholder
                                     font.pixelSize:       13
-                                    font.family:          "Monospace"
+                                    font.family:          VisualStyle.fontFamily
                                     verticalAlignment:    Text.AlignVCenter
                                     leftPadding:          4
                                     focus:                true
@@ -303,7 +301,7 @@ Item {
                                 text:                  "Port"
                                 color:                 VisualStyle.textColor
                                 font.pixelSize:        13
-                                font.family:           "Monospace"
+                                font.family:           VisualStyle.fontFamily
                             }
                             Rectangle {
                                 Layout.preferredWidth: 80
@@ -320,7 +318,7 @@ Item {
                                     placeholderText:      "MMS"
                                     placeholderTextColor: VisualStyle.input.placeholder
                                     font.pixelSize:       13
-                                    font.family:          "Monospace"
+                                    font.family:          VisualStyle.fontFamily
                                     verticalAlignment:    Text.AlignVCenter
                                     leftPadding:          4
                                     color:                VisualStyle.input.text
@@ -341,7 +339,7 @@ Item {
                                 text:                  "TLS"
                                 color:                 VisualStyle.textColor
                                 font.pixelSize:        13
-                                font.family:           "Monospace"
+                                font.family:           VisualStyle.fontFamily
                             }
                             Switch {
                                 id:                    tlsSwitcher
@@ -367,7 +365,7 @@ Item {
                                 text:                  "User"
                                 color:                 VisualStyle.textColor
                                 font.pixelSize:        13
-                                font.family:           "Monospace"
+                                font.family:           VisualStyle.fontFamily
                             }
                             Rectangle {
                                 Layout.fillWidth: true
@@ -384,7 +382,7 @@ Item {
                                     placeholderText:      "Username"
                                     placeholderTextColor: VisualStyle.input.placeholder
                                     font.pixelSize:       13
-                                    font.family:          "Monospace"
+                                    font.family:          VisualStyle.fontFamily
                                     verticalAlignment:    Text.AlignVCenter
                                     leftPadding:          4
                                     color:                VisualStyle.input.text
@@ -406,7 +404,7 @@ Item {
                                 text:                  "Pass"
                                 color:                 VisualStyle.textColor
                                 font.pixelSize:        13
-                                font.family:           "Monospace"
+                                font.family:           VisualStyle.fontFamily
                             }
                             Rectangle {
                                 Layout.fillWidth: true
@@ -424,7 +422,7 @@ Item {
                                     placeholderText:      "Password"
                                     placeholderTextColor: VisualStyle.input.placeholder
                                     font.pixelSize:       13
-                                    font.family:          "Monospace"
+                                    font.family:          VisualStyle.fontFamily
                                     verticalAlignment:    Text.AlignVCenter
                                     leftPadding:          4
                                     color:                VisualStyle.input.text
@@ -444,6 +442,7 @@ Item {
 
                             Button {
                                 id:             connButton
+                                implicitWidth:  140
                                 text:           qsTr("Connect")
                                 font.pixelSize: 13
                                 font.bold:      VisualStyle.boldHeaderText
@@ -463,6 +462,7 @@ Item {
                             }
 
                             Button {
+                                implicitWidth:  140
                                 text:           qsTr("MMS Dump")
                                 font.pixelSize: 13
                                 font.bold:      VisualStyle.boldHeaderText
@@ -508,9 +508,9 @@ Item {
                             anchors.centerIn: parent
                             text:             "SHORTCUTS"
                             color:            VisualStyle.statusBar.textColor
-                            font.pixelSize:   11
+                            font.pixelSize:   14
                             font.bold:        true
-                            font.family:      "Monospace"
+                            font.family:      VisualStyle.fontFamily
                         }
                     }
 
@@ -541,7 +541,7 @@ Item {
                                 text:                  modelData.key
                                 color:                 VisualStyle.borderColor
                                 font.pixelSize:        12
-                                font.family:           "Monospace"
+                                font.family:           VisualStyle.fontFamily
                                 font.bold:             true
                             }
                             Text {
@@ -551,7 +551,7 @@ Item {
                                 text:                modelData.desc
                                 color:               VisualStyle.textColor
                                 font.pixelSize:      12
-                                font.family:         "Monospace"
+                                font.family:         VisualStyle.fontFamily
                             }
                         }
                     }

@@ -48,6 +48,9 @@ namespace App::Models
         case DS_INDEX_COLUMN: {
             return QVariant("#");
         }
+        case DS_LD_COLUMN: {
+            return QVariant("LD");
+        }
         case DS_REF_COLUMN: {
             return QVariant("Reference");
         }
@@ -91,8 +94,15 @@ namespace App::Models
             auto dsItem = m_dataSet->getItem<Core::DataSetItem>(row);
             if (dsItem) {
                 switch (column) {
+                case DS_LD_COLUMN: {
+                    QString name = dsItem->getName();
+                    int sep = name.indexOf('/');
+                    return QVariant(sep >= 0 ? name.left(sep) : "");
+                }
                 case DS_REF_COLUMN: {
-                    return QVariant(dsItem->getName());
+                    QString name = dsItem->getName();
+                    int sep = name.indexOf('/');
+                    return QVariant(sep >= 0 ? name.mid(sep + 1) : name);
                 }
                 case DS_FC_COLUMN: {
                     return QVariant(dsItem->fc());

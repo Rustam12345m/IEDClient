@@ -168,11 +168,12 @@ QtObject
     function columnWidthCalculator(t_headerID, t_tableID, t_column)
     {
         let lw = t_tableID.columnWidth(t_column)
-        let  nw = Math.max(t_headerID.implicitColumnWidth(t_column),
-                          t_tableID.implicitColumnWidth(t_column))
+        let hw = t_headerID.implicitColumnWidth(t_column)
+        let cw = t_tableID.implicitColumnWidth(t_column)
+        let nw = Math.max(hw, cw, 40)
         nw = Math.round(nw)
         if ((nw != lw) && (lw != -1)) {
-            Qt.callLater(t_tableID.forceLayout) // this is cause to call again
+            Qt.callLater(t_tableID.forceLayout)
         }
         return nw
     }

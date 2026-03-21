@@ -98,7 +98,10 @@ FocusScope
         }
 
         columnWidthProvider: function(t_column) {
-            return Globals.columnWidthCalculator(headerID, tableID, t_column)
+            var w = Globals.columnWidthCalculator(headerID, tableID, t_column)
+            // Value column: ensure stable minimum to prevent resizing on each update
+            if (t_column === tableID.columns - 1) w = Math.max(w, 160)
+            return w
         }
 
         delegate: TextDelegate {

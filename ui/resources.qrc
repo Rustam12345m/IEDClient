@@ -2,6 +2,9 @@
     <qresource prefix="/">
         <file>main.qml</file>
 
+        <file>fonts/NotoSansMono-Regular.ttf</file>
+        <file>fonts/NotoSansMono-Bold.ttf</file>
+
         <file>home/Page.qml</file>
         <file>home/ConnectHistoryTable.qml</file>
         <file>home/AppEventViewer.qml</file>
