@@ -54,10 +54,24 @@ clean_all() {
     rm -rf "$BUILD_DIR" "$INSTALL_DIR" "$DIST_DIR"
 }
 
+apply_patches() {
+    local patch="$REPO_DIR/3rdparty/libiec61850-svcb.patch"
+    if [ -f "$patch" ]; then
+        cd "$REPO_DIR/3rdparty/libiec61850"
+        if git apply --check "$patch" 2>/dev/null; then
+            echo "==> Applying libiec61850 SVCB patch..."
+            git apply "$patch"
+        fi
+        cd "$REPO_DIR"
+    fi
+}
+
 do_build() {
     local cmake_build_type="$1"
     shift
     local extra_args=("$@")
+
+    apply_patches
 
     mkdir -p "$BUILD_DIR"
 

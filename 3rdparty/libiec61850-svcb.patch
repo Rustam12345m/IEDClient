@@ -1,0 +1,19 @@
+diff --git a/src/iec61850/client/ied_connection.c b/src/iec61850/client/ied_connection.c
+index a6309296..b2508d62 100644
+--- a/src/iec61850/client/ied_connection.c
++++ b/src/iec61850/client/ied_connection.c
+@@ -2931,6 +2931,14 @@ IedConnection_getLogicalNodeDirectory(IedConnection self, IedClientError* error,
+         addVariablesWithFc("LG", logicalNodeName, ld->variables, lnDirectory);
+         break;
+ 
++    case ACSI_CLASS_MSVCB:
++        addVariablesWithFc("MS", logicalNodeName, ld->variables, lnDirectory);
++        break;
++
++    case ACSI_CLASS_USVCB:
++        addVariablesWithFc("US", logicalNodeName, ld->variables, lnDirectory);
++        break;
++
+     default:
+         if (DEBUG_IED_CLIENT)
+             printf("IED_CLIENT: ACSI class not yet supported!\n");
