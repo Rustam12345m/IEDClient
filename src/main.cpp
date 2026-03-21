@@ -24,14 +24,36 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QStandardPaths>
+#include <QDir>
 
 #include <QQuickStyle>
 #include <iostream>
 
 #include "app/main_presenter.hpp"
+#include "client/linux/handler/exception_handler.h"
+
+namespace
+{
+    bool crashCallback(const google_breakpad::MinidumpDescriptor &t_descriptor,
+                       void *, bool t_succeeded)
+    {
+        fprintf(stderr, "Crash dump written to: %s\n", t_descriptor.path());
+        return t_succeeded;
+    }
+}
 
 int main(int argc, char *argv[])
 {
+    // Crash handler — must be initialized before QGuiApplication
+    std::string crashDir = (QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation)
+                           + "/crashes").toStdString();
+    QDir().mkpath(QString::fromStdString(crashDir));
+
+    google_breakpad::MinidumpDescriptor descriptor(crashDir);
+    google_breakpad::ExceptionHandler eh(descriptor, nullptr, crashCallback, nullptr,
+                                          true, -1);
+
     QGuiApplication app(argc, argv);
 
     QCoreApplication::setOrganizationName("OSI");

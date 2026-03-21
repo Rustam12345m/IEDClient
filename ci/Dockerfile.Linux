@@ -2,6 +2,7 @@ FROM ubuntu:24.04
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential cmake g++ git ninja-build \
+    zip \
     file patchelf wget ca-certificates \
     qt6-base-dev \
     qt6-declarative-dev \
@@ -38,6 +39,15 @@ RUN ARCH=$(uname -m) && \
     ln -s /opt/linuxdeploy/AppRun /usr/local/bin/linuxdeploy && \
     ln -s /opt/linuxdeploy-plugin-qt/AppRun /usr/local/bin/linuxdeploy-plugin-qt && \
     rm /tmp/linuxdeploy.AppImage /tmp/linuxdeploy-plugin-qt.AppImage
+
+# Install dump_syms for Breakpad symbol extraction
+# Built with cargo, installed to /usr/local/bin, then Rust is removed to keep image small
+RUN apt-get update && apt-get install -y --no-install-recommends curl && \
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal && \
+    . /root/.cargo/env && \
+    CARGO_INSTALL_ROOT=/usr/local cargo install dump_syms && \
+    rustup self uninstall -y && \
+    apt-get purge -y curl && apt-get autoremove -y && rm -rf /var/lib/apt/lists/*
 
 # Allow git to work on mounted volumes owned by any user
 RUN git config --system safe.directory '*'

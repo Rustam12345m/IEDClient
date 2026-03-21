@@ -24,6 +24,7 @@ NPROC=$(nproc 2>/dev/null || echo 4)
 
 BUILD_TYPE=""
 DO_ARCHIVE=false
+DO_SYMBOLS=false
 DO_CLEAN=false
 DO_HACK=false
 
@@ -39,10 +40,11 @@ Build options:
 
 Other options:
   --archive     Create self-contained AppImage (binary + libs + Qt plugins)
+  --symbols     Extract Breakpad symbols from the binary (for crash dump analysis)
   --clean       Remove build/, install/, and dist/ directories
   --help        Show this help
 
-Options can be combined:  $0 --release --archive
+Options can be combined:  $0 --release --archive --symbols
 EOF
     exit 0
 }
@@ -140,6 +142,7 @@ while [ "$1" != "" ]; do
         --check)    BUILD_TYPE="check" ;;
         --hack)     DO_HACK=true ;;
         --archive)  DO_ARCHIVE=true ;;
+        --symbols)  DO_SYMBOLS=true ;;
         --clean)    DO_CLEAN=true ;;
         --help|-h)  usage ;;
         *)          echo "Unknown option: $1"; usage ;;
@@ -176,6 +179,47 @@ fi
 
 if $DO_ARCHIVE; then
     do_appimage
+fi
+
+if $DO_SYMBOLS; then
+    if ! command -v dump_syms &>/dev/null; then
+        echo "Error: dump_syms not found. Install with: cargo install dump_syms"
+        exit 1
+    fi
+
+    # Extract symbols
+    SYM_BINARY="$INSTALL_DIR/bin/IEDClient"
+    if [ ! -f "$SYM_BINARY" ]; then
+        SYM_BINARY="$BUILD_DIR/src/IEDClient"
+    fi
+
+    if [ ! -f "$SYM_BINARY" ]; then
+        echo "Error: IEDClient binary not found. Build first."
+        exit 1
+    fi
+
+    mkdir -p "$DIST_DIR"
+    SYM_FILE="$DIST_DIR/IEDClient.sym"
+
+    echo "==> Extracting symbols from $SYM_BINARY..."
+    dump_syms "$SYM_BINARY" > "$SYM_FILE"
+
+    # Read module ID and create the directory structure for minidump-stackwalk
+    SYM_MODULE_ID=$(head -1 "$SYM_FILE" | awk '{print $4}')
+    SYM_STRUCTURED_DIR="$DIST_DIR/symbols/IEDClient/$SYM_MODULE_ID"
+    mkdir -p "$SYM_STRUCTURED_DIR"
+    cp "$SYM_FILE" "$SYM_STRUCTURED_DIR/IEDClient.sym"
+
+    # Create zip archive
+    APP_VERSION=$(grep 'project(IEDClient VERSION' "$REPO_DIR/CMakeLists.txt" | sed 's/.*VERSION "\(.*\)".*/\1/')
+    SYM_ARCHIVE="$DIST_DIR/IEDClient_syms_${APP_VERSION}.zip"
+    cd "$DIST_DIR"
+    zip -r "$SYM_ARCHIVE" symbols/ > /dev/null
+    cd "$REPO_DIR"
+
+    echo "    MODULE: $(head -1 "$SYM_FILE")"
+    SYM_SIZE="$(du -h "$SYM_ARCHIVE" | cut -f1)"
+    echo "==> Symbols archive: $SYM_ARCHIVE ($SYM_SIZE)"
 fi
 
 echo "==> Done."

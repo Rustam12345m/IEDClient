@@ -5,6 +5,9 @@ set(BUILD_EXAMPLES CACHE BOOL OFF)
 # set(CONFIG_INCLUDE_GOOSE_SUPPORT CACHE BOOL OFF)
 add_subdirectory(libiec61850/)
 
+# Google Breakpad (crash reporting)
+include(${CMAKE_SOURCE_DIR}/cmake/breakpad.cmake)
+
 # GoogleTests
 if (BUILD_TESTS)
     set(INSTALL_GTEST OFF CACHE BOOL "" FORCE) # To avoid installing all libs stuff

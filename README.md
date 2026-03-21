@@ -29,6 +29,7 @@ This project uses several third-party libraries to enhance functionality:
 
 - Qt
 - libiec61850
+- Google Breakpad
 - Google Test
 - PaperColor theme
 - Material Icons
@@ -36,6 +37,12 @@ This project uses several third-party libraries to enhance functionality:
 ## Usage Guidelines
 
 The user's guide is currently in development. Users will be able to access the guide using the F1 key within the application.
+
+## Crash Reporting
+
+IEDClient uses [Google Breakpad](https://chromium.googlesource.com/breakpad/breakpad) for automatic crash dump generation. Crash dumps are saved to `~/.local/share/IEDClient/crashes/`. Symbol archives are published alongside release builds.
+
+See [docs/crash_analysis.md](docs/crash_analysis.md) for instructions on analyzing crash dumps.
 
 ## Contributing
 

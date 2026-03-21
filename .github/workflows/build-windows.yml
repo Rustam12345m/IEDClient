@@ -21,11 +21,14 @@ jobs:
           arch: win64_mingw
           tools: tools_mingw1310
 
+      - name: Install dump_syms
+        run: cargo install dump_syms
+
       - name: Configure
         run: >
           cmake -S . -B build
           -G "MinGW Makefiles"
-          -DCMAKE_BUILD_TYPE=Release
+          -DCMAKE_BUILD_TYPE=RelWithDebInfo
           -DCMAKE_INSTALL_PREFIX=install
           -DBUILD_TESTS=OFF
 
@@ -44,8 +47,27 @@ jobs:
       - name: Create zip
         run: Compress-Archive -Path dist\IEDClient -DestinationPath dist\IEDClient-windows-x86_64.zip
 
+      - name: Extract symbols
+        shell: bash
+        run: |
+          dump_syms install/bin/IEDClient.exe > IEDClient.sym
+          BUILD_ID=$(head -1 IEDClient.sym | awk '{print $4}')
+          mkdir -p dist/symbols/IEDClient.exe/$BUILD_ID/
+          cp IEDClient.sym dist/symbols/IEDClient.exe/$BUILD_ID/IEDClient.exe.sym
+
+      - name: Create symbols zip
+        run: |
+          $version = (Select-String -Path CMakeLists.txt -Pattern 'VERSION "(.+)"').Matches.Groups[1].Value
+          Compress-Archive -Path dist\symbols -DestinationPath dist\IEDClient_syms_windows_$version.zip
+
       - name: Upload archive
         uses: actions/upload-artifact@v4
         with:
           name: IEDClient-windows-archive
           path: dist\IEDClient-windows-x86_64.zip
+
+      - name: Upload symbols
+        uses: actions/upload-artifact@v4
+        with:
+          name: IEDClient-windows-symbols
+          path: dist\*_syms_windows_*.zip

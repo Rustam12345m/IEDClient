@@ -16,17 +16,23 @@ jobs:
       - name: Build Docker image
         run: docker build -f ci/Dockerfile.Linux -t iedclient:linux ci/
 
-      - name: Build and create AppImage
+      - name: Build and create AppImage + symbols
         run: >
           docker run --rm -v ${{ github.workspace }}:/workdir
           iedclient:linux
-          /workdir/ci/build_inner.sh --release --archive
+          /workdir/ci/build_inner.sh --release --archive --symbols
 
       - name: Upload AppImage
         uses: actions/upload-artifact@v4
         with:
           name: IEDClient-linux-appimage
           path: dist/*.AppImage
+
+      - name: Upload symbols
+        uses: actions/upload-artifact@v4
+        with:
+          name: IEDClient-linux-symbols
+          path: dist/*_syms_*.zip
 
   deb:
     name: Build .deb package
