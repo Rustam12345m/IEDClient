@@ -54,6 +54,7 @@ elseif(WIN32)
 
     target_include_directories(breakpad_client PUBLIC ${BREAKPAD_DIR})
     target_compile_definitions(breakpad_client PUBLIC BREAKPAD_ENABLED BREAKPAD_WINDOWS)
+    target_compile_definitions(breakpad_client PRIVATE UNICODE _UNICODE)
     target_link_libraries(breakpad_client PRIVATE dbghelp)
 
 else()

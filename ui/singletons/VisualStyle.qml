@@ -120,7 +120,7 @@ QtObject
         property color hoverTextColor:      "#ffffff"
         // Horizontal tabBar
         property int horizontalHeight:      30
-        property int horizontalWidth:       125
-        property int horizontalSpacing:     0
+        property int horizontalWidth:       140
+        property int horizontalSpacing:     2
     }
 }

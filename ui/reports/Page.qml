@@ -73,6 +73,7 @@ FocusScope
 
             leftSide: true
             cellWidth: 30
+            spacing: 2
             color: VisualStyle.toolBarColor
 
             model: ListModel {

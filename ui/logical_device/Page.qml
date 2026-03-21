@@ -44,6 +44,7 @@ FocusScope {
 
         anchors.fill: parent
         anchors.margins: blkSpace
+        anchors.rightMargin: 10
 
         cellWidth: blkWidth + 2 * blkBorder + blkSpace
         cellHeight: blkHeight + 2 * blkBorder + blkSpace

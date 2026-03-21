@@ -131,6 +131,7 @@ FocusScope
                     anchors.fill: parent
 
                     cellWidth: 30
+                    spacing: 2
                     color: VisualStyle.toolBarColor
 
                     //selectedColor: "white"
