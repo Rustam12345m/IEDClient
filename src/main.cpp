@@ -33,28 +33,44 @@
 #include <iostream>
 
 #include "app/main_presenter.hpp"
-#include "client/linux/handler/exception_handler.h"
 
-namespace
-{
+#if defined(BREAKPAD_LINUX)
+#include "client/linux/handler/exception_handler.h"
+namespace {
     bool crashCallback(const google_breakpad::MinidumpDescriptor &descriptor,
-                       void *, bool succeeded)
-    {
+                       void *, bool succeeded) {
         fprintf(stderr, "Crash dump written to: %s\n", descriptor.path());
         return succeeded;
     }
 }
+#elif defined(BREAKPAD_WINDOWS)
+#include "client/windows/handler/exception_handler.h"
+namespace {
+    bool crashCallback(const wchar_t *dumpPath, const wchar_t *minidumpId,
+                       void *, EXCEPTION_POINTERS *, MDRawAssertionInfo *, bool succeeded) {
+        fwprintf(stderr, L"Crash dump written to: %s\\%s.dmp\n", dumpPath, minidumpId);
+        return succeeded;
+    }
+}
+#endif
 
 int main(int argc, char *argv[])
 {
-    // Crash handler — must be initialized before QGuiApplication
-    std::string crashDir = (QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation)
-                           + "/crashes").toStdString();
-    QDir().mkpath(QString::fromStdString(crashDir));
+#ifdef BREAKPAD_ENABLED
+    QString crashDir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation)
+                     + "/crashes";
+    QDir().mkpath(crashDir);
+#endif
 
-    google_breakpad::MinidumpDescriptor descriptor(crashDir);
+#if defined(BREAKPAD_LINUX)
+    google_breakpad::MinidumpDescriptor descriptor(crashDir.toStdString());
     google_breakpad::ExceptionHandler eh(descriptor, nullptr, crashCallback, nullptr,
                                           true, -1);
+#elif defined(BREAKPAD_WINDOWS)
+    google_breakpad::ExceptionHandler eh(crashDir.toStdWString(), nullptr, crashCallback,
+                                          nullptr,
+                                          google_breakpad::ExceptionHandler::HANDLER_ALL);
+#endif
 
     QGuiApplication app(argc, argv);
 
