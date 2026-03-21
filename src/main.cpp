@@ -28,6 +28,7 @@
 #include <QDir>
 #include <QFont>
 #include <QFontDatabase>
+#include <QIcon>
 
 #include <QQuickStyle>
 #include <iostream>
@@ -78,6 +79,8 @@ int main(int argc, char *argv[])
     QFontDatabase::addApplicationFont(":/fonts/NotoSansMono-Regular.ttf");
     QFontDatabase::addApplicationFont(":/fonts/NotoSansMono-Bold.ttf");
     app.setFont(QFont("Noto Sans Mono", 10));
+
+    app.setWindowIcon(QIcon(":/IEDClient.png"));
 
     QCoreApplication::setOrganizationName("OSI");
     QCoreApplication::setOrganizationDomain("opensource.org");

@@ -739,10 +739,10 @@ ApplicationWindow
                     leftPadding: 4
 
                     Text {
-                        width:                 100
+                        width:                 120
                         text:                  modelData.key
                         color:                 VisualStyle.statusBar.textColor
-                        font.pixelSize:        12
+                        font.pixelSize:        14
                         font.family:           VisualStyle.fontFamily
                         font.bold:             true
                         horizontalAlignment:   Text.AlignRight
@@ -751,7 +751,7 @@ ApplicationWindow
                     Text {
                         text:           modelData.desc
                         color:          VisualStyle.statusBar.textColor
-                        font.pixelSize: 12
+                        font.pixelSize: 14
                         font.family:    VisualStyle.fontFamily
                         verticalAlignment: Text.AlignVCenter
                     }

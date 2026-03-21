@@ -2,6 +2,8 @@
     <qresource prefix="/">
         <file>main.qml</file>
 
+        <file>IEDClient.png</file>
+
         <file>fonts/NotoSansMono-Regular.ttf</file>
         <file>fonts/NotoSansMono-Bold.ttf</file>
 
