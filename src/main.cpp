@@ -35,11 +35,11 @@
 
 namespace
 {
-    bool crashCallback(const google_breakpad::MinidumpDescriptor &t_descriptor,
-                       void *, bool t_succeeded)
+    bool crashCallback(const google_breakpad::MinidumpDescriptor &descriptor,
+                       void *, bool succeeded)
     {
-        fprintf(stderr, "Crash dump written to: %s\n", t_descriptor.path());
-        return t_succeeded;
+        fprintf(stderr, "Crash dump written to: %s\n", descriptor.path());
+        return succeeded;
     }
 }
 

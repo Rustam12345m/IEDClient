@@ -35,74 +35,74 @@ extern "C"
 
 namespace
 {
-    void writeValue(QTextStream &t_out, MmsValue *t_val, int t_depth)
+    void writeValue(QTextStream &out, MmsValue *val, int depth)
     {
-        if (!t_val) { t_out << "(null)"; return; }
+        if (!val) { out << "(null)"; return; }
 
         char buf[512];
 
-        switch (MmsValue_getType(t_val)) {
+        switch (MmsValue_getType(val)) {
         case MMS_STRUCTURE:
         case MMS_ARRAY: {
-            int n = MmsValue_getArraySize(t_val);
-            t_out << "{";
+            int n = MmsValue_getArraySize(val);
+            out << "{";
             for (int i = 0; i < n; i++) {
-                if (i > 0) t_out << ", ";
-                if (n > 4 && i == 0) t_out << "\n" << QString(t_depth + 2, ' ');
-                else if (n > 4) t_out << QString(t_depth + 2, ' ');
-                writeValue(t_out, MmsValue_getElement(t_val, i), t_depth + 2);
-                if (n > 4) t_out << "\n";
+                if (i > 0) out << ", ";
+                if (n > 4 && i == 0) out << "\n" << QString(depth + 2, ' ');
+                else if (n > 4) out << QString(depth + 2, ' ');
+                writeValue(out, MmsValue_getElement(val, i), depth + 2);
+                if (n > 4) out << "\n";
             }
-            if (n <= 4) t_out << "}";
-            else t_out << QString(t_depth, ' ') << "}";
+            if (n <= 4) out << "}";
+            else out << QString(depth, ' ') << "}";
             break;
         }
         case MMS_BOOLEAN:
-            t_out << (MmsValue_getBoolean(t_val) ? "true" : "false");
+            out << (MmsValue_getBoolean(val) ? "true" : "false");
             break;
         case MMS_FLOAT:
-            t_out << QString::number(MmsValue_toFloat(t_val), 'g', 6);
+            out << QString::number(MmsValue_toFloat(val), 'g', 6);
             break;
         case MMS_INTEGER:
-            t_out << MmsValue_toInt32(t_val);
+            out << MmsValue_toInt32(val);
             break;
         case MMS_UNSIGNED:
-            t_out << MmsValue_toUint32(t_val);
+            out << MmsValue_toUint32(val);
             break;
         case MMS_VISIBLE_STRING:
         case MMS_STRING: {
-            const char *s = MmsValue_toString(t_val);
-            t_out << "\"" << (s ? s : "") << "\"";
+            const char *s = MmsValue_toString(val);
+            out << "\"" << (s ? s : "") << "\"";
             break;
         }
         case MMS_BIT_STRING:
-            MmsValue_printToBuffer(t_val, buf, sizeof(buf));
-            t_out << buf;
+            MmsValue_printToBuffer(val, buf, sizeof(buf));
+            out << buf;
             break;
         case MMS_OCTET_STRING: {
-            uint16_t len = MmsValue_getOctetStringSize(t_val);
-            uint8_t *data = MmsValue_getOctetStringBuffer(t_val);
+            uint16_t len = MmsValue_getOctetStringSize(val);
+            uint8_t *data = MmsValue_getOctetStringBuffer(val);
             for (int i = 0; i < len; i++) {
-                t_out << QString("%1").arg(data[i], 2, 16, QChar('0'));
-                if (i < len - 1) t_out << ":";
+                out << QString("%1").arg(data[i], 2, 16, QChar('0'));
+                if (i < len - 1) out << ":";
             }
             break;
         }
         case MMS_UTC_TIME:
-            t_out << "T" << MmsValue_toUnixTimestamp(t_val)
-                  << "." << QString("%1").arg(MmsValue_getUtcTimeInMs(t_val) % 1000, 3, 10, QChar('0'))
+            out << "T" << MmsValue_toUnixTimestamp(val)
+                  << "." << QString("%1").arg(MmsValue_getUtcTimeInMs(val) % 1000, 3, 10, QChar('0'))
                   << "Z";
             break;
         case MMS_BINARY_TIME:
-            MmsValue_printToBuffer(t_val, buf, sizeof(buf));
-            t_out << buf;
+            MmsValue_printToBuffer(val, buf, sizeof(buf));
+            out << buf;
             break;
         case MMS_DATA_ACCESS_ERROR:
-            t_out << "ACCESS_ERROR(" << MmsValue_getDataAccessError(t_val) << ")";
+            out << "ACCESS_ERROR(" << MmsValue_getDataAccessError(val) << ")";
             break;
         default:
-            MmsValue_printToBuffer(t_val, buf, sizeof(buf));
-            t_out << buf;
+            MmsValue_printToBuffer(val, buf, sizeof(buf));
+            out << buf;
             break;
         }
     }

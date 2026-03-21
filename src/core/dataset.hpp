@@ -33,8 +33,8 @@ namespace Core
     public:
         using ptr = QSharedPointer< DataSetItem >;
 
-        DataSetItem(ModelItem *t_parent, const QString &t_ref, const QString &t_fc)
-            : ModelItem(t_parent, t_ref), m_fc{t_fc}
+        DataSetItem(ModelItem *parent, const QString &ref, const QString &fc)
+            : ModelItem(parent, ref), m_fc{fc}
         {}
 
         const QString    ref() const { return m_name; }
@@ -65,15 +65,15 @@ namespace Core
     public:
         using ptr = QSharedPointer< DataSet >;
 
-        DataSet(ModelItem *t_parent, const QString &t_name, const QString &t_lnRef, bool t_del)
-            : QObject(nullptr), ModelItem(t_parent, t_name),
-            m_lnReference{t_lnRef}, m_isDeletable{t_del}
+        DataSet(ModelItem *parent, const QString &name, const QString &lnRef, bool del)
+            : QObject(nullptr), ModelItem(parent, name),
+            m_lnReference{lnRef}, m_isDeletable{del}
         {}
 
         const QString ref() const { return m_lnReference; }
 
     signals:
-        void sigItemUpdated(QList<ModelItem::ptr> t_items);
+        void sigItemUpdated(QList<ModelItem::ptr> items);
 
     private:
         QString m_lnReference;

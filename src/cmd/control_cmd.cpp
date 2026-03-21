@@ -23,11 +23,11 @@
 
 namespace Cmd
 {
-    void GetControlInfo_Cmd::execute(Cmd::Interface::IEC61850_API::ptr t_api)
+    void GetControlInfo_Cmd::execute(Cmd::Interface::IEC61850_API::ptr api)
     {
         emit sigCmdEvent(CmdEvent::StartEvent(m_objRef, "Query control info: " + m_objRef));
 
-        auto info = t_api->control().getControlInfo(m_objRef);
+        auto info = api->control().getControlInfo(m_objRef);
 
         emit sigControlInfo(m_objRef,
                             static_cast<int>(info.model),
@@ -36,7 +36,7 @@ namespace Cmd
         emit sigCmdEvent(CmdEvent::FinishEvent(m_objRef, "Control info: " + m_objRef, true));
     }
 
-    void ControlOperate_Cmd::execute(Cmd::Interface::IEC61850_API::ptr t_api)
+    void ControlOperate_Cmd::execute(Cmd::Interface::IEC61850_API::ptr api)
     {
         bool ok = false;
         QString actionName;
@@ -45,19 +45,19 @@ namespace Cmd
         case Action::Operate:
             actionName = "Operate";
             emit sigCmdEvent(CmdEvent::StartEvent(m_objRef, "Operate: " + m_objRef));
-            ok = t_api->control().controlOperate(m_objRef, m_model, m_valType, m_value);
+            ok = api->control().controlOperate(m_objRef, m_model, m_valType, m_value);
             break;
 
         case Action::Select:
             actionName = "Select";
             emit sigCmdEvent(CmdEvent::StartEvent(m_objRef, "Select: " + m_objRef));
-            ok = t_api->control().controlSelect(m_objRef, m_model, m_valType, m_value);
+            ok = api->control().controlSelect(m_objRef, m_model, m_valType, m_value);
             break;
 
         case Action::Cancel:
             actionName = "Cancel";
             emit sigCmdEvent(CmdEvent::StartEvent(m_objRef, "Cancel: " + m_objRef));
-            ok = t_api->control().controlCancel(m_objRef);
+            ok = api->control().controlCancel(m_objRef);
             break;
         }
 

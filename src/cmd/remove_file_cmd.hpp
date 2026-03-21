@@ -32,21 +32,21 @@ namespace Cmd
     {
         Q_OBJECT
     public:
-        RemoveFileCMD(const QString &t_name, int t_fileIndex)
-            : m_filename(t_name), m_fileIndex(t_fileIndex)
+        RemoveFileCMD(const QString &name, int fileIndex)
+            : m_filename(name), m_fileIndex(fileIndex)
         {
         }
         ~RemoveFileCMD() {}
 
-        void    execute(Cmd::Interface::IEC61850_API::ptr t_api) override;
+        void    execute(Cmd::Interface::IEC61850_API::ptr api) override;
 
         // Create new command like Builder pattern
-        static auto create(const QString &t_name, int t_row) {
-            return QSharedPointer<RemoveFileCMD>::create(t_name, t_row);
+        static auto create(const QString &name, int row) {
+            return QSharedPointer<RemoveFileCMD>::create(name, row);
         }
 
     signals:
-        void    sigFileRemoved(int t_row);
+        void    sigFileRemoved(int row);
 
     protected:
         QString m_filename;

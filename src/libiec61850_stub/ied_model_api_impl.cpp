@@ -29,10 +29,10 @@ extern "C"
 
 namespace
 {
-    std::tuple<QString, QString, int> getFX_fromName(const char *t_data)
+    std::tuple<QString, QString, int> getFX_fromName(const char *data)
     {
         // Parse paramets from string like: ctlModel[CF]
-        QString tmp = QString::fromLocal8Bit(t_data);
+        QString tmp = QString::fromLocal8Bit(data);
 
         QString daName, fc;
         int fcNum = 0;
@@ -48,29 +48,29 @@ namespace
         return std::make_tuple(daName, fc, fcNum);
     }
 
-    std::tuple<QString, QString> parseDataSetItemRef(const QString &t_ref)
+    std::tuple<QString, QString> parseDataSetItemRef(const QString &ref)
     {
-        QString ref = t_ref.left(t_ref.size() - 4);
-        QString fc = t_ref.mid(ref.size() + 1, 2);
-        return { ref, fc };
+        QString refTrimmed = ref.left(ref.size() - 4);
+        QString fc = ref.mid(refTrimmed.size() + 1, 2);
+        return { refTrimmed, fc };
     }
 
-    void    recursiveReadAttributes(IedConnection t_con, QSharedPointer<Core::ModelItem> t_parent,
-                                    Core::DataModelBuilder &t_builder)
+    void    recursiveReadAttributes(IedConnection con, QSharedPointer<Core::ModelItem> parent,
+                                    Core::DataModelBuilder &builder)
     {
         IedClientError retval = IED_ERROR_OK;
-        LinkedList daList = IedConnection_getDataDirectory(t_con, &retval, t_parent->getReference().toLocal8Bit().data());
+        LinkedList daList = IedConnection_getDataDirectory(con, &retval, parent->getReference().toLocal8Bit().data());
         if ((retval == IED_ERROR_OK) && (daList != nullptr)) {
             LinkedList attr = LinkedList_getNext(daList);
 
             while (attr != nullptr) {
                 QString name = QString::fromLocal8Bit((char *)attr->data);
 
-                t_builder.createSDA(t_parent, name);
-                auto sda = t_builder.lastSDA();
+                builder.createSDA(parent, name);
+                auto sda = builder.lastSDA();
 
-                QString ref = t_parent->getReference() + "." + name;
-                recursiveReadAttributes(t_con, sda, t_builder);
+                QString ref = parent->getReference() + "." + name;
+                recursiveReadAttributes(con, sda, builder);
 
                 attr = LinkedList_getNext(attr);
             }
@@ -81,7 +81,7 @@ namespace
 
 namespace Libiec61850
 {
-    int IED_ModelAPI_Impl::fetchDataModel(Core::DataModelBuilder &t_builder)
+    int IED_ModelAPI_Impl::fetchDataModel(Core::DataModelBuilder &builder)
     {
         if (!m_api.isConnected()) {
             return -1;
@@ -98,7 +98,7 @@ namespace Libiec61850
         // Fetch all Logical Devices
         LinkedList ld = LinkedList_getNext(ldList);
         while (ld != nullptr) {
-            t_builder.createLD(QString::fromLocal8Bit((char *)ld->data)); // New LD
+            builder.createLD(QString::fromLocal8Bit((char *)ld->data)); // New LD
 
             // Fetch all Logical Nodes
             LinkedList lnList = IedConnection_getLogicalDeviceDirectory(m_api.m_libConn, &retval, (char *)ld->data);
@@ -106,23 +106,23 @@ namespace Libiec61850
 
                 LinkedList node = LinkedList_getNext(lnList);
                 while (node != nullptr) {
-                    t_builder.createLN(QString::fromLocal8Bit((char *)node->data)); // New LN
+                    builder.createLN(QString::fromLocal8Bit((char *)node->data)); // New LN
 
-                    emit sigFoundNode(t_builder.lastLN()->getReference());
+                    emit sigFoundNode(builder.lastLN()->getReference());
 
-                    fetchLN_DO(t_builder);
-                    auto updVals = m_api.state().getValsForLN(t_builder.lastLN());
+                    fetchLN_DO(builder);
+                    auto updVals = m_api.state().getValsForLN(builder.lastLN());
                     updVals->update();
 
-                    fetchLN_DS(t_builder);
+                    fetchLN_DS(builder);
 
-                    fetchLN_RCB(t_builder);
+                    fetchLN_RCB(builder);
 
-                    fetchLN_GOCB(t_builder);
+                    fetchLN_GOCB(builder);
 
-                    fetchLN_SVCB(t_builder);
+                    fetchLN_SVCB(builder);
 
-                    m_api.m_state.getValsForLN(t_builder.lastLN());
+                    m_api.m_state.getValsForLN(builder.lastLN());
 
                     node = LinkedList_getNext(node); // next LN
                 }
@@ -135,10 +135,10 @@ namespace Libiec61850
         return 0;
     }
 
-    int IED_ModelAPI_Impl::fetchLN_DO(Core::DataModelBuilder &t_builder)
+    int IED_ModelAPI_Impl::fetchLN_DO(Core::DataModelBuilder &builder)
     {
         IedClientError retval = IED_ERROR_OK;
-        QString ref = t_builder.lastLN()->getReference();
+        QString ref = builder.lastLN()->getReference();
 
         LinkedList doList = IedConnection_getLogicalNodeDirectory(m_api.m_libConn, &retval,
                                         ref.toStdString().data(), ACSI_CLASS_DATA_OBJECT);
@@ -149,7 +149,7 @@ namespace Libiec61850
                 QString doName = QString::fromLocal8Bit((char *)dObj->data);
                 QString refDO = QString("%1.%2").arg(ref, doName);
 
-                t_builder.createDO(doName);
+                builder.createDO(doName);
 
                 LinkedList daListFC = IedConnection_getDataDirectoryFC(m_api.m_libConn,
                                                     &retval, refDO.toLocal8Bit().data());
@@ -159,10 +159,10 @@ namespace Libiec61850
                     while (attrFC != nullptr) {
                         auto [name, fc, fcNum] = getFX_fromName((char *)attrFC->data);
 
-                        t_builder.createDA(name, fc);
+                        builder.createDA(name, fc);
 
                         // Recursive search SubAttr for DA
-                        recursiveReadAttributes(m_api.m_libConn, t_builder.lastDA(), t_builder);
+                        recursiveReadAttributes(m_api.m_libConn, builder.lastDA(), builder);
 
                         attrFC = LinkedList_getNext(attrFC);
                     }
@@ -176,10 +176,10 @@ namespace Libiec61850
         return 0;
     }
 
-    int IED_ModelAPI_Impl::fetchLN_DS(Core::DataModelBuilder &t_builder)
+    int IED_ModelAPI_Impl::fetchLN_DS(Core::DataModelBuilder &builder)
     {
         IedClientError retval = IED_ERROR_OK;
-        QString lnRef = t_builder.lastLN()->getReference();
+        QString lnRef = builder.lastLN()->getReference();
 
         LinkedList dsList = IedConnection_getLogicalNodeDirectory(m_api.m_libConn, &retval,
                                     lnRef.toStdString().data(), ACSI_CLASS_DATA_SET);
@@ -191,7 +191,7 @@ namespace Libiec61850
             char dataSetRef[130] = { 0 };
             sprintf(dataSetRef, "%s.%s", lnRef.toStdString().data(), dsName);
 
-            t_builder.createDataSet(QString::fromLocal8Bit(dsName), lnRef, isDeletable);
+            builder.createDataSet(QString::fromLocal8Bit(dsName), lnRef, isDeletable);
 
             LinkedList dsEntityList = IedConnection_getDataSetDirectory(m_api.m_libConn, &retval,
                                                                         dataSetRef, &isDeletable);
@@ -200,7 +200,7 @@ namespace Libiec61850
                 QString dsElemRef = QString::fromLocal8Bit((char *)dsEntity->data);
 
                 auto [ref, fc] = parseDataSetItemRef(dsElemRef);
-                t_builder.createDataSet_Elem(ref, fc);
+                builder.createDataSet_Elem(ref, fc);
 
                 dsEntity = LinkedList_getNext(dsEntity);
             }
@@ -212,14 +212,14 @@ namespace Libiec61850
         return 0;
     }
 
-    int IED_ModelAPI_Impl::fetchLN_RCB(Core::DataModelBuilder &t_builder)
+    int IED_ModelAPI_Impl::fetchLN_RCB(Core::DataModelBuilder &builder)
     {
         IedClientError retval = IED_ERROR_OK;
-        QString lnRef = t_builder.lastLN()->getReference();
+        QString lnRef = builder.lastLN()->getReference();
 
-        auto fetchRCBList = [&](ACSIClass t_acsiClass, bool t_isBuffered, const char *t_prefix) {
+        auto fetchRCBList = [&](ACSIClass acsiClass, bool isBuffered, const char *prefix) {
             LinkedList rcbList = IedConnection_getLogicalNodeDirectory(m_api.m_libConn, &retval,
-                                     lnRef.toStdString().data(), t_acsiClass);
+                                     lnRef.toStdString().data(), acsiClass);
             if (retval != IED_ERROR_OK || rcbList == nullptr) {
                 return;
             }
@@ -227,15 +227,15 @@ namespace Libiec61850
             LinkedList rcb = LinkedList_getNext(rcbList);
             while (rcb != nullptr) {
                 QString rcbName = QString::fromLocal8Bit((char *)rcb->data);
-                QString rcbRef  = QString("%1.%2.%3").arg(lnRef, t_prefix, rcbName);
+                QString rcbRef  = QString("%1.%2.%3").arg(lnRef, prefix, rcbName);
 
-                t_builder.createRCB(rcbName, lnRef, t_isBuffered);
+                builder.createRCB(rcbName, lnRef, isBuffered);
 
                 ClientReportControlBlock clientRcb = IedConnection_getRCBValues(
                     m_api.m_libConn, &retval, rcbRef.toStdString().data(), nullptr);
 
                 if (retval == IED_ERROR_OK && clientRcb != nullptr) {
-                    auto rcbItem = t_builder.lastRCB();
+                    auto rcbItem = builder.lastRCB();
 
                     rcbItem->setRptEna(ClientReportControlBlock_getRptEna(clientRcb));
                     rcbItem->setResv(ClientReportControlBlock_getResv(clientRcb));
@@ -283,10 +283,10 @@ namespace Libiec61850
         return 0;
     }
 
-    int IED_ModelAPI_Impl::fetchLN_GOCB(Core::DataModelBuilder &t_builder)
+    int IED_ModelAPI_Impl::fetchLN_GOCB(Core::DataModelBuilder &builder)
     {
         IedClientError retval = IED_ERROR_OK;
-        QString lnRef = t_builder.lastLN()->getReference();
+        QString lnRef = builder.lastLN()->getReference();
 
         LinkedList gocbList = IedConnection_getLogicalNodeDirectory(m_api.m_libConn, &retval,
                                   lnRef.toStdString().data(), ACSI_CLASS_GoCB);
@@ -300,13 +300,13 @@ namespace Libiec61850
             QString name    = QString::fromLocal8Bit((char *)gocb->data);
             QString gocbRef = QString("%1.%2").arg(lnRef, name);
 
-            t_builder.createGOCB(name, lnRef);
+            builder.createGOCB(name, lnRef);
 
             ClientGooseControlBlock clientGocb = IedConnection_getGoCBValues(
                 m_api.m_libConn, &retval, gocbRef.toStdString().data(), nullptr);
 
             if (retval == IED_ERROR_OK && clientGocb != nullptr) {
-                auto gocbItem = t_builder.lastGOCB();
+                auto gocbItem = builder.lastGOCB();
 
                 gocbItem->setGoEna(ClientGooseControlBlock_getGoEna(clientGocb));
                 gocbItem->setConfRev(ClientGooseControlBlock_getConfRev(clientGocb));
@@ -333,14 +333,14 @@ namespace Libiec61850
         return 0;
     }
 
-    int IED_ModelAPI_Impl::fetchLN_SVCB(Core::DataModelBuilder &t_builder)
+    int IED_ModelAPI_Impl::fetchLN_SVCB(Core::DataModelBuilder &builder)
     {
         IedClientError retval = IED_ERROR_OK;
-        QString lnRef = t_builder.lastLN()->getReference();
+        QString lnRef = builder.lastLN()->getReference();
 
-        auto fetchSVCBList = [&](ACSIClass t_acsiClass, bool t_isMulticast, const char *t_prefix) {
+        auto fetchSVCBList = [&](ACSIClass acsiClass, bool isMulticast, const char *prefix) {
             LinkedList svcbList = IedConnection_getLogicalNodeDirectory(m_api.m_libConn, &retval,
-                                      lnRef.toStdString().data(), t_acsiClass);
+                                      lnRef.toStdString().data(), acsiClass);
             if (retval != IED_ERROR_OK || svcbList == nullptr) {
                 return;
             }
@@ -350,13 +350,13 @@ namespace Libiec61850
                 QString name    = QString::fromLocal8Bit((char *)svcb->data);
                 QString svcbRef = QString("%1.%2").arg(lnRef, name);
 
-                t_builder.createSVCB(name, lnRef, t_isMulticast);
+                builder.createSVCB(name, lnRef, isMulticast);
 
                 ClientSVControlBlock clientSvcb = ClientSVControlBlock_create(
                     m_api.m_libConn, svcbRef.toStdString().data());
 
                 if (clientSvcb != nullptr) {
-                    auto svcbItem = t_builder.lastSVCB();
+                    auto svcbItem = builder.lastSVCB();
 
                     svcbItem->setSvEna(ClientSVControlBlock_getSvEna(clientSvcb));
                     svcbItem->setConfRev(ClientSVControlBlock_getConfRev(clientSvcb));

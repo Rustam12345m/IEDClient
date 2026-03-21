@@ -38,10 +38,10 @@ namespace Cmd
         CmdInterface() = default;
         virtual ~CmdInterface() {}
 
-        virtual void execute(Cmd::Interface::IEC61850_API::ptr t_api) {
+        virtual void execute(Cmd::Interface::IEC61850_API::ptr api) {
         }
 
     signals:
-        void sigCmdEvent(CmdEvent t_event);
+        void sigCmdEvent(CmdEvent event);
     };
 }

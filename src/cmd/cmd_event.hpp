@@ -44,17 +44,17 @@ namespace Cmd
     class CmdEvent
     {
     public:
-        static CmdEvent  StartEvent(const QString &t_ip, const QString &t_msg) {
+        static CmdEvent  StartEvent(const QString &ip, const QString &msg) {
             return { .m_type = START_EVENT, .m_time = QDateTime::currentDateTime(),
-                     .m_ip = t_ip, .m_msg = t_msg };
+                     .m_ip = ip, .m_msg = msg };
         }
-        static CmdEvent  ProcessEvent(const QString &t_ip, const QString &t_msg, int t_perc) {
+        static CmdEvent  ProcessEvent(const QString &ip, const QString &msg, int perc) {
             return { .m_type = PROCESS_EVENT, .m_time = QDateTime::currentDateTime(),
-                     .m_ip = t_ip, .m_msg = t_msg, .m_perc = t_perc };
+                     .m_ip = ip, .m_msg = msg, .m_perc = perc };
         }
-        static CmdEvent  FinishEvent(const QString &t_ip, const QString &t_msg, bool t_result) {
+        static CmdEvent  FinishEvent(const QString &ip, const QString &msg, bool result) {
             return { .m_type = FINISH_EVENT, .m_time = QDateTime::currentDateTime(),
-                     .m_ip = t_ip, .m_msg = t_msg, .m_result = t_result };
+                     .m_ip = ip, .m_msg = msg, .m_result = result };
         }
 
     public:

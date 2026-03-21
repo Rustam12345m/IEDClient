@@ -23,7 +23,7 @@
 
 namespace Cmd
 {
-    CmdThread::CmdThread(Cmd::Interface::IEC61850_API::ptr t_api) : m_api(t_api)
+    CmdThread::CmdThread(Cmd::Interface::IEC61850_API::ptr api) : m_api(api)
     {
         setObjectName("CmdThread");
         start();
@@ -38,9 +38,9 @@ namespace Cmd
         }
     }
 
-    void CmdThread::putCommand(CmdInterface::ptr t_cmd)
+    void CmdThread::putCommand(CmdInterface::ptr cmd)
     {
-        m_queue.push(t_cmd);
+        m_queue.push(cmd);
     }
 
     void CmdThread::run()

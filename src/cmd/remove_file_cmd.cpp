@@ -23,9 +23,9 @@
 
 namespace Cmd
 {
-    void RemoveFileCMD::execute(Cmd::Interface::IEC61850_API::ptr t_api)
+    void RemoveFileCMD::execute(Cmd::Interface::IEC61850_API::ptr api)
     {
-        int rc = t_api->fs().remove(m_filename);
+        int rc = api->fs().remove(m_filename);
 
         if (rc == 0) {
             emit sigFileRemoved(m_fileIndex);

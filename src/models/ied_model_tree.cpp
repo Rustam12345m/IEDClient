@@ -23,15 +23,15 @@
 
 namespace App::Models
 {
-    IED_ModelTree::IED_ModelTree(QObject *t_parent, Core::IED::ptr t_ied)
-        : QAbstractItemModel(t_parent), m_ied(t_ied)
+    IED_ModelTree::IED_ModelTree(QObject *parent, Core::IED::ptr ied)
+        : QAbstractItemModel(parent), m_ied(ied)
     {
     }
 
-    void IED_ModelTree::setActiveIED(Core::IED::ptr t_ied)
+    void IED_ModelTree::setActiveIED(Core::IED::ptr ied)
     {
         beginResetModel();
-        m_ied = t_ied;
+        m_ied = ied;
         endResetModel();
     }
 
@@ -43,27 +43,27 @@ namespace App::Models
         return nullptr;
     }
 
-    int IED_ModelTree::findRow(Core::ModelItem *t_item) const
+    int IED_ModelTree::findRow(Core::ModelItem *item) const
     {
-        Core::ModelItem *parent = t_item->getParent();
+        Core::ModelItem *parent = item->getParent();
         if (!parent) {
             return 0;
         }
         const auto &siblings = parent->getItemList();
         for (int i = 0; i < siblings.size(); ++i) {
-            if (siblings[i].get() == t_item) {
+            if (siblings[i].get() == item) {
                 return i;
             }
         }
         return 0;
     }
 
-    QVariant IED_ModelTree::headerData(int t_sect, Qt::Orientation t_orient, int t_role) const
+    QVariant IED_ModelTree::headerData(int sect, Qt::Orientation orient, int role) const
     {
-        if (t_role != Qt::DisplayRole || t_orient != Qt::Horizontal) {
+        if (role != Qt::DisplayRole || orient != Qt::Horizontal) {
             return QVariant();
         }
-        switch (t_sect) {
+        switch (sect) {
         case NAME_COLUMN:  return QVariant("Name");
         case VALUE_COLUMN: return QVariant("Value");
         case FC_COLUMN:    return QVariant("FC");
@@ -71,17 +71,17 @@ namespace App::Models
         return QVariant();
     }
 
-    int IED_ModelTree::rowCount(const QModelIndex &t_parent) const
+    int IED_ModelTree::rowCount(const QModelIndex &parent) const
     {
-        if (t_parent.column() > 0) {
+        if (parent.column() > 0) {
             return 0;
         }
 
         Core::ModelItem *item = nullptr;
-        if (!t_parent.isValid()) {
+        if (!parent.isValid()) {
             item = rootItem();
         } else {
-            item = static_cast<Core::ModelItem*>(t_parent.internalPointer());
+            item = static_cast<Core::ModelItem*>(parent.internalPointer());
         }
 
         if (item) {
@@ -90,40 +90,40 @@ namespace App::Models
         return 0;
     }
 
-    int IED_ModelTree::columnCount(const QModelIndex &t_parent) const
+    int IED_ModelTree::columnCount(const QModelIndex &parent) const
     {
         return COLUMN_COUNT;
     }
 
-    QModelIndex IED_ModelTree::index(int t_row, int t_column, const QModelIndex &t_parent) const
+    QModelIndex IED_ModelTree::index(int row, int column, const QModelIndex &parent) const
     {
-        if (!hasIndex(t_row, t_column, t_parent)) {
+        if (!hasIndex(row, column, parent)) {
             return QModelIndex();
         }
 
         Core::ModelItem *item = nullptr;
-        if (!t_parent.isValid()) {
+        if (!parent.isValid()) {
             item = rootItem();
         } else {
-            item = static_cast<Core::ModelItem*>(t_parent.internalPointer());
+            item = static_cast<Core::ModelItem*>(parent.internalPointer());
         }
 
         if (item) {
-            auto node = item->getItem(t_row);
+            auto node = item->getItem(row);
             if (node) {
-                return createIndex(t_row, t_column, node.get());
+                return createIndex(row, column, node.get());
             }
         }
         return QModelIndex();
     }
 
-    QModelIndex IED_ModelTree::parent(const QModelIndex &t_index) const
+    QModelIndex IED_ModelTree::parent(const QModelIndex &index) const
     {
-        if (!t_index.isValid()) {
+        if (!index.isValid()) {
             return QModelIndex();
         }
 
-        auto *item = static_cast<Core::ModelItem*>(t_index.internalPointer());
+        auto *item = static_cast<Core::ModelItem*>(index.internalPointer());
         if (!item) {
             return QModelIndex();
         }
@@ -136,18 +136,18 @@ namespace App::Models
         return createIndex(findRow(parent), 0, parent);
     }
 
-    QVariant IED_ModelTree::data(const QModelIndex &t_index, int t_role) const
+    QVariant IED_ModelTree::data(const QModelIndex &index, int role) const
     {
-        if (!t_index.isValid() || t_role != Qt::DisplayRole) {
+        if (!index.isValid() || role != Qt::DisplayRole) {
             return QVariant();
         }
 
-        auto *item = static_cast<Core::ModelItem*>(t_index.internalPointer());
+        auto *item = static_cast<Core::ModelItem*>(index.internalPointer());
         if (!item) {
             return QVariant();
         }
 
-        switch (t_index.column()) {
+        switch (index.column()) {
         case NAME_COLUMN:
             return QVariant(item->getName());
         case FC_COLUMN: {

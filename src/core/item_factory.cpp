@@ -32,34 +32,34 @@
 
 namespace Core
 {
-    ModelItem::ptr ItemFactory::createModel(const QString &t_name)
+    ModelItem::ptr ItemFactory::createModel(const QString &name)
     {
-        return DataModel::ptr::create(t_name);
+        return DataModel::ptr::create(name);
     }
 
-    ModelItem::ptr ItemFactory::createLD(ModelItem *t_parent, const QString &t_name)
+    ModelItem::ptr ItemFactory::createLD(ModelItem *parent, const QString &name)
     {
-        return LogicalDevice::ptr::create(t_parent, t_name);
+        return LogicalDevice::ptr::create(parent, name);
     }
 
-    ModelItem::ptr ItemFactory::createLN(ModelItem *t_parent, const QString &t_name)
+    ModelItem::ptr ItemFactory::createLN(ModelItem *parent, const QString &name)
     {
-        return LogicalNode::ptr::create(t_parent, t_name);
+        return LogicalNode::ptr::create(parent, name);
     }
 
-    ModelItem::ptr ItemFactory::createDO(ModelItem *t_parent, const QString &t_name)
+    ModelItem::ptr ItemFactory::createDO(ModelItem *parent, const QString &name)
     {
-        return DataObject::ptr::create(t_parent, t_name);
+        return DataObject::ptr::create(parent, name);
     }
 
-    ModelItem::ptr ItemFactory::createDA(ModelItem *t_parent, const QString &t_name,
-                                                const QString &t_fc)
+    ModelItem::ptr ItemFactory::createDA(ModelItem *parent, const QString &name,
+                                                const QString &fc)
     {
-        return DataAttribute::ptr::create(t_parent, t_name, t_fc);
+        return DataAttribute::ptr::create(parent, name, fc);
     }
 
-    ModelItem::ptr ItemFactory::createSA(ModelItem *t_parent, const QString &t_name)
+    ModelItem::ptr ItemFactory::createSA(ModelItem *parent, const QString &name)
     {
-        return SubAttribute::ptr::create(t_parent, t_name);
+        return SubAttribute::ptr::create(parent, name);
     }
 }

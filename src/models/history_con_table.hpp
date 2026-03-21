@@ -40,19 +40,19 @@ namespace App::Models
         };
 
     public:
-        HistConTable(QObject *t_parent, App::AppSettings &t_conf);
+        HistConTable(QObject *parent, App::AppSettings &conf);
 
-        QVariant headerData(int t_column, Qt::Orientation t_orientation,
-                            int t_role = Qt::DisplayRole) const override;
+        QVariant headerData(int column, Qt::Orientation orientation,
+                            int role = Qt::DisplayRole) const override;
 
         QHash<int, QByteArray> roleNames() const override;
 
-        int rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
-        int columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
+        int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+        int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
-        QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
+        QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
-        Q_INVOKABLE void removeFromHistory(int t_index);
+        Q_INVOKABLE void removeFromHistory(int idx);
 
     public slots:
         void     slotAppConfigUpdated();

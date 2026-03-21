@@ -30,13 +30,13 @@ namespace Libiec61850
     class IED_FS_API_Impl : public Cmd::Interface::IED_FS_API
     {
     public:
-        IED_FS_API_Impl(ApiAdapter &t_api) : m_api(t_api) {}
+        IED_FS_API_Impl(ApiAdapter &api) : m_api(api) {}
         ~IED_FS_API_Impl() override = default;
 
-        int     getFileList(Core::DirOn &t_dir) override;
-        bool    download(const QString &t_filename, const QString &t_localPath,
-                         uint32_t t_fileSize = 0) override;
-        int     remove(const QString &t_filename) override;
+        int     getFileList(Core::DirOn &dir) override;
+        bool    download(const QString &filename, const QString &localPath,
+                         uint32_t fileSize = 0) override;
+        int     remove(const QString &filename) override;
 
     private:
         ApiAdapter&   m_api;

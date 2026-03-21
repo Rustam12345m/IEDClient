@@ -32,8 +32,8 @@ namespace Core
     class FileOn
     {
     public:
-        FileOn(const QString &t_name, uint32_t t_size, uint64_t t_ts)
-            : m_fileName{t_name}, m_size{t_size}, m_mts{t_ts}
+        FileOn(const QString &name, uint32_t size, uint64_t ts)
+            : m_fileName{name}, m_size{size}, m_mts{ts}
         {
         }
         FileOn() = delete;
@@ -64,11 +64,11 @@ namespace Core
 
     public:
         DirOn() {}
-        DirOn(const QString &t_name) : m_name{t_name} {}
+        DirOn(const QString &name) : m_name{name} {}
 
-        void          put(const FileOn &t_file)
+        void          put(const FileOn &file)
         {
-            m_file.push_back(t_file);
+            m_file.push_back(file);
         }
 
         std::tuple<size_t, size_t>         getDirectoryInfo() {
@@ -82,8 +82,8 @@ namespace Core
         size_t        getCount() {
             return m_file.size();
         }
-        void          removeFileFromList(int t_index) {
-            m_file.removeAt(t_index);
+        void          removeFileFromList(int index) {
+            m_file.removeAt(index);
         }
 
     public:
@@ -97,11 +97,11 @@ namespace Core
     public:
         using ptr = QSharedPointer< FS_Model >;
 
-        FS_Model(QObject *t_parent = nullptr) : QObject(t_parent) {}
+        FS_Model(QObject *parent = nullptr) : QObject(parent) {}
 
-        void put(const DirOn &t_dir)
+        void put(const DirOn &dir)
         {
-            m_dir = t_dir;
+            m_dir = dir;
             emit sigFS_Updated();
         }
 
@@ -111,8 +111,8 @@ namespace Core
         size_t getCount() {
             return m_dir.getCount();
         }
-        void removeFileFromList(int t_index) {
-            m_dir.removeFileFromList(t_index);
+        void removeFileFromList(int index) {
+            m_dir.removeFileFromList(index);
         }
 
     signals:

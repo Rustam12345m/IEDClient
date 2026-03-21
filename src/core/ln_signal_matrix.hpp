@@ -33,11 +33,11 @@ namespace Core
     {
     public:
         SignalMatrixRow() = default;
-        SignalMatrixRow(const QString &t_path, const QString &t_fc,
-                        ModelItem::ptr t_v, ModelItem::ptr t_q, ModelItem::ptr t_ts,
-                        ModelItem::ptr t_desc)
-            : m_path{t_path}, m_fc{t_fc}, m_value(t_v), m_quality(t_q), m_timestamp(t_ts),
-            m_desc(t_desc)
+        SignalMatrixRow(const QString &path, const QString &fc,
+                        ModelItem::ptr v, ModelItem::ptr q, ModelItem::ptr ts,
+                        ModelItem::ptr desc)
+            : m_path{path}, m_fc{fc}, m_value(v), m_quality(q), m_timestamp(ts),
+            m_desc(desc)
         {}
 
         ModelItem::ptr base() const { return m_dataObject; }
@@ -105,45 +105,45 @@ namespace Core
             return m_signals.size();
         }
 
-        QString     name(int t_row) const
+        QString     name(int row) const
         {
-            if (t_row >= 0 && t_row < m_signals.size()) {
-                return m_signals[t_row].name();
+            if (row >= 0 && row < m_signals.size()) {
+                return m_signals[row].name();
             }
             return "";
         }
-        QString     fc(int t_row) const
+        QString     fc(int row) const
         {
-            if (t_row >= 0 && t_row < m_signals.size()) {
-                return m_signals[t_row].fc();
+            if (row >= 0 && row < m_signals.size()) {
+                return m_signals[row].fc();
             }
             return "";
         }
-        QString     value(int t_row) const
+        QString     value(int row) const
         {
-            if (t_row >= 0 && t_row < m_signals.size()) {
-                return m_signals[t_row].value();
+            if (row >= 0 && row < m_signals.size()) {
+                return m_signals[row].value();
             }
             return "";
         }
-        QString     quality(int t_row) const
+        QString     quality(int row) const
         {
-            if (t_row >= 0 && t_row < m_signals.size()) {
-                return m_signals[t_row].quality();
+            if (row >= 0 && row < m_signals.size()) {
+                return m_signals[row].quality();
             }
             return "";
         }
-        QString     timestamp(int t_row) const
+        QString     timestamp(int row) const
         {
-            if (t_row >= 0 && t_row < m_signals.size()) {
-                return m_signals[t_row].timestamp();
+            if (row >= 0 && row < m_signals.size()) {
+                return m_signals[row].timestamp();
             }
             return "";
         }
-        QString     description(int t_row) const
+        QString     description(int row) const
         {
-            if (t_row >= 0 && t_row < m_signals.size()) {
-                return m_signals[t_row].desc();
+            if (row >= 0 && row < m_signals.size()) {
+                return m_signals[row].desc();
             }
             return "";
         }
@@ -164,14 +164,14 @@ namespace Core
     class LN_SignalMatrixBuilder
     {
     public:
-        static LN_SignalMatrix::ptr create(QSharedPointer< LogicalNode > t_ln,
-                                           const QList<QString> &t_fcFilter);
+        static LN_SignalMatrix::ptr create(QSharedPointer< LogicalNode > ln,
+                                           const QList<QString> &fcFilter);
 
     private:
-        static void recursiveFillMatrix(LN_SignalMatrix::ptr t_table,
-                                        ModelItem::ptr t_root,
-                                        ModelItem::ptr t_item,
-                                        SignalMatrixRow t_prototype,
-                                        const QList<QString> &t_fcFilter);
+        static void recursiveFillMatrix(LN_SignalMatrix::ptr table,
+                                        ModelItem::ptr root,
+                                        ModelItem::ptr item,
+                                        SignalMatrixRow prototype,
+                                        const QList<QString> &fcFilter);
     };
 }

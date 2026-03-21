@@ -23,30 +23,30 @@
 
 namespace Core
 {
-    ReportStorage::ReportStorage(QObject *t_parent)
-        : QObject(t_parent)
+    ReportStorage::ReportStorage(QObject *parent)
+        : QObject(parent)
     {
     }
 
-    void ReportStorage::setMemberNames(const QStringList &t_names)
+    void ReportStorage::setMemberNames(const QStringList &names)
     {
         QMutexLocker locker(&m_lock);
-        m_memberNames = t_names;
+        m_memberNames = names;
     }
 
-    QString ReportStorage::memberName(int t_index) const
+    QString ReportStorage::memberName(int index) const
     {
         QMutexLocker locker(&m_lock);
-        if (t_index >= 0 && t_index < m_memberNames.size()) {
-            return m_memberNames[t_index];
+        if (index >= 0 && index < m_memberNames.size()) {
+            return m_memberNames[index];
         }
-        return QString::number(t_index);
+        return QString::number(index);
     }
 
-    void ReportStorage::setDataSetRef(const QString &t_ref)
+    void ReportStorage::setDataSetRef(const QString &ref)
     {
         QMutexLocker locker(&m_lock);
-        m_dataSetRef = t_ref;
+        m_dataSetRef = ref;
     }
 
     QString ReportStorage::dataSetRef() const
@@ -55,12 +55,12 @@ namespace Core
         return m_dataSetRef;
     }
 
-    void ReportStorage::addReport(ReceivedReport::ptr t_report)
+    void ReportStorage::addReport(ReceivedReport::ptr report)
     {
         {
             QMutexLocker locker(&m_lock);
             int pos = (m_head + m_count) % Capacity;
-            m_buffer[pos] = t_report;
+            m_buffer[pos] = report;
 
             if (m_count < Capacity) {
                 ++m_count;
@@ -72,13 +72,13 @@ namespace Core
         emit sigReportReceived();
     }
 
-    ReceivedReport::ptr ReportStorage::getReport(int t_index) const
+    ReceivedReport::ptr ReportStorage::getReport(int index) const
     {
         QMutexLocker locker(&m_lock);
-        if (t_index < 0 || t_index >= m_count) {
+        if (index < 0 || index >= m_count) {
             return nullptr;
         }
-        int pos = (m_head + t_index) % Capacity;
+        int pos = (m_head + index) % Capacity;
         return m_buffer[pos];
     }
 

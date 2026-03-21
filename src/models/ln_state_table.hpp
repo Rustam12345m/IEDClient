@@ -46,25 +46,25 @@ namespace App::Models
     public:
         enum class MatrixType { State, Controls, Settings };
 
-        LN_SignalTable(QObject *t_parent, Core::IED::ptr t_ied,
-                       MatrixType t_type = MatrixType::State);
+        LN_SignalTable(QObject *parent, Core::IED::ptr ied,
+                       MatrixType type = MatrixType::State);
 
-        void     setActiveIED(Core::IED::ptr t_ied);
+        void     setActiveIED(Core::IED::ptr ied);
         auto     getCurrectLN() const {
             return m_lnode;
         }
 
-        QVariant headerData(int t_section, Qt::Orientation t_orientation,
-                            int t_role = Qt::DisplayRole) const override;
+        QVariant headerData(int section, Qt::Orientation orientation,
+                            int role = Qt::DisplayRole) const override;
         QHash<int, QByteArray> roleNames() const override;
 
-        int      rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
-        int      columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
-        QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
+        int      rowCount(const QModelIndex &parent = QModelIndex()) const override;
+        int      columnCount(const QModelIndex &parent = QModelIndex()) const override;
+        QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     public slots:
-        void     slotDataUpdated(Core::ModelItem::ptrList t_nodes);
-        void     slotLNSelected(int t_ld, int t_ln);
+        void     slotDataUpdated(Core::ModelItem::ptrList nodes);
+        void     slotLNSelected(int ld, int ln);
 
     private:
         Core::LN_SignalMatrix::ptr getMatrix() const;

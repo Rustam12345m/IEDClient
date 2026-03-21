@@ -32,17 +32,17 @@ namespace Core
         DataModelBuilder();
         ~DataModelBuilder();
 
-        DataModelBuilder& createLD(const QString &t_name);
-        DataModelBuilder& createLN(const QString &t_name);
-        DataModelBuilder& createDO(const QString &t_name);
-        DataModelBuilder& createDA(const QString &t_name, const QString &t_fc);
-        DataModelBuilder& createSDA(ModelItem::ptr t_parent, const QString &t_name);
+        DataModelBuilder& createLD(const QString &name);
+        DataModelBuilder& createLN(const QString &name);
+        DataModelBuilder& createDO(const QString &name);
+        DataModelBuilder& createDA(const QString &name, const QString &fc);
+        DataModelBuilder& createSDA(ModelItem::ptr parent, const QString &name);
 
-        DataModelBuilder& createDataSet(const QString &t_name, const QString &t_lnRef, bool t_del);
-        DataModelBuilder& createDataSet_Elem(const QString &t_ref, const QString &t_fc);
-        DataModelBuilder& createRCB(const QString &t_name, const QString &t_lnRef, bool t_isBuffered);
-        DataModelBuilder& createGOCB(const QString &t_name, const QString &t_lnRef);
-        DataModelBuilder& createSVCB(const QString &t_name, const QString &t_lnRef, bool t_isMulticast);
+        DataModelBuilder& createDataSet(const QString &name, const QString &lnRef, bool del);
+        DataModelBuilder& createDataSet_Elem(const QString &ref, const QString &fc);
+        DataModelBuilder& createRCB(const QString &name, const QString &lnRef, bool isBuffered);
+        DataModelBuilder& createGOCB(const QString &name, const QString &lnRef);
+        DataModelBuilder& createSVCB(const QString &name, const QString &lnRef, bool isMulticast);
 
         auto lastLD() const { return m_lastLD; }
         auto lastLN() const { return m_lastLN; }
@@ -55,7 +55,7 @@ namespace Core
         auto lastGOCB() const { return m_lastGOCB; }
         auto lastSVCB() const { return m_lastSVCB; }
 
-        DataModel::ptr    build(QThread *t_guiThread);
+        DataModel::ptr    build(QThread *guiThread);
 
     private:
         DataModel::ptr          m_model;

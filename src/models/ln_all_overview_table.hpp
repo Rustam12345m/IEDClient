@@ -45,23 +45,23 @@ namespace App::Models
             HEALTH_ROLE
         };
 
-        LN_AllOverviewTable(QObject *t_parent, Core::IED::ptr t_ied);
+        LN_AllOverviewTable(QObject *parent, Core::IED::ptr ied);
 
-        void setActiveIED(Core::IED::ptr t_ied);
+        void setActiveIED(Core::IED::ptr ied);
 
-        Q_INVOKABLE void selectLN(int t_row);
+        Q_INVOKABLE void selectLN(int row);
 
         QHash<int, QByteArray> roleNames() const override;
-        int rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
-        QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
+        int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+        QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     signals:
-        void sigLNSelected(int t_ld, int t_ln);
-        void sigSelectRow(int t_row);
+        void sigLNSelected(int ld, int ln);
+        void sigSelectRow(int row);
 
     public slots:
-        void slotDataUpdated(Core::ModelItem::ptrList t_nodes);
-        void slotLDSelected(int t_ld);
+        void slotDataUpdated(Core::ModelItem::ptrList nodes);
+        void slotLDSelected(int ld);
 
     private:
         struct FlatEntry
@@ -73,7 +73,7 @@ namespace App::Models
         };
 
         void rebuildFlatList();
-        void connectToUpdates(bool t_connect);
+        void connectToUpdates(bool doConnect);
 
         Core::IED::ptr              m_ied;
         QList<FlatEntry>            m_entries;

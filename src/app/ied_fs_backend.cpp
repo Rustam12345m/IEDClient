@@ -23,8 +23,8 @@
 
 namespace App
 {
-    IED_FS_Backend::IED_FS_Backend(IEDConContainer &t_con, EventStorage &t_ev)
-        : BackendInterface(t_con, t_ev)
+    IED_FS_Backend::IED_FS_Backend(IEDConContainer &con, EventStorage &ev)
+        : BackendInterface(con, ev)
     {
         m_fsModel = new Models::IED_FileTable(this, m_con.m_ied);
 
@@ -41,15 +41,15 @@ namespace App
         return QString("Total %1 files. %2 MB").arg(count).arg(size / (1024 * 1024));
     }
 
-    void IED_FS_Backend::updateFilesDirectory(const QString &t_path)
+    void IED_FS_Backend::updateFilesDirectory(const QString &path)
     {
-        auto cmd = Cmd::GetFileList::create(m_con.m_ied->fs(), t_path);
+        auto cmd = Cmd::GetFileList::create(m_con.m_ied->fs(), path);
         putCmdToQueue(cmd);
     }
 
-    void IED_FS_Backend::downloadFile(const QString &t_filename, uint32_t t_fileSize)
+    void IED_FS_Backend::downloadFile(const QString &filename, uint32_t fileSize)
     {
-        auto cmd = Cmd::DownloadFileCmd::create(t_filename, t_fileSize);
+        auto cmd = Cmd::DownloadFileCmd::create(filename, fileSize);
 
         connect(cmd.get(), &Cmd::DownloadFileCmd::sigDownloadProgress,
                 this, &IED_FS_Backend::sigDownloadProgress);
@@ -57,16 +57,16 @@ namespace App
         putCmdToQueue(cmd);
     }
 
-    void IED_FS_Backend::removeFile(const QString &t_filename, int t_row)
+    void IED_FS_Backend::removeFile(const QString &filename, int row)
     {
-        // qDebug() << "IED_FS_Backend: Remove file " << t_filename;
-        auto cmd = Cmd::RemoveFileCMD::create(t_filename, t_row);
+        // qDebug() << "IED_FS_Backend: Remove file " << filename;
+        auto cmd = Cmd::RemoveFileCMD::create(filename, row);
 
         connect(cmd.get(), &Cmd::RemoveFileCMD::sigFileRemoved, m_fsModel, &Models::IED_FileTable::slotRemoveFile);
         putCmdToQueue(cmd);
     }
 
-    void IED_FS_Backend::slotConnected(bool t_done)
+    void IED_FS_Backend::slotConnected(bool done)
     {
         m_fsModel->setActiveIED(m_con.m_ied);
     }

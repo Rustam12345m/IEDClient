@@ -37,31 +37,31 @@ namespace Cmd::Interface
     public:
         virtual ~IED_ControlAPI() {}
 
-        virtual bool setRCBValues(const QString &t_rcbRef, bool t_enable,
-                                  int t_trgOps, uint32_t t_bufTm, uint32_t t_intgPd,
-                                  const QString &t_rptId, const QString &t_datSet) = 0;
+        virtual bool setRCBValues(const QString &rcbRef, bool enable,
+                                  int trgOps, uint32_t bufTm, uint32_t intgPd,
+                                  const QString &rptId, const QString &datSet) = 0;
 
-        virtual bool refreshRCBValues(Core::ReportBlock::ptr t_rcb) = 0;
+        virtual bool refreshRCBValues(Core::ReportBlock::ptr rcb) = 0;
 
         // GOOSE Control Block
-        virtual bool refreshGOOSEValues(Core::GooseControlBlock::ptr t_gocb) = 0;
-        virtual QString setGOOSEEnable(const QString &t_gocbRef, bool t_enable) = 0;
+        virtual bool refreshGOOSEValues(Core::GooseControlBlock::ptr gocb) = 0;
+        virtual QString setGOOSEEnable(const QString &gocbRef, bool enable) = 0;
 
         // SV Control Block
-        virtual bool refreshSVValues(Core::SV_ControlBlock::ptr t_svcb) = 0;
-        virtual QString setSVEnable(const QString &t_svcbRef, bool t_enable) = 0;
+        virtual bool refreshSVValues(Core::SV_ControlBlock::ptr svcb) = 0;
+        virtual QString setSVEnable(const QString &svcbRef, bool enable) = 0;
 
-        virtual bool installReportHandler(const QString &t_rcbRef,
-                                          const QString &t_rptId,
-                                          Core::ReportStorage *t_storage) = 0;
-        virtual void uninstallReportHandler(const QString &t_rcbRef) = 0;
+        virtual bool installReportHandler(const QString &rcbRef,
+                                          const QString &rptId,
+                                          Core::ReportStorage *storage) = 0;
+        virtual void uninstallReportHandler(const QString &rcbRef) = 0;
 
         // Direct Control / SBO
-        virtual ControlInfo getControlInfo(const QString &t_objRef) = 0;
-        virtual bool controlOperate(const QString &t_objRef, CtlModel t_model,
-                                    CtlValType t_valType, const QVariant &t_value) = 0;
-        virtual bool controlSelect(const QString &t_objRef, CtlModel t_model,
-                                   CtlValType t_valType, const QVariant &t_value) = 0;
-        virtual bool controlCancel(const QString &t_objRef) = 0;
+        virtual ControlInfo getControlInfo(const QString &objRef) = 0;
+        virtual bool controlOperate(const QString &objRef, CtlModel model,
+                                    CtlValType valType, const QVariant &value) = 0;
+        virtual bool controlSelect(const QString &objRef, CtlModel model,
+                                   CtlValType valType, const QVariant &value) = 0;
+        virtual bool controlCancel(const QString &objRef) = 0;
     };
 }

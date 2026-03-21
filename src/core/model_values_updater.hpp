@@ -37,8 +37,8 @@ namespace Core
 
         ModelStateUpdater() {}
 
-        void     push(ModelItem::ptr t_item, ModelItemValue::ptr t_value) {
-            m_values.emplace_back(t_item, t_value);
+        void     push(ModelItem::ptr item, ModelItemValue::ptr value) {
+            m_values.emplace_back(item, value);
         }
 
         auto     update() {

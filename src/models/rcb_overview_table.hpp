@@ -44,9 +44,9 @@ namespace App::Models
         };
 
     public:
-        RCB_OverviewTable(QObject *t_parent, Core::IED::ptr t_ied, bool t_buffered = true);
+        RCB_OverviewTable(QObject *parent, Core::IED::ptr ied, bool buffered = true);
 
-        Q_INVOKABLE void setSelectedRCB(int t_inx);
+        Q_INVOKABLE void setSelectedRCB(int inx);
         Q_INVOKABLE QString selectedRptId() const;
         Q_INVOKABLE QString selectedDsRef() const;
         Q_INVOKABLE int     selectedTrgOps() const;
@@ -58,21 +58,21 @@ namespace App::Models
 
         Core::ReportBlock::ptr getSelectedReportBlock() const;
 
-        void        setActiveIED(Core::IED::ptr t_ied);
+        void        setActiveIED(Core::IED::ptr ied);
 
-        QVariant    headerData(int t_section, Qt::Orientation t_orientation,
-                               int t_role = Qt::DisplayRole) const override;
+        QVariant    headerData(int section, Qt::Orientation orientation,
+                               int role = Qt::DisplayRole) const override;
         QHash<int, QByteArray> roleNames() const override;
 
-        int         rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
-        int         columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
-        QVariant    data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
+        int         rowCount(const QModelIndex &parent = QModelIndex()) const override;
+        int         columnCount(const QModelIndex &parent = QModelIndex()) const override;
+        QVariant    data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     signals:
-        void    sigRCBSelected(int t_inx);
+        void    sigRCBSelected(int inx);
 
     public slots:
-        void    slotDataUpdated(bool t_done);
+        void    slotDataUpdated(bool done);
 
     private:
         QList<Core::ReportBlock::ptr> filteredList() const;

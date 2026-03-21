@@ -23,9 +23,9 @@
 
 namespace Cmd
 {
-    void GetFileList::execute(Cmd::Interface::IEC61850_API::ptr t_api)
+    void GetFileList::execute(Cmd::Interface::IEC61850_API::ptr api)
     {
-        if (!t_api->isConnected()) {
+        if (!api->isConnected()) {
             emit sigCmdEvent(Cmd::CmdEvent::FinishEvent("", "Get file list: not connected", false));
             return;
         }
@@ -33,7 +33,7 @@ namespace Cmd
         emit sigCmdEvent(Cmd::CmdEvent::ProcessEvent("", QString("Getting file list: %1").arg(m_path), 50));
 
         Core::DirOn dir(m_path);
-        int retval = t_api->fs().getFileList(dir);
+        int retval = api->fs().getFileList(dir);
         if (retval == 0) {
         }
 

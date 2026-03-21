@@ -42,29 +42,29 @@ namespace App::Models
             COLUMN_COUNT
         };
     public:
-        ReportsTable(QObject *t_parent, Core::IED::ptr t_ied);
+        ReportsTable(QObject *parent, Core::IED::ptr ied);
 
-        void     setActiveIED(Core::IED::ptr t_ied);
+        void     setActiveIED(Core::IED::ptr ied);
 
-        QVariant headerData(int t_section, Qt::Orientation t_orientation,
-                            int t_role = Qt::DisplayRole) const override;
+        QVariant headerData(int section, Qt::Orientation orientation,
+                            int role = Qt::DisplayRole) const override;
         QHash<int, QByteArray> roleNames() const override;
-        int      rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
-        int      columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
+        int      rowCount(const QModelIndex &parent = QModelIndex()) const override;
+        int      columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
-        QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
+        QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
-        Q_INVOKABLE QVariantMap getReportDetail(int t_row) const;
+        Q_INVOKABLE QVariantMap getReportDetail(int row) const;
 
     public slots:
         void     slotDataUpdated();
-        void     slotRCBSelected(int t_inx);
+        void     slotRCBSelected(int inx);
         void     slotReportReceived();
 
     private:
-        void     switchStorage(Core::ReportStorage *t_storage);
-        static QString reasonToString(int t_reason);
-        QString  rcbRefForSender(int t_inx) const;
+        void     switchStorage(Core::ReportStorage *storage);
+        static QString reasonToString(int reason);
+        QString  rcbRefForSender(int inx) const;
 
         Core::IED::ptr m_ied;
         Core::ReportStorage *m_storage = nullptr;

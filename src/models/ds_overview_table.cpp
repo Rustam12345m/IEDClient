@@ -23,21 +23,21 @@
 
 namespace App::Models
 {
-    DS_OverviewTable::DS_OverviewTable(QObject *t_parent, Core::IED::ptr t_ied)
-        : QAbstractListModel(t_parent), m_ied(t_ied)
+    DS_OverviewTable::DS_OverviewTable(QObject *parent, Core::IED::ptr ied)
+        : QAbstractListModel(parent), m_ied(ied)
     {
     }
 
-    void DS_OverviewTable::setActiveIED(Core::IED::ptr t_ied)
+    void DS_OverviewTable::setActiveIED(Core::IED::ptr ied)
     {
         beginResetModel();
-        m_ied = t_ied;
+        m_ied = ied;
         endResetModel();
     }
 
-    void DS_OverviewTable::setSelectedDS(int t_ds)
+    void DS_OverviewTable::setSelectedDS(int ds)
     {
-        m_currentDS = t_ds;
+        m_currentDS = ds;
         emit sigDSSelected(m_currentDS);
     }
 
@@ -46,20 +46,20 @@ namespace App::Models
         return { { SECTION_ROLE, "section" }, { NAME_ROLE, "name" }, { VALUE_ROLE, "value" } };
     }
 
-    int DS_OverviewTable::rowCount(const QModelIndex &t_parent) const
+    int DS_OverviewTable::rowCount(const QModelIndex &parent) const
     {
         return m_ied->model().getDataSetList().count();
     }
 
-    QVariant DS_OverviewTable::data(const QModelIndex &t_index, int t_role) const
+    QVariant DS_OverviewTable::data(const QModelIndex &index, int role) const
     {
-        int row = t_index.row();
+        int row = index.row();
         auto getDataSetList = m_ied->model().getDataSetList();
         if (row >= getDataSetList.count()) {
             return QVariant(" ? ");
         }
 
-        switch (t_role) {
+        switch (role) {
         case SECTION_ROLE: {
             return QVariant(getDataSetList[row]->Core::ModelItem::getParent()->getReference());
         }

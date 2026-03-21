@@ -23,14 +23,14 @@
 
 namespace App::Models
 {
-    GOOSE_OverviewTable::GOOSE_OverviewTable(QObject *t_parent, Core::IED::ptr t_ied)
-        : QAbstractTableModel(t_parent), m_ied(t_ied)
+    GOOSE_OverviewTable::GOOSE_OverviewTable(QObject *parent, Core::IED::ptr ied)
+        : QAbstractTableModel(parent), m_ied(ied)
     {
     }
 
-    void GOOSE_OverviewTable::setSelectedGOOSE(int t_row)
+    void GOOSE_OverviewTable::setSelectedGOOSE(int row)
     {
-        m_selectedRow = t_row;
+        m_selectedRow = row;
     }
 
     QString GOOSE_OverviewTable::selectedGoId() const
@@ -97,18 +97,18 @@ namespace App::Models
         return list[m_selectedRow]->vlanPriority();
     }
 
-    void GOOSE_OverviewTable::setActiveIED(Core::IED::ptr t_ied)
+    void GOOSE_OverviewTable::setActiveIED(Core::IED::ptr ied)
     {
         beginResetModel();
-        m_ied = t_ied;
+        m_ied = ied;
         endResetModel();
     }
 
-    QVariant GOOSE_OverviewTable::headerData(int t_column, Qt::Orientation t_orientation, int t_role) const
+    QVariant GOOSE_OverviewTable::headerData(int column, Qt::Orientation orientation, int role) const
     {
-        if (t_orientation != Qt::Horizontal) return QVariant();
+        if (orientation != Qt::Horizontal) return QVariant();
 
-        switch (t_column) {
+        switch (column) {
         case GOOSE_ENA_COLUMN:    return QVariant(QString("Enabled"));
         case GOOSE_ID_COLUMN:     return QVariant(QString("GOOSE ID"));
         case GOOSE_DS_COLUMN:     return QVariant(QString("DataSet"));
@@ -127,22 +127,22 @@ namespace App::Models
         return { { Qt::DisplayRole, "display" } };
     }
 
-    int GOOSE_OverviewTable::rowCount(const QModelIndex &t_parent) const
+    int GOOSE_OverviewTable::rowCount(const QModelIndex &parent) const
     {
         if (!m_ied) return 0;
         return m_ied->model().getGO_CBList().count();
     }
 
-    int GOOSE_OverviewTable::columnCount(const QModelIndex &t_parent) const
+    int GOOSE_OverviewTable::columnCount(const QModelIndex &parent) const
     {
         return COLUMN_COUNT;
     }
 
-    QVariant GOOSE_OverviewTable::data(const QModelIndex &t_index, int t_role) const
+    QVariant GOOSE_OverviewTable::data(const QModelIndex &index, int role) const
     {
-        if (t_role != Qt::DisplayRole) return QVariant();
+        if (role != Qt::DisplayRole) return QVariant();
 
-        int row = t_index.row(), column = t_index.column();
+        int row = index.row(), column = index.column();
         const auto list = m_ied->model().getGO_CBList();
         if (row < 0 || row >= list.count()) return QVariant();
 
@@ -162,7 +162,7 @@ namespace App::Models
         return QVariant();
     }
 
-    void GOOSE_OverviewTable::slotDataUpdated(bool t_done)
+    void GOOSE_OverviewTable::slotDataUpdated(bool done)
     {
         beginResetModel();
         endResetModel();

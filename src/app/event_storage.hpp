@@ -40,10 +40,10 @@ namespace App
 
         QString getLastMessage();
 
-        void    putEventToStorage(Cmd::CmdEvent t_event);
+        void    putEventToStorage(Cmd::CmdEvent event);
 
     signals:
-        void    sigNewEvent(Cmd::CmdEvent t_event);
+        void    sigNewEvent(Cmd::CmdEvent event);
 
     private:
         mutable QMutex                              m_lock;

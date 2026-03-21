@@ -26,9 +26,9 @@
 
 namespace
 {
-    QString     convertTimestampMsToUserString(uint64_t t_ms)
+    QString     convertTimestampMsToUserString(uint64_t ms)
     {
-        uint64_t sec = t_ms / 1000;
+        uint64_t sec = ms / 1000;
         QDateTime dt = QDateTime::fromSecsSinceEpoch(sec);
 
         return dt.toString("HH:mm:ss dd.MM.yyyy"); // ms isn't important
@@ -37,26 +37,26 @@ namespace
 
 namespace App::Models
 {
-    IED_FileTable::IED_FileTable(QObject *t_parent, Core::IED::ptr t_ied)
-        : QAbstractTableModel(t_parent), m_ied(t_ied)
+    IED_FileTable::IED_FileTable(QObject *parent, Core::IED::ptr ied)
+        : QAbstractTableModel(parent), m_ied(ied)
     {
         connect(&m_ied->fs(), SIGNAL(sigFS_Updated()), this, SLOT(slotDataUpdated()));
     }
 
-    void IED_FileTable::setActiveIED(Core::IED::ptr t_ied)
+    void IED_FileTable::setActiveIED(Core::IED::ptr ied)
     {
         beginResetModel();
-        m_ied = t_ied;
+        m_ied = ied;
         connect(&m_ied->fs(), SIGNAL(sigFS_Updated()), this, SLOT(slotDataUpdated()));
         endResetModel();
     }
 
-    int IED_FileTable::rowCount(const QModelIndex &t_parent) const
+    int IED_FileTable::rowCount(const QModelIndex &parent) const
     {
         return m_ied->fs().m_dir.m_file.size();
     }
 
-    int IED_FileTable::columnCount(const QModelIndex &t_parent) const
+    int IED_FileTable::columnCount(const QModelIndex &parent) const
     {
         return FS_COLUMN_COUNT;
     }
@@ -66,18 +66,18 @@ namespace App::Models
         return { { Qt::DisplayRole, "display"}, { ROLE_SORT_VALUE, "sort_value" } };
     }
 
-    Qt::ItemFlags IED_FileTable::flags(const QModelIndex &t_index) const
+    Qt::ItemFlags IED_FileTable::flags(const QModelIndex &index) const
     {
-        return QAbstractTableModel::flags(t_index) | Qt::ItemIsSelectable;
+        return QAbstractTableModel::flags(index) | Qt::ItemIsSelectable;
     }
 
-    QVariant IED_FileTable::headerData(int t_column, Qt::Orientation t_orientation, int t_role) const
+    QVariant IED_FileTable::headerData(int column, Qt::Orientation orientation, int role) const
     {
-        if (t_orientation != Qt::Horizontal) {
+        if (orientation != Qt::Horizontal) {
             return QVariant();
         }
 
-        switch (t_column) {
+        switch (column) {
         case FS_INDEX_COLUMN: {
             return QVariant::fromValue(SortHeaderValue("№", true));
         }
@@ -97,15 +97,15 @@ namespace App::Models
         return QVariant("");
     }
 
-    QVariant IED_FileTable::data(const QModelIndex &t_index, int t_role) const
+    QVariant IED_FileTable::data(const QModelIndex &index, int role) const
     {
-        //qDebug() << "FS: Data " << t_index.column() << " role = " << t_role;
+        //qDebug() << "FS: Data " << index.column() << " role = " << role;
 
-        int row = t_index.row();
+        int row = index.row();
         if ((row >= 0) && (row < m_ied->fs().m_dir.m_file.size())) {
-            if (t_role == ComRoles::ROLE_SORT_VALUE) {
+            if (role == ComRoles::ROLE_SORT_VALUE) {
                 // values for sorting process
-                switch (t_index.column()) {
+                switch (index.column()) {
                 case FS_INDEX_COLUMN: {
                     return QVariant(qlonglong(row + 1));
                 }
@@ -124,7 +124,7 @@ namespace App::Models
                 }
             } else {
                 // for user
-                switch (t_index.column()) {
+                switch (index.column()) {
                 case FS_INDEX_COLUMN: {
                     return QString("%1").arg(row + 1);
                 }
@@ -146,16 +146,16 @@ namespace App::Models
         return QVariant(" - ");
     }
 
-    void IED_FileTable::slotRemoveFile(int t_row)
+    void IED_FileTable::slotRemoveFile(int row)
     {
-        if (t_row < 0 || t_row >= m_ied->fs().getCount()) {
+        if (row < 0 || row >= m_ied->fs().getCount()) {
             return;
         }
 
-        beginRemoveRows(QModelIndex(), t_row, t_row);
+        beginRemoveRows(QModelIndex(), row, row);
 
         // Remove from Tree
-        m_ied->fs().removeFileFromList(t_row);
+        m_ied->fs().removeFileFromList(row);
 
         endRemoveRows();
     }

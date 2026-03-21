@@ -10,56 +10,56 @@ namespace UnitTests
     {
     public:
         MOCK_METHOD(bool, setRCBValues,
-                    (const QString &t_rcbRef, bool t_enable,
-                     int t_trgOps, uint32_t t_bufTm, uint32_t t_intgPd,
-                     const QString &t_rptId, const QString &t_datSet),
+                    (const QString &rcbRef, bool enable,
+                     int trgOps, uint32_t bufTm, uint32_t intgPd,
+                     const QString &rptId, const QString &datSet),
                     (override));
 
         MOCK_METHOD(bool, refreshRCBValues,
-                    (Core::ReportBlock::ptr t_rcb),
+                    (Core::ReportBlock::ptr rcb),
                     (override));
 
         MOCK_METHOD(bool, refreshGOOSEValues,
-                    (Core::GooseControlBlock::ptr t_gocb),
+                    (Core::GooseControlBlock::ptr gocb),
                     (override));
 
         MOCK_METHOD(QString, setGOOSEEnable,
-                    (const QString &t_gocbRef, bool t_enable),
+                    (const QString &gocbRef, bool enable),
                     (override));
 
         MOCK_METHOD(bool, refreshSVValues,
-                    (Core::SV_ControlBlock::ptr t_svcb),
+                    (Core::SV_ControlBlock::ptr svcb),
                     (override));
 
         MOCK_METHOD(QString, setSVEnable,
-                    (const QString &t_svcbRef, bool t_enable),
+                    (const QString &svcbRef, bool enable),
                     (override));
 
         MOCK_METHOD(bool, installReportHandler,
-                    (const QString &t_rcbRef, const QString &t_rptId,
-                     Core::ReportStorage *t_storage),
+                    (const QString &rcbRef, const QString &rptId,
+                     Core::ReportStorage *storage),
                     (override));
 
         MOCK_METHOD(void, uninstallReportHandler,
-                    (const QString &t_rcbRef),
+                    (const QString &rcbRef),
                     (override));
 
         MOCK_METHOD(Cmd::Interface::ControlInfo, getControlInfo,
-                    (const QString &t_objRef),
+                    (const QString &objRef),
                     (override));
 
         MOCK_METHOD(bool, controlOperate,
-                    (const QString &t_objRef, Cmd::Interface::CtlModel t_model,
-                     Cmd::Interface::CtlValType t_valType, const QVariant &t_value),
+                    (const QString &objRef, Cmd::Interface::CtlModel model,
+                     Cmd::Interface::CtlValType valType, const QVariant &value),
                     (override));
 
         MOCK_METHOD(bool, controlSelect,
-                    (const QString &t_objRef, Cmd::Interface::CtlModel t_model,
-                     Cmd::Interface::CtlValType t_valType, const QVariant &t_value),
+                    (const QString &objRef, Cmd::Interface::CtlModel model,
+                     Cmd::Interface::CtlValType valType, const QVariant &value),
                     (override));
 
         MOCK_METHOD(bool, controlCancel,
-                    (const QString &t_objRef),
+                    (const QString &objRef),
                     (override));
     };
 
@@ -67,13 +67,13 @@ namespace UnitTests
     {
     public:
         MOCK_METHOD(Core::ModelStateUpdater::ptr, getStatusForAllLD,
-                    (Core::DataModel::ptr t_model), (override));
+                    (Core::DataModel::ptr model), (override));
         MOCK_METHOD(Core::ModelStateUpdater::ptr, getStatusForAllLN,
-                    (Core::LogicalDevice::ptr t_ld), (override));
+                    (Core::LogicalDevice::ptr ld), (override));
         MOCK_METHOD(Core::ModelStateUpdater::ptr, getValsForLN,
-                    (Core::LogicalNode::ptr t_ln), (override));
+                    (Core::LogicalNode::ptr ln), (override));
         MOCK_METHOD(Core::ModelStateUpdater::ptr, getValsForDS,
-                    (Core::DataSet::ptr t_ds), (override));
+                    (Core::DataSet::ptr ds), (override));
     };
 
     class MockModelAPI : public Cmd::Interface::IED_ModelAPI
@@ -81,16 +81,16 @@ namespace UnitTests
         Q_OBJECT
     public:
         MOCK_METHOD(int, fetchDataModel,
-                    (Core::DataModelBuilder &t_builder), (override));
+                    (Core::DataModelBuilder &builder), (override));
     };
 
     class MockFS_API : public Cmd::Interface::IED_FS_API
     {
         Q_OBJECT
     public:
-        MOCK_METHOD(int, getFileList, (Core::DirOn &t_dir), (override));
-        MOCK_METHOD(bool, download, (const QString &t_filename, const QString &t_localPath, uint32_t t_fileSize), (override));
-        MOCK_METHOD(int, remove, (const QString &t_filename), (override));
+        MOCK_METHOD(int, getFileList, (Core::DirOn &dir), (override));
+        MOCK_METHOD(bool, download, (const QString &filename, const QString &localPath, uint32_t fileSize), (override));
+        MOCK_METHOD(int, remove, (const QString &filename), (override));
     };
 
     class MockIEC61850API : public Cmd::Interface::IEC61850_API
@@ -101,7 +101,7 @@ namespace UnitTests
             : m_mockControl{}, m_mockState{}, m_mockModel{}, m_mockFS{}
         {}
 
-        MOCK_METHOD(QString, connect, (const Cmd::IEDCredentials &t_creds), (override));
+        MOCK_METHOD(QString, connect, (const Cmd::IEDCredentials &creds), (override));
         MOCK_METHOD(void, disconnect, (), (override));
         MOCK_METHOD(bool, isConnected, (), (const, override));
         MOCK_METHOD(QString, getVersion, (), (const, override));

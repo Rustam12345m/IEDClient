@@ -27,8 +27,8 @@
 
 namespace App
 {
-    IED_Backend::IED_Backend(IEDConContainer &t_con, EventStorage &t_ev)
-        : BackendInterface(t_con, t_ev)
+    IED_Backend::IED_Backend(IEDConContainer &con, EventStorage &ev)
+        : BackendInterface(con, ev)
     {
         m_ldsModel = new Models::LD_OverviewGrid(this, m_con.m_ied);
         m_ldPropModel = new Models::LD_PropertiesTable(this, m_con.m_ied);
@@ -149,16 +149,16 @@ namespace App
         putCmdToQueue(cmd);
     }
 
-    void IED_Backend::setGOOSEEnable(int t_index, bool t_enable)
+    void IED_Backend::setGOOSEEnable(int index, bool enable)
     {
         const auto &gocbList = m_con.m_ied->model().getGO_CBList();
-        if (t_index < 0 || t_index >= gocbList.size()) {
-            // qDebug() << "IED_Backend: Invalid GOOSE index" << t_index;
+        if (index < 0 || index >= gocbList.size()) {
+            // qDebug() << "IED_Backend: Invalid GOOSE index" << index;
             return;
         }
 
-        auto gocb = gocbList[t_index];
-        auto cmd = Cmd::SetGooseEnable_Cmd::create(gocb, t_enable);
+        auto gocb = gocbList[index];
+        auto cmd = Cmd::SetGooseEnable_Cmd::create(gocb, enable);
 
         connect(cmd.get(), &Cmd::CmdInterface::sigCmdEvent, this,
                 [this](Cmd::CmdEvent ev) {
@@ -171,16 +171,16 @@ namespace App
         putCmdToQueue(cmd);
     }
 
-    void IED_Backend::setSVEnable(int t_index, bool t_enable)
+    void IED_Backend::setSVEnable(int index, bool enable)
     {
         const auto &svcbList = m_con.m_ied->model().getSV_CBList();
-        if (t_index < 0 || t_index >= svcbList.size()) {
-            // qDebug() << "IED_Backend: Invalid SV index" << t_index;
+        if (index < 0 || index >= svcbList.size()) {
+            // qDebug() << "IED_Backend: Invalid SV index" << index;
             return;
         }
 
-        auto svcb = svcbList[t_index];
-        auto cmd = Cmd::SetSVEnable_Cmd::create(svcb, t_enable);
+        auto svcb = svcbList[index];
+        auto cmd = Cmd::SetSVEnable_Cmd::create(svcb, enable);
 
         connect(cmd.get(), &Cmd::CmdInterface::sigCmdEvent, this,
                 [this](Cmd::CmdEvent ev) {
@@ -193,9 +193,9 @@ namespace App
         putCmdToQueue(cmd);
     }
 
-    void IED_Backend::dumpMmsModel(const QString &t_ip, int t_port)
+    void IED_Backend::dumpMmsModel(const QString &ip, int port)
     {
-        Cmd::IEDCredentials cred(t_ip, t_port, false, "", "");
+        Cmd::IEDCredentials cred(ip, port, false, "", "");
         auto cmd = Cmd::MmsDumpCmd::create(cred);
         putCmdToQueue(cmd);
     }
@@ -224,9 +224,9 @@ namespace App
         Core::DataSet::ptr ds = m_dsSigModel->getDataSet();
         auto cmd = Cmd::UpdateDataSet_Cmd::create(m_con.m_ied, ds);
         connect(cmd.get(), &Cmd::UpdateDataSet_Cmd::sigModelValues, this,
-                [this](Core::ModelStateUpdater::ptr t_vals) {
-                    if (t_vals) {
-                        auto updated = t_vals->update();
+                [this](Core::ModelStateUpdater::ptr vals) {
+                    if (vals) {
+                        auto updated = vals->update();
                         m_dsSigModel->slotDataUpdated(updated);
                     }
                 }, Qt::QueuedConnection);
@@ -234,13 +234,13 @@ namespace App
         putCmdToQueue(cmd);
     }
 
-    void IED_Backend::setRCBEnable(bool t_buffered, int t_index,
-                                       bool t_enable, int t_trgOps,
-                                       int t_bufTm, int t_intgPd,
-                                       const QString &t_rptId, const QString &t_datSet)
+    void IED_Backend::setRCBEnable(bool buffered, int index,
+                                       bool enable, int trgOps,
+                                       int bufTm, int intgPd,
+                                       const QString &rptId, const QString &datSet)
     {
-        auto *model = t_buffered ? m_brcbComModel : m_urcbComModel;
-        model->setSelectedRCB(t_index);
+        auto *model = buffered ? m_brcbComModel : m_urcbComModel;
+        model->setSelectedRCB(index);
         auto rcb = model->getSelectedReportBlock();
         if (!rcb) {
             // qDebug() << "IED_Backend: No RCB selected";
@@ -248,20 +248,20 @@ namespace App
         }
 
         Core::ReportStorage *storage = nullptr;
-        if (t_enable) {
+        if (enable) {
             QString prefix = rcb->isBuffered() ? "BR" : "RP";
             QString rcbRef = QString("%1.%2.%3").arg(rcb->lnRef(), prefix, rcb->getName());
             storage = m_con.m_ied->model().getOrCreateReportStorage(rcbRef);
 
-            storage->setDataSetRef(t_datSet);
+            storage->setDataSetRef(datSet);
 
             // Pre-populate member names from the DataSet
             for (auto &ds : m_con.m_ied->model().getDataSetList()) {
-                // t_datSet may be full ref like "LD0/LLN0$ds1" — match against
+                // datSet may be full ref like "LD0/LLN0$ds1" — match against
                 // both the short name and the composed full reference
                 QString fullRef = ds->ref() + "$" + ds->getName();
-                if (ds->getName() == t_datSet || fullRef == t_datSet
-                    || t_datSet.endsWith(ds->getName())) {
+                if (ds->getName() == datSet || fullRef == datSet
+                    || datSet.endsWith(ds->getName())) {
                     QStringList names;
                     for (size_t i = 0; i < ds->getItemCount(); i++) {
                         auto dsItem = ds->getItem<Core::DataSetItem>(i);
@@ -273,10 +273,10 @@ namespace App
             }
         }
 
-        auto cmd = Cmd::SetRCBValues_Cmd::create(rcb, t_enable, t_trgOps,
-                                                  static_cast<uint32_t>(t_bufTm),
-                                                  static_cast<uint32_t>(t_intgPd),
-                                                  t_rptId, t_datSet, storage);
+        auto cmd = Cmd::SetRCBValues_Cmd::create(rcb, enable, trgOps,
+                                                  static_cast<uint32_t>(bufTm),
+                                                  static_cast<uint32_t>(intgPd),
+                                                  rptId, datSet, storage);
 
         connect(cmd.get(), &Cmd::CmdInterface::sigCmdEvent, this,
                 [this, model](Cmd::CmdEvent ev) {
@@ -291,9 +291,9 @@ namespace App
 
     // ── Control operations ──────────────────────────────────────────
 
-    QString IED_Backend::getControlObjectRef(int t_proxyRow)
+    QString IED_Backend::getControlObjectRef(int proxyRow)
     {
-        QModelIndex proxyIdx = m_sortControlsModel->index(t_proxyRow, 0);
+        QModelIndex proxyIdx = m_sortControlsModel->index(proxyRow, 0);
         QModelIndex sourceIdx = m_sortControlsModel->mapToSource(proxyIdx);
         int sourceRow = sourceIdx.row();
 
@@ -309,46 +309,46 @@ namespace App
         return base ? base->getReference() : QString();
     }
 
-    void IED_Backend::queryControlInfo(const QString &t_objRef)
+    void IED_Backend::queryControlInfo(const QString &objRef)
     {
-        auto cmd = Cmd::GetControlInfo_Cmd::create(t_objRef);
+        auto cmd = Cmd::GetControlInfo_Cmd::create(objRef);
         connect(cmd.get(), &Cmd::GetControlInfo_Cmd::sigControlInfo,
                 this, &IED_Backend::sigControlInfo, Qt::QueuedConnection);
         putCmdToQueue(cmd);
     }
 
-    void IED_Backend::controlOperate(const QString &t_objRef, int t_ctlModel,
-                                      int t_valType, const QVariant &t_value)
+    void IED_Backend::controlOperate(const QString &objRef, int ctlModel,
+                                      int valType, const QVariant &value)
     {
         auto cmd = Cmd::ControlOperate_Cmd::create(
-            t_objRef, Cmd::ControlOperate_Cmd::Action::Operate,
-            static_cast<Cmd::Interface::CtlModel>(t_ctlModel),
-            static_cast<Cmd::Interface::CtlValType>(t_valType),
-            t_value);
+            objRef, Cmd::ControlOperate_Cmd::Action::Operate,
+            static_cast<Cmd::Interface::CtlModel>(ctlModel),
+            static_cast<Cmd::Interface::CtlValType>(valType),
+            value);
 
         connect(cmd.get(), &Cmd::ControlOperate_Cmd::sigControlResult,
                 this, &IED_Backend::sigControlResult, Qt::QueuedConnection);
         putCmdToQueue(cmd);
     }
 
-    void IED_Backend::controlSelect(const QString &t_objRef, int t_ctlModel,
-                                     int t_valType, const QVariant &t_value)
+    void IED_Backend::controlSelect(const QString &objRef, int ctlModel,
+                                     int valType, const QVariant &value)
     {
         auto cmd = Cmd::ControlOperate_Cmd::create(
-            t_objRef, Cmd::ControlOperate_Cmd::Action::Select,
-            static_cast<Cmd::Interface::CtlModel>(t_ctlModel),
-            static_cast<Cmd::Interface::CtlValType>(t_valType),
-            t_value);
+            objRef, Cmd::ControlOperate_Cmd::Action::Select,
+            static_cast<Cmd::Interface::CtlModel>(ctlModel),
+            static_cast<Cmd::Interface::CtlValType>(valType),
+            value);
 
         connect(cmd.get(), &Cmd::ControlOperate_Cmd::sigControlResult,
                 this, &IED_Backend::sigControlResult, Qt::QueuedConnection);
         putCmdToQueue(cmd);
     }
 
-    void IED_Backend::controlCancel(const QString &t_objRef)
+    void IED_Backend::controlCancel(const QString &objRef)
     {
         auto cmd = Cmd::ControlOperate_Cmd::create(
-            t_objRef, Cmd::ControlOperate_Cmd::Action::Cancel,
+            objRef, Cmd::ControlOperate_Cmd::Action::Cancel,
             Cmd::Interface::CtlModel::StatusOnly,
             Cmd::Interface::CtlValType::Unknown,
             QVariant());
@@ -384,7 +384,7 @@ namespace App
         return "All Report Control Blocks";
     }
 
-    void IED_Backend::slotConnected(bool t_done)
+    void IED_Backend::slotConnected(bool done)
     {
         m_ldsModel->setActiveIED(m_con.m_ied);
         m_ldPropModel->setActiveIED(m_con.m_ied);
@@ -404,10 +404,10 @@ namespace App
         m_iedTreeModel->setActiveIED(m_con.m_ied);
     }
 
-    void IED_Backend::slotUpdateItems(Core::ModelStateUpdater::ptr t_vals)
+    void IED_Backend::slotUpdateItems(Core::ModelStateUpdater::ptr vals)
     {
-        if (t_vals) {
-            t_vals->update();
+        if (vals) {
+            vals->update();
         }
     }
 }

@@ -30,13 +30,13 @@ namespace Cmd
     class DisConnectCmd : public CmdInterface
     {
     public:
-        DisConnectCmd(Core::IED::ptr t_ied) {}
+        DisConnectCmd(Core::IED::ptr ied) {}
         ~DisConnectCmd() {}
 
-        void execute(Cmd::Interface::IEC61850_API::ptr t_api) override;
+        void execute(Cmd::Interface::IEC61850_API::ptr api) override;
 
-        static auto create(Core::IED::ptr t_ied) {
-            return QSharedPointer<DisConnectCmd>::create(t_ied);
+        static auto create(Core::IED::ptr ied) {
+            return QSharedPointer<DisConnectCmd>::create(ied);
         }
 
     private:

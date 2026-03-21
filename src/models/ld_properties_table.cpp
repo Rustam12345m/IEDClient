@@ -23,8 +23,8 @@
 
 namespace App::Models
 {
-    LD_PropertiesTable::LD_PropertiesTable(QObject *t_parent, Core::IED::ptr t_ied)
-        : QAbstractListModel(t_parent), m_ied{t_ied}
+    LD_PropertiesTable::LD_PropertiesTable(QObject *parent, Core::IED::ptr ied)
+        : QAbstractListModel(parent), m_ied{ied}
     {
         m_ldProp.append(PropertyItem("General information", "Name", ""));
         m_ldProp.append(PropertyItem("General information", "LN", ""));
@@ -52,10 +52,10 @@ namespace App::Models
         m_devProp.append(PropertyItem("Connection", "Max PDU", ""));
     }
 
-    void LD_PropertiesTable::setActiveIED(Core::IED::ptr t_ied)
+    void LD_PropertiesTable::setActiveIED(Core::IED::ptr ied)
     {
         beginResetModel();
-        m_ied = t_ied;
+        m_ied = ied;
         endResetModel();
     }
 
@@ -64,7 +64,7 @@ namespace App::Models
         return { { SECTION_ROLE, "section" }, { NAME_ROLE, "name" }, { VALUE_ROLE, "value" } };
     }
 
-    int LD_PropertiesTable::rowCount(const QModelIndex &t_index) const
+    int LD_PropertiesTable::rowCount(const QModelIndex &index) const
     {
         if (m_currentLD >= 0) {
             return m_ldProp.count();
@@ -73,23 +73,23 @@ namespace App::Models
         }
     }
 
-    QVariant LD_PropertiesTable::data(const QModelIndex &t_index, int t_role) const
+    QVariant LD_PropertiesTable::data(const QModelIndex &index, int role) const
     {
         if (m_currentLD >= 0) {
-            return dataLD(t_index, t_role);
+            return dataLD(index, role);
         } else {
-            return dataIED(t_index, t_role);
+            return dataIED(index, role);
         }
     }
 
-    QVariant LD_PropertiesTable::dataLD(const QModelIndex &t_index, int t_role) const
+    QVariant LD_PropertiesTable::dataLD(const QModelIndex &index, int role) const
     {
-        int row = t_index.row();
+        int row = index.row();
         if (row < 0 || row >= m_ldProp.size()) {
             return QVariant("");
         }
 
-        switch (t_role) {
+        switch (role) {
         case SECTION_ROLE: {
             if (m_ldProp[row].obj.isEmpty())
                 return QVariant(m_ldProp[row].section);
@@ -147,14 +147,14 @@ namespace App::Models
         return QVariant(" - ");
     }
 
-    QVariant LD_PropertiesTable::dataIED(const QModelIndex &t_index, int t_role) const
+    QVariant LD_PropertiesTable::dataIED(const QModelIndex &index, int role) const
     {
-        int row = t_index.row();
+        int row = index.row();
         if (row < 0 || row >= m_devProp.size()) {
             return QVariant("");
         }
 
-        switch (t_role) {
+        switch (role) {
         case SECTION_ROLE: {
             return QVariant(m_devProp[row].section);
         }
@@ -177,10 +177,10 @@ namespace App::Models
         return QVariant(" - ");
     }
 
-    void LD_PropertiesTable::slotLDSelected(int t_ld)
+    void LD_PropertiesTable::slotLDSelected(int ld)
     {
         beginResetModel();
-        m_currentLD = t_ld;
+        m_currentLD = ld;
         endResetModel();
         //emit dataChanged(index(0, 0), index(rowCount() - 1, 0), { SECTION_ROLE, NAME_ROLE, VALUE_ROLE });
     }

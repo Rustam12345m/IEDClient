@@ -39,26 +39,26 @@ namespace App::Models
         };
 
     public:
-        DS_SignalsTable(QObject *t_parent, Core::IED::ptr t_ied);
+        DS_SignalsTable(QObject *parent, Core::IED::ptr ied);
 
-        void    setActiveIED(Core::IED::ptr t_ied);
+        void    setActiveIED(Core::IED::ptr ied);
         auto    getDataSet() {
             return m_dataSet;
         }
 
-        QVariant headerData(int t_section, Qt::Orientation t_orientation,
-                            int t_role = Qt::DisplayRole) const override;
+        QVariant headerData(int section, Qt::Orientation orientation,
+                            int role = Qt::DisplayRole) const override;
         QHash<int, QByteArray> roleNames() const override;
-        int     rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
-        int     columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
+        int     rowCount(const QModelIndex &parent = QModelIndex()) const override;
+        int     columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
-        QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
+        QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
-        Q_INVOKABLE QVariantList getItemDetail(int t_row) const;
+        Q_INVOKABLE QVariantList getItemDetail(int row) const;
 
     public slots:
-        void    slotDataSetSelected(int t_ds);
-        void    slotDataUpdated(QList<Core::ModelItem::ptr> t_items);
+        void    slotDataSetSelected(int ds);
+        void    slotDataUpdated(QList<Core::ModelItem::ptr> items);
 
     private:
         Core::IED::ptr          m_ied;

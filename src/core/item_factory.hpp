@@ -33,22 +33,22 @@ namespace Core
     {
     public:
         // Object Tree <- base node for IED Data Object model
-        static QSharedPointer< ModelItem > createModel(const QString &t_name);
+        static QSharedPointer< ModelItem > createModel(const QString &name);
 
         // Logical Device
-        static QSharedPointer< ModelItem > createLD(ModelItem *t_parent, const QString &t_name);
+        static QSharedPointer< ModelItem > createLD(ModelItem *parent, const QString &name);
 
         // Logical Node
-        static QSharedPointer< ModelItem > createLN(ModelItem *t_parent, const QString &t_name);
+        static QSharedPointer< ModelItem > createLN(ModelItem *parent, const QString &name);
 
         // Data Object
-        static QSharedPointer< ModelItem > createDO(ModelItem *t_parent, const QString &t_name);
+        static QSharedPointer< ModelItem > createDO(ModelItem *parent, const QString &name);
 
         // Data Attribute
-        static QSharedPointer< ModelItem > createDA(ModelItem *t_parent, const QString &t_name,
-                                                    const QString &t_fc);
+        static QSharedPointer< ModelItem > createDA(ModelItem *parent, const QString &name,
+                                                    const QString &fc);
 
         // Sub Attribute
-        static QSharedPointer< ModelItem > createSA(ModelItem *t_parent, const QString &t_name);
+        static QSharedPointer< ModelItem > createSA(ModelItem *parent, const QString &name);
     };
 }

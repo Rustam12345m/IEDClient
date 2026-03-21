@@ -35,13 +35,13 @@ namespace Cmd
     {
         Q_OBJECT
     public:
-        MmsDumpCmd(const IEDCredentials &t_cred) : m_cred(t_cred) {}
+        MmsDumpCmd(const IEDCredentials &cred) : m_cred(cred) {}
         ~MmsDumpCmd() = default;
 
-        void execute(Cmd::Interface::IEC61850_API::ptr t_api) override;
+        void execute(Cmd::Interface::IEC61850_API::ptr api) override;
 
-        static auto create(const IEDCredentials &t_cred) {
-            return QSharedPointer<MmsDumpCmd>::create(t_cred);
+        static auto create(const IEDCredentials &cred) {
+            return QSharedPointer<MmsDumpCmd>::create(cred);
         }
 
     private:

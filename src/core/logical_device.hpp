@@ -34,8 +34,8 @@ namespace Core
     public:
         using ptr = QSharedPointer< LogicalDevice >;
 
-        LogicalDevice(ModelItem *t_parent, const QString &t_name) 
-            : QObject(nullptr), ModelItem(t_parent, t_name)
+        LogicalDevice(ModelItem *parent, const QString &name)
+            : QObject(nullptr), ModelItem(parent, name)
         {
             m_delimetr = ""; // There isn't a delimetr between IEDName and LDName
         }
@@ -43,24 +43,24 @@ namespace Core
         LogicalNode::ptr     lln0() const { return m_lln0; }
         LogicalNode::ptr     lphd1() const { return m_lphd1; }
 
-        void    addSubItem(ModelItem::ptr t_node) override {
-            QString name = t_node->getName();
-            if (name.contains("LLN0")) {
-                m_lln0 = t_node.dynamicCast<LogicalNode>();
+        void    addSubItem(ModelItem::ptr node) override {
+            QString nodeName = node->getName();
+            if (nodeName.contains("LLN0")) {
+                m_lln0 = node.dynamicCast<LogicalNode>();
             }
-            else if (name.contains("LPHD1")) {
-                m_lphd1 = t_node.dynamicCast<LogicalNode>();
+            else if (nodeName.contains("LPHD1")) {
+                m_lphd1 = node.dynamicCast<LogicalNode>();
             }
 
-            ModelItem::addSubItem(t_node);
+            ModelItem::addSubItem(node);
         }
 
     signals:
-        void     sigDataObjectUpdated(ModelItem::ptrList t_nodes);
+        void     sigDataObjectUpdated(ModelItem::ptrList nodes);
 
     protected:
-         void    notifyFromChild(ModelItem::ptrList t_nodes) override {
-            emit sigDataObjectUpdated(t_nodes);
+         void    notifyFromChild(ModelItem::ptrList nodes) override {
+            emit sigDataObjectUpdated(nodes);
         };
 
     protected:

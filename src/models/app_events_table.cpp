@@ -27,17 +27,17 @@ namespace App::Models
     {
     }
 
-    int AppEventsTable::rowCount(const QModelIndex &t_parent) const
+    int AppEventsTable::rowCount(const QModelIndex &parent) const
     {
-        if (t_parent.isValid()) {
+        if (parent.isValid()) {
             return 0;
         }
         return m_count;
     }
 
-    int AppEventsTable::columnCount(const QModelIndex &t_parent) const
+    int AppEventsTable::columnCount(const QModelIndex &parent) const
     {
-        if (t_parent.isValid()) {
+        if (parent.isValid()) {
             return 0;
         }
         return COLUMN_COUNT;
@@ -48,18 +48,18 @@ namespace App::Models
         return { { Qt::DisplayRole, "display" } };
     }
 
-    Qt::ItemFlags AppEventsTable::flags(const QModelIndex &t_index) const
+    Qt::ItemFlags AppEventsTable::flags(const QModelIndex &index) const
     {
-        return QAbstractTableModel::flags(t_index) | Qt::ItemIsSelectable;
+        return QAbstractTableModel::flags(index) | Qt::ItemIsSelectable;
     }
 
-    QVariant AppEventsTable::headerData(int t_section, Qt::Orientation t_orientation, int t_role) const
+    QVariant AppEventsTable::headerData(int section, Qt::Orientation orientation, int role) const
     {
-        if (t_role != Qt::DisplayRole || t_orientation != Qt::Horizontal) {
+        if (role != Qt::DisplayRole || orientation != Qt::Horizontal) {
             return QVariant();
         }
 
-        switch (t_section) {
+        switch (section) {
         case DATE_COLUMN:   return "Date and Time";
         case SOURCE_COLUMN: return "Source";
         case DESC_COLUMN:   return "Description";
@@ -67,18 +67,18 @@ namespace App::Models
         return QVariant();
     }
 
-    QVariant AppEventsTable::data(const QModelIndex &t_index, int t_role) const
+    QVariant AppEventsTable::data(const QModelIndex &index, int role) const
     {
-        if (t_role != Qt::DisplayRole || !t_index.isValid()) {
+        if (role != Qt::DisplayRole || !index.isValid()) {
             return QVariant();
         }
 
         // Newest events first: row 0 = most recent
-        int logicalIndex = m_count - 1 - t_index.row();
+        int logicalIndex = m_count - 1 - index.row();
         int pos = (m_head + logicalIndex) % Capacity;
         const auto &ev = m_buffer[pos];
 
-        switch (t_index.column()) {
+        switch (index.column()) {
         case DATE_COLUMN:
             return ev.m_time.toString("yyyy-MM-dd hh:mm:ss");
         case SOURCE_COLUMN:
@@ -89,16 +89,16 @@ namespace App::Models
         return QVariant();
     }
 
-    void AppEventsTable::addEvent(Cmd::CmdEvent t_event)
+    void AppEventsTable::addEvent(Cmd::CmdEvent event)
     {
         if (m_count < Capacity) {
             beginInsertRows(QModelIndex(), 0, 0);
             int pos = (m_head + m_count) % Capacity;
-            m_buffer[pos] = std::move(t_event);
+            m_buffer[pos] = std::move(event);
             ++m_count;
             endInsertRows();
         } else {
-            m_buffer[m_head] = std::move(t_event);
+            m_buffer[m_head] = std::move(event);
             m_head = (m_head + 1) % Capacity;
             emit dataChanged(index(0, 0), index(m_count - 1, COLUMN_COUNT - 1));
         }

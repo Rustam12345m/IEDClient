@@ -9,7 +9,7 @@ namespace App::Models
     {
         Q_OBJECT
     public:
-        SortProxyModel(QObject *t_parent) : QSortFilterProxyModel(t_parent) {}
+        SortProxyModel(QObject *parent) : QSortFilterProxyModel(parent) {}
         ~SortProxyModel() = default;
 
         bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;

@@ -26,39 +26,39 @@ namespace App::Models
 {
     namespace
     {
-        inline int getInt(Core::ModelItem::ptr t_item)
+        inline int getInt(Core::ModelItem::ptr item)
         {
-            return t_item ? t_item->getValue().toInt() : -1;
+            return item ? item->getValue().toInt() : -1;
         }
     }
 
-    LN_OverviewTable::LN_OverviewTable(QObject *t_parent, Core::IED::ptr t_ied)
-        : QAbstractTableModel(t_parent), m_ied(t_ied)
+    LN_OverviewTable::LN_OverviewTable(QObject *parent, Core::IED::ptr ied)
+        : QAbstractTableModel(parent), m_ied(ied)
     {
     }
 
-    void LN_OverviewTable::setActiveIED(Core::IED::ptr t_ied)
+    void LN_OverviewTable::setActiveIED(Core::IED::ptr ied)
     {
         beginResetModel();
-        m_ied = t_ied;
+        m_ied = ied;
         m_ldev.reset();
         m_ldevIndex = -1;
         endResetModel();
     }
 
-    void LN_OverviewTable::setSelectedLN(int t_ln)
+    void LN_OverviewTable::setSelectedLN(int inx)
     {
-        //qDebug() << "LNs_Table: Selected LN = " << t_ln;
-        emit sigLNSelected(m_ldevIndex, t_ln);
+        //qDebug() << "LNs_Table: Selected LN = " << inx;
+        emit sigLNSelected(m_ldevIndex, inx);
     }
 
-    QVariant LN_OverviewTable::headerData(int t_section, Qt::Orientation t_orientation, int t_role) const
+    QVariant LN_OverviewTable::headerData(int section, Qt::Orientation orientation, int role) const
     {
-        switch (t_orientation) {
+        switch (orientation) {
         case Qt::Horizontal: {
             const char* labels[] = { "Name", "Mode", "Beh", "Health" };
 
-            return QVariant(labels[t_section % COLUMN_COUNT]);
+            return QVariant(labels[section % COLUMN_COUNT]);
         }
         case Qt::Vertical: {
             break;
@@ -72,7 +72,7 @@ namespace App::Models
         return { { Qt::DisplayRole, "display" } };
     }
 
-    int LN_OverviewTable::rowCount(const QModelIndex &t_parent) const
+    int LN_OverviewTable::rowCount(const QModelIndex &parent) const
     {
         if (m_ldev) {
             return m_ldev->getItemCount();
@@ -80,16 +80,16 @@ namespace App::Models
         return 0;
     }
 
-    int LN_OverviewTable::columnCount(const QModelIndex &t_parent) const
+    int LN_OverviewTable::columnCount(const QModelIndex &parent) const
     {
         return COLUMN_COUNT;
     }
 
-    QVariant LN_OverviewTable::data(const QModelIndex &t_index, int t_role) const
+    QVariant LN_OverviewTable::data(const QModelIndex &index, int role) const
     {
-        auto ln = m_ldev->getItem<Core::LogicalNode>(t_index.row());
+        auto ln = m_ldev->getItem<Core::LogicalNode>(index.row());
         if (ln) {
-            switch (t_index.column()) {
+            switch (index.column()) {
             case NAME_COLUMN: {
                 return QVariant(ln->getName());
             }
@@ -107,20 +107,20 @@ namespace App::Models
         return QVariant(" ? ");
     }
 
-    void LN_OverviewTable::slotDataUpdated(Core::ModelItem::ptrList t_nodes)
+    void LN_OverviewTable::slotDataUpdated(Core::ModelItem::ptrList nodes)
     {
         emit dataChanged(index(0, MOD_COLUMN), index(rowCount() - 1, HEALTH_COLUMN));
     }
 
-    void LN_OverviewTable::slotLDSelected(int t_ld)
+    void LN_OverviewTable::slotLDSelected(int ld)
     {
-        if (m_ldevIndex != t_ld) {
+        if (m_ldevIndex != ld) {
             if (m_ldev) {
                 disconnect(m_updConnection);
             }
 
             beginResetModel();
-            m_ldevIndex = t_ld;
+            m_ldevIndex = ld;
             m_ldev = m_ied->model().getLogicalDevice(m_ldevIndex);
             if (m_ldev) {
                 m_updConnection = connect(m_ldev.get(), &Core::LogicalDevice::sigDataObjectUpdated,

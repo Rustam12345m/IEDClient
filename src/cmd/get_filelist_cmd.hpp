@@ -30,15 +30,15 @@ namespace Cmd
     {
         Q_OBJECT
     public:
-        GetFileList(Core::FS_Model &t_tree, const QString &t_path)
-            : m_fsModel(t_tree), m_path{t_path}
+        GetFileList(Core::FS_Model &tree, const QString &path)
+            : m_fsModel(tree), m_path{path}
         {}
         ~GetFileList() {}
 
-        void        execute(Cmd::Interface::IEC61850_API::ptr t_api) override;
+        void        execute(Cmd::Interface::IEC61850_API::ptr api) override;
 
-        static auto create(Core::FS_Model &t_tree, const QString &t_path) {
-            return QSharedPointer<GetFileList>::create(t_tree, t_path);
+        static auto create(Core::FS_Model &tree, const QString &path) {
+            return QSharedPointer<GetFileList>::create(tree, path);
         }
 
     private:

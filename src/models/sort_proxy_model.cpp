@@ -18,14 +18,14 @@ namespace App::Models
         return true;
     }
 
-    bool SortProxyModel::lessThan(const QModelIndex &t_left, const QModelIndex &t_right) const
+    bool SortProxyModel::lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const
     {
-        //qDebug() << "SortProxyModel: lessThan L = " << t_left.row() << ", R = " << t_right.row();
+        //qDebug() << "SortProxyModel: lessThan L = " << source_left.row() << ", R = " << source_right.row();
 
         QAbstractItemModel *m = sourceModel();
         if (m != nullptr) {
-            QVariant l = m->data(t_left, ComRoles::ROLE_SORT_VALUE),
-                    r = m->data(t_right, ComRoles::ROLE_SORT_VALUE);
+            QVariant l = m->data(source_left, ComRoles::ROLE_SORT_VALUE),
+                    r = m->data(source_right, ComRoles::ROLE_SORT_VALUE);
 
             if (l.typeId() == r.typeId()) {
                 switch (l.typeId()) {

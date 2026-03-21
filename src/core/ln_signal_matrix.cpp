@@ -24,39 +24,39 @@
 
 namespace Core
 {
-    LN_SignalMatrix::ptr LN_SignalMatrixBuilder::create(QSharedPointer< LogicalNode > t_ln,
-                                                         const QList<QString> &t_fcFilter)
+    LN_SignalMatrix::ptr LN_SignalMatrixBuilder::create(QSharedPointer< LogicalNode > ln,
+                                                         const QList<QString> &fcFilter)
     {
         auto matrix = LN_SignalMatrix::ptr::create();
 
-        auto dataObjList = t_ln->getItemList();
+        auto dataObjList = ln->getItemList();
         for (auto item : dataObjList) {
             SignalMatrixRow rowPrototype;
             rowPrototype.m_dataObject = item;
-            recursiveFillMatrix(matrix, t_ln, item, rowPrototype, t_fcFilter);
+            recursiveFillMatrix(matrix, ln, item, rowPrototype, fcFilter);
         }
         return matrix;
     }
 
-    void LN_SignalMatrixBuilder::recursiveFillMatrix(LN_SignalMatrix::ptr t_matrix,
-                                                     ModelItem::ptr t_root,
-                                                     ModelItem::ptr t_item,
-                                                     SignalMatrixRow t_rowPrototype,
-                                                     const QList<QString> &t_fcFilter)
+    void LN_SignalMatrixBuilder::recursiveFillMatrix(LN_SignalMatrix::ptr table,
+                                                     ModelItem::ptr root,
+                                                     ModelItem::ptr item,
+                                                     SignalMatrixRow rowPrototype,
+                                                     const QList<QString> &fcFilter)
     {
         // Find Q, TS, Desc elements
-        for (size_t i=0;i<t_item->getItemCount();i++) {
-            ModelItem::ptr child = t_item->getItem(i);
+        for (size_t i=0;i<item->getItemCount();i++) {
+            ModelItem::ptr child = item->getItem(i);
             if (child->getName() == "q") {
-                t_rowPrototype.m_quality = child;
+                rowPrototype.m_quality = child;
                 continue;
             }
             if (child->getName() == "t") {
-                t_rowPrototype.m_timestamp = child;
+                rowPrototype.m_timestamp = child;
                 continue;
             }
             if (child->getName() == "d") {
-                t_rowPrototype.m_desc = child;
+                rowPrototype.m_desc = child;
                 continue;
             }
         }
@@ -64,15 +64,15 @@ namespace Core
         const QList<QString> ATTR = { "q", "t", "d" };
 
         // Create signals
-        for (size_t i=0;i<t_item->getItemCount();i++) {
-            ModelItem::ptr child = t_item->getItem(i);
+        for (size_t i=0;i<item->getItemCount();i++) {
+            ModelItem::ptr child = item->getItem(i);
 
             auto da = child.dynamicCast<Core::DataAttribute>();
             if (da) {
-                if (!t_fcFilter.contains(da->fcStr())) {
+                if (!fcFilter.contains(da->fcStr())) {
                     continue;
                 }
-                t_rowPrototype.m_fc = da->fcStr();
+                rowPrototype.m_fc = da->fcStr();
             }
 
             if (ATTR.contains(child->getName())) {
@@ -81,11 +81,11 @@ namespace Core
 
             if (child->getItemCount() == 0) {
                 // Leaf
-                t_rowPrototype.m_path = child->getReference(t_root.get());
-                t_rowPrototype.m_value = child;
-                t_matrix->m_signals.emplace_back(t_rowPrototype);
+                rowPrototype.m_path = child->getReference(root.get());
+                rowPrototype.m_value = child;
+                table->m_signals.emplace_back(rowPrototype);
             } else {
-                recursiveFillMatrix(t_matrix, t_root, child, t_rowPrototype, t_fcFilter);
+                recursiveFillMatrix(table, root, child, rowPrototype, fcFilter);
             }
         }
     }

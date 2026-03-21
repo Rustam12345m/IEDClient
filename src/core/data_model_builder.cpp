@@ -32,78 +32,78 @@ namespace Core
     {
     }
 
-    DataModelBuilder& DataModelBuilder::createLD(const QString &t_name)
+    DataModelBuilder& DataModelBuilder::createLD(const QString &name)
     {
-        m_lastLD = LogicalDevice::ptr::create(m_model.get(), t_name);
+        m_lastLD = LogicalDevice::ptr::create(m_model.get(), name);
         m_model->addSubItem(m_lastLD);
         return *this;
     }
 
-    DataModelBuilder& DataModelBuilder::createLN(const QString &t_name)
+    DataModelBuilder& DataModelBuilder::createLN(const QString &name)
     {
-        m_lastLN = LogicalNode::ptr::create(m_lastLD.get(), t_name);
+        m_lastLN = LogicalNode::ptr::create(m_lastLD.get(), name);
         m_lastLD->addSubItem(m_lastLN);
         return *this;
     }
 
-    DataModelBuilder& DataModelBuilder::createDO(const QString &t_name)
+    DataModelBuilder& DataModelBuilder::createDO(const QString &name)
     {
-        m_lastDO = DataObject::ptr::create(m_lastLN.get(), t_name);
+        m_lastDO = DataObject::ptr::create(m_lastLN.get(), name);
         m_lastLN->addSubItem(m_lastDO);
         return *this;
     }
 
-    DataModelBuilder& DataModelBuilder::createDA(const QString &t_name, const QString &t_fc)
+    DataModelBuilder& DataModelBuilder::createDA(const QString &name, const QString &fc)
     {
-        m_lastDA = DataAttribute::ptr::create(m_lastDO.get(), t_name, t_fc);
+        m_lastDA = DataAttribute::ptr::create(m_lastDO.get(), name, fc);
         m_lastDO->addSubItem(m_lastDA);
         return *this;
     }
 
-    DataModelBuilder& DataModelBuilder::createSDA(ModelItem::ptr t_parent, const QString &t_name)
+    DataModelBuilder& DataModelBuilder::createSDA(ModelItem::ptr parent, const QString &name)
     {
-        m_lastSDA = SubAttribute::ptr::create(t_parent.get(), t_name);
-        t_parent->addSubItem(m_lastSDA);
+        m_lastSDA = SubAttribute::ptr::create(parent.get(), name);
+        parent->addSubItem(m_lastSDA);
         return *this;
     }
 
-    DataModelBuilder& DataModelBuilder::createDataSet(const QString &t_name, const QString &t_lnRef, bool t_del)
+    DataModelBuilder& DataModelBuilder::createDataSet(const QString &name, const QString &lnRef, bool del)
     {
-        m_lastDataSet = DataSet::ptr::create(lastLN().get(), t_name, t_lnRef, t_del);
+        m_lastDataSet = DataSet::ptr::create(lastLN().get(), name, lnRef, del);
         m_model->pushDataSet(m_lastDataSet);
         // m_lastLN->
         return *this;
     }
 
-    DataModelBuilder& DataModelBuilder::createDataSet_Elem(const QString &t_ref, const QString &t_fc)
+    DataModelBuilder& DataModelBuilder::createDataSet_Elem(const QString &ref, const QString &fc)
     {
-        auto dsEnt = DataSetItem::ptr::create(lastDataSet().get(), t_ref, t_fc);
+        auto dsEnt = DataSetItem::ptr::create(lastDataSet().get(), ref, fc);
         lastDataSet()->addSubItem(dsEnt);
         return *this;
     }
 
-    DataModelBuilder& DataModelBuilder::createRCB(const QString &t_name, const QString &t_lnRef, bool t_isBuffered)
+    DataModelBuilder& DataModelBuilder::createRCB(const QString &name, const QString &lnRef, bool isBuffered)
     {
-        m_lastRCB = ReportBlock::ptr::create(lastLN().get(), t_name, t_lnRef, t_isBuffered);
+        m_lastRCB = ReportBlock::ptr::create(lastLN().get(), name, lnRef, isBuffered);
         m_model->pushReportCB(m_lastRCB);
         return *this;
     }
 
-    DataModelBuilder& DataModelBuilder::createGOCB(const QString &t_name, const QString &t_lnRef)
+    DataModelBuilder& DataModelBuilder::createGOCB(const QString &name, const QString &lnRef)
     {
-        m_lastGOCB = GooseControlBlock::ptr::create(lastLN().get(), t_name, t_lnRef);
+        m_lastGOCB = GooseControlBlock::ptr::create(lastLN().get(), name, lnRef);
         m_model->pushGooseCB(m_lastGOCB);
         return *this;
     }
 
-    DataModelBuilder& DataModelBuilder::createSVCB(const QString &t_name, const QString &t_lnRef, bool t_isMulticast)
+    DataModelBuilder& DataModelBuilder::createSVCB(const QString &name, const QString &lnRef, bool isMulticast)
     {
-        m_lastSVCB = SV_ControlBlock::ptr::create(lastLN().get(), t_name, t_lnRef, t_isMulticast);
+        m_lastSVCB = SV_ControlBlock::ptr::create(lastLN().get(), name, lnRef, isMulticast);
         m_model->pushSV_CB(m_lastSVCB);
         return *this;
     }
 
-    QSharedPointer<DataModel> DataModelBuilder::build(QThread *t_guiThread)
+    QSharedPointer<DataModel> DataModelBuilder::build(QThread *guiThread)
     {
         m_model->resolveIEDName();
 
@@ -112,7 +112,7 @@ namespace Core
 
             for (size_t j=0;j<ld->getItemCount();j++) {
                 auto ln = ld->getItem<LogicalNode>(j);
-                ln->moveToThread(t_guiThread); // GUI thread
+                ln->moveToThread(guiThread); // GUI thread
 
                 ln->m_sigMatrix      = LN_SignalMatrixBuilder::create(ln, {"ST", "MX"});
                 ln->m_coMatrix       = LN_SignalMatrixBuilder::create(ln, {"CO"});

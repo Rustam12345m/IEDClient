@@ -27,13 +27,13 @@ namespace Core
 {
     namespace
     {
-        void     printTree(QString t_prefix, ModelItem::ptr t_item)
+        void     printTree(QString prefix, ModelItem::ptr item)
         {
-            auto &nodeList = t_item->getItemList();
+            auto &nodeList = item->getItemList();
             for (auto node : nodeList) {
-                // qDebug().noquote() << t_prefix << node->getName();
+                // qDebug().noquote() << prefix << node->getName();
 
-                printTree(t_prefix + "  ", node);
+                printTree(prefix + "  ", node);
             }
         }
     }
@@ -78,41 +78,41 @@ namespace Core
         }
     }
 
-    LogicalDevice::ptr DataModel::getLogicalDevice(int t_ld)
+    LogicalDevice::ptr DataModel::getLogicalDevice(int ld)
     {
-        return getItem<Core::LogicalDevice>(t_ld);
+        return getItem<Core::LogicalDevice>(ld);
     }
 
-    LogicalNode::ptr DataModel::getLogicalNode(int t_ld, int t_ln)
+    LogicalNode::ptr DataModel::getLogicalNode(int ld, int ln)
     {
-        auto ld = getItem<Core::LogicalDevice>(t_ld);
-        if (ld) {
-            return ld->getItem<Core::LogicalNode>(t_ln);
+        auto ldPtr = getItem<Core::LogicalDevice>(ld);
+        if (ldPtr) {
+            return ldPtr->getItem<Core::LogicalNode>(ln);
         }
         return nullptr;
     }
 
-    ModelItem::ptr DataModel::getItemByReference(const QString &t_ref)
+    ModelItem::ptr DataModel::getItemByReference(const QString &ref)
     {
         // MMS_REF: "HugeModelIEDMain/GGIO1.Mod[CO]"
         // MMS_REF: "HugeModelIEDMain/GGIO1.Mod.stVal[ST]"
-        int inx = t_ref.indexOf('/'), nextInx = -1;
+        int inx = ref.indexOf('/'), nextInx = -1;
         if (inx == -1) {
             return nullptr;
         }
-        QString ldName = t_ref.mid(m_name.size(), inx - m_name.size());
+        QString ldName = ref.mid(m_name.size(), inx - m_name.size());
         inx++;
 
         QStringList names;
-        while ((nextInx = t_ref.indexOf('.', inx)) != -1) {
-            names.push_back(t_ref.mid(inx, nextInx - inx));
+        while ((nextInx = ref.indexOf('.', inx)) != -1) {
+            names.push_back(ref.mid(inx, nextInx - inx));
             inx = nextInx + 1;
         }
-        if (inx < t_ref.size()) {
-            names.push_back(t_ref.mid(inx, t_ref.size() - inx));
+        if (inx < ref.size()) {
+            names.push_back(ref.mid(inx, ref.size() - inx));
         }
 
-        // qDebug() << "GetItemByRef: ref = " << t_ref << ", ldName = " << ldName << ", nameList = " << names;
+        // qDebug() << "GetItemByRef: ref = " << ref << ", ldName = " << ldName << ", nameList = " << names;
         return recFindModelItem(names, 0, findSubItem(ldName));
     }
 
@@ -127,46 +127,46 @@ namespace Core
         }
     }
     
-    void DataModel::pushDataSet(DataSet::ptr t_ds)
+    void DataModel::pushDataSet(DataSet::ptr ds)
     {
-        m_ds.push_back(t_ds);
+        m_ds.push_back(ds);
     }
 
-    void DataModel::pushReportCB(ReportBlock::ptr t_cb)
+    void DataModel::pushReportCB(ReportBlock::ptr cb)
     {
-        m_rcb.push_back(t_cb);
+        m_rcb.push_back(cb);
     }
 
-    void DataModel::pushGooseCB(GooseControlBlock::ptr t_cb)
+    void DataModel::pushGooseCB(GooseControlBlock::ptr cb)
     {
-        m_gocb.push_back(t_cb);
+        m_gocb.push_back(cb);
     }
 
-    void DataModel::pushSV_CB(SV_ControlBlock::ptr t_cb)
+    void DataModel::pushSV_CB(SV_ControlBlock::ptr cb)
     {
-        m_svcb.push_back(t_cb);
+        m_svcb.push_back(cb);
     }
 
-    ReportStorage* DataModel::getOrCreateReportStorage(const QString &t_rcbRef)
+    ReportStorage* DataModel::getOrCreateReportStorage(const QString &rcbRef)
     {
-        auto it = m_reportStorages.find(t_rcbRef);
+        auto it = m_reportStorages.find(rcbRef);
         if (it != m_reportStorages.end()) {
             return it.value();
         }
         auto *storage = new ReportStorage(nullptr);
-        m_reportStorages.insert(t_rcbRef, storage);
+        m_reportStorages.insert(rcbRef, storage);
         return storage;
     }
 
-    ModelItem::ptr DataModel::recFindModelItem(QStringList &t_names, int t_inx, ModelItem::ptr t_item)
+    ModelItem::ptr DataModel::recFindModelItem(QStringList &names, int inx, ModelItem::ptr item)
     {
-        if (t_item == nullptr) {
+        if (item == nullptr) {
             return nullptr;
         }
-        if (t_inx == (t_names.size() - 1)) {
+        if (inx == (names.size() - 1)) {
             // End
-            return t_item->findSubItem(t_names[t_inx]);
+            return item->findSubItem(names[inx]);
         }
-        return recFindModelItem(t_names, t_inx + 1, t_item->findSubItem(t_names[t_inx]));
+        return recFindModelItem(names, inx + 1, item->findSubItem(names[inx]));
     }
 }

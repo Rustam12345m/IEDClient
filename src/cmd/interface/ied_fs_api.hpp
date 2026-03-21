@@ -31,12 +31,12 @@ namespace Cmd::Interface
     public:
         virtual ~IED_FS_API() {}
 
-        virtual int  getFileList(Core::DirOn &t_dir) = 0;
-        virtual bool download(const QString &t_filename, const QString &t_localPath,
-                              uint32_t t_fileSize = 0) = 0;
-        virtual int  remove(const QString &t_filename) = 0;
+        virtual int  getFileList(Core::DirOn &dir) = 0;
+        virtual bool download(const QString &filename, const QString &localPath,
+                              uint32_t fileSize = 0) = 0;
+        virtual int  remove(const QString &filename) = 0;
 
     signals:
-        void sigDownloadProgress(int t_perc);
+        void sigDownloadProgress(int perc);
     };
 }

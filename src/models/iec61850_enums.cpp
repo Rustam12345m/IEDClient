@@ -53,26 +53,26 @@ health_status[] = {
 
 namespace App::Models
 {
-    QVariant IEC_EnumUserInfo::mod(int t_mod)
+    QVariant IEC_EnumUserInfo::mod(int mod)
     {
         QVariantMap retval;
-        MBH(retval, t_mod, mod_beh_status);
+        MBH(retval, mod, mod_beh_status);
         return retval;
     }
 
-    QVariant IEC_EnumUserInfo::beh(int t_beh)
+    QVariant IEC_EnumUserInfo::beh(int beh)
     {
-        return mod(t_beh);
+        return mod(beh);
     }
 
-    QVariant IEC_EnumUserInfo::health(int t_health)
+    QVariant IEC_EnumUserInfo::health(int health)
     {
         QVariantMap retval;
-        MBH(retval, t_health, health_status);
+        MBH(retval, health, health_status);
         return retval;
     }
 
-    QVariant IEC_EnumUserInfo::sim(int t_value)
+    QVariant IEC_EnumUserInfo::sim(int value)
     {
         QVariantMap retval;
         retval["num"] = -1;
@@ -82,7 +82,7 @@ namespace App::Models
         return retval;
     }
 
-    QVariant IEC_EnumUserInfo::blk(int t_value)
+    QVariant IEC_EnumUserInfo::blk(int value)
     {
         QVariantMap retval;
         retval["num"] = -1;

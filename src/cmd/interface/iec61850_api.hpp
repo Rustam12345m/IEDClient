@@ -42,7 +42,7 @@ namespace Cmd::Interface
 
         virtual ~IEC61850_API() {}
 
-        virtual QString connect(const Cmd::IEDCredentials &t_creds) = 0;
+        virtual QString connect(const Cmd::IEDCredentials &creds) = 0;
         virtual void disconnect() = 0;
         virtual bool isConnected() const = 0;
 
@@ -56,7 +56,7 @@ namespace Cmd::Interface
         virtual IED_FS_API&     fs() = 0;
 
     signals:
-        void sigFoundNode(const QString t_path);
+        void sigFoundNode(const QString path);
         void sigConClosed();
     };
 }

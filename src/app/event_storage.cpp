@@ -33,12 +33,12 @@ namespace App
         return m_buffer[last].m_msg;
     }
 
-    void EventStorage::putEventToStorage(Cmd::CmdEvent t_event)
+    void EventStorage::putEventToStorage(Cmd::CmdEvent event)
     {
         {
             QMutexLocker locker(&m_lock);
             int pos = (m_head + m_count) % Capacity;
-            m_buffer[pos] = t_event;
+            m_buffer[pos] = event;
 
             if (m_count < Capacity) {
                 ++m_count;
@@ -47,6 +47,6 @@ namespace App
             }
         }
 
-        emit sigNewEvent(t_event);
+        emit sigNewEvent(event);
     }
 }

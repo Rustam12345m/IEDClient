@@ -45,25 +45,25 @@ namespace App::Models
             QString     name;
             QString     obj;
 
-            PropertyItem(const QString &t_node, const QString &t_name, const QString &t_obj)
-                : section{t_node}, name{t_name}, obj{t_obj} {}
+            PropertyItem(const QString &node, const QString &propName, const QString &propObj)
+                : section{node}, name{propName}, obj{propObj} {}
         };
 
     public:
-        LD_PropertiesTable(QObject *t_parent, Core::IED::ptr t_ied);
+        LD_PropertiesTable(QObject *parent, Core::IED::ptr ied);
 
-        void setActiveIED(Core::IED::ptr t_ied);
+        void setActiveIED(Core::IED::ptr ied);
 
         QHash<int, QByteArray> roleNames() const override;
-        int rowCount(const QModelIndex &t_index = QModelIndex()) const override;
-        QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
+        int rowCount(const QModelIndex &index = QModelIndex()) const override;
+        QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     private:
-        QVariant dataLD(const QModelIndex &t_index, int t_role) const;
-        QVariant dataIED(const QModelIndex &t_index, int t_role) const;
+        QVariant dataLD(const QModelIndex &index, int role) const;
+        QVariant dataIED(const QModelIndex &index, int role) const;
 
     public slots:
-        void slotLDSelected(int t_ld);
+        void slotLDSelected(int ld);
 
     private:
         Core::IED::ptr      m_ied;

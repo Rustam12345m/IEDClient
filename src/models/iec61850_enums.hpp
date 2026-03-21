@@ -29,10 +29,10 @@ namespace App::Models
     class IEC_EnumUserInfo
     {
     public:
-        static QVariant mod(int t_mod);
-        static QVariant beh(int t_beh);
-        static QVariant health(int t_health);
-        static QVariant sim(int t_value);
-        static QVariant blk(int t_value);
+        static QVariant mod(int mod);
+        static QVariant beh(int beh);
+        static QVariant health(int health);
+        static QVariant sim(int value);
+        static QVariant blk(int value);
     };
 };

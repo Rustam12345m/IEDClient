@@ -26,33 +26,33 @@ namespace App::Models
 {
     namespace
     {
-        inline int getInt(Core::ModelItem::ptr t_item)
+        inline int getInt(Core::ModelItem::ptr item)
         {
-            return t_item ? t_item->getValue().toInt() : -1;
+            return item ? item->getValue().toInt() : -1;
         }
     }
 
-    LN_AllOverviewTable::LN_AllOverviewTable(QObject *t_parent, Core::IED::ptr t_ied)
-        : QAbstractListModel(t_parent), m_ied(t_ied)
+    LN_AllOverviewTable::LN_AllOverviewTable(QObject *parent, Core::IED::ptr ied)
+        : QAbstractListModel(parent), m_ied(ied)
     {
     }
 
-    void LN_AllOverviewTable::setActiveIED(Core::IED::ptr t_ied)
+    void LN_AllOverviewTable::setActiveIED(Core::IED::ptr ied)
     {
         beginResetModel();
 
         connectToUpdates(false);
-        m_ied = t_ied;
+        m_ied = ied;
         rebuildFlatList();
         connectToUpdates(true);
 
         endResetModel();
     }
 
-    void LN_AllOverviewTable::selectLN(int t_row)
+    void LN_AllOverviewTable::selectLN(int row)
     {
-        if (t_row >= 0 && t_row < m_entries.size()) {
-            const auto &entry = m_entries[t_row];
+        if (row >= 0 && row < m_entries.size()) {
+            const auto &entry = m_entries[row];
             emit sigLNSelected(entry.ldIndex, entry.lnIndex);
         }
     }
@@ -70,19 +70,19 @@ namespace App::Models
         };
     }
 
-    int LN_AllOverviewTable::rowCount(const QModelIndex &t_parent) const
+    int LN_AllOverviewTable::rowCount(const QModelIndex &parent) const
     {
         return m_entries.size();
     }
 
-    QVariant LN_AllOverviewTable::data(const QModelIndex &t_index, int t_role) const
+    QVariant LN_AllOverviewTable::data(const QModelIndex &index, int role) const
     {
-        if (!t_index.isValid() || t_index.row() >= m_entries.size())
+        if (!index.isValid() || index.row() >= m_entries.size())
             return {};
 
-        const auto &entry = m_entries[t_index.row()];
+        const auto &entry = m_entries[index.row()];
 
-        switch (t_role) {
+        switch (role) {
         case SECTION_ROLE:
             return "LD: " + entry.ldName;
         case LD_INDEX_ROLE:
@@ -102,7 +102,7 @@ namespace App::Models
         return {};
     }
 
-    void LN_AllOverviewTable::slotDataUpdated(Core::ModelItem::ptrList t_nodes)
+    void LN_AllOverviewTable::slotDataUpdated(Core::ModelItem::ptrList nodes)
     {
         if (!m_entries.isEmpty()) {
             emit dataChanged(index(0), index(m_entries.size() - 1),
@@ -110,10 +110,10 @@ namespace App::Models
         }
     }
 
-    void LN_AllOverviewTable::slotLDSelected(int t_ld)
+    void LN_AllOverviewTable::slotLDSelected(int ld)
     {
         for (int i = 0; i < m_entries.size(); i++) {
-            if (m_entries[i].ldIndex == t_ld) {
+            if (m_entries[i].ldIndex == ld) {
                 emit sigSelectRow(i);
                 return;
             }
@@ -147,9 +147,9 @@ namespace App::Models
         }
     }
 
-    void LN_AllOverviewTable::connectToUpdates(bool t_connect)
+    void LN_AllOverviewTable::connectToUpdates(bool doConnect)
     {
-        if (!t_connect) {
+        if (!doConnect) {
             for (auto &conn : m_connections) {
                 disconnect(conn);
             }

@@ -31,8 +31,8 @@ namespace App::Models
         Q_GADGET
     public:
         SortHeaderValue() {}
-        SortHeaderValue(const QString &t_text, bool t_sort)
-            : m_text(t_text), m_sortable(t_sort) {}
+        SortHeaderValue(const QString &text, bool sort)
+            : m_text(text), m_sortable(sort) {}
 
         QString m_text;
         bool    m_sortable = false;

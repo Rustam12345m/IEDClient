@@ -23,7 +23,7 @@
 
 namespace Cmd
 {
-    void SetSVEnable_Cmd::execute(Cmd::Interface::IEC61850_API::ptr t_api)
+    void SetSVEnable_Cmd::execute(Cmd::Interface::IEC61850_API::ptr api)
     {
         QString svcbRef = QString("%1.%2").arg(m_svcb->lnRef(), m_svcb->getName());
         QString action = m_enable ? "Enable" : "Disable";
@@ -31,7 +31,7 @@ namespace Cmd
         emit sigCmdEvent(CmdEvent::StartEvent(svcbRef,
             QString("%1 SV: %2").arg(action, svcbRef)));
 
-        QString err = t_api->control().setSVEnable(svcbRef, m_enable);
+        QString err = api->control().setSVEnable(svcbRef, m_enable);
 
         if (err.isEmpty()) {
             m_svcb->setSvEna(m_enable);

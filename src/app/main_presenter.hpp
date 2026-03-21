@@ -40,28 +40,28 @@ namespace App
         MainPresenter();
         ~MainPresenter() = default;
 
-        void setQmlContextMembers(QQmlContext *t_context);
+        void setQmlContextMembers(QQmlContext *context);
 
         Q_PROPERTY(QVariant iedConStatus READ getIEDConStatus NOTIFY sigIEDConChanged)
         Q_INVOKABLE QVariant getIEDConStatus();
 
         // API for QML
-        Q_INVOKABLE void connectTo(const QVariantMap &t_data);
+        Q_INVOKABLE void connectTo(const QVariantMap &data);
         Q_INVOKABLE void disconnectFrom();
-        Q_INVOKABLE void toolDumpModel(const QVariantMap &t_data);
-        Q_INVOKABLE void copyToClipboard(const QString &t_text);
+        Q_INVOKABLE void toolDumpModel(const QVariantMap &data);
+        Q_INVOKABLE void copyToClipboard(const QString &text);
         Q_PROPERTY(bool isConnected READ isConnected NOTIFY sigIEDConChanged)
         bool isConnected() const { return m_con.isConnected(); }
 
     public slots:
-        void slotCmdEvent(Cmd::CmdEvent t_ev);
+        void slotCmdEvent(Cmd::CmdEvent ev);
         void slotConClosed();
 
     signals:
-        void sigCmdProgress(int t_perc, QString t_msg);
-        void sigCmdFinished(bool t_done);
-        void sigIEDConChanged(bool t_done);
-        void sigConnectionError(QString t_msg);
+        void sigCmdProgress(int perc, QString msg);
+        void sigCmdFinished(bool done);
+        void sigIEDConChanged(bool done);
+        void sigConnectionError(QString msg);
 
     protected:
         IEDConContainer m_con; // Complex component of IED's stub

@@ -24,9 +24,9 @@
 
 namespace Core
 {
-    void ModelItem::addSubItem(ModelItem::ptr t_child)
+    void ModelItem::addSubItem(ModelItem::ptr child)
     {
-        m_items.push_back(t_child);
+        m_items.push_back(child);
     }
 
     QString ModelItem::getValue() const
@@ -37,13 +37,13 @@ namespace Core
         return "";
     }
 
-    bool ModelItem::updateValue(ModelItemValue::ptr t_newValue)
+    bool ModelItem::updateValue(ModelItemValue::ptr newValue)
     {
-        if (m_value && (*m_value == *t_newValue)) {
+        if (m_value && (*m_value == *newValue)) {
             return false;
         }
 
-        m_value = t_newValue;
+        m_value = newValue;
 
         if (m_parent != nullptr) {
             auto nodes = ModelItem::ptrList::create();
@@ -52,11 +52,11 @@ namespace Core
         return true;
     }
 
-    void ModelItem::notifyFromChild(ModelItem::ptrList t_nodes)
+    void ModelItem::notifyFromChild(ModelItem::ptrList nodes)
     {
         if (m_parent != nullptr) {
-            t_nodes->push_front(this);
-            m_parent->notifyFromChild(t_nodes);
+            nodes->push_front(this);
+            m_parent->notifyFromChild(nodes);
         }
     }
 }

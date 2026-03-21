@@ -34,32 +34,32 @@ namespace Core
     public:
         using ptr = QSharedPointer< DataModel >;
 
-        DataModel(const QString &t_name) : ModelItem(nullptr, t_name)
+        DataModel(const QString &name) : ModelItem(nullptr, name)
         {
             m_delimetr = ""; // There isn't a delimetr because it is a top node
         }
         ~DataModel() = default;
 
-        ModelItem::ptr      getItemByReference(const QString &t_ref);
-        LogicalDevice::ptr  getLogicalDevice(int t_ld);
-        LogicalNode::ptr    getLogicalNode(int t_ld, int t_ln);
+        ModelItem::ptr      getItemByReference(const QString &ref);
+        LogicalDevice::ptr  getLogicalDevice(int ld);
+        LogicalNode::ptr    getLogicalNode(int ld, int ln);
 
         const auto getDataSetList() { return m_ds; }
         const auto getReportCBList() { return m_rcb; }
         const auto getGO_CBList() { return m_gocb; }
         const auto getSV_CBList() { return m_svcb; }
 
-        void pushDataSet(DataSet::ptr t_ds);
-        void pushReportCB(ReportBlock::ptr t_cb);
-        void pushGooseCB(GooseControlBlock::ptr t_cb);
-        void pushSV_CB(SV_ControlBlock::ptr t_cb);
+        void pushDataSet(DataSet::ptr ds);
+        void pushReportCB(ReportBlock::ptr cb);
+        void pushGooseCB(GooseControlBlock::ptr cb);
+        void pushSV_CB(SV_ControlBlock::ptr cb);
 
-        ReportStorage* getOrCreateReportStorage(const QString &t_rcbRef);
+        ReportStorage* getOrCreateReportStorage(const QString &rcbRef);
 
         void print();
 
     private:
-        ModelItem::ptr recFindModelItem(QStringList &t_names, int t_inx, ModelItem::ptr t_item);
+        ModelItem::ptr recFindModelItem(QStringList &names, int inx, ModelItem::ptr item);
         void resolveIEDName(); // TODO: Move to DataModelBuilder
 
     private:

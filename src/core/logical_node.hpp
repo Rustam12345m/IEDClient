@@ -45,8 +45,8 @@ namespace Core
     public:
         using ptr = QSharedPointer< LogicalNode >;
 
-        LogicalNode(ModelItem *t_parent, const QString &t_name)
-            : QObject(nullptr), ModelItem(t_parent, t_name)
+        LogicalNode(ModelItem *parent, const QString &name)
+            : QObject(nullptr), ModelItem(parent, name)
         {
             m_delimetr = "/"; // Between LDName and LNName
         }
@@ -55,24 +55,24 @@ namespace Core
         DataObject::ptr    getBehItem() const { return m_beh; }
         DataObject::ptr    getHealthItem() const { return m_health; }
 
-        void     addSubItem(ModelItem::ptr t_child) override {
-            if (t_child->getName() == "Mod") {
-                m_mod = t_child.dynamicCast<DataObject>();
-            } else if (t_child->getName() == "Beh") {
-                m_beh = t_child.dynamicCast<DataObject>();
-            } else if (t_child->getName() == "Health") {
-                m_health = t_child.dynamicCast<DataObject>();
+        void     addSubItem(ModelItem::ptr child) override {
+            if (child->getName() == "Mod") {
+                m_mod = child.dynamicCast<DataObject>();
+            } else if (child->getName() == "Beh") {
+                m_beh = child.dynamicCast<DataObject>();
+            } else if (child->getName() == "Health") {
+                m_health = child.dynamicCast<DataObject>();
             }
-            ModelItem::addSubItem(t_child);
+            ModelItem::addSubItem(child);
         }
-        void     addSubItem(DataSet::ptr t_ds) {
-            m_dataSets.push_back(t_ds);
+        void     addSubItem(DataSet::ptr ds) {
+            m_dataSets.push_back(ds);
         }
-        void     addSubItem(ReportBlock::ptr t_rcb) {
-            m_rcbs.push_back(t_rcb);
+        void     addSubItem(ReportBlock::ptr rcb) {
+            m_rcbs.push_back(rcb);
         }
-        void     addSubItem(GooseControlBlock::ptr t_gocb) {
-            m_gooses.push_back(t_gocb);
+        void     addSubItem(GooseControlBlock::ptr gocb) {
+            m_gooses.push_back(gocb);
         }
 
         auto&    getSignalMatrix() const {
@@ -95,10 +95,10 @@ namespace Core
         }
 
     signals:
-        void     sigDataObjectUpdated(ModelItem::ptrList t_nodes);
+        void     sigDataObjectUpdated(ModelItem::ptrList nodes);
 
     protected:
-         void    notifyFromChild(ModelItem::ptrList t_nodes) override;
+         void    notifyFromChild(ModelItem::ptrList nodes) override;
 
     protected:
         DataObject::ptr         m_mod;

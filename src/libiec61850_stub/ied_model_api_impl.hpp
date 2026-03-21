@@ -30,17 +30,17 @@ namespace Libiec61850
     class IED_ModelAPI_Impl : public Cmd::Interface::IED_ModelAPI
     {
     public:
-        IED_ModelAPI_Impl(ApiAdapter &t_api) : m_api(t_api) {};
+        IED_ModelAPI_Impl(ApiAdapter &api) : m_api(api) {};
         ~IED_ModelAPI_Impl() override = default;
 
-        int     fetchDataModel(Core::DataModelBuilder &t_builder) override;
+        int     fetchDataModel(Core::DataModelBuilder &builder) override;
 
     private:
-        int     fetchLN_DO(Core::DataModelBuilder &t_builder);
-        int     fetchLN_DS(Core::DataModelBuilder &t_builder);
-        int     fetchLN_RCB(Core::DataModelBuilder &t_builder);
-        int     fetchLN_GOCB(Core::DataModelBuilder &t_builder);
-        int     fetchLN_SVCB(Core::DataModelBuilder &t_builder);
+        int     fetchLN_DO(Core::DataModelBuilder &builder);
+        int     fetchLN_DS(Core::DataModelBuilder &builder);
+        int     fetchLN_RCB(Core::DataModelBuilder &builder);
+        int     fetchLN_GOCB(Core::DataModelBuilder &builder);
+        int     fetchLN_SVCB(Core::DataModelBuilder &builder);
 
     private:
         ApiAdapter&   m_api;

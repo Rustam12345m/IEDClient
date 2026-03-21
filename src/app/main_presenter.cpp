@@ -33,12 +33,12 @@ namespace App
         connect(&m_con, &IEDConContainer::sigConClosed, this, &MainPresenter::slotConClosed);
     }
 
-    void MainPresenter::setQmlContextMembers(QQmlContext *t_context)
+    void MainPresenter::setQmlContextMembers(QQmlContext *context)
     {
-        t_context->setContextProperty("presenter", this);
-        t_context->setContextProperty("appBackend", &m_appBackend);
-        t_context->setContextProperty("iedBackend", &m_iedBackend);
-        t_context->setContextProperty("fsBackend", &m_fsBackend);
+        context->setContextProperty("presenter", this);
+        context->setContextProperty("appBackend", &m_appBackend);
+        context->setContextProperty("iedBackend", &m_iedBackend);
+        context->setContextProperty("fsBackend", &m_fsBackend);
     }
 
     QVariant MainPresenter::getIEDConStatus()
@@ -61,11 +61,11 @@ namespace App
         return retval;
     }
 
-    void MainPresenter::connectTo(const QVariantMap &t_data)
+    void MainPresenter::connectTo(const QVariantMap &data)
     {
         // qDebug() << "MainPresenter: Connect cmd";
 
-        Cmd::IEDCredentials cred(t_data);
+        Cmd::IEDCredentials cred(data);
         m_con.createNewConnection(cred);
 
         auto cmd = Cmd::ConnectCmd::create(m_con.m_cred, m_con.m_ied);
@@ -83,11 +83,11 @@ namespace App
         m_con.m_cmdThread->putCommand(cmd);
     }
 
-    void MainPresenter::toolDumpModel(const QVariantMap &t_data)
+    void MainPresenter::toolDumpModel(const QVariantMap &data)
     {
         /*
-        Cmd::IEDCredentials con(t_data);
-        QString dir = t_data.value("path").toString();
+        Cmd::IEDCredentials con(data);
+        QString dir = data.value("path").toString();
 
         Tools::DumpModel *dump = new Tools::DumpModel(this);
 
@@ -95,36 +95,36 @@ namespace App
         connect(dump, &Tools::DumpModel::sigProgress, this, &MainPresenter::slotCmdProgress);
         */
 
-        // dump->init(t_dir, t_ip, t_port, t_tls, t_name, t_pass);
+        // dump->init(dir, ip, port, tls, name, pass);
         // dump->start();
     }
 
-    void MainPresenter::copyToClipboard(const QString &t_text)
+    void MainPresenter::copyToClipboard(const QString &text)
     {
-        QGuiApplication::clipboard()->setText(t_text);
+        QGuiApplication::clipboard()->setText(text);
     }
 
-    void MainPresenter::slotCmdEvent(Cmd::CmdEvent t_ev)
+    void MainPresenter::slotCmdEvent(Cmd::CmdEvent ev)
     {
-        m_events.putEventToStorage(t_ev);
+        m_events.putEventToStorage(ev);
 
-        switch (t_ev.m_type) {
+        switch (ev.m_type) {
         case Cmd::PROCESS_EVENT: {
-            emit sigCmdProgress(t_ev.m_perc, t_ev.m_msg);
+            emit sigCmdProgress(ev.m_perc, ev.m_msg);
             break;
         }
         case Cmd::FINISH_EVENT: {
-            m_iedBackend.slotConnected(t_ev.m_result);
-            m_fsBackend.slotConnected(t_ev.m_result);
+            m_iedBackend.slotConnected(ev.m_result);
+            m_fsBackend.slotConnected(ev.m_result);
 
-            if (t_ev.m_result) {
+            if (ev.m_result) {
                 m_appBackend.saveCredsToHistory(m_con.m_cred);
             } else {
-                emit sigConnectionError(t_ev.m_msg);
+                emit sigConnectionError(ev.m_msg);
             }
 
-            emit sigCmdFinished(t_ev.m_result);
-            emit sigIEDConChanged(t_ev.m_result);
+            emit sigCmdFinished(ev.m_result);
+            emit sigIEDConChanged(ev.m_result);
             break;
         }
         case Cmd::START_EVENT:

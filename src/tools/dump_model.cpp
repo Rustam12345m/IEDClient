@@ -27,7 +27,7 @@
 
 namespace Tools
 {
-    DumpModel::DumpModel(QObject *t_parent) : QThread(t_parent)
+    DumpModel::DumpModel(QObject *parent) : QThread(parent)
     {
     }
 
@@ -36,15 +36,15 @@ namespace Tools
         // qDebug() << "DumpModel: Destructor";
     }
 
-    void DumpModel::init(const QString &t_dir, const QString &t_ip, unsigned int t_port,
-                         bool t_tls, const QString &t_name, const QString &t_pass)
+    void DumpModel::init(const QString &dir, const QString &ip, unsigned int port,
+                         bool tls, const QString &name, const QString &pass)
     {
-        m_fileDirectory = t_dir;
-        m_ip = t_ip;
-        m_port = t_port;
-        m_tls = t_tls;
-        m_user = t_name;
-        m_password = t_pass;
+        m_fileDirectory = dir;
+        m_ip = ip;
+        m_port = port;
+        m_tls = tls;
+        m_user = name;
+        m_password = pass;
     }
 
     void DumpModel::run()

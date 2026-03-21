@@ -23,22 +23,22 @@
 
 namespace App::Models
 {
-    LN_CommonTree::LN_CommonTree(QObject *t_parent, Core::IED::ptr t_ied)
-        : QAbstractItemModel(t_parent), m_ied(t_ied)
+    LN_CommonTree::LN_CommonTree(QObject *parent, Core::IED::ptr ied)
+        : QAbstractItemModel(parent), m_ied(ied)
     {
     }
 
-    void LN_CommonTree::setActiveIED(Core::IED::ptr t_ied)
+    void LN_CommonTree::setActiveIED(Core::IED::ptr ied)
     {
         beginResetModel();
-        m_ied = t_ied;
+        m_ied = ied;
         m_lnode.reset();
         endResetModel();
     }
 
-    QVariant LN_CommonTree::headerData(int t_sect, Qt::Orientation t_orient, int t_role) const
+    QVariant LN_CommonTree::headerData(int sect, Qt::Orientation orient, int role) const
     {
-        switch (t_sect) {
+        switch (sect) {
         case NAME_COLUMN: {
             return QVariant("Name");
         }
@@ -52,17 +52,17 @@ namespace App::Models
         return QVariant("");
     }
 
-    int LN_CommonTree::rowCount(const QModelIndex &t_parent) const
+    int LN_CommonTree::rowCount(const QModelIndex &parent) const
     {
-        if (t_parent.column() > 0) {
+        if (parent.column() > 0) {
             return 0;
         }
 
         Core::ModelItem *item = nullptr;
-        if (!t_parent.isValid()) {
+        if (!parent.isValid()) {
             item = m_lnode.get();
         } else {
-            item = static_cast<Core::ModelItem*>(t_parent.internalPointer());
+            item = static_cast<Core::ModelItem*>(parent.internalPointer());
         }
 
         if (item != nullptr) {
@@ -71,60 +71,60 @@ namespace App::Models
         return 0;
     }
 
-    int LN_CommonTree::columnCount(const QModelIndex &t_parent) const
+    int LN_CommonTree::columnCount(const QModelIndex &parent) const
     {
         return COLUMN_COUNT;
     }
 
-    QModelIndex LN_CommonTree::index(int t_row, int t_column, const QModelIndex &t_parent) const
+    QModelIndex LN_CommonTree::index(int row, int column, const QModelIndex &parent) const
     {
-        if (!hasIndex(t_row, t_column, t_parent)) {
+        if (!hasIndex(row, column, parent)) {
             return QModelIndex();
         }
 
         Core::ModelItem *item = nullptr;
-        if (!t_parent.isValid()) {
+        if (!parent.isValid()) {
             item = m_lnode.get();
         } else {
-            item = static_cast<Core::ModelItem*>(t_parent.internalPointer());
+            item = static_cast<Core::ModelItem*>(parent.internalPointer());
         }
 
         if (item != nullptr) {
-            auto node = item->getItem(t_row);
+            auto node = item->getItem(row);
             if (node) {
-                return createIndex(t_row, t_column, node.get());
+                return createIndex(row, column, node.get());
             }
         }
         return QModelIndex();
     }
 
-    QModelIndex LN_CommonTree::parent(const QModelIndex &t_index) const
+    QModelIndex LN_CommonTree::parent(const QModelIndex &index) const
     {
-        if (!t_index.isValid()) {
+        if (!index.isValid()) {
             return QModelIndex();
         }
 
-        Core::ModelItem *parent = nullptr;
-        Core::ModelItem *item = static_cast<Core::ModelItem*>(t_index.internalPointer());
+        Core::ModelItem *parentItem = nullptr;
+        Core::ModelItem *item = static_cast<Core::ModelItem*>(index.internalPointer());
         if (item != nullptr) {
-            parent = item->getParent();
+            parentItem = item->getParent();
         }
 
-        if (parent == m_lnode.get()) {
+        if (parentItem == m_lnode.get()) {
             return QModelIndex();
         }
-        return createIndex(parent->getItemCount(), 0, parent);
+        return createIndex(parentItem->getItemCount(), 0, parentItem);
     }
 
-    QVariant LN_CommonTree::data(const QModelIndex &t_index, int t_role) const
+    QVariant LN_CommonTree::data(const QModelIndex &index, int role) const
     {
-        if (!t_index.isValid() || (t_role != Qt::DisplayRole)) {
+        if (!index.isValid() || (role != Qt::DisplayRole)) {
             return QVariant();
         }
 
-        Core::ModelItem *item = static_cast<Core::ModelItem*>(t_index.internalPointer());
+        Core::ModelItem *item = static_cast<Core::ModelItem*>(index.internalPointer());
         if (item != nullptr) {
-            switch (t_index.column()) {
+            switch (index.column()) {
             case NAME_COLUMN: {
                 return QVariant(item->getName());
             }
@@ -143,24 +143,24 @@ namespace App::Models
         return QVariant(" ? ");
     }
 
-    void LN_CommonTree::slotDataUpdated(Core::ModelItem::ptrList t_nodes)
+    void LN_CommonTree::slotDataUpdated(Core::ModelItem::ptrList nodes)
     {
         //qDebug() << "LN_CommonTree: slotDataUpdated";
         // emit dataChanged(index(0, 0), index(rowCount() - 1, VALUE_COLUMN));
     }
 
-    void LN_CommonTree::slotLNSelected(int t_ld, int t_ln)
+    void LN_CommonTree::slotLNSelected(int ld, int ln)
     {
-        // qDebug() << "LN_CommonTree: ld = " << t_ld << " ln = " << t_ln;
+        // qDebug() << "LN_CommonTree: ld = " << ld << " ln = " << ln;
 
-        Core::LogicalNode::ptr ln = m_ied->model().getLogicalNode(t_ld, t_ln);
-        if (ln != m_lnode) {
+        Core::LogicalNode::ptr lnNode = m_ied->model().getLogicalNode(ld, ln);
+        if (lnNode != m_lnode) {
             if (m_lnode) {
                 disconnect(m_updConnection);
             }
 
             beginResetModel();
-            m_lnode = ln;
+            m_lnode = lnNode;
             if (m_lnode) {
                 m_updConnection = connect(m_lnode.get(), &Core::LogicalNode::sigDataObjectUpdated,
                                         this, &LN_CommonTree::slotDataUpdated);

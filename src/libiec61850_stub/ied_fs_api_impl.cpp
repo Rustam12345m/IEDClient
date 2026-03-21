@@ -64,10 +64,10 @@ namespace Libiec61850
         }
     }
 
-    int IED_FS_API_Impl::getFileList(Core::DirOn &t_dir)
+    int IED_FS_API_Impl::getFileList(Core::DirOn &dir)
     {
         if (m_api.isConnected()) {
-            std::string path = t_dir.name().toStdString();
+            std::string path = dir.name().toStdString();
 
             IedClientError retval = IED_ERROR_OK;
             LinkedList dirRoot = IedConnection_getFileDirectory(m_api.m_libConn, &retval, path.c_str());
@@ -86,7 +86,7 @@ namespace Libiec61850
                     uint32_t fsize = FileDirectoryEntry_getFileSize(entry);
                     uint64_t fmodif = FileDirectoryEntry_getLastModified(entry);
 
-                    t_dir.put(Core::FileOn(fname, fsize, fmodif));
+                    dir.put(Core::FileOn(fname, fsize, fmodif));
 
                     dirEntry = LinkedList_getNext(dirEntry);
                 }
@@ -96,14 +96,14 @@ namespace Libiec61850
         return 0;
     }
 
-    bool IED_FS_API_Impl::download(const QString &t_filename, const QString &t_localPath,
-                                    uint32_t t_fileSize)
+    bool IED_FS_API_Impl::download(const QString &filename, const QString &localPath,
+                                    uint32_t fileSize)
     {
         if (!m_api.isConnected()) {
             return false;
         }
 
-        FILE *fp = fopen(t_localPath.toStdString().c_str(), "wb");
+        FILE *fp = fopen(localPath.toStdString().c_str(), "wb");
         if (!fp) {
             return false;
         }
@@ -111,28 +111,28 @@ namespace Libiec61850
         DownloadContext ctx;
         ctx.fp = fp;
         ctx.api = this;
-        ctx.fileSize = t_fileSize;
+        ctx.fileSize = fileSize;
 
         IedClientError error = IED_ERROR_OK;
-        IedConnection_getFile(m_api.m_libConn, &error, t_filename.toStdString().c_str(),
+        IedConnection_getFile(m_api.m_libConn, &error, filename.toStdString().c_str(),
                               downloadHandler, static_cast<void *>(&ctx));
         fclose(fp);
 
         if (error != IED_ERROR_OK) {
-            QFile::remove(t_localPath);
+            QFile::remove(localPath);
             return false;
         }
         return true;
     }
 
-    int IED_FS_API_Impl::remove(const QString &t_filename)
+    int IED_FS_API_Impl::remove(const QString &filename)
     {
         if (!m_api.isConnected()) {
             return -1;
         }
 
         IedClientError retval = IED_ERROR_OK;
-        IedConnection_deleteFile(m_api.m_libConn, &retval, t_filename.toStdString().c_str());
+        IedConnection_deleteFile(m_api.m_libConn, &retval, filename.toStdString().c_str());
         return (retval != IED_ERROR_OK);
     }
 }

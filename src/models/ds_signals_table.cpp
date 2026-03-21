@@ -25,26 +25,26 @@
 
 namespace App::Models
 {
-    DS_SignalsTable::DS_SignalsTable(QObject *t_parent, Core::IED::ptr t_ied)
-        : QAbstractTableModel(t_parent), m_ied(t_ied)
+    DS_SignalsTable::DS_SignalsTable(QObject *parent, Core::IED::ptr ied)
+        : QAbstractTableModel(parent), m_ied(ied)
     {
     }
 
-    void DS_SignalsTable::setActiveIED(Core::IED::ptr t_ied)
+    void DS_SignalsTable::setActiveIED(Core::IED::ptr ied)
     {
         beginResetModel();
-        m_ied = t_ied;
+        m_ied = ied;
         m_dataSet.reset();
         endResetModel();
     }
 
-    QVariant DS_SignalsTable::headerData(int t_column, Qt::Orientation t_orientation, int t_role) const
+    QVariant DS_SignalsTable::headerData(int column, Qt::Orientation orientation, int role) const
     {
-        if (t_orientation != Qt::Horizontal) {
+        if (orientation != Qt::Horizontal) {
             return QVariant();
         }
 
-        switch (t_column) {
+        switch (column) {
         case DS_INDEX_COLUMN: {
             return QVariant("#");
         }
@@ -66,7 +66,7 @@ namespace App::Models
         return { { Qt::DisplayRole, "display" } };
     }
 
-    int DS_SignalsTable::rowCount(const QModelIndex &t_parent) const
+    int DS_SignalsTable::rowCount(const QModelIndex &parent) const
     {
         if (m_dataSet) {
             return m_dataSet->getItemCount();
@@ -74,14 +74,14 @@ namespace App::Models
         return 0;
     }
 
-    int DS_SignalsTable::columnCount(const QModelIndex &t_parent) const
+    int DS_SignalsTable::columnCount(const QModelIndex &parent) const
     {
         return COLUMN_COUNT;
     }
 
-    QVariant DS_SignalsTable::data(const QModelIndex &t_index, int t_role) const
+    QVariant DS_SignalsTable::data(const QModelIndex &index, int role) const
     {
-        int row = t_index.row(), column = t_index.column();
+        int row = index.row(), column = index.column();
 
         if (column == DS_INDEX_COLUMN) {
             return QVariant(QString::number(row + 1));
@@ -117,29 +117,29 @@ namespace App::Models
 
     namespace
     {
-        void collectLeaves(Core::ModelItem::ptr t_root, Core::ModelItem::ptr t_item, QVariantList &t_out)
+        void collectLeaves(Core::ModelItem::ptr root, Core::ModelItem::ptr item, QVariantList &out)
         {
-            if (t_item->getItemCount() == 0) {
+            if (item->getItemCount() == 0) {
                 QVariantMap entry;
-                entry["name"] = t_item->getReference(t_root.get());
-                entry["value"] = t_item->getValue();
-                t_out.append(entry);
+                entry["name"] = item->getReference(root.get());
+                entry["value"] = item->getValue();
+                out.append(entry);
                 return;
             }
-            for (auto &sub : t_item->getItemList()) {
-                collectLeaves(t_root, sub, t_out);
+            for (auto &sub : item->getItemList()) {
+                collectLeaves(root, sub, out);
             }
         }
     }
 
-    QVariantList DS_SignalsTable::getItemDetail(int t_row) const
+    QVariantList DS_SignalsTable::getItemDetail(int row) const
     {
         QVariantList result;
-        if (!m_dataSet || t_row < 0 || t_row >= m_dataSet->getItemCount()) {
+        if (!m_dataSet || row < 0 || row >= m_dataSet->getItemCount()) {
             return result;
         }
 
-        auto dsItem = m_dataSet->getItem<Core::DataSetItem>(t_row);
+        auto dsItem = m_dataSet->getItem<Core::DataSetItem>(row);
         if (!dsItem) {
             return result;
         }
@@ -161,19 +161,19 @@ namespace App::Models
         return result;
     }
 
-    void DS_SignalsTable::slotDataUpdated(QList<Core::ModelItem::ptr> t_items)
+    void DS_SignalsTable::slotDataUpdated(QList<Core::ModelItem::ptr> items)
     {
         if (rowCount() > 0) {
             emit dataChanged(index(0, DS_VALUE_COLUMN), index(rowCount() - 1, COLUMN_COUNT - 1));
         }
     }
 
-    void DS_SignalsTable::slotDataSetSelected(int t_ds)
+    void DS_SignalsTable::slotDataSetSelected(int ds)
     {
         auto getDataSetList = m_ied->model().getDataSetList();
         Core::DataSet::ptr newDS;
-        if (t_ds >= 0 && t_ds < getDataSetList.size()) {
-            newDS = getDataSetList[t_ds];
+        if (ds >= 0 && ds < getDataSetList.size()) {
+            newDS = getDataSetList[ds];
 
             if (m_dataSet != newDS) {
                 if (m_dataSet) {

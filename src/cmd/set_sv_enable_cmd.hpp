@@ -33,15 +33,15 @@ namespace Cmd
     {
         Q_OBJECT
     public:
-        SetSVEnable_Cmd(Core::SV_ControlBlock::ptr t_svcb, bool t_enable)
-            : m_svcb{t_svcb}, m_enable{t_enable}
+        SetSVEnable_Cmd(Core::SV_ControlBlock::ptr svcb, bool enable)
+            : m_svcb{svcb}, m_enable{enable}
         {}
         ~SetSVEnable_Cmd() override = default;
 
-        void execute(Cmd::Interface::IEC61850_API::ptr t_api) override;
+        void execute(Cmd::Interface::IEC61850_API::ptr api) override;
 
-        static auto create(Core::SV_ControlBlock::ptr t_svcb, bool t_enable) {
-            return QSharedPointer<SetSVEnable_Cmd>::create(t_svcb, t_enable);
+        static auto create(Core::SV_ControlBlock::ptr svcb, bool enable) {
+            return QSharedPointer<SetSVEnable_Cmd>::create(svcb, enable);
         }
 
     private:

@@ -33,16 +33,16 @@ namespace Cmd
     {
         Q_OBJECT
     public:
-        UpdateGooseCBs_Cmd(Core::IED::ptr t_ied) : m_ied{t_ied}
+        UpdateGooseCBs_Cmd(Core::IED::ptr ied) : m_ied{ied}
         {
         }
         ~UpdateGooseCBs_Cmd() = default;
 
-        void    execute(Cmd::Interface::IEC61850_API::ptr t_api) override;
+        void    execute(Cmd::Interface::IEC61850_API::ptr api) override;
 
         // Create new command like Builder pattern
-        static auto create(Core::IED::ptr t_ied) {
-            return QSharedPointer<UpdateGooseCBs_Cmd>::create(t_ied);
+        static auto create(Core::IED::ptr ied) {
+            return QSharedPointer<UpdateGooseCBs_Cmd>::create(ied);
         }
 
     private:

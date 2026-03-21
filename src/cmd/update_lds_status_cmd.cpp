@@ -25,9 +25,9 @@
 
 namespace Cmd
 {
-    void UpdateLDs_StatusCmd::execute(Cmd::Interface::IEC61850_API::ptr t_api)
+    void UpdateLDs_StatusCmd::execute(Cmd::Interface::IEC61850_API::ptr api)
     {
-        Core::ModelStateUpdater::ptr vals = t_api->state().getStatusForAllLD(m_ied->getDataModel());
+        Core::ModelStateUpdater::ptr vals = api->state().getStatusForAllLD(m_ied->getDataModel());
         if (vals) {
             // Update process must to be finished in the GUI thread
             emit sigModelValues(vals);
@@ -42,7 +42,7 @@ namespace Cmd
         }
     }
 
-    void UpdateLDs_StatusCmd::slotMsgProgress(const QString &t_msg)
+    void UpdateLDs_StatusCmd::slotMsgProgress(const QString &msg)
     {
     }
 }

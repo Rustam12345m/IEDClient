@@ -24,24 +24,24 @@
 namespace
 {
     // remove: .stVal and .f
-    QString     removeSomeParts(const QString &t_name)
+    QString     removeSomeParts(const QString &name)
     {
-        if (t_name.endsWith(".stVal")) {
-            return t_name.first(t_name.size() - 6);
-        } else if (t_name.endsWith(".f")) {
-            return t_name.first(t_name.size() - 2);
-        }/* else if (t_name.endsWith(".mag.f")) {
-            return t_name.first(t_name.size() - 6);
+        if (name.endsWith(".stVal")) {
+            return name.first(name.size() - 6);
+        } else if (name.endsWith(".f")) {
+            return name.first(name.size() - 2);
+        }/* else if (name.endsWith(".mag.f")) {
+            return name.first(name.size() - 6);
         }
         */
-        return t_name;
+        return name;
     }
 }
 
 namespace App::Models
 {
-    LN_SignalTable::LN_SignalTable(QObject *t_parent, Core::IED::ptr t_ied, MatrixType t_type)
-        : QAbstractTableModel(t_parent), m_ied(t_ied), m_type(t_type)
+    LN_SignalTable::LN_SignalTable(QObject *parent, Core::IED::ptr ied, MatrixType type)
+        : QAbstractTableModel(parent), m_ied(ied), m_type(type)
     {
     }
 
@@ -55,21 +55,21 @@ namespace App::Models
         }
     }
 
-    void LN_SignalTable::setActiveIED(Core::IED::ptr t_ied)
+    void LN_SignalTable::setActiveIED(Core::IED::ptr ied)
     {
         beginResetModel();
-        m_ied = t_ied;
+        m_ied = ied;
         m_lnode.reset();
         endResetModel();
     }
 
-    QVariant LN_SignalTable::headerData(int t_column, Qt::Orientation t_orientation, int t_role) const
+    QVariant LN_SignalTable::headerData(int column, Qt::Orientation orientation, int role) const
     {
-        if (t_orientation != Qt::Horizontal) {
+        if (orientation != Qt::Horizontal) {
             return QVariant();
         }
 
-        switch (t_column) {
+        switch (column) {
         case DO_NAME_COLUMN: {
             return QVariant::fromValue(SortHeaderValue("Name", true));
         }
@@ -97,26 +97,26 @@ namespace App::Models
         return { { Qt::DisplayRole, "display" }, { Qt::UserRole + 1, "sort_value" } };
     }
 
-    int LN_SignalTable::rowCount(const QModelIndex &t_parent) const
+    int LN_SignalTable::rowCount(const QModelIndex &parent) const
     {
         auto matrix = getMatrix();
         return matrix ? matrix->size() : 0;
     }
 
-    int LN_SignalTable::columnCount(const QModelIndex &t_parent) const
+    int LN_SignalTable::columnCount(const QModelIndex &parent) const
     {
         return 6;
     }
 
-    QVariant LN_SignalTable::data(const QModelIndex &t_index, int t_role) const
+    QVariant LN_SignalTable::data(const QModelIndex &index, int role) const
     {
-        int row = t_index.row(), column = t_index.column();
+        int row = index.row(), col = index.column();
 
         auto doTable = getMatrix();
         if (doTable) {
-            if (t_role == ComRoles::ROLE_SORT_VALUE) {
+            if (role == ComRoles::ROLE_SORT_VALUE) {
                 // for sorting process
-                switch (column) {
+                switch (col) {
                 case DO_NAME_COLUMN: {
                     return QVariant(doTable->name(row));
                 }
@@ -138,7 +138,7 @@ namespace App::Models
                 }
             } else {
                 // for user interface
-                switch (column) {
+                switch (col) {
                 case DO_NAME_COLUMN: {
                     return QVariant(removeSomeParts(doTable->name(row)));
                 }
@@ -163,13 +163,13 @@ namespace App::Models
         return QVariant(" ? ");
     }
 
-    void LN_SignalTable::slotDataUpdated(Core::ModelItem::ptrList t_nodes)
+    void LN_SignalTable::slotDataUpdated(Core::ModelItem::ptrList nodes)
     {
-        if (t_nodes->empty()) {
+        if (nodes->empty()) {
             return;
         }
 
-        Core::ModelItem *doItem = t_nodes->front();
+        Core::ModelItem *doItem = nodes->front();
         // qDebug() << "LN_SignalTable: slotDataUpdated, do =" << doItem->getName();
 
         auto matrixPtr = getMatrix();
@@ -183,17 +183,17 @@ namespace App::Models
         // emit dataChanged(index(0, DO_NAME_COLUMN), index(rowCount() - 1, DO_DESC_COLUMN));
     }
 
-    void LN_SignalTable::slotLNSelected(int t_ld, int t_ln)
+    void LN_SignalTable::slotLNSelected(int ld, int ln)
     {
-        // qDebug() << "LN_SignalTable: ld = " << t_ld << " ln = " << t_ln;
-        Core::LogicalNode::ptr ln = m_ied->model().getLogicalNode(t_ld, t_ln);
-        if (ln != m_lnode) {
+        // qDebug() << "LN_SignalTable: ld = " << ld << " ln = " << ln;
+        Core::LogicalNode::ptr lnNode = m_ied->model().getLogicalNode(ld, ln);
+        if (lnNode != m_lnode) {
             if (m_lnode) {
                 disconnect(m_updConnection);
             }
 
             beginResetModel();
-            m_lnode = ln;
+            m_lnode = lnNode;
             if (m_lnode) {
                 m_updConnection = connect(m_lnode.get(), &Core::LogicalNode::sigDataObjectUpdated,
                                         this, &LN_SignalTable::slotDataUpdated);

@@ -38,8 +38,8 @@ namespace Core
     public:
         using ptr = QSharedPointer< SV_ControlBlock >;
 
-        SV_ControlBlock(ModelItem *t_parent, const QString &t_name, const QString &t_lnRef, bool t_isMulticast)
-            : QObject(nullptr), ModelItem(t_parent, t_name), m_lnRef{t_lnRef}, m_isMulticast{t_isMulticast}
+        SV_ControlBlock(ModelItem *parent, const QString &name, const QString &lnRef, bool isMulticast)
+            : QObject(nullptr), ModelItem(parent, name), m_lnRef{lnRef}, m_isMulticast{isMulticast}
         {}
 
         const QString & lnRef()     const { return m_lnRef; }
@@ -51,12 +51,12 @@ namespace Core
         uint32_t smpRate()          const { return m_smpRate; }
         int      noASDU()           const { return m_noASDU; }
 
-        void setSvEna(bool t_v)              { m_svEna    = t_v; }
-        void setSvId(const QString &t_v)     { m_svId     = t_v; }
-        void setDatSet(const QString &t_v)   { m_datSet   = t_v; }
-        void setConfRev(uint32_t t_v)        { m_confRev  = t_v; }
-        void setSmpRate(uint32_t t_v)        { m_smpRate  = t_v; }
-        void setNoASDU(int t_v)              { m_noASDU   = t_v; }
+        void setSvEna(bool v)              { m_svEna    = v; }
+        void setSvId(const QString &v)     { m_svId     = v; }
+        void setDatSet(const QString &v)   { m_datSet   = v; }
+        void setConfRev(uint32_t v)        { m_confRev  = v; }
+        void setSmpRate(uint32_t v)        { m_smpRate  = v; }
+        void setNoASDU(int v)              { m_noASDU   = v; }
 
     signals:
         void sigUpdated();

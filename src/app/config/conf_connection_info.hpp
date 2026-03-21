@@ -29,9 +29,9 @@ namespace App
     class ConfConnectionInfo
     {
     public:
-        ConfConnectionInfo(const Cmd::IEDCredentials &t_creds,
-                           const QString &t_iedName, const QString &t_date)
-            : m_creds(t_creds), m_iedName(t_iedName), m_date(t_date)
+        ConfConnectionInfo(const Cmd::IEDCredentials &creds,
+                           const QString &iedName, const QString &date)
+            : m_creds(creds), m_iedName(iedName), m_date(date)
         {
         }
         ConfConnectionInfo() = delete;
@@ -42,8 +42,8 @@ namespace App
         const auto ied() const { return m_iedName; }
         const auto date() const { return m_date; }
 
-        bool operator==(const ConfConnectionInfo &t_right) const {
-            return m_creds == t_right.m_creds;
+        bool operator==(const ConfConnectionInfo &right) const {
+            return m_creds == right.m_creds;
         }
 
     private:

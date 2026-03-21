@@ -36,16 +36,16 @@ namespace Core
     public:
         static constexpr int Capacity = 100;
 
-        explicit ReportStorage(QObject *t_parent = nullptr);
+        explicit ReportStorage(QObject *parent = nullptr);
 
-        void setMemberNames(const QStringList &t_names);
-        QString memberName(int t_index) const;
+        void setMemberNames(const QStringList &names);
+        QString memberName(int index) const;
 
-        void setDataSetRef(const QString &t_ref);
+        void setDataSetRef(const QString &ref);
         QString dataSetRef() const;
 
-        void addReport(ReceivedReport::ptr t_report);
-        ReceivedReport::ptr getReport(int t_index) const;
+        void addReport(ReceivedReport::ptr report);
+        ReceivedReport::ptr getReport(int index) const;
         int  count() const;
         void clear();
 

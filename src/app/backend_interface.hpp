@@ -45,26 +45,26 @@ namespace App
     {
         Q_OBJECT
     public:
-        BackendInterface(IEDConContainer &t_con, EventStorage &t_ev)
-            : m_con(t_con), m_events(t_ev)
+        BackendInterface(IEDConContainer &con, EventStorage &ev)
+            : m_con(con), m_events(ev)
         {
         }
         BackendInterface() = delete;
         virtual ~BackendInterface() {}
 
-        BackendInterface& operator=(const BackendInterface &t_obj) = delete;
+        BackendInterface& operator=(const BackendInterface &obj) = delete;
 
     protected:
-        void    putCmdToQueue(Cmd::CmdInterface::ptr t_cmd);
+        void    putCmdToQueue(Cmd::CmdInterface::ptr cmd);
 
     signals:
-        void    sigCmdProgress(int t_perc, QString t_msg);
-        void    sigCmdFinished(bool t_done);
-        void    sigCmdError(QString t_msg);
+        void    sigCmdProgress(int perc, QString msg);
+        void    sigCmdFinished(bool done);
+        void    sigCmdError(QString msg);
 
     public slots:
-        void         slotCmdEvent(Cmd::CmdEvent t_ev);
-        virtual void slotConnected(bool t_done);
+        void         slotCmdEvent(Cmd::CmdEvent ev);
+        virtual void slotConnected(bool done);
 
     protected:
         IEDConContainer& m_con;

@@ -23,10 +23,10 @@
 
 namespace Core
 {
-    const char* DataAttribute::fcNumToString(FC_ENUM t_num)
+    const char* DataAttribute::fcNumToString(FC_ENUM num)
     {
-        switch (t_num) {
-        #define _(name, num, desc) case name: return #name;
+        switch (num) {
+        #define _(name, num_, desc) case name: return #name;
             FC_STUFF(_)
         #undef _
         default: {
@@ -35,10 +35,10 @@ namespace Core
         }
     }
 
-    const char* DataAttribute::fcNumToDescription(FC_ENUM t_num)
+    const char* DataAttribute::fcNumToDescription(FC_ENUM num)
     {
-        switch (t_num) {
-        #define _(name, num, desc) case name: return desc;
+        switch (num) {
+        #define _(name, num_, desc) case name: return desc;
             FC_STUFF(_)
         #undef _
         default: {
@@ -47,9 +47,9 @@ namespace Core
         }
     }
 
-    FC_ENUM DataAttribute::fcStringToNum(const QString &t_num)
+    FC_ENUM DataAttribute::fcStringToNum(const QString &num)
     {
-        #define X(name, num, desc) if (t_num == #name) return FC_ENUM::name;
+        #define X(name, num_, desc) if (num == #name) return FC_ENUM::name;
             FC_STUFF(X)
         #undef X
         return FC_ENUM::UNDEFINED;

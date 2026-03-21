@@ -35,10 +35,10 @@ namespace Cmd
     public:
         using ptr = QSharedPointer< CmdThread >;
 
-        CmdThread(Cmd::Interface::IEC61850_API::ptr t_api);
+        CmdThread(Cmd::Interface::IEC61850_API::ptr api);
         ~CmdThread();
 
-        void    putCommand(CmdInterface::ptr t_cmd);
+        void    putCommand(CmdInterface::ptr cmd);
 
     private:
         void    run();

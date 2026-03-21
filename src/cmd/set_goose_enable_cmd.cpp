@@ -23,7 +23,7 @@
 
 namespace Cmd
 {
-    void SetGooseEnable_Cmd::execute(Cmd::Interface::IEC61850_API::ptr t_api)
+    void SetGooseEnable_Cmd::execute(Cmd::Interface::IEC61850_API::ptr api)
     {
         QString gocbRef = QString("%1.%2").arg(m_gocb->lnRef(), m_gocb->getName());
         QString action = m_enable ? "Enable" : "Disable";
@@ -31,7 +31,7 @@ namespace Cmd
         emit sigCmdEvent(CmdEvent::StartEvent(gocbRef,
             QString("%1 GOOSE: %2").arg(action, gocbRef)));
 
-        QString err = t_api->control().setGOOSEEnable(gocbRef, m_enable);
+        QString err = api->control().setGOOSEEnable(gocbRef, m_enable);
 
         if (err.isEmpty()) {
             m_gocb->setGoEna(m_enable);

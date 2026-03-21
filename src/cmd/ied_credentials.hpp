@@ -30,16 +30,16 @@ namespace Cmd
     {
     public:
         IEDCredentials() = default;
-        IEDCredentials(const QString &t_ip, int t_port, bool t_tls, const QString &t_login, const QString &t_pass)
-            : m_ip(t_ip), m_port(t_port), m_tls(t_tls), m_login(t_login), m_password(t_pass)
+        IEDCredentials(const QString &ip, int port, bool tls, const QString &login, const QString &pass)
+            : m_ip(ip), m_port(port), m_tls(tls), m_login(login), m_password(pass)
         {}
-        IEDCredentials(const QVariantMap &t_data)
+        IEDCredentials(const QVariantMap &data)
         {
-            m_ip = t_data.value("ip").toString();
-            m_port = t_data.value("port").toInt();
-            m_tls = t_data.value("tls").toBool();
-            m_login = t_data.value("login").toString();
-            m_password = t_data.value("password").toString();
+            m_ip = data.value("ip").toString();
+            m_port = data.value("port").toInt();
+            m_tls = data.value("tls").toBool();
+            m_login = data.value("login").toString();
+            m_password = data.value("password").toString();
         }
 
         const auto ip() const { return m_ip; }
@@ -48,12 +48,12 @@ namespace Cmd
         const auto login() const { return m_login; }
         const auto password() const { return m_password; }
 
-        bool operator==(const IEDCredentials &t_right) const {
-            return (m_ip == t_right.m_ip)
-                    && (m_port == t_right.m_port)
-                    && (m_tls == t_right.m_tls)
-                    /* && (m_login == t_right.m_login) */
-                    /* && (m_password == t_right.m_password)*/;
+        bool operator==(const IEDCredentials &right) const {
+            return (m_ip == right.m_ip)
+                    && (m_port == right.m_port)
+                    && (m_tls == right.m_tls)
+                    /* && (m_login == right.m_login) */
+                    /* && (m_password == right.m_password)*/;
         }
 
     protected:

@@ -53,7 +53,7 @@ namespace App
     {
         Q_OBJECT
     public:
-        IED_Backend(IEDConContainer &t_con, EventStorage &t_ev);
+        IED_Backend(IEDConContainer &con, EventStorage &ev);
         ~IED_Backend() = default;
 
         Q_INVOKABLE QAbstractListModel*  getLD_GridModel() const { return m_ldsModel; }
@@ -81,24 +81,24 @@ namespace App
         Q_INVOKABLE void updateSV_Status();
         Q_INVOKABLE void updateLN_TreeValues();
         Q_INVOKABLE void updateDS_Values();
-        Q_INVOKABLE void setRCBEnable(bool t_buffered, int t_index,
-                                       bool t_enable, int t_trgOps,
-                                       int t_bufTm, int t_intgPd,
-                                       const QString &t_rptId, const QString &t_datSet);
+        Q_INVOKABLE void setRCBEnable(bool buffered, int index,
+                                       bool enable, int trgOps,
+                                       int bufTm, int intgPd,
+                                       const QString &rptId, const QString &datSet);
 
         // Control operations
-        Q_INVOKABLE QString getControlObjectRef(int t_proxyRow);
-        Q_INVOKABLE void queryControlInfo(const QString &t_objRef);
-        Q_INVOKABLE void controlOperate(const QString &t_objRef, int t_ctlModel,
-                                         int t_valType, const QVariant &t_value);
-        Q_INVOKABLE void controlSelect(const QString &t_objRef, int t_ctlModel,
-                                        int t_valType, const QVariant &t_value);
-        Q_INVOKABLE void controlCancel(const QString &t_objRef);
+        Q_INVOKABLE QString getControlObjectRef(int proxyRow);
+        Q_INVOKABLE void queryControlInfo(const QString &objRef);
+        Q_INVOKABLE void controlOperate(const QString &objRef, int ctlModel,
+                                         int valType, const QVariant &value);
+        Q_INVOKABLE void controlSelect(const QString &objRef, int ctlModel,
+                                        int valType, const QVariant &value);
+        Q_INVOKABLE void controlCancel(const QString &objRef);
 
         // GOOSE / SV enable
-        Q_INVOKABLE void setGOOSEEnable(int t_index, bool t_enable);
-        Q_INVOKABLE void setSVEnable(int t_index, bool t_enable);
-        Q_INVOKABLE void dumpMmsModel(const QString &t_ip, int t_port);
+        Q_INVOKABLE void setGOOSEEnable(int index, bool enable);
+        Q_INVOKABLE void setSVEnable(int index, bool enable);
+        Q_INVOKABLE void dumpMmsModel(const QString &ip, int port);
 
         // Status bar
         Q_INVOKABLE QString ldsPageStatus();
@@ -113,8 +113,8 @@ namespace App
         void sigControlResult(QString objRef, bool success, QString message);
 
     public slots:
-        void slotConnected(bool t_done) override;
-        void slotUpdateItems(Core::ModelStateUpdater::ptr t_vals);
+        void slotConnected(bool done) override;
+        void slotUpdateItems(Core::ModelStateUpdater::ptr vals);
 
     protected:
         // Models for Tables in GUI

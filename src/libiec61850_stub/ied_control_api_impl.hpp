@@ -32,39 +32,39 @@ namespace Libiec61850
     class IED_ControlAPI_Impl : public Cmd::Interface::IED_ControlAPI
     {
     public:
-        IED_ControlAPI_Impl(ApiAdapter &t_api) : m_api(t_api) {}
+        IED_ControlAPI_Impl(ApiAdapter &api) : m_api(api) {}
         ~IED_ControlAPI_Impl() override = default;
 
-        bool setRCBValues(const QString &t_rcbRef, bool t_enable,
-                          int t_trgOps, uint32_t t_bufTm, uint32_t t_intgPd,
-                          const QString &t_rptId, const QString &t_datSet) override;
+        bool setRCBValues(const QString &rcbRef, bool enable,
+                          int trgOps, uint32_t bufTm, uint32_t intgPd,
+                          const QString &rptId, const QString &datSet) override;
 
-        bool refreshRCBValues(Core::ReportBlock::ptr t_rcb) override;
+        bool refreshRCBValues(Core::ReportBlock::ptr rcb) override;
 
         // GOOSE Control Block
-        bool refreshGOOSEValues(Core::GooseControlBlock::ptr t_gocb) override;
-        QString setGOOSEEnable(const QString &t_gocbRef, bool t_enable) override;
+        bool refreshGOOSEValues(Core::GooseControlBlock::ptr gocb) override;
+        QString setGOOSEEnable(const QString &gocbRef, bool enable) override;
 
         // SV Control Block
-        bool refreshSVValues(Core::SV_ControlBlock::ptr t_svcb) override;
-        QString setSVEnable(const QString &t_svcbRef, bool t_enable) override;
+        bool refreshSVValues(Core::SV_ControlBlock::ptr svcb) override;
+        QString setSVEnable(const QString &svcbRef, bool enable) override;
 
-        bool installReportHandler(const QString &t_rcbRef,
-                                  const QString &t_rptId,
-                                  Core::ReportStorage *t_storage) override;
-        void uninstallReportHandler(const QString &t_rcbRef) override;
+        bool installReportHandler(const QString &rcbRef,
+                                  const QString &rptId,
+                                  Core::ReportStorage *storage) override;
+        void uninstallReportHandler(const QString &rcbRef) override;
         void uninstallAllHandlers();
 
         // Direct Control / SBO
-        Cmd::Interface::ControlInfo getControlInfo(const QString &t_objRef) override;
-        bool controlOperate(const QString &t_objRef, Cmd::Interface::CtlModel t_model,
-                            Cmd::Interface::CtlValType t_valType, const QVariant &t_value) override;
-        bool controlSelect(const QString &t_objRef, Cmd::Interface::CtlModel t_model,
-                           Cmd::Interface::CtlValType t_valType, const QVariant &t_value) override;
-        bool controlCancel(const QString &t_objRef) override;
+        Cmd::Interface::ControlInfo getControlInfo(const QString &objRef) override;
+        bool controlOperate(const QString &objRef, Cmd::Interface::CtlModel model,
+                            Cmd::Interface::CtlValType valType, const QVariant &value) override;
+        bool controlSelect(const QString &objRef, Cmd::Interface::CtlModel model,
+                           Cmd::Interface::CtlValType valType, const QVariant &value) override;
+        bool controlCancel(const QString &objRef) override;
 
     private:
-        static void staticReportCallback(void *t_param, void *t_report);
+        static void staticReportCallback(void *param, void *report);
 
         ApiAdapter& m_api;
         QSet<QString> m_activeHandlers;

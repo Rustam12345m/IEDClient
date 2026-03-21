@@ -32,21 +32,21 @@ namespace Cmd
     {
         Q_OBJECT
     public:
-        DownloadFileCmd(const QString &t_name, uint32_t t_fileSize = 0)
-            : m_filename(t_name), m_fileSize(t_fileSize)
+        DownloadFileCmd(const QString &name, uint32_t fileSize = 0)
+            : m_filename(name), m_fileSize(fileSize)
         {
         }
         ~DownloadFileCmd() {}
 
-        void    execute(Cmd::Interface::IEC61850_API::ptr t_api) override;
+        void    execute(Cmd::Interface::IEC61850_API::ptr api) override;
 
         // Create new command like Builder pattern
-        static auto create(const QString &t_name, uint32_t t_fileSize = 0) {
-            return QSharedPointer<DownloadFileCmd>::create(t_name, t_fileSize);
+        static auto create(const QString &name, uint32_t fileSize = 0) {
+            return QSharedPointer<DownloadFileCmd>::create(name, fileSize);
         }
 
     signals:
-        void    sigDownloadProgress(int t_perc);
+        void    sigDownloadProgress(int perc);
 
     private:
         QString  m_filename;

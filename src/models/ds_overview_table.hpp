@@ -38,19 +38,19 @@ namespace App::Models
         };
 
     public:
-        DS_OverviewTable(QObject *t_parent, Core::IED::ptr t_ied);
+        DS_OverviewTable(QObject *parent, Core::IED::ptr ied);
 
-        Q_INVOKABLE void setSelectedDS(int t_ds);
+        Q_INVOKABLE void setSelectedDS(int ds);
         int getCurrentDS() const { return m_currentDS; }
 
-        void setActiveIED(Core::IED::ptr t_ied);
+        void setActiveIED(Core::IED::ptr ied);
 
         QHash<int, QByteArray> roleNames() const override;
-        int rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
-        QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
+        int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+        QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     signals:
-        void sigDSSelected(int t_ds);
+        void sigDSSelected(int ds);
 
     public slots:
         void slotDataUpdated();

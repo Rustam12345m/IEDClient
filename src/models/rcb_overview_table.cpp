@@ -23,19 +23,19 @@
 
 namespace App::Models
 {
-    static QString formatTrgOps(int t_trgOps)
+    static QString formatTrgOps(int trgOps)
     {
         QStringList parts;
-        if (t_trgOps & 2)  parts << "dchg";
-        if (t_trgOps & 4)  parts << "qchg";
-        if (t_trgOps & 8)  parts << "dupd";
-        if (t_trgOps & 16) parts << "intg";
-        if (t_trgOps & 32) parts << "gi";
+        if (trgOps & 2)  parts << "dchg";
+        if (trgOps & 4)  parts << "qchg";
+        if (trgOps & 8)  parts << "dupd";
+        if (trgOps & 16) parts << "intg";
+        if (trgOps & 32) parts << "gi";
         return parts.isEmpty() ? "none" : parts.join("|");
     }
 
-    RCB_OverviewTable::RCB_OverviewTable(QObject *t_parent, Core::IED::ptr t_ied, bool t_buffered)
-        : QAbstractTableModel(t_parent), m_ied(t_ied), m_buffered(t_buffered)
+    RCB_OverviewTable::RCB_OverviewTable(QObject *parent, Core::IED::ptr ied, bool buffered)
+        : QAbstractTableModel(parent), m_ied(ied), m_buffered(buffered)
     {
     }
 
@@ -62,9 +62,9 @@ namespace App::Models
         return selectedRCB();
     }
 
-    void RCB_OverviewTable::setSelectedRCB(int t_inx)
+    void RCB_OverviewTable::setSelectedRCB(int inx)
     {
-        m_currentRCB = t_inx;
+        m_currentRCB = inx;
         emit sigRCBSelected(m_currentRCB);
     }
 
@@ -116,20 +116,20 @@ namespace App::Models
         return rcb ? rcb->intgPd() : 0;
     }
 
-    void RCB_OverviewTable::setActiveIED(Core::IED::ptr t_ied)
+    void RCB_OverviewTable::setActiveIED(Core::IED::ptr ied)
     {
         beginResetModel();
-        m_ied = t_ied;
+        m_ied = ied;
         endResetModel();
     }
 
-    QVariant RCB_OverviewTable::headerData(int t_column, Qt::Orientation t_orientation, int t_role) const
+    QVariant RCB_OverviewTable::headerData(int column, Qt::Orientation orientation, int role) const
     {
-        if (t_orientation != Qt::Horizontal) {
+        if (orientation != Qt::Horizontal) {
             return QVariant();
         }
 
-        switch (t_column) {
+        switch (column) {
         case RCB_ENA_COLUMN: {
             return QVariant(QString("Enabled"));
         }
@@ -166,22 +166,22 @@ namespace App::Models
         return { { Qt::DisplayRole, "display" } };
     }
 
-    int RCB_OverviewTable::rowCount(const QModelIndex &t_parent) const
+    int RCB_OverviewTable::rowCount(const QModelIndex &parent) const
     {
         if (!m_ied) return 0;
         return filteredList().count();
     }
 
-    int RCB_OverviewTable::columnCount(const QModelIndex &t_parent) const
+    int RCB_OverviewTable::columnCount(const QModelIndex &parent) const
     {
         return COLUMN_COUNT;
     }
 
-    QVariant RCB_OverviewTable::data(const QModelIndex &t_index, int t_role) const
+    QVariant RCB_OverviewTable::data(const QModelIndex &index, int role) const
     {
-        if (t_role != Qt::DisplayRole) return QVariant();
+        if (role != Qt::DisplayRole) return QVariant();
 
-        int row = t_index.row(), column = t_index.column();
+        int row = index.row(), column = index.column();
         const auto list = filteredList();
         if (row < 0 || row >= list.count()) return QVariant();
 
@@ -210,7 +210,7 @@ namespace App::Models
         return QVariant();
     }
 
-    void RCB_OverviewTable::slotDataUpdated(bool t_done)
+    void RCB_OverviewTable::slotDataUpdated(bool done)
     {
         beginResetModel();
         endResetModel();

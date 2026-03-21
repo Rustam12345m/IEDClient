@@ -29,17 +29,17 @@ namespace Tools
     {
         Q_OBJECT
     public:
-        DumpModel(QObject *t_parent);
+        DumpModel(QObject *parent);
         ~DumpModel();
 
-        void init(const QString &t_dir, const QString &t_ip, unsigned int t_port,
-                 bool t_tls, const QString &t_name, const QString &t_pass);
+        void init(const QString &dir, const QString &ip, unsigned int port,
+                 bool tls, const QString &name, const QString &pass);
 
         void run() override;
 
     signals:
-        void    sigProgress(int t_perc, QString t_msg);
-        void    sigFinished(bool t_done);
+        void    sigProgress(int perc, QString msg);
+        void    sigFinished(bool done);
 
     private:
         QString m_fileDirectory;

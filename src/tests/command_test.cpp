@@ -22,7 +22,7 @@ namespace UnitTests
     }
 
     // Helper: build an IED with a minimal model containing RCBs
-    static Core::IED::ptr makeIEDWithRCBs(int t_count)
+    static Core::IED::ptr makeIEDWithRCBs(int count)
     {
         auto ied = Core::IED::ptr::create();
 
@@ -30,7 +30,7 @@ namespace UnitTests
         builder.createLD("IEDNameA_LD_1")
                .createLN("LLN0");
 
-        for (int i = 0; i < t_count; ++i) {
+        for (int i = 0; i < count; ++i) {
             builder.createRCB(QString("brcb%1").arg(i), "IEDNameA_LD_1/LLN0", true);
         }
 

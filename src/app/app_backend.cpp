@@ -26,8 +26,8 @@
 
 namespace App
 {
-    AppBackend::AppBackend(IEDConContainer &t_con, EventStorage &t_ev)
-        : BackendInterface(t_con, t_ev)
+    AppBackend::AppBackend(IEDConContainer &con, EventStorage &ev)
+        : BackendInterface(con, ev)
     {
         m_eventsModel = new Models::AppEventsTable(this);
         m_lastConnModel = new Models::HistConTable(this, m_settings);
@@ -58,8 +58,8 @@ namespace App
         return m_events.getLastMessage();
     }
 
-    void AppBackend::saveCredsToHistory(const Cmd::IEDCredentials &t_cred)
+    void AppBackend::saveCredsToHistory(const Cmd::IEDCredentials &cred)
     {
-        m_settings.putConnectionToConfig(t_cred, m_con.m_ied->model().getName());
+        m_settings.putConnectionToConfig(cred, m_con.m_ied->model().getName());
     }
 }

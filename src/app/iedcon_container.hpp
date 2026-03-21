@@ -45,12 +45,12 @@ namespace App
             return m_api->isConnected();
         }
 
-        void     createNewConnection(const Cmd::IEDCredentials &t_cred) {
+        void     createNewConnection(const Cmd::IEDCredentials &cred) {
             m_cmdThread.clear();
             m_api.clear();
             m_ied.clear();
 
-            m_cred = t_cred;
+            m_cred = cred;
             m_ied = Core::IED::ptr::create();
 
             auto apiImpl =  Libiec61850::ApiAdapter::ptr::create();

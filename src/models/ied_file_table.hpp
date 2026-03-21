@@ -44,27 +44,27 @@ namespace App::Models
             FS_COLUMN_COUNT
         };
     public:
-        IED_FileTable(QObject *t_parent, Core::IED::ptr t_ied);
+        IED_FileTable(QObject *parent, Core::IED::ptr ied);
         ~IED_FileTable() = default;
 
-        void        setActiveIED(Core::IED::ptr t_ied);
+        void        setActiveIED(Core::IED::ptr ied);
 
-        int         rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
-        int         columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
+        int         rowCount(const QModelIndex &parent = QModelIndex()) const override;
+        int         columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
         QHash<int, QByteArray>   roleNames() const override;
-        Qt::ItemFlags            flags(const QModelIndex &t_index) const override;
+        Qt::ItemFlags            flags(const QModelIndex &index) const override;
 
-        QVariant    headerData(int t_section, Qt::Orientation t_orientation,
-                                int t_role = Qt::DisplayRole) const override;
-        QVariant    data(const QModelIndex &t_index, int role = Qt::DisplayRole) const override;
+        QVariant    headerData(int section, Qt::Orientation orientation,
+                                int role = Qt::DisplayRole) const override;
+        QVariant    data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     signals:
         void        sigFS_Updated();
 
     public slots:
         void        slotDataUpdated();
-        void        slotRemoveFile(int t_row);
+        void        slotRemoveFile(int row);
 
     private:
         Core::IED::ptr m_ied;

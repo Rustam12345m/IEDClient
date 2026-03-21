@@ -26,29 +26,29 @@ namespace Core
 {
     namespace
     {
-        void recurs_fillValue(ModelItem::ptr t_root, ModelItem::ptr t_item, QString &t_val)
+        void recurs_fillValue(ModelItem::ptr root, ModelItem::ptr item, QString &val)
         {
-            if (t_item->getItemCount() == 0) {
+            if (item->getItemCount() == 0) {
                 // Leaft = End
-                t_val += QString("%1 = \"%2\"; ").arg(t_item->getReference(t_root.get())).arg(t_item->getValue());
+                val += QString("%1 = \"%2\"; ").arg(item->getReference(root.get())).arg(item->getValue());
             }
 
-            auto subItemList = t_item->getItemList();
+            auto subItemList = item->getItemList();
             for (auto s : subItemList) {
-                recurs_fillValue(t_root, s, t_val);
+                recurs_fillValue(root, s, val);
             }
         }
     }
 
-    QString ModelItemFullValue::get(QSharedPointer< ModelItem > t_item)
+    QString ModelItemFullValue::get(QSharedPointer< ModelItem > item)
     {
-        if (t_item->getItemCount() == 0) {
-            return t_item->getValue();
+        if (item->getItemCount() == 0) {
+            return item->getValue();
         }
 
-        auto subItemList = t_item->getItemList();
+        auto subItemList = item->getItemList();
         QString fullValue;
-        recurs_fillValue(t_item, t_item, fullValue);
+        recurs_fillValue(item, item, fullValue);
         return fullValue;
     }
 }

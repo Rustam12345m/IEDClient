@@ -35,8 +35,8 @@ namespace Core
     public:
         using ptr = QSharedPointer< ReportBlock >;
 
-        ReportBlock(ModelItem *t_parent, const QString &t_name, const QString &t_lnRef, bool t_isBuffered)
-            : ModelItem(t_parent, t_name), m_lnRef{t_lnRef}, m_isBuffered{t_isBuffered}
+        ReportBlock(ModelItem *parent, const QString &name, const QString &lnRef, bool isBuffered)
+            : ModelItem(parent, name), m_lnRef{lnRef}, m_isBuffered{isBuffered}
         {}
 
         const QString & lnRef()     const { return m_lnRef; }
@@ -51,15 +51,15 @@ namespace Core
         uint32_t intgPd()           const { return m_intgPd; }
         const QString & owner()     const { return m_owner; }
 
-        void setRptEna(bool t_v)             { m_rptEna  = t_v; }
-        void setResv(bool t_v)               { m_resv    = t_v; }
-        void setRptId(const QString &t_v)    { m_rptId   = t_v; }
-        void setDsRef(const QString &t_v)    { m_dsRef   = t_v; }
-        void setTrgOps(int t_v)              { m_trgOps  = t_v; }
-        void setConfRev(uint32_t t_v)        { m_confRev = t_v; }
-        void setBufTm(uint32_t t_v)          { m_bufTm   = t_v; }
-        void setIntgPd(uint32_t t_v)         { m_intgPd  = t_v; }
-        void setOwner(const QString &t_v)    { m_owner   = t_v; }
+        void setRptEna(bool v)             { m_rptEna  = v; }
+        void setResv(bool v)               { m_resv    = v; }
+        void setRptId(const QString &v)    { m_rptId   = v; }
+        void setDsRef(const QString &v)    { m_dsRef   = v; }
+        void setTrgOps(int v)              { m_trgOps  = v; }
+        void setConfRev(uint32_t v)        { m_confRev = v; }
+        void setBufTm(uint32_t v)          { m_bufTm   = v; }
+        void setIntgPd(uint32_t v)         { m_intgPd  = v; }
+        void setOwner(const QString &v)    { m_owner   = v; }
 
     private:
         QString  m_lnRef;

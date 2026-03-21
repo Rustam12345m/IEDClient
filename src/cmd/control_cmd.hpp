@@ -33,15 +33,15 @@ namespace Cmd
     {
         Q_OBJECT
     public:
-        GetControlInfo_Cmd(const QString &t_objRef)
-            : m_objRef{t_objRef}
+        GetControlInfo_Cmd(const QString &objRef)
+            : m_objRef{objRef}
         {}
         ~GetControlInfo_Cmd() override = default;
 
-        void execute(Cmd::Interface::IEC61850_API::ptr t_api) override;
+        void execute(Cmd::Interface::IEC61850_API::ptr api) override;
 
-        static auto create(const QString &t_objRef) {
-            return QSharedPointer<GetControlInfo_Cmd>::create(t_objRef);
+        static auto create(const QString &objRef) {
+            return QSharedPointer<GetControlInfo_Cmd>::create(objRef);
         }
 
     signals:
@@ -60,23 +60,23 @@ namespace Cmd
     public:
         enum class Action { Operate, Select, Cancel };
 
-        ControlOperate_Cmd(const QString &t_objRef, Action t_action,
-                           Cmd::Interface::CtlModel t_model,
-                           Cmd::Interface::CtlValType t_valType,
-                           const QVariant &t_value)
-            : m_objRef{t_objRef}, m_action{t_action},
-              m_model{t_model}, m_valType{t_valType}, m_value{t_value}
+        ControlOperate_Cmd(const QString &objRef, Action action,
+                           Cmd::Interface::CtlModel model,
+                           Cmd::Interface::CtlValType valType,
+                           const QVariant &value)
+            : m_objRef{objRef}, m_action{action},
+              m_model{model}, m_valType{valType}, m_value{value}
         {}
         ~ControlOperate_Cmd() override = default;
 
-        void execute(Cmd::Interface::IEC61850_API::ptr t_api) override;
+        void execute(Cmd::Interface::IEC61850_API::ptr api) override;
 
-        static auto create(const QString &t_objRef, Action t_action,
-                           Cmd::Interface::CtlModel t_model,
-                           Cmd::Interface::CtlValType t_valType,
-                           const QVariant &t_value) {
+        static auto create(const QString &objRef, Action action,
+                           Cmd::Interface::CtlModel model,
+                           Cmd::Interface::CtlValType valType,
+                           const QVariant &value) {
             return QSharedPointer<ControlOperate_Cmd>::create(
-                t_objRef, t_action, t_model, t_valType, t_value);
+                objRef, action, model, valType, value);
         }
 
     signals:

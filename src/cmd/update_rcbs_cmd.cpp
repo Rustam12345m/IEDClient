@@ -24,7 +24,7 @@
 
 namespace Cmd
 {
-    void UpdateRCBs_Cmd::execute(Cmd::Interface::IEC61850_API::ptr t_api)
+    void UpdateRCBs_Cmd::execute(Cmd::Interface::IEC61850_API::ptr api)
     {
         emit sigCmdEvent(CmdEvent::StartEvent("", "Update RCB: refreshing all values"));
 
@@ -32,7 +32,7 @@ namespace Cmd
         int updated = 0;
 
         for (const auto &rcb : rcbList) {
-            if (t_api->control().refreshRCBValues(rcb)) {
+            if (api->control().refreshRCBValues(rcb)) {
                 ++updated;
             }
         }

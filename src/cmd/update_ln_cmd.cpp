@@ -23,9 +23,9 @@
 
 namespace Cmd
 {
-    void UpdateLNode_Cmd::execute(Cmd::Interface::IEC61850_API::ptr t_api)
+    void UpdateLNode_Cmd::execute(Cmd::Interface::IEC61850_API::ptr api)
     {
-        Core::ModelStateUpdater::ptr vals = t_api->state().getValsForLN(m_lnode);
+        Core::ModelStateUpdater::ptr vals = api->state().getValsForLN(m_lnode);
         if (vals) {
             // Update process must to be finished in the GUI thread
             emit sigModelValues(vals);

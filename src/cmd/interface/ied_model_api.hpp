@@ -31,9 +31,9 @@ namespace Cmd::Interface
     public:
         virtual ~IED_ModelAPI() {}
 
-        virtual int fetchDataModel(Core::DataModelBuilder &t_builder) = 0;
+        virtual int fetchDataModel(Core::DataModelBuilder &builder) = 0;
 
     signals:
-        void sigFoundNode(const QString t_ref);
+        void sigFoundNode(const QString ref);
     };
 };

@@ -35,8 +35,8 @@ namespace Core
     public:
         using ptr = QSharedPointer< DataObject >;
 
-        DataObject(ModelItem *t_parent, const QString &t_name)
-            : ModelItem(t_parent, t_name)
+        DataObject(ModelItem *parent, const QString &name)
+            : ModelItem(parent, name)
         {
             m_delimetr = "."; // Between LNName and DOName
         }
@@ -66,24 +66,24 @@ namespace Core
             return " - ";
         }
 
-        void        addSubItem(ModelItem::ptr t_node) override {
-            m_items.push_back(t_node);
+        void        addSubItem(ModelItem::ptr node) override {
+            m_items.push_back(node);
 
-            DataAttribute::ptr da = t_node.staticCast<DataAttribute>();
+            DataAttribute::ptr da = node.staticCast<DataAttribute>();
             if (!da) {
                 return;
             }
 
-            if (t_node->getName() == "stVal" || t_node->getName() == "mag") {
+            if (node->getName() == "stVal" || node->getName() == "mag") {
                 m_value = da;
             }
-            else if (t_node->getName() == "q") {
+            else if (node->getName() == "q") {
                 m_quality = da;
             }
-            else if (t_node->getName() == "t") {
+            else if (node->getName() == "t") {
                 m_timestamp = da;
             }
-            else if (t_node->getName() == "d") {
+            else if (node->getName() == "d") {
                 m_description = da;
             }
         }

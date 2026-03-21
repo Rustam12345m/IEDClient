@@ -34,7 +34,7 @@ namespace App
     {
         Q_OBJECT
     public:
-        IED_FS_Backend(IEDConContainer &t_con, EventStorage &t_ev);
+        IED_FS_Backend(IEDConContainer &con, EventStorage &ev);
         ~IED_FS_Backend() = default;
 
         // Properties for QML
@@ -46,14 +46,14 @@ namespace App
 
         // API for QML
         Q_INVOKABLE QString fsPageStatus();
-        Q_INVOKABLE void updateFilesDirectory(const QString &t_path);
-        Q_INVOKABLE void downloadFile(const QString &t_filename, uint32_t t_fileSize);
-        Q_INVOKABLE void removeFile(const QString &t_filename, int t_row);
+        Q_INVOKABLE void updateFilesDirectory(const QString &path);
+        Q_INVOKABLE void downloadFile(const QString &filename, uint32_t fileSize);
+        Q_INVOKABLE void removeFile(const QString &filename, int row);
 
-        void slotConnected(bool t_done) override;
+        void slotConnected(bool done) override;
 
     signals:
-        void sigDownloadProgress(int t_perc);
+        void sigDownloadProgress(int perc);
 
     protected:
         Models::IED_FileTable*  m_fsModel = nullptr;

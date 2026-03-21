@@ -24,7 +24,7 @@
 
 namespace Cmd
 {
-    void UpdateGooseCBs_Cmd::execute(Cmd::Interface::IEC61850_API::ptr t_api)
+    void UpdateGooseCBs_Cmd::execute(Cmd::Interface::IEC61850_API::ptr api)
     {
         emit sigCmdEvent(CmdEvent::StartEvent("", "Update GOOSE: refreshing all values"));
 
@@ -32,7 +32,7 @@ namespace Cmd
         int updated = 0;
 
         for (const auto &gocb : gocbList) {
-            if (t_api->control().refreshGOOSEValues(gocb)) {
+            if (api->control().refreshGOOSEValues(gocb)) {
                 ++updated;
             }
         }

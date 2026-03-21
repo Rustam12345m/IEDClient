@@ -30,9 +30,9 @@ namespace Libiec61850
 {
     namespace
     {
-        void     callback_ConnectionHandler(void *t_param, sIedConnection *t_con)
+        void     callback_ConnectionHandler(void *param, sIedConnection *con)
         {
-            ApiAdapter *adapter = static_cast<ApiAdapter*>(t_param);
+            ApiAdapter *adapter = static_cast<ApiAdapter*>(param);
             if (adapter != nullptr) {
                 adapter->callbackOnCloseEvent();
             }
@@ -41,9 +41,9 @@ namespace Libiec61850
 
     namespace
     {
-        QString iedErrorToString(IedClientError t_err)
+        QString iedErrorToString(IedClientError err)
         {
-            switch (t_err) {
+            switch (err) {
             case IED_ERROR_TIMEOUT:              return "Connection timed out";
             case IED_ERROR_CONNECTION_REJECTED:   return "Connection rejected by server";
             case IED_ERROR_ACCESS_DENIED:         return "Access denied";
@@ -51,17 +51,17 @@ namespace Libiec61850
             case IED_ERROR_SERVICE_NOT_SUPPORTED: return "Service not supported";
             case IED_ERROR_NOT_CONNECTED:         return "Unable to establish connection";
             default:
-                return QString("Connection failed (error code: %1)").arg(static_cast<int>(t_err));
+                return QString("Connection failed (error code: %1)").arg(static_cast<int>(err));
             }
         }
     }
 
-    QString ApiAdapter::connect(const Cmd::IEDCredentials &t_creds)
+    QString ApiAdapter::connect(const Cmd::IEDCredentials &creds)
     {
         IedClientError retval = IED_ERROR_OK;
 
         m_libConn = IedConnection_create();
-        IedConnection_connect(m_libConn, &retval, t_creds.ip().toStdString().c_str(), t_creds.port());
+        IedConnection_connect(m_libConn, &retval, creds.ip().toStdString().c_str(), creds.port());
         if (retval == IED_ERROR_OK) {
             // Callback for close-events
             IedConnection_installConnectionClosedHandler(m_libConn, &callback_ConnectionHandler, this);

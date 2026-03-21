@@ -37,7 +37,7 @@ namespace Core
     public:
         using ptr = QSharedPointer< IED >;
 
-        IED(QObject *t_parent=nullptr) {
+        IED(QObject *parent=nullptr) {
             m_model = DataModel::ptr::create("");
             m_fsModel = FS_Model::ptr::create();
         }
@@ -50,15 +50,15 @@ namespace Core
         auto getFSModel() { return m_fsModel; }
 
         const DevServIdentity& identify() { return m_servIdent; }
-        void setIdentify(const DevServIdentity &t_ident) {
-            m_servIdent = t_ident;
+        void setIdentify(const DevServIdentity &ident) {
+            m_servIdent = ident;
         }
 
-        void setModel(DataModel::ptr t_model) {
-            m_model = t_model;
+        void setModel(DataModel::ptr model) {
+            m_model = model;
         }
-        void setFSModel(FS_Model::ptr t_model) {
-            m_fsModel = t_model;
+        void setFSModel(FS_Model::ptr fsModel) {
+            m_fsModel = fsModel;
         }
 
     private:

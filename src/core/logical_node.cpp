@@ -23,9 +23,9 @@
 
 namespace Core
 {
-    void LogicalNode::notifyFromChild(ModelItem::ptrList t_nodes)
+    void LogicalNode::notifyFromChild(ModelItem::ptrList nodes)
     {
-        emit sigDataObjectUpdated(t_nodes);
-        ModelItem::notifyFromChild(t_nodes);
+        emit sigDataObjectUpdated(nodes);
+        ModelItem::notifyFromChild(nodes);
     }
 }

@@ -28,12 +28,12 @@
 
 namespace Cmd
 {
-    void ConnectCmd::execute(Cmd::Interface::IEC61850_API::ptr t_api)
+    void ConnectCmd::execute(Cmd::Interface::IEC61850_API::ptr api)
     {
         emit sigCmdEvent(CmdEvent::StartEvent(m_cred.ip(),
                 QString(tr("Connecting to %1:%2")).arg(m_cred.ip()).arg(m_cred.port())));
 
-        QString err = t_api->connect(m_cred);
+        QString err = api->connect(m_cred);
         if (!err.isEmpty()) {
             emit sigCmdEvent(CmdEvent::FinishEvent(m_cred.ip(),
                     QString(tr("Cannot connect to %1:%2\n%3"))
@@ -42,7 +42,7 @@ namespace Cmd
             return;
         }
 
-        connect(&t_api->model(), &Cmd::Interface::IED_ModelAPI::sigFoundNode,
+        connect(&api->model(), &Cmd::Interface::IED_ModelAPI::sigFoundNode,
                 this, &ConnectCmd::slotFoundNewLN);
 
         m_percProgress = 50;
@@ -51,24 +51,24 @@ namespace Cmd
                         .arg(m_cred.ip()).arg(m_cred.port()), m_percProgress));
 
         Core::DataModelBuilder builder;
-        t_api->model().fetchDataModel(builder);
+        api->model().fetchDataModel(builder);
         m_ied->setModel(builder.build(QCoreApplication::instance()->thread()));
 
-        auto ident = t_api->getServIdentity();
+        auto ident = api->getServIdentity();
         m_ied->setIdentify(ident);
 
-        emit sigCmdEvent(CmdEvent::FinishEvent(m_cred.ip(), 
+        emit sigCmdEvent(CmdEvent::FinishEvent(m_cred.ip(),
                 QString(tr("IEDClient successfully connected to %1:%2"))
                         .arg(m_cred.ip()).arg(m_cred.port()),
                 true));
     }
 
-    void ConnectCmd::slotFoundNewLN(const QString &t_msg)
+    void ConnectCmd::slotFoundNewLN(const QString &msg)
     {
         m_percProgress += 5;
         if (m_percProgress >= 99) {
             m_percProgress = 99;
         }
-        emit sigCmdEvent(CmdEvent::ProcessEvent(m_cred.ip(), t_msg, m_percProgress));
+        emit sigCmdEvent(CmdEvent::ProcessEvent(m_cred.ip(), msg, m_percProgress));
     }
 }

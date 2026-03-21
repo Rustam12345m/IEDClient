@@ -33,15 +33,15 @@ namespace Cmd
     {
         Q_OBJECT
     public:
-        SetGooseEnable_Cmd(Core::GooseControlBlock::ptr t_gocb, bool t_enable)
-            : m_gocb{t_gocb}, m_enable{t_enable}
+        SetGooseEnable_Cmd(Core::GooseControlBlock::ptr gocb, bool enable)
+            : m_gocb{gocb}, m_enable{enable}
         {}
         ~SetGooseEnable_Cmd() override = default;
 
-        void execute(Cmd::Interface::IEC61850_API::ptr t_api) override;
+        void execute(Cmd::Interface::IEC61850_API::ptr api) override;
 
-        static auto create(Core::GooseControlBlock::ptr t_gocb, bool t_enable) {
-            return QSharedPointer<SetGooseEnable_Cmd>::create(t_gocb, t_enable);
+        static auto create(Core::GooseControlBlock::ptr gocb, bool enable) {
+            return QSharedPointer<SetGooseEnable_Cmd>::create(gocb, enable);
         }
 
     private:

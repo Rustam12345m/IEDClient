@@ -38,22 +38,22 @@ namespace App::Models
         };
 
     public:
-        LN_CommonTree(QObject *t_parent, Core::IED::ptr t_ied);
+        LN_CommonTree(QObject *parent, Core::IED::ptr ied);
 
-        void        setActiveIED(Core::IED::ptr t_ied);
+        void        setActiveIED(Core::IED::ptr ied);
 
-        QVariant    headerData(int t_sect, Qt::Orientation t_orient,
-                               int t_role = Qt::DisplayRole) const override;
+        QVariant    headerData(int sect, Qt::Orientation orient,
+                               int role = Qt::DisplayRole) const override;
 
-        int         rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
-        int         columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
-        QModelIndex index(int t_row, int t_column, const QModelIndex &t_parent = QModelIndex()) const override;
-        QModelIndex parent(const QModelIndex &t_index) const override;
-        QVariant    data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
+        int         rowCount(const QModelIndex &parent = QModelIndex()) const override;
+        int         columnCount(const QModelIndex &parent = QModelIndex()) const override;
+        QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
+        QModelIndex parent(const QModelIndex &index) const override;
+        QVariant    data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     public slots:
-        void     slotLNSelected(int t_ld, int t_ln);
-        void     slotDataUpdated(Core::ModelItem::ptrList t_nodes);
+        void     slotLNSelected(int ld, int ln);
+        void     slotDataUpdated(Core::ModelItem::ptrList nodes);
 
     private:
         Core::IED::ptr           m_ied;

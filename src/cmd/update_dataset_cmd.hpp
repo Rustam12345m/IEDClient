@@ -30,19 +30,19 @@ namespace Cmd
     {
         Q_OBJECT
     public:
-        UpdateDataSet_Cmd(Core::IED::ptr t_ied, Core::DataSet::ptr t_ds)
-            : m_ied{t_ied}, m_dataset{t_ds}
+        UpdateDataSet_Cmd(Core::IED::ptr ied, Core::DataSet::ptr ds)
+            : m_ied{ied}, m_dataset{ds}
         {
         }
 
-        void     execute(Cmd::Interface::IEC61850_API::ptr t_api) override;
+        void     execute(Cmd::Interface::IEC61850_API::ptr api) override;
 
-        static auto create(Core::IED::ptr t_ied, Core::DataSet::ptr t_ds) {
-            return QSharedPointer<UpdateDataSet_Cmd>::create(t_ied, t_ds);
+        static auto create(Core::IED::ptr ied, Core::DataSet::ptr ds) {
+            return QSharedPointer<UpdateDataSet_Cmd>::create(ied, ds);
         }
 
     signals:
-        void     sigModelValues(Core::ModelStateUpdater::ptr t_vals);
+        void     sigModelValues(Core::ModelStateUpdater::ptr vals);
 
     private:
         Core::IED::ptr     m_ied;

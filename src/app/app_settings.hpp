@@ -38,18 +38,18 @@ namespace App
         Q_OBJECT
     public:
         AppSettings();
-        AppSettings(const QString &t_filepath);
+        AppSettings(const QString &filepath);
 
         lisHistConnInfo    getConnectionList();
-        void    putConnectionToConfig(const Cmd::IEDCredentials &t_creds, const QString &t_ied);
-        void    saveHistoryList(const lisHistConnInfo &t_list);
+        void    putConnectionToConfig(const Cmd::IEDCredentials &creds, const QString &ied);
+        void    saveHistoryList(const lisHistConnInfo &list);
 
     signals:
         void    sigConfUpdated();
 
     private:
-        int     readConfigFile(const QString &t_filepath, lisHistConnInfo &t_list);
-        int     writeConfigFile(const QString &t_filepath, const lisHistConnInfo &t_list);
+        int     readConfigFile(const QString &filepath, lisHistConnInfo &list);
+        int     writeConfigFile(const QString &filepath, const lisHistConnInfo &list);
 
     private:
         QString m_confFilepath;

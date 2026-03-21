@@ -30,20 +30,20 @@ namespace Cmd
     {
         Q_OBJECT
     public:
-        UpdateLNs_StatusCmd(Core::IED::ptr t_ied, Core::LogicalDevice::ptr t_ld)
-            : m_ied(t_ied), m_ld(t_ld)
+        UpdateLNs_StatusCmd(Core::IED::ptr ied, Core::LogicalDevice::ptr ld)
+            : m_ied(ied), m_ld(ld)
         {
         }
         ~UpdateLNs_StatusCmd() override {}
 
-        void    execute(Cmd::Interface::IEC61850_API::ptr t_api) override;
+        void    execute(Cmd::Interface::IEC61850_API::ptr api) override;
 
-        static auto create(Core::IED::ptr t_ied, Core::LogicalDevice::ptr t_ld) {
-            return QSharedPointer<UpdateLNs_StatusCmd>::create(t_ied, t_ld);
+        static auto create(Core::IED::ptr ied, Core::LogicalDevice::ptr ld) {
+            return QSharedPointer<UpdateLNs_StatusCmd>::create(ied, ld);
         }
 
     signals:
-        void     sigModelValues(Core::ModelStateUpdater::ptr t_vals);
+        void     sigModelValues(Core::ModelStateUpdater::ptr vals);
 
     private:
         Core::IED::ptr           m_ied;

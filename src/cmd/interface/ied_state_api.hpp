@@ -30,10 +30,10 @@ namespace Cmd::Interface
     public:
         virtual ~IED_StateAPI() {}
 
-        virtual Core::ModelStateUpdater::ptr getStatusForAllLD(Core::DataModel::ptr t_model) = 0;
-        virtual Core::ModelStateUpdater::ptr getStatusForAllLN(Core::LogicalDevice::ptr t_ld) = 0;
+        virtual Core::ModelStateUpdater::ptr getStatusForAllLD(Core::DataModel::ptr model) = 0;
+        virtual Core::ModelStateUpdater::ptr getStatusForAllLN(Core::LogicalDevice::ptr ld) = 0;
 
-        virtual Core::ModelStateUpdater::ptr getValsForLN(Core::LogicalNode::ptr t_ln) = 0;
-        virtual Core::ModelStateUpdater::ptr getValsForDS(Core::DataSet::ptr t_ds) = 0;
+        virtual Core::ModelStateUpdater::ptr getValsForLN(Core::LogicalNode::ptr ln) = 0;
+        virtual Core::ModelStateUpdater::ptr getValsForDS(Core::DataSet::ptr ds) = 0;
     };
 }

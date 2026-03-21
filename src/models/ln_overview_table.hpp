@@ -40,29 +40,29 @@ namespace App::Models
             COLUMN_COUNT
         };
 
-        LN_OverviewTable(QObject *t_parent, Core::IED::ptr t_ied);
+        LN_OverviewTable(QObject *parent, Core::IED::ptr ied);
 
-        Q_INVOKABLE void setSelectedLN(int t_inx);
+        Q_INVOKABLE void setSelectedLN(int inx);
 
-        void     setActiveIED(Core::IED::ptr t_ied);
+        void     setActiveIED(Core::IED::ptr ied);
         auto     getLogicalDevice() const { return m_ldev; }
 
-        QVariant headerData(int t_section, Qt::Orientation t_orientation,
-                            int t_role = Qt::DisplayRole) const override;
+        QVariant headerData(int section, Qt::Orientation orientation,
+                            int role = Qt::DisplayRole) const override;
 
         QHash<int, QByteArray> roleNames() const override;
 
-        int      rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
-        int      columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
+        int      rowCount(const QModelIndex &parent = QModelIndex()) const override;
+        int      columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
-        QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
+        QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     signals:
-        void     sigLNSelected(int t_ld, int t_ln);
+        void     sigLNSelected(int ld, int ln);
 
     public slots:
-        void     slotDataUpdated(Core::ModelItem::ptrList t_nodes);
-        void     slotLDSelected(int t_ld);
+        void     slotDataUpdated(Core::ModelItem::ptrList nodes);
+        void     slotLDSelected(int ld);
 
     private:
         Core::IED::ptr              m_ied;

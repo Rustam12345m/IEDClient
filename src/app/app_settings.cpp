@@ -49,9 +49,9 @@ namespace App
         }
     }
 
-    AppSettings::AppSettings(const QString &t_filepath) : QObject(nullptr)
+    AppSettings::AppSettings(const QString &filepath) : QObject(nullptr)
     {
-        m_confFilepath = t_filepath;
+        m_confFilepath = filepath;
     }
 
     lisHistConnInfo AppSettings::getConnectionList()
@@ -63,9 +63,9 @@ namespace App
         return devs;
     }
 
-    void AppSettings::putConnectionToConfig(const Cmd::IEDCredentials &t_creds, const QString &t_ied)
+    void AppSettings::putConnectionToConfig(const Cmd::IEDCredentials &creds, const QString &ied)
     {
-        App::ConfConnectionInfo newCon(t_creds, t_ied, App::GetCurrentDateTime());
+        App::ConfConnectionInfo newCon(creds, ied, App::GetCurrentDateTime());
 
         auto devs = getConnectionList();
         for (auto it=devs.begin();it!=devs.end();) {
@@ -81,14 +81,14 @@ namespace App
         emit sigConfUpdated();
     }
 
-    void AppSettings::saveHistoryList(const lisHistConnInfo &t_list)
+    void AppSettings::saveHistoryList(const lisHistConnInfo &list)
     {
-        writeConfigFile(m_confFilepath, t_list);
+        writeConfigFile(m_confFilepath, list);
     }
 
-    int AppSettings::readConfigFile(const QString &t_filepath, lisHistConnInfo &t_list)
+    int AppSettings::readConfigFile(const QString &filepath, lisHistConnInfo &list)
     {
-        QFile conf(t_filepath);
+        QFile conf(filepath);
         if (!conf.open(QFile::ReadOnly | QFile::Text)) {
             return -1;
         }
@@ -117,7 +117,7 @@ namespace App
 
                     QString iedName = xml.attributes().value("ied").toString();
                     QString date = xml.attributes().value("date").toString();
-                    t_list.push_front(App::ConfConnectionInfo(cred, iedName, date));
+                    list.push_front(App::ConfConnectionInfo(cred, iedName, date));
                 }
             }
         }
@@ -125,15 +125,15 @@ namespace App
         return 0;
     }
 
-    int AppSettings::writeConfigFile(const QString &t_filepath, const lisHistConnInfo &t_list)
+    int AppSettings::writeConfigFile(const QString &filepath, const lisHistConnInfo &list)
     {
         // Ensure parent directory exists
-        QDir dir = QFileInfo(t_filepath).absoluteDir();
+        QDir dir = QFileInfo(filepath).absoluteDir();
         if (!dir.exists()) {
             dir.mkpath(".");
         }
 
-        QFile file(t_filepath);
+        QFile file(filepath);
         if (!file.open(QFile::WriteOnly | QFile::Text | QFile::Truncate)) {
             return -1;
         }
@@ -150,7 +150,7 @@ namespace App
 
         // history_connections
         xml.writeStartElement("history_connections");
-        for (auto &d : t_list) {
+        for (auto &d : list) {
             xml.writeStartElement("device");
             xml.writeAttribute("ip", d.ip());
             xml.writeAttribute("port", QString::number(d.port()));

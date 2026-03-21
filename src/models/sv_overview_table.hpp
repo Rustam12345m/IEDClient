@@ -45,9 +45,9 @@ namespace App::Models
         };
 
     public:
-        SV_OverviewTable(QObject *t_parent, Core::IED::ptr t_ied);
+        SV_OverviewTable(QObject *parent, Core::IED::ptr ied);
 
-        Q_INVOKABLE void setSelectedSV(int t_row);
+        Q_INVOKABLE void setSelectedSV(int row);
 
         Q_INVOKABLE QString  selectedSvId() const;
         Q_INVOKABLE QString  selectedDatSet() const;
@@ -57,18 +57,18 @@ namespace App::Models
         Q_INVOKABLE uint32_t selectedSmpRate() const;
         Q_INVOKABLE int      selectedNoASDU() const;
 
-        void        setActiveIED(Core::IED::ptr t_ied);
+        void        setActiveIED(Core::IED::ptr ied);
 
-        QVariant    headerData(int t_section, Qt::Orientation t_orientation,
-                               int t_role = Qt::DisplayRole) const override;
+        QVariant    headerData(int section, Qt::Orientation orientation,
+                               int role = Qt::DisplayRole) const override;
         QHash<int, QByteArray> roleNames() const override;
 
-        int         rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
-        int         columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
-        QVariant    data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
+        int         rowCount(const QModelIndex &parent = QModelIndex()) const override;
+        int         columnCount(const QModelIndex &parent = QModelIndex()) const override;
+        QVariant    data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     public slots:
-        void    slotDataUpdated(bool t_done);
+        void    slotDataUpdated(bool done);
 
     private:
         Core::IED::ptr m_ied;

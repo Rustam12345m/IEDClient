@@ -45,19 +45,19 @@ namespace App::Models
         explicit AppEventsTable(QObject *parent = nullptr);
         ~AppEventsTable() = default;
 
-        int rowCount(const QModelIndex &t_parent = QModelIndex()) const override;
-        int columnCount(const QModelIndex &t_parent = QModelIndex()) const override;
+        int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+        int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
         QHash<int, QByteArray> roleNames() const override;
-        Qt::ItemFlags flags(const QModelIndex &t_index) const override;
+        Qt::ItemFlags flags(const QModelIndex &index) const override;
 
-        Q_INVOKABLE QVariant headerData(int t_section, Qt::Orientation t_orientation,
-                                        int t_role = Qt::DisplayRole) const override;
+        Q_INVOKABLE QVariant headerData(int section, Qt::Orientation orientation,
+                                        int role = Qt::DisplayRole) const override;
 
-        QVariant data(const QModelIndex &t_index, int t_role = Qt::DisplayRole) const override;
+        QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     public slots:
-        void addEvent(Cmd::CmdEvent t_event);
+        void addEvent(Cmd::CmdEvent event);
 
     private:
         std::array<Cmd::CmdEvent, Capacity> m_buffer{};

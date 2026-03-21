@@ -30,15 +30,15 @@ namespace Libiec61850
     class IED_StateAPI_Impl : public Cmd::Interface::IED_StateAPI
     {
     public:
-        IED_StateAPI_Impl(ApiAdapter &t_api) : m_api(t_api) {}
+        IED_StateAPI_Impl(ApiAdapter &api) : m_api(api) {}
         ~IED_StateAPI_Impl() override = default;
 
-        Core::ModelStateUpdater::ptr getStatusForAllLD(Core::DataModel::ptr t_model) override;
-        Core::ModelStateUpdater::ptr getStatusForAllLN(Core::LogicalDevice::ptr t_ld) override;
+        Core::ModelStateUpdater::ptr getStatusForAllLD(Core::DataModel::ptr model) override;
+        Core::ModelStateUpdater::ptr getStatusForAllLN(Core::LogicalDevice::ptr ld) override;
 
-        Core::ModelStateUpdater::ptr getValsForLN(Core::LogicalNode::ptr t_ln) override;
-        Core::ModelStateUpdater::ptr getValsForDS(Core::DataSet::ptr t_ds) override;
-    
+        Core::ModelStateUpdater::ptr getValsForLN(Core::LogicalNode::ptr ln) override;
+        Core::ModelStateUpdater::ptr getValsForDS(Core::DataSet::ptr ds) override;
+
     private:
         ApiAdapter&   m_api;
     };

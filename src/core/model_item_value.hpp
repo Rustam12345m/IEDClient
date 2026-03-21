@@ -32,18 +32,18 @@ namespace Core
         using ptr = QSharedPointer< ModelItemValue >;
 
         ModelItemValue() {}
-        ModelItemValue(const QString &t_value) : m_value(t_value) {}
+        ModelItemValue(const QString &value) : m_value(value) {}
 
         QString     str() {
             return m_value;
         }
 
-        bool operator==(const ModelItemValue &t_other) const {
-            return (m_value == t_other.m_value);
+        bool operator==(const ModelItemValue &other) const {
+            return (m_value == other.m_value);
         }
 
-        static auto create(const QString &t_value) {
-            return ModelItemValue::ptr::create(t_value);
+        static auto create(const QString &value) {
+            return ModelItemValue::ptr::create(value);
         }
 
     private:
@@ -57,6 +57,6 @@ namespace Core
     class ModelItemFullValue
     {
     public:
-        static QString get(QSharedPointer< ModelItem > t_item);
+        static QString get(QSharedPointer< ModelItem > item);
     };
 }

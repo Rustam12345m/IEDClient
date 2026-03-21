@@ -44,8 +44,8 @@ namespace Core
         using ptr = QSharedPointer< ModelItem >;
         using ptrList = QSharedPointer< QList< ModelItem* > >;
 
-        ModelItem(ModelItem *t_parent, const QString &t_name)
-            : m_parent(t_parent), m_name(t_name)
+        ModelItem(ModelItem *parent, const QString &name)
+            : m_parent(parent), m_name(name)
         {}
         ModelItem() = delete;
         virtual ~ModelItem() {}
@@ -62,11 +62,11 @@ namespace Core
         ModelItem*    getParent() const {
             return m_parent;
         }
-        QString       getReference(ModelItem *t_root=nullptr) {
+        QString       getReference(ModelItem *root=nullptr) {
             // Make full reference to item in this model
             QString path;
-            if (m_parent && (m_parent != t_root)) {
-                path = m_parent->getReference(t_root) + m_delimetr;
+            if (m_parent && (m_parent != root)) {
+                path = m_parent->getReference(root) + m_delimetr;
             }
             return path + m_name;
         }
@@ -79,40 +79,40 @@ namespace Core
         }
 
         template<typename T>
-        QSharedPointer< T > getItem(int t_inx) {
-            if ((t_inx >= 0) && (t_inx < m_items.size())) {
-                return m_items[t_inx].staticCast<T>();
+        QSharedPointer< T > getItem(int inx) {
+            if ((inx >= 0) && (inx < m_items.size())) {
+                return m_items[inx].staticCast<T>();
             }
             return nullptr;
         }
-        ModelItem::ptr getItem(int t_inx) {
-            return ModelItem::getItem<ModelItem>(t_inx);
+        ModelItem::ptr getItem(int inx) {
+            return ModelItem::getItem<ModelItem>(inx);
         }
         virtual QString getValue() const;
 
-        ModelItem::ptr findSubItem(const QString &t_name) {
+        ModelItem::ptr findSubItem(const QString &name) {
             for (auto it : m_items) {
-                if (it->getName() == t_name) {
+                if (it->getName() == name) {
                     return it;
                 }
             }
             return nullptr;
         }
         template <typename... Names>
-        ModelItem::ptr findSubItem(const QString &t_first, Names... rest) {
+        ModelItem::ptr findSubItem(const QString &first, Names... rest) {
             for (auto it : m_items) {
-                if (it->getName() == t_first) {
+                if (it->getName() == first) {
                     return it->findSubItem(rest...);
                 }
             }
             return nullptr;
         }
 
-        virtual void   addSubItem(ModelItem::ptr t_child);
-        virtual bool   updateValue(ModelItemValue::ptr t_newValue);
+        virtual void   addSubItem(ModelItem::ptr child);
+        virtual bool   updateValue(ModelItemValue::ptr newValue);
 
     protected:
-        virtual void   notifyFromChild(ModelItem::ptrList t_nodes);
+        virtual void   notifyFromChild(ModelItem::ptrList nodes);
 
     protected:
         ModelItem*     m_parent = nullptr;

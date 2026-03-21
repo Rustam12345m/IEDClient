@@ -23,14 +23,14 @@
 
 namespace App::Models
 {
-    SV_OverviewTable::SV_OverviewTable(QObject *t_parent, Core::IED::ptr t_ied)
-        : QAbstractTableModel(t_parent), m_ied(t_ied)
+    SV_OverviewTable::SV_OverviewTable(QObject *parent, Core::IED::ptr ied)
+        : QAbstractTableModel(parent), m_ied(ied)
     {
     }
 
-    void SV_OverviewTable::setSelectedSV(int t_row)
+    void SV_OverviewTable::setSelectedSV(int row)
     {
-        m_selectedRow = t_row;
+        m_selectedRow = row;
     }
 
     QString SV_OverviewTable::selectedSvId() const
@@ -83,18 +83,18 @@ namespace App::Models
         return list[m_selectedRow]->noASDU();
     }
 
-    void SV_OverviewTable::setActiveIED(Core::IED::ptr t_ied)
+    void SV_OverviewTable::setActiveIED(Core::IED::ptr ied)
     {
         beginResetModel();
-        m_ied = t_ied;
+        m_ied = ied;
         endResetModel();
     }
 
-    QVariant SV_OverviewTable::headerData(int t_column, Qt::Orientation t_orientation, int t_role) const
+    QVariant SV_OverviewTable::headerData(int column, Qt::Orientation orientation, int role) const
     {
-        if (t_orientation != Qt::Horizontal) return QVariant();
+        if (orientation != Qt::Horizontal) return QVariant();
 
-        switch (t_column) {
+        switch (column) {
         case SV_ENA_COLUMN:    return QVariant(QString("Enabled"));
         case SV_TYPE_COLUMN:   return QVariant(QString("Type"));
         case SV_ID_COLUMN:     return QVariant(QString("SV ID"));
@@ -111,22 +111,22 @@ namespace App::Models
         return { { Qt::DisplayRole, "display" } };
     }
 
-    int SV_OverviewTable::rowCount(const QModelIndex &t_parent) const
+    int SV_OverviewTable::rowCount(const QModelIndex &parent) const
     {
         if (!m_ied) return 0;
         return m_ied->model().getSV_CBList().count();
     }
 
-    int SV_OverviewTable::columnCount(const QModelIndex &t_parent) const
+    int SV_OverviewTable::columnCount(const QModelIndex &parent) const
     {
         return COLUMN_COUNT;
     }
 
-    QVariant SV_OverviewTable::data(const QModelIndex &t_index, int t_role) const
+    QVariant SV_OverviewTable::data(const QModelIndex &index, int role) const
     {
-        if (t_role != Qt::DisplayRole) return QVariant();
+        if (role != Qt::DisplayRole) return QVariant();
 
-        int row = t_index.row(), column = t_index.column();
+        int row = index.row(), column = index.column();
         const auto list = m_ied->model().getSV_CBList();
         if (row < 0 || row >= list.count()) return QVariant();
 
@@ -144,7 +144,7 @@ namespace App::Models
         return QVariant();
     }
 
-    void SV_OverviewTable::slotDataUpdated(bool t_done)
+    void SV_OverviewTable::slotDataUpdated(bool done)
     {
         beginResetModel();
         endResetModel();

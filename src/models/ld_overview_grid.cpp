@@ -26,23 +26,23 @@ namespace App::Models
 {
     namespace
     {
-        inline int getInt(Core::ModelItem::ptr t_item)
+        inline int getInt(Core::ModelItem::ptr item)
         {
-            return t_item ? t_item->getValue().toInt() : -1;
+            return item ? item->getValue().toInt() : -1;
         }
     }
 
-    LD_OverviewGrid::LD_OverviewGrid(QObject *t_parent, Core::IED::ptr t_ied)
-        : QAbstractListModel(t_parent), m_ied(t_ied)
+    LD_OverviewGrid::LD_OverviewGrid(QObject *parent, Core::IED::ptr ied)
+        : QAbstractListModel(parent), m_ied(ied)
     {
     }
 
-    void LD_OverviewGrid::setActiveIED(Core::IED::ptr t_ied)
+    void LD_OverviewGrid::setActiveIED(Core::IED::ptr ied)
     {
         beginResetModel();
 
         connectToUpdates(m_ied->model(), false);
-        m_ied = t_ied;
+        m_ied = ied;
         connectToUpdates(m_ied->model(), true);
 
         endResetModel();
@@ -53,14 +53,14 @@ namespace App::Models
         return { { LD_ROLE_VALUES, "ld_object" } };
     }
 
-    int LD_OverviewGrid::rowCount(const QModelIndex &t_index) const
+    int LD_OverviewGrid::rowCount(const QModelIndex &index) const
     {
         return m_ied->model().getItemCount();
     }
 
-    QVariant LD_OverviewGrid::data(const QModelIndex &t_index, int t_role) const
+    QVariant LD_OverviewGrid::data(const QModelIndex &index, int role) const
     {
-        auto ld = m_ied->model().getLogicalDevice(t_index.row());
+        auto ld = m_ied->model().getLogicalDevice(index.row());
         if (ld) {
             int mod = -1, beh = -1, health = -1, sim = -1, blk = -1;
             auto ln0 = ld->lln0();
@@ -84,19 +84,19 @@ namespace App::Models
         return QVariant(" - ");
     }
 
-    void LD_OverviewGrid::setSelectedLD(int t_ld)
+    void LD_OverviewGrid::setSelectedLD(int ld)
     {
-        //qDebug() << "LD_OverviewGrid: Selected LD = " << t_ld;
-        emit sigLDSelected(t_ld);
+        //qDebug() << "LD_OverviewGrid: Selected LD = " << ld;
+        emit sigLDSelected(ld);
     }
 
-    void LD_OverviewGrid::connectToUpdates(Core::DataModel &t_model, bool t_con)
+    void LD_OverviewGrid::connectToUpdates(Core::DataModel &model, bool con)
     {
-        for (size_t i=0;i<t_model.getItemCount();i++) {
-            auto ld = t_model.getItem< Core::LogicalDevice >(i);
+        for (size_t i=0;i<model.getItemCount();i++) {
+            auto ld = model.getItem< Core::LogicalDevice >(i);
 
             if (ld->lln0()) {
-                if (t_con) {
+                if (con) {
                     connect(ld->lln0().get(), &Core::LogicalNode::sigDataObjectUpdated,
                             this, &LD_OverviewGrid::slotDataUpdated);
                 } else {
@@ -107,7 +107,7 @@ namespace App::Models
         }
     }
 
-    void LD_OverviewGrid::slotDataUpdated(Core::ModelItem::ptrList t_nodes)
+    void LD_OverviewGrid::slotDataUpdated(Core::ModelItem::ptrList nodes)
     {
         // qDebug() << "LD_OverviewGrid: Data updated";
 

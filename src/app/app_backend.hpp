@@ -36,7 +36,7 @@ namespace App
     {
         Q_OBJECT
     public:
-        AppBackend(IEDConContainer &t_con, EventStorage &t_ev);
+        AppBackend(IEDConContainer &con, EventStorage &ev);
 
         Q_PROPERTY(QAbstractTableModel* appLogsModel READ getEventsModel    CONSTANT)
         Q_PROPERTY(QAbstractItemModel*  lastConnList READ getLastConn_Model CONSTANT)
@@ -49,7 +49,7 @@ namespace App
         Models::AppEventsTable* getEventsModel() const { return m_eventsModel; }
         Models::HistConTable*   getLastConn_Model() const { return m_lastConnModel; }
 
-        void saveCredsToHistory(const Cmd::IEDCredentials &t_cred);
+        void saveCredsToHistory(const Cmd::IEDCredentials &cred);
 
     signals:
         void sigNewStatusMsg();

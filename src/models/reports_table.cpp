@@ -26,29 +26,29 @@
 
 namespace App::Models
 {
-    ReportsTable::ReportsTable(QObject *t_parent, Core::IED::ptr t_ied)
-        : QAbstractTableModel(t_parent), m_ied(t_ied)
+    ReportsTable::ReportsTable(QObject *parent, Core::IED::ptr ied)
+        : QAbstractTableModel(parent), m_ied(ied)
     {
     }
 
-    void ReportsTable::setActiveIED(Core::IED::ptr t_ied)
+    void ReportsTable::setActiveIED(Core::IED::ptr ied)
     {
         beginResetModel();
-        m_ied = t_ied;
+        m_ied = ied;
         switchStorage(nullptr);
         endResetModel();
     }
 
-    QVariant ReportsTable::headerData(int t_section, Qt::Orientation t_orientation, int t_role) const
+    QVariant ReportsTable::headerData(int section, Qt::Orientation orientation, int role) const
     {
-        if (t_role != Qt::DisplayRole) {
+        if (role != Qt::DisplayRole) {
             return QVariant();
         }
 
-        switch (t_orientation) {
+        switch (orientation) {
         case Qt::Horizontal: {
             const char* labels[] = { "#", "Timestamp", "Reason", "Values" };
-            return QVariant(labels[t_section % COLUMN_COUNT]);
+            return QVariant(labels[section % COLUMN_COUNT]);
         }
         case Qt::Vertical:
             break;
@@ -61,25 +61,25 @@ namespace App::Models
         return { { Qt::DisplayRole, "display" } };
     }
 
-    int ReportsTable::rowCount(const QModelIndex &t_parent) const
+    int ReportsTable::rowCount(const QModelIndex &parent) const
     {
-        Q_UNUSED(t_parent);
+        Q_UNUSED(parent);
         return m_storage ? m_storage->count() : 0;
     }
 
-    int ReportsTable::columnCount(const QModelIndex &t_parent) const
+    int ReportsTable::columnCount(const QModelIndex &parent) const
     {
-        Q_UNUSED(t_parent);
+        Q_UNUSED(parent);
         return COLUMN_COUNT;
     }
 
-    QVariant ReportsTable::data(const QModelIndex &t_index, int t_role) const
+    QVariant ReportsTable::data(const QModelIndex &index, int role) const
     {
-        if (t_role != Qt::DisplayRole || !m_storage) {
+        if (role != Qt::DisplayRole || !m_storage) {
             return QVariant();
         }
 
-        int row = t_index.row();
+        int row = index.row();
         // Show newest reports first
         int storageIndex = m_storage->count() - 1 - row;
         auto report = m_storage->getReport(storageIndex);
@@ -87,7 +87,7 @@ namespace App::Models
             return QVariant();
         }
 
-        switch (t_index.column()) {
+        switch (index.column()) {
         case SEQ_COLUMN:
             return report->seqNum;
         case TIMESTAMP_COLUMN:
@@ -109,14 +109,14 @@ namespace App::Models
         return QVariant();
     }
 
-    QVariantMap ReportsTable::getReportDetail(int t_row) const
+    QVariantMap ReportsTable::getReportDetail(int row) const
     {
         QVariantMap result;
         if (!m_storage) {
             return result;
         }
 
-        int storageIndex = m_storage->count() - 1 - t_row;
+        int storageIndex = m_storage->count() - 1 - row;
         auto report = m_storage->getReport(storageIndex);
         if (!report) {
             return result;
@@ -153,13 +153,13 @@ namespace App::Models
         endResetModel();
     }
 
-    void ReportsTable::slotRCBSelected(int t_inx)
+    void ReportsTable::slotRCBSelected(int inx)
     {
         beginResetModel();
 
         Core::ReportStorage *newStorage = nullptr;
 
-        if (m_ied && t_inx >= 0) {
+        if (m_ied && inx >= 0) {
             // Determine which overview table sent the signal
             auto *overviewTable = qobject_cast<RCB_OverviewTable*>(sender());
             if (overviewTable) {
@@ -186,12 +186,12 @@ namespace App::Models
         endInsertRows();
     }
 
-    void ReportsTable::switchStorage(Core::ReportStorage *t_storage)
+    void ReportsTable::switchStorage(Core::ReportStorage *storage)
     {
         if (m_storageConn) {
             disconnect(m_storageConn);
         }
-        m_storage = t_storage;
+        m_storage = storage;
         if (m_storage) {
             m_storageConn = connect(m_storage, &Core::ReportStorage::sigReportReceived,
                                     this, &ReportsTable::slotReportReceived,
@@ -199,14 +199,14 @@ namespace App::Models
         }
     }
 
-    QString ReportsTable::reasonToString(int t_reason)
+    QString ReportsTable::reasonToString(int reason)
     {
         QStringList parts;
-        if (t_reason & 1)  parts.append("DataChange");
-        if (t_reason & 2)  parts.append("QualityChange");
-        if (t_reason & 4)  parts.append("DataUpdate");
-        if (t_reason & 8)  parts.append("Integrity");
-        if (t_reason & 16) parts.append("GI");
+        if (reason & 1)  parts.append("DataChange");
+        if (reason & 2)  parts.append("QualityChange");
+        if (reason & 4)  parts.append("DataUpdate");
+        if (reason & 8)  parts.append("Integrity");
+        if (reason & 16) parts.append("GI");
         if (parts.isEmpty()) {
             return "Unknown";
         }

@@ -23,7 +23,7 @@
 
 namespace Cmd
 {
-    void SetRCBValues_Cmd::execute(Cmd::Interface::IEC61850_API::ptr t_api)
+    void SetRCBValues_Cmd::execute(Cmd::Interface::IEC61850_API::ptr api)
     {
         QString prefix = m_rcb->isBuffered() ? "BR" : "RP";
         QString rcbRef = QString("%1.%2.%3").arg(m_rcb->lnRef(), prefix, m_rcb->getName());
@@ -33,25 +33,25 @@ namespace Cmd
             QString("%1 RCB: %2").arg(action, rcbRef)));
 
         if (m_enable && m_storage) {
-            t_api->control().installReportHandler(rcbRef, m_rptId, m_storage);
+            api->control().installReportHandler(rcbRef, m_rptId, m_storage);
         }
 
-        bool ok = t_api->control().setRCBValues(rcbRef, m_enable, m_trgOps,
+        bool ok = api->control().setRCBValues(rcbRef, m_enable, m_trgOps,
                                                   m_bufTm, m_intgPd, m_rptId, m_datSet);
 
         if (ok) {
             if (!m_enable) {
-                t_api->control().uninstallReportHandler(rcbRef);
+                api->control().uninstallReportHandler(rcbRef);
             }
 
             // Re-read all values from the server to get updated owner, resv, etc.
-            t_api->control().refreshRCBValues(m_rcb);
+            api->control().refreshRCBValues(m_rcb);
 
             emit sigCmdEvent(CmdEvent::FinishEvent(rcbRef,
                 QString("RCB %1: %2").arg(action, rcbRef), true));
         } else {
             if (m_enable && m_storage) {
-                t_api->control().uninstallReportHandler(rcbRef);
+                api->control().uninstallReportHandler(rcbRef);
             }
             emit sigCmdEvent(CmdEvent::FinishEvent(rcbRef,
                 QString("Failed to %1 RCB: %2").arg(action.toLower(), rcbRef), false));

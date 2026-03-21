@@ -23,30 +23,30 @@
 
 namespace App
 {
-    void BackendInterface::putCmdToQueue(Cmd::CmdInterface::ptr t_cmd)
+    void BackendInterface::putCmdToQueue(Cmd::CmdInterface::ptr cmd)
     {
-        connect(t_cmd.get(), &Cmd::CmdInterface::sigCmdEvent, this, &BackendInterface::slotCmdEvent);
+        connect(cmd.get(), &Cmd::CmdInterface::sigCmdEvent, this, &BackendInterface::slotCmdEvent);
 
-        m_con.m_cmdThread->putCommand(t_cmd);
+        m_con.m_cmdThread->putCommand(cmd);
     }
 
-    void BackendInterface::slotCmdEvent(Cmd::CmdEvent t_ev)
+    void BackendInterface::slotCmdEvent(Cmd::CmdEvent ev)
     {
-        if (t_ev.m_ip.isEmpty() || t_ev.m_ip == "IP?") {
-            t_ev.m_ip = m_con.m_cred.ip();
+        if (ev.m_ip.isEmpty() || ev.m_ip == "IP?") {
+            ev.m_ip = m_con.m_cred.ip();
         }
 
-        m_events.putEventToStorage(t_ev);
+        m_events.putEventToStorage(ev);
 
-        switch (t_ev.m_type) {
+        switch (ev.m_type) {
         case Cmd::PROCESS_EVENT: {
-            emit sigCmdProgress(t_ev.m_perc, t_ev.m_msg);
+            emit sigCmdProgress(ev.m_perc, ev.m_msg);
             break;
         }
         case Cmd::FINISH_EVENT: {
-            emit sigCmdFinished(t_ev.m_result);
-            if (!t_ev.m_result) {
-                emit sigCmdError(t_ev.m_msg);
+            emit sigCmdFinished(ev.m_result);
+            if (!ev.m_result) {
+                emit sigCmdError(ev.m_msg);
             }
             break;
         }
@@ -57,7 +57,7 @@ namespace App
         }
     }
 
-    void BackendInterface::slotConnected(bool t_done)
+    void BackendInterface::slotConnected(bool done)
     {
     }
 }

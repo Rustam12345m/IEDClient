@@ -34,19 +34,19 @@ namespace Cmd
     {
         Q_OBJECT
     public:
-        ConnectCmd(const IEDCredentials &t_cred, Core::IED::ptr t_ied)
-                : m_cred(t_cred), m_ied(t_ied)
+        ConnectCmd(const IEDCredentials &cred, Core::IED::ptr ied)
+                : m_cred(cred), m_ied(ied)
         {}
         ~ConnectCmd() {}
 
-        void    execute(Cmd::Interface::IEC61850_API::ptr t_api) override;
+        void    execute(Cmd::Interface::IEC61850_API::ptr api) override;
 
-        static auto create(const IEDCredentials &t_cred, Core::IED::ptr t_ied) {
-            return QSharedPointer<ConnectCmd>::create(t_cred, t_ied);
+        static auto create(const IEDCredentials &cred, Core::IED::ptr ied) {
+            return QSharedPointer<ConnectCmd>::create(cred, ied);
         }
 
     private slots:
-        void     slotFoundNewLN(const QString &t_ref);
+        void     slotFoundNewLN(const QString &ref);
 
     private:
         IEDCredentials m_cred;

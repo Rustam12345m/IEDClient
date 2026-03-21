@@ -66,10 +66,10 @@ namespace Core
     public:
         using ptr = QSharedPointer< DataAttribute >;
 
-        DataAttribute(ModelItem *t_parent, const QString &t_name, const QString &t_fc)
-            : ModelItem(t_parent, t_name)
+        DataAttribute(ModelItem *parent, const QString &name, const QString &fc)
+            : ModelItem(parent, name)
         {
-            m_fc = fcStringToNum(t_fc);
+            m_fc = fcStringToNum(fc);
             m_delimetr = "."; // Between DOName and DAName
         }
 
@@ -80,9 +80,9 @@ namespace Core
             return fcNumToString(m_fc);
         }
 
-        static const char* fcNumToString(FC_ENUM t_num);
-        static const char* fcNumToDescription(FC_ENUM t_num);
-        static FC_ENUM fcStringToNum(const QString &t_num);
+        static const char* fcNumToString(FC_ENUM num);
+        static const char* fcNumToDescription(FC_ENUM num);
+        static FC_ENUM fcStringToNum(const QString &num);
 
     protected:
         FC_ENUM     m_fc = FC_ENUM::UNDEFINED;

@@ -40,7 +40,7 @@ namespace Libiec61850
         ApiAdapter() : m_model(*this), m_state(*this), m_control(*this), m_fs(*this) {}
         ~ApiAdapter() override {}
 
-        QString connect(const Cmd::IEDCredentials &t_creds) override;
+        QString connect(const Cmd::IEDCredentials &creds) override;
         void    disconnect() override;
         bool    isConnected() const override;
 
