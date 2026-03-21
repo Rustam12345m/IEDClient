@@ -125,9 +125,41 @@ Rules and patterns established during development that must be maintained.
 - **`sigCmdError(QString)`**: Emitted by `BackendInterface::slotCmdEvent` on any `FINISH_EVENT` with `m_result == false`. Connected to `connectionErrorDialog.showError()` in main.qml for both `iedBackend` and `fsBackend`.
 - **IP auto-fill**: `slotCmdEvent` fills empty or `"IP?"` IP fields from `m_con.m_cred.ip()` before storing events.
 
+## FC-Aware Data Model Architecture
+
+- **Sub-attributes are filtered by FC during model building**: `recursiveReadAttributes()` uses `IedConnection_getDataDirectoryByFC()` (not `getDataDirectory()`) to only discover sub-attributes for the matching functional constraint. This prevents mixing children from different FCs under the same DataAttribute node.
+- **Duplicate DA names per DataObject are expected**: A DataObject like `A` can have `phsA[DC]` and `phsA[MX]` as separate children — both named "phsA" but with different FCs. This is correct per IEC 61850 — each FC has its own attribute hierarchy.
+- **`recFindModelItem()` uses backtracking**: When resolving a path like `A.phsA.cVal.mag.f`, if the first `phsA` child (e.g., `phsA[DC]`) doesn't have `cVal`, it tries the next `phsA` child (`phsA[MX]`). This handles FC-duplicate names.
+- **`findSubItem(name)` returns the first match only**: Not FC-aware. Safe for unique names (LN, DO level) but ambiguous at the DA level where duplicates exist. Use `recFindModelItem` for FC-safe path resolution.
+- **`getReference()` does not include FC**: Two siblings with the same name produce identical path strings. This is mitigated because libiec61850 API always takes FC as a separate parameter alongside the path.
+- **Signal matrix correctly filters by FC**: `recursiveFillMatrix()` skips DAs whose FC doesn't match the filter, so no duplicate rows are created.
+- **Dataset item resolution is FC-safe**: Uses `getItemByReference()` → `recFindModelItem()` with backtracking. Finds the correct FC variant by following the deepest resolvable path.
+- **Value notification is pointer-based**: `updateValue()` → `notifyFromChild()` uses parent pointers, not name lookups. Unaffected by duplicate names.
+- **Positional value matching**: `getValuesForItemByMmsValue()` matches MMS structure elements to model children by position. This works correctly because each DA now only has children from its own FC — the element count matches.
+- **Never hide values based on tree structure**: `getValue()` is always shown in tree models regardless of `getItemCount()`. The tree displays exactly what the IED provides.
+
+## Crash Reporting (Breakpad)
+
+- **Linux**: Uses `client/linux/handler/exception_handler.h`. Dumps to `~/.local/share/IEDClient/crashes/`.
+- **Windows**: Uses `client/windows/handler/exception_handler.h` with `UNICODE`/`_UNICODE` defines for MinGW. Dumps to `%LOCALAPPDATA%\IEDClient\crashes/`.
+- **Guarded by defines**: `BREAKPAD_ENABLED` + `BREAKPAD_LINUX` or `BREAKPAD_WINDOWS`. Unsupported platforms get empty INTERFACE target.
+- **Initialize before QGuiApplication**: The ExceptionHandler must be constructed before any Qt objects.
+
+## Embedded Font
+
+- **Noto Sans Mono** embedded via Qt resources (`ui/fonts/`). Loaded in `main.cpp` via `QFontDatabase::addApplicationFont`, set as app-wide default with `app.setFont()`.
+- **`VisualStyle.fontFamily`** property references the font name. All QML code uses this instead of hardcoded `"Monospace"`.
+
+## Tree Filter
+
+- **`TreeFilterProxy`**: Recursive `QSortFilterProxyModel` for the IED tree. Splits filter text on `.` and matches all parts sequentially against the node's full path (root-to-leaf).
+- **`setRecursiveFilteringEnabled(true)`**: Qt built-in recursive filtering keeps parent nodes visible when children match.
+- **`layoutChanged()`** for tree refresh: `dataChanged` with flat indices doesn't refresh nested tree rows. Use `layoutChanged()` in `slotDataUpdated()` to force full tree re-read.
+
 ## C++ Conventions
 
-- **`t_` prefix** for function parameters, **`m_` prefix** for members.
+- **`m_` prefix** for member variables. No prefix for function parameters (removed `t_` prefix).
 - **Command pattern**: all async IED operations go through `CmdThread` with `CmdInterface` commands.
 - **`Q_INVOKABLE`** for methods called from QML.
 - **No `qDebug()` in production code**: All debug output commented out. Use event log for user-visible messages.
+- **Never build without checking**: Do not run `./ci/build_local.sh` unless explicitly asked by the user.

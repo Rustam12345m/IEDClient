@@ -164,9 +164,18 @@ namespace Core
             return nullptr;
         }
         if (inx == (names.size() - 1)) {
-            // End
             return item->findSubItem(names[inx]);
         }
-        return recFindModelItem(names, inx + 1, item->findSubItem(names[inx]));
+
+        // Try all children with matching name (handles multiple FCs like phsA[DC] and phsA[MX])
+        for (auto &child : item->getItemList()) {
+            if (child->getName() == names[inx]) {
+                auto result = recFindModelItem(names, inx + 1, child);
+                if (result) {
+                    return result;
+                }
+            }
+        }
+        return nullptr;
     }
 }
