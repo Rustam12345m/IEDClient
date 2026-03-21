@@ -508,10 +508,17 @@ ApplicationWindow
 
                                     fsBackend.updateFilesDirectory("/")
                                     setActivePanel(Globals.Panel.HIDE)
-
-                                    setPageStatusText(fsBackend.fsPageStatus())
                                 } else {
                                     focus = false
+                                }
+                            }
+
+                            Connections {
+                                target: fsBackend
+                                function onSigCmdFinished() {
+                                    if (fsPageID.visible) {
+                                        setPageStatusText(fsBackend.fsPageStatus())
+                                    }
                                 }
                             }
                         }
@@ -879,7 +886,6 @@ ApplicationWindow
         }
         case Globals.Page.FS: {
             fsBackend.updateFilesDirectory("/")
-            setPageStatusText(fsBackend.fsPageStatus())
             break;
         }
         case Globals.Page.DS: {
