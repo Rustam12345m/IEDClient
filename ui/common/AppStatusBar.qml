@@ -53,8 +53,9 @@ Rectangle
             id: msgStatusTextID
             height: parent.height
 
-            horizontalAlignment: Text.AlignLeft // HCenter
+            horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter
+            elide: Text.ElideRight
 
             text: ""
             color: VisualStyle.statusBar.textColor

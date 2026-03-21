@@ -84,7 +84,7 @@ namespace App::Models
 
         switch (role) {
         case SECTION_ROLE:
-            return "LD: " + entry.ldName;
+            return entry.ldName;
         case LD_INDEX_ROLE:
             return entry.ldIndex;
         case LN_INDEX_ROLE:
@@ -132,7 +132,7 @@ namespace App::Models
             if (!ld)
                 continue;
 
-            QString ldName = ld->getName();
+            QString ldName = ld->getReference();
             for (size_t lnIdx = 0; lnIdx < ld->getItemCount(); lnIdx++) {
                 auto ln = ld->getItem<Core::LogicalNode>(lnIdx);
                 if (ln) {

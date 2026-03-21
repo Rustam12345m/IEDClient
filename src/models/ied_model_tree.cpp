@@ -64,7 +64,7 @@ namespace App::Models
             return QVariant();
         }
         switch (sect) {
-        case NAME_COLUMN:  return QVariant("Name");
+        case NAME_COLUMN:  return QVariant("Reference");
         case VALUE_COLUMN: return QVariant("Value");
         case FC_COLUMN:    return QVariant("FC");
         }
@@ -152,13 +152,16 @@ namespace App::Models
             return QVariant(item->getName());
         case FC_COLUMN: {
             auto *da = dynamic_cast<Core::DataAttribute*>(item);
-            if (da) {
-                return QVariant(da->fcStr());
+            if (da && !da->fcStr().isEmpty()) {
+                return QVariant(QString("[%1]").arg(da->fcStr()));
             }
             return QVariant("");
         }
         case VALUE_COLUMN:
-            return QVariant(item->getValue());
+            if (item->getItemCount() == 0) {
+                return QVariant(item->getValue());
+            }
+            return QVariant("");
         }
         return QVariant();
     }

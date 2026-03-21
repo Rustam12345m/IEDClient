@@ -531,6 +531,8 @@ ApplicationWindow
                     width: 480
                     clip: true
 
+                    property int lastWidth: 480
+
                     SplitView.fillWidth: false
                     SplitView.preferredWidth: 480
 
@@ -622,8 +624,11 @@ ApplicationWindow
                         if (width < 80) {
                             panelStack.visible = false
                             width = 0
-                        } else if (!panelStack.visible) {
-                            panelStack.visible = true
+                        } else {
+                            if (!panelStack.visible) {
+                                panelStack.visible = true
+                            }
+                            lastWidth = width
                         }
                     }
                 }
@@ -806,7 +811,7 @@ ApplicationWindow
             propertyPanel.visible = false
         } else {
             if (!propertyPanel.visible) {
-                propertyPanel.SplitView.preferredWidth = 250
+                propertyPanel.SplitView.preferredWidth = propertyPanel.lastWidth
                 propertyPanel.visible = true
             }
 

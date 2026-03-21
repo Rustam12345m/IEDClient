@@ -107,7 +107,8 @@ FocusScope {
 
                 columnWidthProvider: function(t_column) {
                     var w = Globals.columnWidthCalculator(headerID, treeViewID, t_column)
-                    if (t_column === 1) w = Math.max(w, 180)  // Value: fit "11:11:11 11.11.1970"
+                    if (t_column === 0) w = Math.max(w, 180)       // Reference
+                    else if (t_column === 1) w = Math.max(w, 180)  // Value
                     return w
                 }
 

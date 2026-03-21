@@ -89,7 +89,9 @@ Item {
                     color:            VisualStyle.toolBarColor
 
                     Text {
-                        anchors.centerIn: parent
+                        anchors.fill: parent
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
                         text:             "RECENT CONNECTIONS"
                         color:            VisualStyle.statusBar.textColor
                         font.pixelSize:   14
@@ -210,7 +212,8 @@ Item {
             // ── QUICK CONNECT ─────────────────────────────────────────────
             Rectangle {
                 Layout.fillWidth:       true
-                Layout.fillHeight:      true
+                Layout.preferredHeight: quickConnectLayout.implicitHeight +
+                                        VisualStyle.borderWidth * 2
 
                 color:        VisualStyle.input.bg
                 border.color: VisualStyle.borderColor
@@ -220,7 +223,9 @@ Item {
                     id: quickConnectLayout
 
                     anchors {
-                        fill:    parent
+                        left:    parent.left
+                        right:   parent.right
+                        top:     parent.top
                         margins: VisualStyle.borderWidth
                     }
                     spacing: 0
@@ -231,7 +236,9 @@ Item {
                         color:            VisualStyle.toolBarColor
 
                         Text {
-                            anchors.centerIn: parent
+                            anchors.fill: parent
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
                             text:             "QUICK CONNECT"
                             color:            VisualStyle.statusBar.textColor
                             font.pixelSize:   14
@@ -483,8 +490,7 @@ Item {
             // ── SHORTCUTS ─────────────────────────────────────────────────
             Rectangle {
                 Layout.fillWidth:       true
-                Layout.preferredHeight: shortcutsLayout.implicitHeight +
-                                        VisualStyle.borderWidth * 2
+                Layout.fillHeight:      true
 
                 color:        VisualStyle.input.bg
                 border.color: VisualStyle.borderColor
@@ -494,7 +500,9 @@ Item {
                     id: shortcutsLayout
 
                     anchors {
-                        fill:    parent
+                        left:    parent.left
+                        right:   parent.right
+                        top:     parent.top
                         margins: VisualStyle.borderWidth
                     }
                     spacing: 0
@@ -505,7 +513,9 @@ Item {
                         color:            VisualStyle.toolBarColor
 
                         Text {
-                            anchors.centerIn: parent
+                            anchors.fill: parent
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
                             text:             "SHORTCUTS"
                             color:            VisualStyle.statusBar.textColor
                             font.pixelSize:   14
@@ -558,11 +568,6 @@ Item {
                 }
             }
 
-            // Spacer
-            Item {
-                Layout.fillWidth:  true
-                Layout.fillHeight: true
-            }
         }
     }
 }

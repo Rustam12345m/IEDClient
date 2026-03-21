@@ -143,8 +143,8 @@ namespace App::Models
             }
             case FC_COLUMN: {
                 auto *da = dynamic_cast<Core::DataAttribute*>(item);
-                if (da) {
-                    return QVariant(da->fcStr());
+                if (da && !da->fcStr().isEmpty()) {
+                    return QVariant(QString("[%1]").arg(da->fcStr()));
                 }
                 return QVariant("");
             }

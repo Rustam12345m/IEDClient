@@ -58,32 +58,46 @@ FocusScope
             }
         }
 
+        property string activeSection: ""
+
         onCurrentIndexChanged: {
             if (currentIndex >= 0) {
                 model.selectLN(currentIndex)
                 rootID.sigSelectedNewLN()
+                if (currentItem) {
+                    activeSection = currentItem.sectionValue || ""
+                }
             }
         }
 
         section.property: "section"
         section.delegate: Rectangle {
+            required property string section
+
             width: listView.width
             height: defRowHeight
-            color: VisualStyle.table.headerColor
+
+            property bool active: section !== "" && section === listView.activeSection
+
+            color: active ? VisualStyle.borderColor : VisualStyle.table.headerColor
             border.color: VisualStyle.table.rowBorderColor2
 
             clip: true
 
             Text {
-                text: section
-                anchors.centerIn: parent
-                font.bold: VisualStyle.boldHeaderText
-                color: VisualStyle.table.headerTextColor
+                text: parent.section
+                anchors.fill: parent
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                font.bold: parent.active
+                color: parent.active ? "#ffffff" : VisualStyle.table.headerTextColor
             }
         }
 
         delegate: Rectangle {
             id: delegateRoot
+
+            property string sectionValue: model.section || ""
 
             width: listView.width
             height: defRowHeight

@@ -99,8 +99,9 @@ FocusScope
 
         columnWidthProvider: function(t_column) {
             var w = Globals.columnWidthCalculator(headerID, tableID, t_column)
-            // Value column: ensure stable minimum to prevent resizing on each update
-            if (t_column === tableID.columns - 1) w = Math.max(w, 160)
+            if (t_column === 1) w = Math.max(w, 160)       // LD
+            else if (t_column === 2) w = Math.max(w, 160)  // Reference
+            else if (t_column === tableID.columns - 1) w = Math.max(w, 160) // Value
             return w
         }
 
