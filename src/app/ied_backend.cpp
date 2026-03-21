@@ -202,6 +202,16 @@ namespace App
         putCmdToQueue(cmd);
     }
 
+    QStringList IED_Backend::getDataSetRefs() const
+    {
+        QStringList refs;
+        for (const auto &ds : m_con.m_ied->model().getDataSetList()) {
+            refs.append(ds->ref() + "$" + ds->getName());
+        }
+        refs.sort();
+        return refs;
+    }
+
     void IED_Backend::updateLN_TreeValues()
     {
         // qDebug() << "IED_Backend: Update LN command";

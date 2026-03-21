@@ -55,9 +55,25 @@ Item
     function loadFromModel() {
         if (!rcbModel) return
         rcbID.text = rcbModel.selectedRptId()
-        dataSetID.text = rcbModel.selectedDsRef()
         bufTmField.text = rcbModel.selectedBufTm()
         intgPdField.text = rcbModel.selectedIntgPd()
+
+        // Populate DataSet ComboBox
+        var refs = iedBackend.getDataSetRefs()
+        var currentDs = rcbModel.selectedDsRef()
+        var idx = refs.indexOf(currentDs)
+
+        if (currentDs.length > 0 && idx < 0) {
+            // Unknown value — prepend in red
+            refs.unshift(currentDs)
+            dataSetID.unknownValue = true
+            idx = 0
+        } else {
+            dataSetID.unknownValue = false
+        }
+
+        dataSetID.model = refs
+        dataSetID.currentIndex = idx
 
         var trg = rcbModel.selectedTrgOps()
         chkDataChange.checked   = (trg & 2) !== 0
@@ -134,14 +150,22 @@ Item
                     horizontalAlignment: Text.AlignRight
                     verticalAlignment: Text.AlignVCenter
                 }
-                TextField {
+                ComboBox {
                     Layout.fillWidth: true
                     id: dataSetID
                     height: defRowHeight
 
-                    text: ""
-                    activeFocusOnPress: true
-                    selectByMouse: true
+                    property bool unknownValue: false
+
+                    delegate: ItemDelegate {
+                        width: dataSetID.width
+                        contentItem: Text {
+                            text: modelData
+                            color: (index === 0 && dataSetID.unknownValue) ? "red" : palette.text
+                            elide: Text.ElideRight
+                        }
+                        highlighted: dataSetID.highlightedIndex === index
+                    }
                 }
             }
             RowLayout {
@@ -347,7 +371,7 @@ Item
                                   parseInt(bufTmField.text) || 0,
                                   parseInt(intgPdField.text) || 0,
                                   rcbID.text,
-                                  dataSetID.text)
+                                  dataSetID.currentText)
                     }
                 }
                 Button {
