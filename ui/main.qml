@@ -562,6 +562,12 @@ ApplicationWindow
                                 iedBackend.setRCBEnable(rcbPageID.isBuffered,
                                     rcbPageID.selectedRCBIndex, false, 0, 0, 0, "", "")
                             }
+                            onSigGoToDataSet: function(dsRef) {
+                                setActivePage(Globals.Page.DS)
+                                Qt.callLater(function() {
+                                    iedBackend.selectDataSetByRef(dsRef)
+                                })
+                            }
 
                             Connections {
                                 target: iedBackend

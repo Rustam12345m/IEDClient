@@ -59,6 +59,14 @@ FocusScope
             listViewID.model.setSelectedDS(listViewID.selectedIndex)
         }
 
+        Connections {
+            target: listViewID.model
+            function onSigSelectRow(row) {
+                listViewID.selectedIndex = row
+                listViewID.currentIndex = row
+            }
+        }
+
         section.property: "section"
         section.delegate: Rectangle {
             width: listViewID.width

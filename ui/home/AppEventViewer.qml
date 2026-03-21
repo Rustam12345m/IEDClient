@@ -89,9 +89,9 @@ FocusScope
         }
 
         columnWidthProvider: function(col) {
-            if (col === 0) return 160
-            if (col === 1) return 140
-            return Math.max(200, tableID.width - 300)
+            if (col === 0) return 170
+            if (col === 1) return 240
+            return Math.max(200, tableID.width - 410)
         }
 
         onWidthChanged: forceLayout()

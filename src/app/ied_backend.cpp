@@ -212,6 +212,18 @@ namespace App
         return refs;
     }
 
+    void IED_Backend::selectDataSetByRef(const QString &ref)
+    {
+        const auto &dsList = m_con.m_ied->model().getDataSetList();
+        for (int i = 0; i < dsList.size(); i++) {
+            QString dsRef = dsList[i]->ref() + "$" + dsList[i]->getName();
+            if (dsRef == ref || ref.endsWith(dsList[i]->getName())) {
+                m_dsComModel->setSelectedDS(i);
+                return;
+            }
+        }
+    }
+
     void IED_Backend::updateLN_TreeValues()
     {
         // qDebug() << "IED_Backend: Update LN command";

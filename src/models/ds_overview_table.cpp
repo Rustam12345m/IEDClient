@@ -39,6 +39,7 @@ namespace App::Models
     {
         m_currentDS = ds;
         emit sigDSSelected(m_currentDS);
+        emit sigSelectRow(m_currentDS);
     }
 
     QHash<int, QByteArray> DS_OverviewTable::roleNames() const

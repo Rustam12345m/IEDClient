@@ -51,6 +51,7 @@ namespace App::Models
 
     signals:
         void sigDSSelected(int ds);
+        void sigSelectRow(int row);
 
     public slots:
         void slotDataUpdated();

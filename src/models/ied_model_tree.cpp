@@ -158,10 +158,7 @@ namespace App::Models
             return QVariant("");
         }
         case VALUE_COLUMN:
-            if (item->getItemCount() == 0) {
-                return QVariant(item->getValue());
-            }
-            return QVariant("");
+            return QVariant(item->getValue());
         }
         return QVariant();
     }

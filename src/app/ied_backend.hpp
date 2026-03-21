@@ -102,6 +102,7 @@ namespace App
         Q_INVOKABLE void setSVEnable(int index, bool enable);
         Q_INVOKABLE void dumpMmsModel(const QString &ip, int port);
         Q_INVOKABLE QStringList getDataSetRefs() const;
+        Q_INVOKABLE void selectDataSetByRef(const QString &ref);
 
         // Status bar
         Q_INVOKABLE QString ldsPageStatus();

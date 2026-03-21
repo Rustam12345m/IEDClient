@@ -41,6 +41,7 @@ Item
 
     signal sigEnable(int trgOps, int bufTm, int intgPd, string rptId, string datSet)
     signal sigDisable()
+    signal sigGoToDataSet(string dsRef)
 
     function collectTrgOps() {
         var trg = 0
@@ -153,7 +154,6 @@ Item
                 ComboBox {
                     Layout.fillWidth: true
                     id: dataSetID
-                    height: defRowHeight
 
                     property bool unknownValue: false
 
@@ -162,10 +162,23 @@ Item
                         contentItem: Text {
                             text: modelData
                             color: (index === 0 && dataSetID.unknownValue) ? "red" : palette.text
+                            font.bold: index === dataSetID.currentIndex
                             elide: Text.ElideRight
                         }
                         highlighted: dataSetID.highlightedIndex === index
+                        background: Rectangle {
+                            color: index === dataSetID.currentIndex
+                                   ? VisualStyle.table.selRowColor
+                                   : (highlighted ? palette.highlight : "transparent")
+                        }
                     }
+                }
+                Button {
+                    width: defRowHeight
+                    height: defRowHeight
+                    icon.source: "qrc:/img/icons/arrow_forward.svg"
+                    focusPolicy: Qt.NoFocus
+                    onClicked: sigGoToDataSet(dataSetID.currentText)
                 }
             }
             RowLayout {

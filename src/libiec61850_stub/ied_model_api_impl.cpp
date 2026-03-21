@@ -56,10 +56,11 @@ namespace
     }
 
     void    recursiveReadAttributes(IedConnection con, QSharedPointer<Core::ModelItem> parent,
-                                    Core::DataModelBuilder &builder)
+                                    Core::DataModelBuilder &builder, FunctionalConstraint fc)
     {
         IedClientError retval = IED_ERROR_OK;
-        LinkedList daList = IedConnection_getDataDirectory(con, &retval, parent->getReference().toLocal8Bit().data());
+        LinkedList daList = IedConnection_getDataDirectoryByFC(con, &retval,
+                                parent->getReference().toLocal8Bit().data(), fc);
         if ((retval == IED_ERROR_OK) && (daList != nullptr)) {
             LinkedList attr = LinkedList_getNext(daList);
 
@@ -69,8 +70,7 @@ namespace
                 builder.createSDA(parent, name);
                 auto sda = builder.lastSDA();
 
-                QString ref = parent->getReference() + "." + name;
-                recursiveReadAttributes(con, sda, builder);
+                recursiveReadAttributes(con, sda, builder, fc);
 
                 attr = LinkedList_getNext(attr);
             }
@@ -161,8 +161,9 @@ namespace Libiec61850
 
                         builder.createDA(name, fc);
 
-                        // Recursive search SubAttr for DA
-                        recursiveReadAttributes(m_api.m_libConn, builder.lastDA(), builder);
+                        // Recursive search SubAttr for DA (filtered by FC)
+                        recursiveReadAttributes(m_api.m_libConn, builder.lastDA(), builder,
+                                                (FunctionalConstraint)fcNum);
 
                         attrFC = LinkedList_getNext(attrFC);
                     }

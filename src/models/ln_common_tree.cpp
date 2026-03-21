@@ -149,10 +149,7 @@ namespace App::Models
                 return QVariant("");
             }
             case VALUE_COLUMN: {
-                if (item->getItemCount() == 0) {
-                    return QVariant(item->getValue());
-                }
-                return QVariant("");
+                return QVariant(item->getValue());
             }
             }
         }
@@ -161,9 +158,7 @@ namespace App::Models
 
     void LN_CommonTree::slotDataUpdated(Core::ModelItem::ptrList nodes)
     {
-        if (rowCount() > 0) {
-            emit dataChanged(index(0, VALUE_COLUMN), index(rowCount() - 1, VALUE_COLUMN));
-        }
+        emit layoutChanged();
     }
 
     void LN_CommonTree::slotLNSelected(int ld, int ln)
