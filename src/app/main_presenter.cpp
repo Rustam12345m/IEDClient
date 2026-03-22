@@ -136,11 +136,6 @@ namespace App
 
     void MainPresenter::slotConClosed()
     {
-        m_con.m_ied = Core::IED::ptr::create();
-
-        m_iedBackend.slotConnected(false);
-        m_fsBackend.slotConnected(false);
-
         emit sigIEDConChanged(false);
     }
 }

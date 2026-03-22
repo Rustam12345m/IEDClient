@@ -35,7 +35,7 @@ FocusScope
     readonly property int defDelegateHeight: 30
     readonly property int defDelegateWidth: 150
 
-    signal sigDeviceSelected(string t_ip, int t_port)
+    signal sigDeviceSelected(string ip, int port)
 
     function getValue(row, col) {
         let idx = tableID.model.index(row, col)
@@ -83,8 +83,8 @@ FocusScope
             */
         }
 
-        columnWidthProvider: function(t_column) {
-            return Globals.columnWidthFillSpace(headerID, tableID, t_column)
+        columnWidthProvider: function(column) {
+            return Globals.columnWidthFillSpace(headerID, tableID, column)
         }
 
         delegate: TextDelegate {

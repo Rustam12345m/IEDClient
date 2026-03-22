@@ -156,6 +156,30 @@ Rules and patterns established during development that must be maintained.
 - **`setRecursiveFilteringEnabled(true)`**: Qt built-in recursive filtering keeps parent nodes visible when children match.
 - **`layoutChanged()`** for tree refresh: `dataChanged` with flat indices doesn't refresh nested tree rows. Use `layoutChanged()` in `slotDataUpdated()` to force full tree re-read.
 
+## Disconnect Behavior
+
+- **Data preserved on disconnect**: `slotConClosed()` only emits `sigIEDConChanged(false)` — it does NOT create a new empty IED or reset models. The fetched data remains visible after connection loss or user-initiated disconnect.
+- **Tabs remain visible after first connection**: `hasConnected` flag (QML) is set `true` on first successful connect. Tabs are hidden only before first connection (`showOnlyFirst: !hasConnected`), never re-hidden on disconnect.
+- **Page navigation unrestricted**: No guard on `setActivePage()` — users can browse any tab while disconnected.
+- **New connection replaces data**: `slotConnected(true)` on successful connect calls `setActiveIED()` on all models with the new IED, replacing any stale data.
+
+## ScrollBar Overlap Prevention
+
+- **ListView ScrollBar overlaps content by default**: Qt Quick's `ScrollBar.vertical` renders on top of delegate content.
+- **Fix pattern**: Give the ScrollBar an `id` (e.g., `vScrollBar`), then set delegate and section delegate `width: listView.width - vScrollBar.width`. This keeps content out from under the scrollbar.
+- **Applied to**: `LN_AllOverviewList`, `DS_OverviewTable`. Other ListViews with ScrollBars should follow the same pattern.
+
+## LN Page Status Bar
+
+- **Status shows selected LN reference**: `lnsPageStatus()` returns `"ldName / lnName"` from `LN_AllOverviewTable::getSelectedReference()`, not the LD page's selection.
+- **Updates on selection change**: LN Page emits `sigLNSelectionChanged()` on every LN click, connected to `setPageStatusText(iedBackend.lnsPageStatus())` in main.qml.
+- **`m_selectedRow`** in `LN_AllOverviewTable` tracks the last selected row for reference display.
+
+## LN Filter
+
+- **`LN_AllOverviewTable::setFilter()`**: Case-insensitive filter on `"ldName/lnName"`. Triggers `beginResetModel()` → `rebuildFlatList()` → `endResetModel()`.
+- **TextField at bottom of LN list**: Anchored to parent bottom, ListView bottom anchored to filter top.
+
 ## C++ Conventions
 
 - **`m_` prefix** for member variables. No prefix for function parameters (removed `t_` prefix).

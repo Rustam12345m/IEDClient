@@ -33,6 +33,8 @@ FocusScope
 {
     id: rootID
 
+    signal sigLNSelectionChanged()
+
     function resizeColumnsOnPage() {
         // console.log("LN_Page: resizeColumnsOnPage")
         tableDO.resizeColumnsToContent()
@@ -71,8 +73,7 @@ FocusScope
                 anchors.fill: parent
 
                 onSigSelectedNewLN: function() {
-                    // console.log("LN_Page: Resize columns")
-                    // Qt.callLater(rootID.resizeColumnsOnPage)
+                    rootID.sigLNSelectionChanged()
                 }
             }
 

@@ -34,7 +34,7 @@ ModalDialog {
     property alias text: msgText.text
     property alias value: valueBox.text
 
-    signal sigResult(bool t_user, string t_ref, string t_value)
+    signal sigResult(bool user, string ref, string val)
 
     title: "Change Value"
     dialogWidth: 450
@@ -108,10 +108,10 @@ ModalDialog {
         return rootID.visible
     }
 
-    function open(t_ref, t_msg, t_value) {
-        rootID.doReference = t_ref
-        msgText.text = t_msg
-        valueBox.text = t_value
+    function open(ref, msg, val) {
+        rootID.doReference = ref
+        msgText.text = msg
+        valueBox.text = val
         rootID.open()
     }
 }

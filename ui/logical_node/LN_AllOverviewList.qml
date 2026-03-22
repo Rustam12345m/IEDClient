@@ -85,7 +85,7 @@ FocusScope
 
             property bool active: section !== "" && section === listView.activeSection
 
-            color: active ? VisualStyle.borderColor : VisualStyle.table.headerColor
+            color: active ? VisualStyle.table.selRowColor : VisualStyle.table.headerColor
             border.color: VisualStyle.table.rowBorderColor2
 
             clip: true
@@ -96,7 +96,7 @@ FocusScope
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 font.bold: parent.active
-                color: parent.active ? "#ffffff" : VisualStyle.table.headerTextColor
+                color: VisualStyle.table.headerTextColor
             }
         }
 
@@ -104,12 +104,11 @@ FocusScope
             id: delegateRoot
 
             property string sectionValue: model.section || ""
+            property bool selected: listView.currentIndex === index
 
             width: listView.width - vScrollBar.width
             height: defRowHeight
-            color: (listView.currentIndex === index)
-                   ? VisualStyle.table.selRowColor
-                   : VisualStyle.table.rowColor1
+            color: selected ? VisualStyle.borderColor : VisualStyle.table.rowColor1
             border.color: VisualStyle.table.rowBorderColor2
 
             RowLayout {
@@ -124,13 +123,13 @@ FocusScope
 
                     Text {
                         anchors.fill: parent
-                        horizontalAlignment: Text.AlignLeft
+                        horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                         elide: Text.ElideRight
                         leftPadding: defTextPadding
                         rightPadding: defTextPadding
                         text: model.name
-                        color: VisualStyle.textColor
+                        color: delegateRoot.selected ? "#ffffff" : VisualStyle.textColor
                     }
                 }
 
@@ -153,7 +152,7 @@ FocusScope
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
                             text: model.mod ? model.mod.text : "?"
-                            color: VisualStyle.textColor
+                            color: delegateRoot.selected ? "#ffffff" : VisualStyle.textColor
                         }
                     }
                 }
@@ -177,7 +176,7 @@ FocusScope
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
                             text: model.beh ? model.beh.text : "?"
-                            color: VisualStyle.textColor
+                            color: delegateRoot.selected ? "#ffffff" : VisualStyle.textColor
                         }
                     }
                 }
@@ -201,7 +200,7 @@ FocusScope
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
                             text: model.health ? model.health.text : "?"
-                            color: VisualStyle.textColor
+                            color: delegateRoot.selected ? "#ffffff" : VisualStyle.textColor
                         }
                     }
                 }

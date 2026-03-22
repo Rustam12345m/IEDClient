@@ -105,10 +105,10 @@ FocusScope {
                 palette.base:            VisualStyle.table.rowColor1
                 palette.text:            VisualStyle.textColor
 
-                columnWidthProvider: function(t_column) {
-                    var w = Globals.columnWidthCalculator(headerID, treeViewID, t_column)
-                    if (t_column === 0) w = Math.max(w, 180)       // Reference
-                    else if (t_column === 1) w = Math.max(w, 180)  // Value
+                columnWidthProvider: function(column) {
+                    var w = Globals.columnWidthCalculator(headerID, treeViewID, column)
+                    if (column === 0) w = Math.max(w, 180)       // Reference
+                    else if (column === 1) w = Math.max(w, 180)  // Value
                     return w
                 }
 

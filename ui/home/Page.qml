@@ -31,7 +31,7 @@ import "qrc:/common/"
 Item {
     id: rootID
 
-    signal sigConnectTo(var t_con)
+    signal sigConnectTo(var con)
 
     function slotSetCurrentDevice(ip, port) {
         ipAddrInput.text = ip

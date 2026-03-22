@@ -97,11 +97,11 @@ FocusScope
             onSelectionChanged: tableID.selVer++
         }
 
-        columnWidthProvider: function(t_column) {
-            var w = Globals.columnWidthCalculator(headerID, tableID, t_column)
-            if (t_column === 1) w = Math.max(w, 160)       // LD
-            else if (t_column === 2) w = Math.max(w, 160)  // Reference
-            else if (t_column === tableID.columns - 1) w = Math.max(w, 160) // Value
+        columnWidthProvider: function(column) {
+            var w = Globals.columnWidthCalculator(headerID, tableID, column)
+            if (column === 1) w = Math.max(w, 160)       // LD
+            else if (column === 2) w = Math.max(w, 160)  // Reference
+            else if (column === tableID.columns - 1) w = Math.max(w, 160) // Value
             return w
         }
 

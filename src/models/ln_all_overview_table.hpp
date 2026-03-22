@@ -51,6 +51,7 @@ namespace App::Models
 
         Q_INVOKABLE void selectLN(int row);
         Q_INVOKABLE void setFilter(const QString &text);
+        Q_INVOKABLE QString getSelectedReference() const;
 
         QHash<int, QByteArray> roleNames() const override;
         int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -79,6 +80,7 @@ namespace App::Models
         Core::IED::ptr              m_ied;
         QList<FlatEntry>            m_entries;
         QString                     m_filter;
+        int                         m_selectedRow = -1;
         QList<QMetaObject::Connection> m_connections;
     };
 }

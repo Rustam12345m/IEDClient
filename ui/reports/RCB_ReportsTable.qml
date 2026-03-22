@@ -72,8 +72,8 @@ FocusScope
         clip: true
         boundsBehavior: Flickable.StopAtBounds
 
-        columnWidthProvider: function(t_column) {
-            return Globals.columnWidthCalculator(headerID, tableID, t_column)
+        columnWidthProvider: function(column) {
+            return Globals.columnWidthCalculator(headerID, tableID, column)
         }
 
         selectionBehavior: TableView.SelectRows

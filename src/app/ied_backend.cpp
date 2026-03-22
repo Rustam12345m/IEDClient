@@ -391,11 +391,7 @@ namespace App
 
     QString IED_Backend::lnsPageStatus()
     {
-        auto ld = m_lnsModel->getLogicalDevice();
-        if (ld) {
-            return "LD: " + ld->getName();
-        }
-        return " - ";
+        return m_lnAllModel->getSelectedReference();
     }
 
     QString IED_Backend::dsPageStatus()

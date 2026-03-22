@@ -73,9 +73,9 @@ Item
         interactive: true
         boundsBehavior: Flickable.StopAtBounds
 
-        columnWidthProvider: function(t_column) {
-            var w = Globals.columnWidthCalculator(headerID, tableID, t_column)
-            if (t_column === tableID.columns - 1) w += 16
+        columnWidthProvider: function(column) {
+            var w = Globals.columnWidthCalculator(headerID, tableID, column)
+            if (column === tableID.columns - 1) w += 16
             return w
         }
 

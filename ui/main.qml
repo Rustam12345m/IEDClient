@@ -42,6 +42,8 @@ ApplicationWindow
     id: rootWindowID
     width: 1000
     height: 650
+
+    property bool hasConnected: false
     minimumWidth: 800
     minimumHeight: 600
 
@@ -277,7 +279,7 @@ ApplicationWindow
                 // color: VisualStyle.toolBarColor
                 // selectedColor: VisualStyle.tabBar.selColor
                 // unselectedColor: VisualStyle.tabBar.unselColor
-                showOnlyFirst: !presenter.isConnected
+                showOnlyFirst: !rootWindowID.hasConnected
 
                 model: ListModel {
                     ListElement { title: "HOME" }
@@ -383,6 +385,10 @@ ApplicationWindow
 
                         LN.Page {
                             id: lnPageID
+
+                            onSigLNSelectionChanged: {
+                                setPageStatusText(iedBackend.lnsPageStatus())
+                            }
 
                             onVisibleChanged: {
                                 if (visible) {
@@ -780,8 +786,8 @@ ApplicationWindow
             text: ""
         }
 
-        function showError(t_msg) {
-            errorMessageText.text = t_msg
+        function showError(msg) {
+            errorMessageText.text = msg
             open()
         }
     }
@@ -805,9 +811,6 @@ ApplicationWindow
 
     // Active Page + Panel
     function setActivePage(page) {
-        if (page !== Globals.Page.START && !presenter.isConnected) {
-            return
-        }
         mainStackID.currentIndex = page
         mainTabBarID.currentIndex = page
     }
@@ -914,22 +917,20 @@ ApplicationWindow
     }
 
     // Slots from backend
-    function slotOnProgress(t_perc, t_msg) {
+    function slotOnProgress(perc, msg) {
         if (!globalProgressBar.isActive()) {
             globalProgressBar.startLoad()
         }
-        globalProgressBar.updateLoad(t_perc, t_msg)
+        globalProgressBar.updateLoad(perc, msg)
     }
     function slotOnFinished() {
         globalProgressBar.finishLoad()
     }
-    function slotOnConnected(t_done) {
-        if (t_done) {
-            globalProgressBar.finishLoad()
+    function slotOnConnected(done) {
+        globalProgressBar.finishLoad()
+        if (done) {
+            rootWindowID.hasConnected = true
             rootWindowID.setActivePage(Globals.Page.LD)
-        } else {
-            globalProgressBar.finishLoad()
-            rootWindowID.setActivePage(Globals.Page.START)
         }
     }
     function slotStatusMessage() {

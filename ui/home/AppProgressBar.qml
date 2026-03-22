@@ -91,9 +91,9 @@ ModalDialog
     function finishLoad() {
         rootID.close()
     }
-    function updateLoad(t_perc, t_msg) {
-        progressBar.value = t_perc
-        progressValue.text = t_perc + " %"
-        progressText.text = t_msg
+    function updateLoad(perc, msg) {
+        progressBar.value = perc
+        progressValue.text = perc + " %"
+        progressText.text = msg
     }
 }

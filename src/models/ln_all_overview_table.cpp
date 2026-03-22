@@ -52,9 +52,19 @@ namespace App::Models
     void LN_AllOverviewTable::selectLN(int row)
     {
         if (row >= 0 && row < m_entries.size()) {
+            m_selectedRow = row;
             const auto &entry = m_entries[row];
             emit sigLNSelected(entry.ldIndex, entry.lnIndex);
         }
+    }
+
+    QString LN_AllOverviewTable::getSelectedReference() const
+    {
+        if (m_selectedRow >= 0 && m_selectedRow < m_entries.size()) {
+            const auto &entry = m_entries[m_selectedRow];
+            return entry.ldName + " / " + entry.ln->getName();
+        }
+        return " - ";
     }
 
     void LN_AllOverviewTable::setFilter(const QString &text)

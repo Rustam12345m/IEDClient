@@ -47,41 +47,41 @@ QtObject
     }
 
 
-    function setSelectedRow(t_tableID, t_row)
+    function setSelectedRow(tableID, row)
     {
-        if (t_tableID.currentRow === t_row) {
+        if (tableID.currentRow === row) {
             // return;
         }
 
-        let idx = t_tableID.model.index(t_row, 0);
-        t_tableID.selectionModel.setCurrentIndex(idx, ItemSelectionModel.Clear
+        let idx = tableID.model.index(row, 0);
+        tableID.selectionModel.setCurrentIndex(idx, ItemSelectionModel.Clear
                                                     | ItemSelectionModel.Select
                                                     | ItemSelectionModel.Rows);
-        t_tableID.forceActiveFocus()
+        tableID.forceActiveFocus()
     }
 
-    function toggleSelectedRow(t_tableID, t_row)
+    function toggleSelectedRow(tableID, row)
     {
-        let idx = t_tableID.model.index(t_row, 0);
-        t_tableID.selectionModel.setCurrentIndex(idx, ItemSelectionModel.Toggle
+        let idx = tableID.model.index(row, 0);
+        tableID.selectionModel.setCurrentIndex(idx, ItemSelectionModel.Toggle
                                                     | ItemSelectionModel.Rows);
-        t_tableID.forceActiveFocus()
+        tableID.forceActiveFocus()
     }
 
-    function resizeColumnsToContent(t_headerID, t_tableID)
+    function resizeColumnsToContent(headerID, tableID)
     {
-        for (let i=0;i<t_tableID.columns;i++) {
-            let w = Math.max(t_headerID.implicitColumnWidth(i), t_tableID.implicitColumnWidth(i))
-            t_tableID.setColumnWidth(i, w)
+        for (let i=0;i<tableID.columns;i++) {
+            let w = Math.max(headerID.implicitColumnWidth(i), tableID.implicitColumnWidth(i))
+            tableID.setColumnWidth(i, w)
         }
     }
 
-    function resizeColumnsToAvailableWidth(t_headerID, t_tableID)
+    function resizeColumnsToAvailableWidth(headerID, tableID)
     {
         var iw = []
         let sum = 0, i = 0
-        for (i=0;i<t_tableID.columns;i++) {
-            iw[i] = Math.max(t_headerID.implicitColumnWidth(i), t_tableID.implicitColumnWidth(i))
+        for (i=0;i<tableID.columns;i++) {
+            iw[i] = Math.max(headerID.implicitColumnWidth(i), tableID.implicitColumnWidth(i))
             if (iw[i] < 0 || isNaN(iw[i])) {
                 iw[i] = 1
             }
@@ -90,21 +90,21 @@ QtObject
         if (sum === 0) {
             sum = 1
         }
-        for (i=0;i<t_tableID.columns;i++) {
-            let w = t_tableID.width * iw[i] / sum
+        for (i=0;i<tableID.columns;i++) {
+            let w = tableID.width * iw[i] / sum
             if (w < 0 || isNaN(w)) {
                 w = 1
             }
-            t_tableID.setColumnWidth(i, w)
+            tableID.setColumnWidth(i, w)
         }
     }
 
-    function columnWidthFillSpace(t_headerID, t_tableID, t_column)
+    function columnWidthFillSpace(headerID, tableID, column)
     {
         var iw = []
         let sum = 0, i = 0
-        for (i=0;i<t_tableID.columns;i++) {
-            iw[i] = Math.max(t_headerID.implicitColumnWidth(i), t_tableID.implicitColumnWidth(i))
+        for (i=0;i<tableID.columns;i++) {
+            iw[i] = Math.max(headerID.implicitColumnWidth(i), tableID.implicitColumnWidth(i))
             if (iw[i] < 0 || isNaN(iw[i])) {
                 iw[i] = 1
             }
@@ -113,26 +113,26 @@ QtObject
         if (sum === 0) {
             sum = 1
         }
-        let w = (t_tableID.width * iw[t_column] / sum)
+        let w = (tableID.width * iw[column] / sum)
         if (w < 0 || isNaN(w)) {
             return 1
         }
         return w;
     }
 
-    function copyRowToClipboard(t_tableID) {
-        if (t_tableID.currentRow < 0) return
+    function copyRowToClipboard(tableID) {
+        if (tableID.currentRow < 0) return
         var parts = []
-        var cols = t_tableID.model.columnCount()
+        var cols = tableID.model.columnCount()
         for (var c = 0; c < cols; c++) {
-            var idx = t_tableID.model.index(t_tableID.currentRow, c)
-            parts.push(t_tableID.model.data(idx))
+            var idx = tableID.model.index(tableID.currentRow, c)
+            parts.push(tableID.model.data(idx))
         }
         presenter.copyToClipboard(parts.join(";"))
     }
 
-    function copySelectedRowsToClipboard(t_tableID) {
-        var indexes = t_tableID.selectionModel.selectedIndexes
+    function copySelectedRowsToClipboard(tableID) {
+        var indexes = tableID.selectionModel.selectedIndexes
         if (indexes.length === 0) return
 
         // Collect unique selected rows
@@ -143,20 +143,20 @@ QtObject
         var rows = Object.keys(rowSet).map(Number).sort(function(a, b) { return a - b })
 
         var lines = []
-        var cols = t_tableID.model.columnCount()
+        var cols = tableID.model.columnCount()
         for (var r = 0; r < rows.length; r++) {
             var parts = []
             for (var c = 0; c < cols; c++) {
-                var idx = t_tableID.model.index(rows[r], c)
-                parts.push(t_tableID.model.data(idx))
+                var idx = tableID.model.index(rows[r], c)
+                parts.push(tableID.model.data(idx))
             }
             lines.push(parts.join(";"))
         }
         presenter.copyToClipboard(lines.join("\n"))
     }
 
-    function selectedRowCount(t_tableID) {
-        var indexes = t_tableID.selectionModel.selectedIndexes
+    function selectedRowCount(tableID) {
+        var indexes = tableID.selectionModel.selectedIndexes
         if (indexes.length === 0) return 0
         var rowSet = {}
         for (var i = 0; i < indexes.length; i++) {
@@ -165,15 +165,15 @@ QtObject
         return Object.keys(rowSet).length
     }
 
-    function columnWidthCalculator(t_headerID, t_tableID, t_column)
+    function columnWidthCalculator(headerID, tableID, column)
     {
-        let lw = t_tableID.columnWidth(t_column)
-        let hw = t_headerID.implicitColumnWidth(t_column)
-        let cw = t_tableID.implicitColumnWidth(t_column)
+        let lw = tableID.columnWidth(column)
+        let hw = headerID.implicitColumnWidth(column)
+        let cw = tableID.implicitColumnWidth(column)
         let nw = Math.max(hw, cw, 40)
         nw = Math.round(nw)
         if ((nw != lw) && (lw != -1)) {
-            Qt.callLater(t_tableID.forceLayout)
+            Qt.callLater(tableID.forceLayout)
         }
         return nw
     }

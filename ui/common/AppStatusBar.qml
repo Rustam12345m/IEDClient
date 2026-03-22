@@ -76,7 +76,6 @@ Rectangle
         Text {
             Layout.fillWidth: false
             Layout.alignment: Qt.AlignVCenter
-            Layout.preferredWidth: 200
 
             id: pageStatusTextID
             height: parent.height

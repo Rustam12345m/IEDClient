@@ -57,24 +57,24 @@ Item
     function resizeColumnsOnPage() {
         Globals.resizeColumnsToContent(headerID, tableID)
     }
-    function getFilename(t_row) {
-        let idx = tableID.model.index(t_row, 2)
+    function getFilename(row) {
+        let idx = tableID.model.index(row, 2)
         return tableID.model.data(idx, "display")
     }
-    function getFileSize(t_row) {
-        let idx = tableID.model.index(t_row, 3)
+    function getFileSize(row) {
+        let idx = tableID.model.index(row, 3)
         return tableID.model.data(idx, "sort_value")
     }
-    function cmdDownloadFile(t_row) {
-        downloadingRow = t_row
+    function cmdDownloadFile(row) {
+        downloadingRow = row
         downloadProgress = 0
-        Globals.setSelectedRow(tableID, t_row)
-        fsBackend.downloadFile(getFilename(t_row), getFileSize(t_row))
+        Globals.setSelectedRow(tableID, row)
+        fsBackend.downloadFile(getFilename(row), getFileSize(row))
     }
-    function cmdRemoveFile(t_row) {
-        // console.log("Control: Remove file N" + t_row)
+    function cmdRemoveFile(row) {
+        // console.log("Control: Remove file N" + row)
 
-        fsBackend.removeFile(getFilename(t_row), t_row)
+        fsBackend.removeFile(getFilename(row), row)
     }
 
     // Header for Table below with columns for Files
@@ -122,8 +122,8 @@ Item
             */
         }
 
-        columnWidthProvider: function(t_column) {
-            return Globals.columnWidthCalculator(headerID, tableID, t_column)
+        columnWidthProvider: function(column) {
+            return Globals.columnWidthCalculator(headerID, tableID, column)
         }
 
         delegate: DelegateChooser {
@@ -136,12 +136,12 @@ Item
                              ? rootID.downloadProgress
                              : (rootID.completedRows[row] !== undefined ? rootID.completedRows[row] : 0)
 
-                    onSigDownloadFile: function(t_row) {
-                        rootID.cmdDownloadFile(t_row)
+                    onSigDownloadFile: function(row) {
+                        rootID.cmdDownloadFile(row)
                     }
-                    onSigRemoveFile: function(t_row) {
-                        Globals.setSelectedRow(tableID, t_row)
-                        deleteConfirmDialog.askDelete(t_row)
+                    onSigRemoveFile: function(row) {
+                        Globals.setSelectedRow(tableID, row)
+                        deleteConfirmDialog.askDelete(row)
                     }
                 }
             }
@@ -151,11 +151,11 @@ Item
                     selected: (tableID.currentRow == row)
                     text: model.display
 
-                    onSigClick: function(t_row) {
-                        Globals.setSelectedRow(tableID, t_row)
+                    onSigClick: function(row) {
+                        Globals.setSelectedRow(tableID, row)
                     }
-                    onSigDoubleClick: function(t_row) {
-                        rootID.cmdDownloadFile(t_row)
+                    onSigDoubleClick: function(row) {
+                        rootID.cmdDownloadFile(row)
                     }
                 }
             }
@@ -211,9 +211,9 @@ Item
         dialogWidth: 420
         dialogHeight: 180
 
-        function askDelete(t_row) {
-            pendingRow = t_row
-            deleteFileNameText.text = "Delete \"" + getFilename(t_row) + "\"?"
+        function askDelete(row) {
+            pendingRow = row
+            deleteFileNameText.text = "Delete \"" + getFilename(row) + "\"?"
             open()
         }
 
