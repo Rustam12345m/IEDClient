@@ -187,3 +187,27 @@ Rules and patterns established during development that must be maintained.
 - **`Q_INVOKABLE`** for methods called from QML.
 - **No `qDebug()` in production code**: All debug output commented out. Use event log for user-visible messages.
 - **Never build without checking**: Do not run `./ci/build_local.sh` unless explicitly asked by the user.
+
+## Watchlist Persistence
+
+- **Watchlist is persisted per device** in `iedclient_config.xml` inside a `<watchlist>` sub-element of each `<device>`:
+  ```xml
+  <device ip="..." port="..." ...>
+      <watchlist>
+          <node ref="LD0/LLN0.Mod" fc="ST"/>
+      </watchlist>
+  </device>
+  ```
+- **Save on every change**: `WatchlistModel::sigItemsChanged` → `MainPresenter::slotSaveWatchlist()` → `AppSettings::saveWatchlistForDevice()`. Fires on add, remove, and clear.
+- **Load on connect**: `MainPresenter::slotCmdEvent(FINISH, ok)` calls `getWatchlistForDevice()` → `IED_Backend::loadWatchlist()`.
+- **No infinite save loop**: `loadWatchlist()` uses `WatchlistModel::setItems()` which does NOT emit `sigItemsChanged`.
+- **`putConnectionToConfig` preserves watchlist**: When deduplicating a device entry, the existing watchlist is copied to the new entry before the old one is erased.
+
+## Dataset Table
+
+- **FC column displays values in brackets**: The FC column shows `[FC]` (e.g., `[ST]`), not bare `ST`. Reference and FC remain separate columns.
+
+## Global F5 Refresh
+
+- **`updateActivePage()` must handle all page types**: Every `Globals.Page.*` value needs a case in the switch. `IED_TREE` calls `iedBackend.updateWatchlistValues()`.
+- **Global `Shortcut` intercepts F5 before local `Keys.onPressed`**: Page-level F5 handlers are unreachable — all F5 logic must go through `updateActivePage()` in `main.qml`.

@@ -33,6 +33,7 @@ namespace App::Models
             DS_INDEX_COLUMN = 0,
             DS_LD_COLUMN,
             DS_REF_COLUMN,
+            DS_FC_COLUMN,
             DS_VALUE_COLUMN,
 
             COLUMN_COUNT
