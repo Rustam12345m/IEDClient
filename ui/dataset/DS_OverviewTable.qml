@@ -69,7 +69,7 @@ FocusScope
 
         section.property: "section"
         section.delegate: Rectangle {
-            width: listViewID.width
+            width: listViewID.width - vScrollBar.width
             height: defRowHeight
             color: VisualStyle.table.headerColor
             border.color: VisualStyle.table.rowBorderColor2
@@ -85,7 +85,7 @@ FocusScope
         }
 
         delegate: Item {
-            width: listViewID.width
+            width: listViewID.width - vScrollBar.width
             height: defRowHeight
 
             Rectangle {
@@ -169,6 +169,7 @@ FocusScope
         }
 
         ScrollBar.vertical: ScrollBar {
+            id: vScrollBar
             policy: ScrollBar.AsNeeded
             active: true
 

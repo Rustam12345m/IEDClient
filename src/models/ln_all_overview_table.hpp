@@ -50,6 +50,7 @@ namespace App::Models
         void setActiveIED(Core::IED::ptr ied);
 
         Q_INVOKABLE void selectLN(int row);
+        Q_INVOKABLE void setFilter(const QString &text);
 
         QHash<int, QByteArray> roleNames() const override;
         int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -77,6 +78,7 @@ namespace App::Models
 
         Core::IED::ptr              m_ied;
         QList<FlatEntry>            m_entries;
+        QString                     m_filter;
         QList<QMetaObject::Connection> m_connections;
     };
 }

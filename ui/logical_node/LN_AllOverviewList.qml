@@ -42,7 +42,13 @@ FocusScope
     ListView {
         id: listView
 
-        anchors.fill: parent
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
+            bottom: lnFilterInput.top
+            bottomMargin: 2
+        }
         boundsBehavior: Flickable.StopAtBounds
         clip: true
         focus: true
@@ -74,7 +80,7 @@ FocusScope
         section.delegate: Rectangle {
             required property string section
 
-            width: listView.width
+            width: listView.width - vScrollBar.width
             height: defRowHeight
 
             property bool active: section !== "" && section === listView.activeSection
@@ -99,7 +105,7 @@ FocusScope
 
             property string sectionValue: model.section || ""
 
-            width: listView.width
+            width: listView.width - vScrollBar.width
             height: defRowHeight
             color: (listView.currentIndex === index)
                    ? VisualStyle.table.selRowColor
@@ -118,7 +124,7 @@ FocusScope
 
                     Text {
                         anchors.fill: parent
-                        horizontalAlignment: Text.AlignRight
+                        horizontalAlignment: Text.AlignLeft
                         verticalAlignment: Text.AlignVCenter
                         elide: Text.ElideRight
                         leftPadding: defTextPadding
@@ -210,6 +216,7 @@ FocusScope
         }
 
         ScrollBar.vertical: ScrollBar {
+            id: vScrollBar
             policy: ScrollBar.AsNeeded
             active: true
             onActiveChanged: {
@@ -223,6 +230,23 @@ FocusScope
             if (event.key === Qt.Key_C && (event.modifiers & Qt.ControlModifier)) {
                 event.accepted = true
             }
+        }
+    }
+
+    TextField {
+        id: lnFilterInput
+
+        anchors {
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+        }
+        height: 28
+        placeholderText: "Filter LN..."
+        font.pixelSize: 12
+
+        onTextChanged: {
+            listView.model.setFilter(text)
         }
     }
 }

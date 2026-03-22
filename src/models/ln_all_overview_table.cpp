@@ -57,6 +57,14 @@ namespace App::Models
         }
     }
 
+    void LN_AllOverviewTable::setFilter(const QString &text)
+    {
+        m_filter = text.trimmed();
+        beginResetModel();
+        rebuildFlatList();
+        endResetModel();
+    }
+
     QHash<int, QByteArray> LN_AllOverviewTable::roleNames() const
     {
         return {
@@ -136,6 +144,12 @@ namespace App::Models
             for (size_t lnIdx = 0; lnIdx < ld->getItemCount(); lnIdx++) {
                 auto ln = ld->getItem<Core::LogicalNode>(lnIdx);
                 if (ln) {
+                    if (!m_filter.isEmpty()) {
+                        QString fullName = ldName + "/" + ln->getName();
+                        if (!fullName.contains(m_filter, Qt::CaseInsensitive)) {
+                            continue;
+                        }
+                    }
                     m_entries.append({
                         static_cast<int>(ldIdx),
                         static_cast<int>(lnIdx),

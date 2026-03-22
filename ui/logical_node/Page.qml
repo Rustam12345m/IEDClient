@@ -44,10 +44,18 @@ FocusScope
 
         anchors.fill: parent
 
-        // Delimiter
-        handle: SplitDelimeter {
+        handle: Rectangle {
+            implicitWidth: VisualStyle.delimeterWidth
             height: splitView.height
-            pressed: SplitHandle.pressed
+            color: SplitHandle.pressed ? "#707070" : VisualStyle.borderColor
+
+            Rectangle {
+                anchors.centerIn: parent
+                width: 2
+                height: 40
+                radius: 1
+                color: SplitHandle.pressed ? "white" : "#707070"
+            }
         }
 
         // Area for LogicalNode's list (all LDs)
@@ -90,8 +98,6 @@ FocusScope
                     top: parent.top
                     bottom: parent.bottom
                     left: parent.left
-                    // right: parent.right
-                    // bottom: rectLnViewTabBar.top
                     right: rectLnViewTabBar.left
                 }
 
