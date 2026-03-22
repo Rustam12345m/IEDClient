@@ -19,29 +19,17 @@
  *  See COPYING file for the complete license text.
  * */
 
-#pragma once
+#include "update_watchlist_cmd.hpp"
 
-#include "cmd/interface/ied_state_api.hpp"
-
-namespace Libiec61850
+namespace Cmd
 {
-    class ApiAdapter;
-
-    class IED_StateAPI_Impl : public Cmd::Interface::IED_StateAPI
+    void UpdateWatchlist_Cmd::execute(Cmd::Interface::IEC61850_API::ptr api)
     {
-    public:
-        IED_StateAPI_Impl(ApiAdapter &api) : m_api(api) {}
-        ~IED_StateAPI_Impl() override = default;
+        QVariantList results = api->state().readValuesByRef(m_refs, m_fcs);
 
-        Core::ModelStateUpdater::ptr getStatusForAllLD(Core::DataModel::ptr model) override;
-        Core::ModelStateUpdater::ptr getStatusForAllLN(Core::LogicalDevice::ptr ld) override;
-
-        Core::ModelStateUpdater::ptr getValsForLN(Core::LogicalNode::ptr ln) override;
-        Core::ModelStateUpdater::ptr getValsForDS(Core::DataSet::ptr ds) override;
-
-        QVariantList readValuesByRef(const QStringList &refs, const QStringList &fcs) override;
-
-    private:
-        ApiAdapter&   m_api;
-    };
-};
+        emit sigValuesRead(results);
+        emit sigCmdEvent(CmdEvent::FinishEvent("",
+                QString("Watchlist: %1 values read").arg(results.size()),
+                true));
+    }
+}

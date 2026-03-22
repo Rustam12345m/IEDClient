@@ -50,6 +50,8 @@ namespace App
         Models::HistConTable*   getLastConn_Model() const { return m_lastConnModel; }
 
         void saveCredsToHistory(const Cmd::IEDCredentials &cred);
+        WatchlistRefs getWatchlistForDevice(const Cmd::IEDCredentials &creds);
+        void saveWatchlistForDevice(const Cmd::IEDCredentials &creds, const WatchlistRefs &wl);
 
     signals:
         void sigNewStatusMsg();

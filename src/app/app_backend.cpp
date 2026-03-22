@@ -62,4 +62,14 @@ namespace App
     {
         m_settings.putConnectionToConfig(cred, m_con.m_ied->model().getName());
     }
+
+    WatchlistRefs AppBackend::getWatchlistForDevice(const Cmd::IEDCredentials &creds)
+    {
+        return m_settings.getWatchlistForDevice(creds);
+    }
+
+    void AppBackend::saveWatchlistForDevice(const Cmd::IEDCredentials &creds, const WatchlistRefs &wl)
+    {
+        m_settings.saveWatchlistForDevice(creds, wl);
+    }
 }

@@ -21,27 +21,30 @@
 
 #pragma once
 
-#include "cmd/interface/ied_state_api.hpp"
+#include "cmd_interface.hpp"
 
-namespace Libiec61850
+namespace Cmd
 {
-    class ApiAdapter;
-
-    class IED_StateAPI_Impl : public Cmd::Interface::IED_StateAPI
+    class UpdateWatchlist_Cmd : public CmdInterface
     {
+        Q_OBJECT
     public:
-        IED_StateAPI_Impl(ApiAdapter &api) : m_api(api) {}
-        ~IED_StateAPI_Impl() override = default;
+        UpdateWatchlist_Cmd(const QStringList &refs, const QStringList &fcs)
+            : m_refs(refs), m_fcs(fcs)
+        {
+        }
 
-        Core::ModelStateUpdater::ptr getStatusForAllLD(Core::DataModel::ptr model) override;
-        Core::ModelStateUpdater::ptr getStatusForAllLN(Core::LogicalDevice::ptr ld) override;
+        void execute(Cmd::Interface::IEC61850_API::ptr api) override;
 
-        Core::ModelStateUpdater::ptr getValsForLN(Core::LogicalNode::ptr ln) override;
-        Core::ModelStateUpdater::ptr getValsForDS(Core::DataSet::ptr ds) override;
+        static auto create(const QStringList &refs, const QStringList &fcs) {
+            return QSharedPointer<UpdateWatchlist_Cmd>::create(refs, fcs);
+        }
 
-        QVariantList readValuesByRef(const QStringList &refs, const QStringList &fcs) override;
+    signals:
+        void sigValuesRead(QVariantList results);
 
     private:
-        ApiAdapter&   m_api;
+        QStringList m_refs;
+        QStringList m_fcs;
     };
-};
+}

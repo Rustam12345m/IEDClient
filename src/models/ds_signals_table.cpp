@@ -54,9 +54,6 @@ namespace App::Models
         case DS_REF_COLUMN: {
             return QVariant("Reference");
         }
-        case DS_FC_COLUMN: {
-            return QVariant("FC");
-        }
         case DS_VALUE_COLUMN: {
             return QVariant("Value");
         }
@@ -102,10 +99,8 @@ namespace App::Models
                 case DS_REF_COLUMN: {
                     QString name = dsItem->getName();
                     int sep = name.indexOf('/');
-                    return QVariant(sep >= 0 ? name.mid(sep + 1) : name);
-                }
-                case DS_FC_COLUMN: {
-                    return QVariant(dsItem->fc());
+                    QString ref = sep >= 0 ? name.mid(sep + 1) : name;
+                    return QVariant(ref + "[" + dsItem->fc() + "]");
                 }
                 case DS_VALUE_COLUMN: {
                     auto item = dsItem->item();

@@ -29,6 +29,7 @@
 #include "cmd/set_goose_enable_cmd.hpp"
 #include "cmd/set_sv_enable_cmd.hpp"
 #include "cmd/mms_dump_cmd.hpp"
+#include "cmd/update_watchlist_cmd.hpp"
 #include "models/sort_proxy_model.hpp"
 #include "models/ld_overview_grid.hpp"
 #include "models/ld_properties_table.hpp"
@@ -44,6 +45,8 @@
 #include "models/reports_table.hpp"
 #include "models/goose_overview_table.hpp"
 #include "models/sv_overview_table.hpp"
+#include "models/watchlist_model.hpp"
+#include "config/conf_connection_info.hpp"
 
 namespace App
 {
@@ -74,6 +77,15 @@ namespace App
         Q_INVOKABLE QAbstractTableModel* getGOSE_ComModel() const { return m_gooseComModel; }
         Q_INVOKABLE QAbstractTableModel* getSV_ComModel()   const { return m_svComModel; }
         Q_INVOKABLE QAbstractTableModel* getReportsModel()  const { return m_reportsModel; }
+        Q_INVOKABLE QAbstractTableModel* getWatchlistModel() const { return m_watchlistModel; }
+        Q_INVOKABLE void addToWatchlist(const QString &ref, const QString &fc,
+                                        const QString &value = " - ");
+        Q_INVOKABLE void addTreeItemToWatchlist(const QModelIndex &proxyIndex);
+        Q_INVOKABLE void removeFromWatchlist(int row);
+        Q_INVOKABLE void clearWatchlist();
+        Q_INVOKABLE void updateWatchlistValues();
+        void loadWatchlist(const WatchlistRefs &items);
+        Models::WatchlistModel* watchlistModel() const { return m_watchlistModel; }
 
         // CMD
         Q_INVOKABLE void updateLDs_Status();
@@ -142,5 +154,6 @@ namespace App
         Models::ReportsTable*        m_reportsModel  = nullptr;
         Models::IED_ModelTree*       m_iedTreeModel  = nullptr;
         Models::TreeFilterProxy*     m_iedTreeFilter = nullptr;
+        Models::WatchlistModel*      m_watchlistModel = nullptr;
     };
 }

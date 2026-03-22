@@ -913,6 +913,10 @@ ApplicationWindow
             setPageStatusText(iedBackend.rcbPageStatus())
             break;
         }
+        case Globals.Page.IED_TREE: {
+            iedBackend.updateWatchlistValues()
+            break;
+        }
         }
     }
 

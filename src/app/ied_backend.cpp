@@ -22,6 +22,8 @@
 #include "ied_backend.hpp"
 #include "cmd/set_rcb_values_cmd.hpp"
 #include "core/dataset.hpp"
+#include "core/data_attribute.hpp"
+#include "core/data_object.hpp"
 
 #include <QCoreApplication>
 
@@ -48,6 +50,7 @@ namespace App
         m_iedTreeModel  = new Models::IED_ModelTree(this, m_con.m_ied);
         m_iedTreeFilter = new Models::TreeFilterProxy(this);
         m_iedTreeFilter->setSourceModel(m_iedTreeModel);
+        m_watchlistModel = new Models::WatchlistModel(this);
 
         m_sortDOModel = new Models::SortProxyModel(this);
         m_sortDOModel->setSourceModel(m_lnStateModel);
@@ -379,6 +382,94 @@ namespace App
 
         connect(cmd.get(), &Cmd::ControlOperate_Cmd::sigControlResult,
                 this, &IED_Backend::sigControlResult, Qt::QueuedConnection);
+        putCmdToQueue(cmd);
+    }
+
+    // ── Watchlist ─────────────────────────────────────────────────
+
+    void IED_Backend::addToWatchlist(const QString &ref, const QString &fc, const QString &value)
+    {
+        m_watchlistModel->addItem(ref, fc, value);
+    }
+
+    void IED_Backend::removeFromWatchlist(int row)
+    {
+        m_watchlistModel->removeItem(row);
+    }
+
+    void IED_Backend::clearWatchlist()
+    {
+        m_watchlistModel->clear();
+    }
+
+    void IED_Backend::loadWatchlist(const WatchlistRefs &items)
+    {
+        QList<Models::WatchlistModel::WatchItem> wItems;
+        for (const auto &[ref, fc] : items) {
+            wItems.append({ref, fc, " - "});
+        }
+        m_watchlistModel->setItems(wItems);
+    }
+
+    static bool isDataObjectOrBelow(Core::ModelItem *item)
+    {
+        for (auto *p = item; p; p = p->getParent()) {
+            if (dynamic_cast<Core::DataObject*>(p))
+                return true;
+        }
+        return false;
+    }
+
+    static QString findFC(Core::ModelItem *item)
+    {
+        for (auto *p = item; p; p = p->getParent()) {
+            auto *da = dynamic_cast<Core::DataAttribute*>(p);
+            if (da) return da->fcStr();
+        }
+        return {};
+    }
+
+    void IED_Backend::addTreeItemToWatchlist(const QModelIndex &proxyIndex)
+    {
+        auto srcIdx = m_iedTreeFilter->mapToSource(proxyIndex);
+        if (!srcIdx.isValid()) return;
+
+        auto *item = static_cast<Core::ModelItem*>(srcIdx.internalPointer());
+        if (!item || !isDataObjectOrBelow(item)) return;
+
+        if (item->getItemCount() == 0) {
+            m_watchlistModel->addItem(item->getReference(), findFC(item), item->getValue());
+        } else {
+            std::function<void(Core::ModelItem*)> addLeaves = [&](Core::ModelItem *node) {
+                if (node->getItemCount() == 0) {
+                    m_watchlistModel->addItem(node->getReference(), findFC(node), node->getValue());
+                } else {
+                    for (auto &child : node->getItemList()) {
+                        addLeaves(child.get());
+                    }
+                }
+            };
+            addLeaves(item);
+        }
+    }
+
+    void IED_Backend::updateWatchlistValues()
+    {
+        auto items = m_watchlistModel->getItems();
+        if (items.isEmpty()) return;
+
+        QStringList refs, fcs;
+        for (const auto &item : items) {
+            refs.append(item.ref);
+            fcs.append(item.fc);
+        }
+
+        auto cmd = Cmd::UpdateWatchlist_Cmd::create(refs, fcs);
+        connect(cmd.get(), &Cmd::UpdateWatchlist_Cmd::sigValuesRead,
+                this, [this](QVariantList results) {
+                    m_watchlistModel->updateValues(results);
+                }, Qt::QueuedConnection);
+
         putCmdToQueue(cmd);
     }
 

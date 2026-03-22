@@ -23,6 +23,8 @@
 
 #include "core/data_model.hpp"
 
+#include <QVariantList>
+
 namespace Cmd::Interface
 {
     class IED_StateAPI
@@ -35,5 +37,7 @@ namespace Cmd::Interface
 
         virtual Core::ModelStateUpdater::ptr getValsForLN(Core::LogicalNode::ptr ln) = 0;
         virtual Core::ModelStateUpdater::ptr getValsForDS(Core::DataSet::ptr ds) = 0;
+
+        virtual QVariantList readValuesByRef(const QStringList &refs, const QStringList &fcs) = 0;
     };
 }

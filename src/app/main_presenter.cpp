@@ -31,6 +31,9 @@ namespace App
         m_iedBackend(m_con, m_events), m_fsBackend(m_con, m_events)
     {
         connect(&m_con, &IEDConContainer::sigConClosed, this, &MainPresenter::slotConClosed);
+
+        connect(m_iedBackend.watchlistModel(), &Models::WatchlistModel::sigItemsChanged,
+                this, &MainPresenter::slotSaveWatchlist);
     }
 
     void MainPresenter::setQmlContextMembers(QQmlContext *context)
@@ -119,6 +122,8 @@ namespace App
 
             if (ev.m_result) {
                 m_appBackend.saveCredsToHistory(m_con.m_cred);
+                auto wl = m_appBackend.getWatchlistForDevice(m_con.m_cred);
+                m_iedBackend.loadWatchlist(wl);
             } else {
                 emit sigConnectionError(ev.m_msg);
             }
@@ -132,6 +137,19 @@ namespace App
             break;
         }
         }
+    }
+
+    void MainPresenter::slotSaveWatchlist()
+    {
+        if (!m_con.isConnected()) {
+            return;
+        }
+        auto items = m_iedBackend.watchlistModel()->getItems();
+        WatchlistRefs wl;
+        for (const auto &item : items) {
+            wl.append({item.ref, item.fc});
+        }
+        m_appBackend.saveWatchlistForDevice(m_con.m_cred, wl);
     }
 
     void MainPresenter::slotConClosed()

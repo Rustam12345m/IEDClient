@@ -56,6 +56,7 @@ namespace App
     public slots:
         void slotCmdEvent(Cmd::CmdEvent ev);
         void slotConClosed();
+        void slotSaveWatchlist();
 
     signals:
         void sigCmdProgress(int perc, QString msg);

@@ -58,6 +58,9 @@ set(SOURCES
 
     tree_filter_proxy.hpp
     tree_filter_proxy.cpp
+
+    watchlist_model.hpp
+    watchlist_model.cpp
 )
 
 qt_add_library(models_lib STATIC ${SOURCES})

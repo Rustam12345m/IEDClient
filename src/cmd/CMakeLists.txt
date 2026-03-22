@@ -65,6 +65,9 @@ set(SOURCES
 
     mms_dump_cmd.hpp
     mms_dump_cmd.cpp
+
+    update_watchlist_cmd.hpp
+    update_watchlist_cmd.cpp
 )
 
 qt_add_library(cmd_lib STATIC ${SOURCES})

@@ -74,6 +74,8 @@ namespace UnitTests
                     (Core::LogicalNode::ptr ln), (override));
         MOCK_METHOD(Core::ModelStateUpdater::ptr, getValsForDS,
                     (Core::DataSet::ptr ds), (override));
+        MOCK_METHOD(QVariantList, readValuesByRef,
+                    (const QStringList &refs, const QStringList &fcs), (override));
     };
 
     class MockModelAPI : public Cmd::Interface::IED_ModelAPI

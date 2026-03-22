@@ -22,10 +22,14 @@
 #pragma once
 
 #include <QString>
+#include <QList>
+#include <QPair>
 #include "cmd/ied_credentials.hpp"
 
 namespace App
 {
+    typedef QList<QPair<QString,QString>> WatchlistRefs;
+
     class ConfConnectionInfo
     {
     public:
@@ -42,6 +46,9 @@ namespace App
         const auto ied() const { return m_iedName; }
         const auto date() const { return m_date; }
 
+        const WatchlistRefs& watchlist() const { return m_watchlist; }
+        void setWatchlist(const WatchlistRefs &wl) { m_watchlist = wl; }
+
         bool operator==(const ConfConnectionInfo &right) const {
             return m_creds == right.m_creds;
         }
@@ -50,5 +57,6 @@ namespace App
         Cmd::IEDCredentials m_creds;
         QString m_iedName;
         QString m_date;
+        WatchlistRefs m_watchlist;
     };
 }

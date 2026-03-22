@@ -21,6 +21,7 @@
 
 #include "ied_state_api_impl.hpp"
 #include "libiec61850_adapter.hpp"
+#include "core/data_attribute.hpp"
 
 #include <QDateTime>
 #include <algorithm>
@@ -234,6 +235,78 @@ namespace Libiec61850
             getValuesForDataObject(item, vals, m_api.m_libConn);
         }
         return vals;
+    }
+
+    static QString mmsValueToString(MmsValue *mmsValue)
+    {
+        if (!mmsValue) return {};
+
+        switch (MmsValue_getType(mmsValue)) {
+        case MMS_BOOLEAN:
+            return MmsValue_getBoolean(mmsValue) ? "True" : "False";
+        case MMS_INTEGER:
+            return QString::number((long long)MmsValue_toInt64(mmsValue));
+        case MMS_UNSIGNED:
+            return QString::number(MmsValue_toUint32(mmsValue));
+        case MMS_FLOAT:
+            return QString::number(MmsValue_toFloat(mmsValue));
+        case MMS_VISIBLE_STRING:
+        case MMS_STRING: {
+            char tmp[256] = {0};
+            strncpy(tmp, MmsValue_toString(mmsValue), 255);
+            return QString::fromLocal8Bit(tmp);
+        }
+        case MMS_UTC_TIME:
+            return convertTimestampMsToUserString(MmsValue_getUtcTimeInMs(mmsValue));
+        case MMS_BINARY_TIME:
+            return convertTimestampMsToUserString(MmsValue_getBinaryTimeAsUtcMs(mmsValue));
+        case MMS_BIT_STRING: {
+            uint64_t value = 0;
+            int size = MmsValue_getBitStringSize(mmsValue);
+            if (size < (int)(sizeof(value) * 8)) {
+                for (int i = 0; i < size; i++)
+                    value |= MmsValue_getBitStringBit(mmsValue, i) ? (1ULL << i) : 0;
+            }
+            return QString::number((qulonglong)value, 2);
+        }
+        case MMS_ARRAY:
+        case MMS_STRUCTURE: {
+            char tmp[1024] = {0};
+            MmsValue_printToBuffer(mmsValue, tmp, 1024);
+            return QString::fromLocal8Bit(tmp);
+        }
+        default: {
+            char tmp[1024] = {0};
+            MmsValue_printToBuffer(mmsValue, tmp, 1024);
+            return QString::fromLocal8Bit(tmp);
+        }
+        }
+    }
+
+    QVariantList IED_StateAPI_Impl::readValuesByRef(const QStringList &refs, const QStringList &fcs)
+    {
+        QVariantList results;
+        if (!m_api.isConnected()) return results;
+
+        for (int i = 0; i < refs.size(); i++) {
+            auto ref = refs[i].toStdString();
+            auto fc = (FunctionalConstraint)Core::DataAttribute::fcStringToNum(
+                i < fcs.size() ? fcs[i] : "ST");
+
+            IedClientError retval = IED_ERROR_OK;
+            MmsValue *rawValue = IedConnection_readObject(m_api.m_libConn, &retval, ref.data(), fc);
+
+            QVariantMap entry;
+            entry["ref"] = refs[i];
+            if (retval == IED_ERROR_OK && rawValue) {
+                entry["value"] = mmsValueToString(rawValue);
+                MmsValue_delete(rawValue);
+            } else {
+                entry["value"] = QString("error %1").arg((int)retval);
+            }
+            results.append(entry);
+        }
+        return results;
     }
 
     Core::ModelStateUpdater::ptr IED_StateAPI_Impl::getValsForDS(Core::DataSet::ptr ds)

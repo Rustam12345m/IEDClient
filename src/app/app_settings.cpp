@@ -70,6 +70,7 @@ namespace App
         auto devs = getConnectionList();
         for (auto it=devs.begin();it!=devs.end();) {
             if (*it == newCon) {
+                newCon.setWatchlist(it->watchlist());
                 it = devs.erase(it);
             } else {
                 ++it;
@@ -86,6 +87,31 @@ namespace App
         writeConfigFile(m_confFilepath, list);
     }
 
+    WatchlistRefs AppSettings::getWatchlistForDevice(const Cmd::IEDCredentials &creds)
+    {
+        auto devs = getConnectionList();
+        for (const auto &d : devs) {
+            ConfConnectionInfo tmp(creds, "", "");
+            if (d == tmp) {
+                return d.watchlist();
+            }
+        }
+        return {};
+    }
+
+    void AppSettings::saveWatchlistForDevice(const Cmd::IEDCredentials &creds, const WatchlistRefs &wl)
+    {
+        auto devs = getConnectionList();
+        for (auto &d : devs) {
+            ConfConnectionInfo tmp(creds, "", "");
+            if (d == tmp) {
+                d.setWatchlist(wl);
+                writeConfigFile(m_confFilepath, devs);
+                return;
+            }
+        }
+    }
+
     int AppSettings::readConfigFile(const QString &filepath, lisHistConnInfo &list)
     {
         QFile conf(filepath);
@@ -99,14 +125,6 @@ namespace App
             if (token == QXmlStreamReader::StartElement) {
                 QString name = xml.name().toString();
 
-                if (name == "main") {
-                    // 
-                } else if (name == "history_connections") {
-                    // 
-                } else if (name == "history_scl_files") {
-                    // 
-                }
-
                 if (name == "device") {
                     Cmd::IEDCredentials cred(
                         xml.attributes().value("ip").toString(),
@@ -117,7 +135,25 @@ namespace App
 
                     QString iedName = xml.attributes().value("ied").toString();
                     QString date = xml.attributes().value("date").toString();
-                    list.push_front(App::ConfConnectionInfo(cred, iedName, date));
+
+                    App::ConfConnectionInfo info(cred, iedName, date);
+
+                    WatchlistRefs wl;
+                    while (!xml.atEnd()) {
+                        xml.readNext();
+                        if (xml.isEndElement() && xml.name().toString() == "device") {
+                            break;
+                        }
+                        if (xml.isStartElement() && xml.name().toString() == "node") {
+                            QString ref = xml.attributes().value("ref").toString();
+                            QString fc = xml.attributes().value("fc").toString();
+                            if (!ref.isEmpty()) {
+                                wl.append({ref, fc});
+                            }
+                        }
+                    }
+                    info.setWatchlist(wl);
+                    list.push_front(info);
                 }
             }
         }
@@ -157,6 +193,18 @@ namespace App
             xml.writeAttribute("tls", QString::number(d.tls() ? 1 : 0));
             xml.writeAttribute("ied", d.ied());
             xml.writeAttribute("date", d.date());
+
+            if (!d.watchlist().isEmpty()) {
+                xml.writeStartElement("watchlist");
+                for (const auto &[ref, fc] : d.watchlist()) {
+                    xml.writeStartElement("node");
+                    xml.writeAttribute("ref", ref);
+                    xml.writeAttribute("fc", fc);
+                    xml.writeEndElement();
+                }
+                xml.writeEndElement();
+            }
+
             xml.writeEndElement();
         }
         xml.writeEndElement();

@@ -31,22 +31,37 @@ import "qrc:/common/"
 FocusScope {
     id: rootID
 
+    Keys.onPressed: function(event) {
+        if (event.key === Qt.Key_F5) {
+            iedBackend.updateWatchlistValues()
+            event.accepted = true
+        }
+    }
+
     SplitView {
         id: splitView
 
         focus: true
         anchors.fill: parent
 
-        // Delimiter
-        handle: SplitDelimeter {
+        handle: Rectangle {
+            implicitWidth: VisualStyle.delimeterWidth
             height: splitView.height
-            pressed: SplitHandle.pressed
+            color: SplitHandle.pressed ? "#707070" : VisualStyle.borderColor
+
+            Rectangle {
+                anchors.centerIn: parent
+                width: 2
+                height: 40
+                radius: 1
+                color: SplitHandle.pressed ? "white" : "#707070"
+            }
         }
 
         // Left pane: IED tree
         Rectangle {
-            SplitView.preferredWidth: splitView.width * 0.5
-            SplitView.minimumWidth: 300
+            id: treePane
+            SplitView.preferredWidth: 300
             SplitView.fillWidth: false
 
             color: VisualStyle.input.bg
@@ -106,16 +121,30 @@ FocusScope {
                 palette.text:            VisualStyle.textColor
 
                 columnWidthProvider: function(column) {
-                    var w = Globals.columnWidthCalculator(headerID, treeViewID, column)
-                    if (column === 0) w = Math.max(w, 180)       // Reference
-                    else if (column === 1) w = Math.max(w, 180)  // Value
-                    return w
+                    return Globals.columnWidthFillSpace(headerID, treeViewID, column)
                 }
 
                 Keys.onPressed: function(event) {
                     if (event.key === Qt.Key_C && (event.modifiers & Qt.ControlModifier)) {
                         Globals.copyRowToClipboard(treeViewID)
                         event.accepted = true
+                        return
+                    }
+                    if (event.key === Qt.Key_Right && (event.modifiers & Qt.ControlModifier)) {
+                        if (treeViewID.currentRow >= 0) {
+                            iedBackend.addTreeItemToWatchlist(
+                                treeViewID.selectionModel.currentIndex)
+                        }
+                        event.accepted = true
+                        return
+                    }
+                    if (event.key === Qt.Key_Insert || event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                        if (treeViewID.currentRow >= 0) {
+                            iedBackend.addTreeItemToWatchlist(
+                                treeViewID.selectionModel.currentIndex)
+                        }
+                        event.accepted = true
+                        return
                     }
                 }
 
@@ -132,6 +161,14 @@ FocusScope {
                                 treeViewID.collapseRecursively(row)
                             else
                                 treeViewID.expandRecursively(row)
+                        }
+                    }
+
+                    TapHandler {
+                        acceptedModifiers: Qt.AltModifier
+                        onTapped: {
+                            iedBackend.addTreeItemToWatchlist(
+                                treeViewID.modelIndex(Qt.point(0, row)))
                         }
                     }
                 }
@@ -207,12 +244,17 @@ FocusScope {
             }
         }
 
-        // Right pane: empty placeholder for future features
+        // Right pane: Watchlist
         Rectangle {
             SplitView.minimumWidth: 200
             SplitView.fillWidth: true
 
             color: VisualStyle.input.bg
+
+            WatchlistPanel {
+                id: watchlistPanel
+                anchors.fill: parent
+            }
         }
     }
 

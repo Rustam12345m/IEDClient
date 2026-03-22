@@ -44,6 +44,9 @@ namespace App
         void    putConnectionToConfig(const Cmd::IEDCredentials &creds, const QString &ied);
         void    saveHistoryList(const lisHistConnInfo &list);
 
+        WatchlistRefs getWatchlistForDevice(const Cmd::IEDCredentials &creds);
+        void saveWatchlistForDevice(const Cmd::IEDCredentials &creds, const WatchlistRefs &wl);
+
     signals:
         void    sigConfUpdated();
 
