@@ -498,6 +498,7 @@ ApplicationWindow
                             onVisibleChanged: {
                                 if (visible) {
                                     focus = true
+                                    setPageStatusText("")
                                     setActivePanel(Globals.Panel.HIDE)
                                 } else {
                                     focus = false

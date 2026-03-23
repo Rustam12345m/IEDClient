@@ -98,6 +98,7 @@ FocusScope
                 font.bold: parent.active
                 color: VisualStyle.table.headerTextColor
             }
+
         }
 
         delegate: Rectangle {
@@ -105,7 +106,6 @@ FocusScope
 
             property string sectionValue: model.section || ""
             property bool selected: listView.currentIndex === index
-
             width: listView.width - vScrollBar.width
             height: defRowHeight
             color: selected ? VisualStyle.table.selRowColor : VisualStyle.table.rowColor1

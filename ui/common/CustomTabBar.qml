@@ -43,6 +43,7 @@ Rectangle
     property color selectedColor: VisualStyle.tabBar.selColor
     property color unselectedColor: VisualStyle.tabBar.unselColor
     property bool showOnlyFirst: false
+    property var disabledIndexes: []
 
     signal sigTabSelected(int index)
 
@@ -72,6 +73,7 @@ Rectangle
             required property string title
             property bool selected: (listViewID.currentIndex === index)
             property bool tabVisible: index === 0 || !rootID.showOnlyFirst
+            property bool disabled: rootID.disabledIndexes.indexOf(index) >= 0
 
             visible: tabVisible
             implicitHeight: tabVisible ? (rootID.horizontalBar ? rootID.height : rootID.cellHeight) : 0
@@ -84,7 +86,8 @@ Rectangle
 
                 border.width: 0
                 border.color: VisualStyle.borderColor
-                color: btnItemID.selected ? rootID.selectedColor : rootID.unselectedColor
+                color: btnItemID.selected ? rootID.selectedColor
+                       : (btnItemID.disabled ? VisualStyle.borderColor : rootID.unselectedColor)
 
                 Rectangle {
                     id: hiddenRectID
@@ -106,7 +109,7 @@ Rectangle
                     focus: false
                     color: btnItemID.selected ? VisualStyle.tabBar.selTextColor
                            : (hiddenRectID.visible ? VisualStyle.tabBar.hoverTextColor
-                                                   : VisualStyle.tabBar.unselTextColor);
+                                                   : VisualStyle.tabBar.unselTextColor)
                     font.bold: VisualStyle.boldHeaderText
                 }
                 MouseArea {
@@ -125,6 +128,10 @@ Rectangle
                     */
 
                     onClicked: function(mouse) {
+                        if (btnItemID.disabled) {
+                            mouse.accepted = true
+                            return
+                        }
                         hiddenRectID.visible = false
                         listViewID.currentIndex = index
                         sigTabSelected(index)

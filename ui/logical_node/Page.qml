@@ -35,6 +35,8 @@ FocusScope
 
     signal sigLNSelectionChanged()
 
+    property int modelVer: 0
+
     function resizeColumnsOnPage() {
         // console.log("LN_Page: resizeColumnsOnPage")
         tableDO.resizeColumnsToContent()
@@ -141,14 +143,32 @@ FocusScope
                     spacing: 2
                     color: VisualStyle.toolBarColor
 
-                    //selectedColor: "white"
-                    //unselectedColor: VisualStyle.toolBarColor
-
                     model: ListModel {
                         ListElement { title: "STATE" }
                         ListElement { title: "CONTROLS" }
                         ListElement { title: "SETTINGS" }
                         ListElement { title: "TREE" }
+                    }
+
+                    disabledIndexes: {
+                        rootID.modelVer
+                        var arr = []
+                        if (iedBackend.getLN_ControlsModel().rowCount() === 0) arr.push(1)
+                        if (iedBackend.getLN_SettingsModel().rowCount() === 0) arr.push(2)
+                        return arr
+                    }
+
+                    Connections {
+                        target: iedBackend.getLN_ControlsModel()
+                        function onModelReset() { rootID.modelVer++ }
+                        function onRowsInserted() { rootID.modelVer++ }
+                        function onRowsRemoved() { rootID.modelVer++ }
+                    }
+                    Connections {
+                        target: iedBackend.getLN_SettingsModel()
+                        function onModelReset() { rootID.modelVer++ }
+                        function onRowsInserted() { rootID.modelVer++ }
+                        function onRowsRemoved() { rootID.modelVer++ }
                     }
 
                     onSigTabSelected: function(index) {
