@@ -4,8 +4,27 @@ on: [push, pull_request]
 
 jobs:
 
+  test:
+    name: Build and test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Build Docker image
+        run: docker build -f ci/Dockerfile.Linux -t iedclient:linux ci/
+
+      - name: Build and run tests
+        run: >
+          docker run --rm -v ${{ github.workspace }}:/workdir
+          iedclient:linux
+          /workdir/ci/build_inner.sh --check
+
   appimage:
     name: Build AppImage
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
