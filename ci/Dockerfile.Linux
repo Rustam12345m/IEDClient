@@ -45,7 +45,7 @@ RUN ARCH=$(uname -m) && \
 RUN apt-get update && apt-get install -y --no-install-recommends curl && \
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal && \
     . /root/.cargo/env && \
-    CARGO_INSTALL_ROOT=/usr/local cargo install dump_syms@2.3.6 && \
+    CARGO_INSTALL_ROOT=/usr/local cargo install dump_syms@2.3.7 && \
     rustup self uninstall -y && \
     apt-get purge -y curl && apt-get autoremove -y && rm -rf /var/lib/apt/lists/*
 
