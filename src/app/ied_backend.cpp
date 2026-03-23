@@ -78,6 +78,10 @@ namespace App
         connect(m_dsComModel, &Models::DS_OverviewTable::sigDSSelected, m_dsSigModel, &Models::DS_SignalsTable::slotDataSetSelected);
         connect(m_brcbComModel, &Models::RCB_OverviewTable::sigRCBSelected, m_reportsModel, &Models::ReportsTable::slotRCBSelected);
         connect(m_urcbComModel, &Models::RCB_OverviewTable::sigRCBSelected, m_reportsModel, &Models::ReportsTable::slotRCBSelected);
+
+        // CommandTermination from network thread → main thread
+        connect(m_con.m_api.get(), &Cmd::Interface::IEC61850_API::sigCommandTermination,
+                this, &IED_Backend::sigCommandTermination, Qt::QueuedConnection);
     }
 
     void IED_Backend::updateLDs_Status()
@@ -384,6 +388,21 @@ namespace App
         connect(cmd.get(), &Cmd::ControlOperate_Cmd::sigControlResult,
                 this, &IED_Backend::sigControlResult, Qt::QueuedConnection);
         putCmdToQueue(cmd);
+    }
+
+    void IED_Backend::setTestMode(bool test)
+    {
+        m_con.m_api->control().setTestMode(test);
+    }
+
+    void IED_Backend::setInterlockCheck(bool check)
+    {
+        m_con.m_api->control().setInterlockCheck(check);
+    }
+
+    void IED_Backend::setSynchroCheck(bool check)
+    {
+        m_con.m_api->control().setSynchroCheck(check);
     }
 
     // ── Watchlist ─────────────────────────────────────────────────

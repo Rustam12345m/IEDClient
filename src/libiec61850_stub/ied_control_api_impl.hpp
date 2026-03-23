@@ -25,6 +25,8 @@
 
 #include "cmd/interface/ied_control_api.hpp"
 
+struct sControlObjectClient;
+
 namespace Libiec61850
 {
     class ApiAdapter;
@@ -33,7 +35,7 @@ namespace Libiec61850
     {
     public:
         IED_ControlAPI_Impl(ApiAdapter &api) : m_api(api) {}
-        ~IED_ControlAPI_Impl() override = default;
+        ~IED_ControlAPI_Impl() override;
 
         bool setRCBValues(const QString &rcbRef, bool enable,
                           int trgOps, uint32_t bufTm, uint32_t intgPd,
@@ -63,10 +65,29 @@ namespace Libiec61850
                            Cmd::Interface::CtlValType valType, const QVariant &value) override;
         bool controlCancel(const QString &objRef) override;
 
+        // Control flags
+        void setTestMode(bool test) override;
+        void setInterlockCheck(bool check) override;
+        void setSynchroCheck(bool check) override;
+
     private:
         static void staticReportCallback(void *param, void *report);
+        static void commandTerminationHandler(void *param, sControlObjectClient *client);
+
+        sControlObjectClient* getOrCreateClient(const QString &objRef);
+        void destroyActiveClient();
+        void applyControlFlags(sControlObjectClient *client);
 
         ApiAdapter& m_api;
         QSet<QString> m_activeHandlers;
+
+        // Persistent control client for SBO sequence + CommandTermination
+        sControlObjectClient* m_activeClient = nullptr;
+        QString m_activeClientRef;
+
+        // Control flags
+        bool m_testMode = false;
+        bool m_interlockCheck = false;
+        bool m_synchroCheck = false;
     };
 };

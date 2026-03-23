@@ -368,6 +368,8 @@ namespace Libiec61850
 
     void IED_ControlAPI_Impl::uninstallAllHandlers()
     {
+        destroyActiveClient();
+
         if (!m_api.m_libConn) {
             m_activeHandlers.clear();
             return;
@@ -381,6 +383,11 @@ namespace Libiec61850
     }
 
     // ── Direct Control / SBO ──────────────────────────────────────────
+
+    IED_ControlAPI_Impl::~IED_ControlAPI_Impl()
+    {
+        destroyActiveClient();
+    }
 
     namespace
     {
@@ -405,6 +412,94 @@ namespace Libiec61850
             case VT::Float:    return MmsValue_newFloat(value.toFloat());
             default:           return nullptr;
             }
+        }
+    }
+
+    void IED_ControlAPI_Impl::commandTerminationHandler(void *param, ControlObjectClient client)
+    {
+        auto *self = static_cast<IED_ControlAPI_Impl*>(param);
+        if (!self) return;
+
+        LastApplError lastErr = ControlObjectClient_getLastApplError(client);
+
+        // CommandTermination+: error=NO_ERROR and addCause=UNKNOWN
+        bool success = (lastErr.error == CONTROL_ERROR_NO_ERROR
+                        && lastErr.addCause == ADD_CAUSE_UNKNOWN);
+
+        QString addCauseStr = Cmd::Interface::addCauseToString(static_cast<int>(lastErr.addCause));
+        QString objRef = self->m_activeClientRef;
+
+        emit self->m_api.sigCommandTermination(objRef, success, addCauseStr);
+    }
+
+    ControlObjectClient IED_ControlAPI_Impl::getOrCreateClient(const QString &objRef)
+    {
+        if (m_activeClient && m_activeClientRef == objRef) {
+            applyControlFlags(m_activeClient);
+            return m_activeClient;
+        }
+
+        destroyActiveClient();
+
+        if (!m_api.m_libConn) {
+            return nullptr;
+        }
+
+        auto ref = objRef.toStdString();
+        m_activeClient = ControlObjectClient_create(ref.c_str(), m_api.m_libConn);
+        if (!m_activeClient) {
+            return nullptr;
+        }
+
+        m_activeClientRef = objRef;
+
+        ControlObjectClient_setCommandTerminationHandler(
+            m_activeClient, commandTerminationHandler, this);
+
+        ControlObjectClient_setOrigin(m_activeClient, nullptr, CONTROL_ORCAT_STATION_CONTROL);
+
+        applyControlFlags(m_activeClient);
+
+        return m_activeClient;
+    }
+
+    void IED_ControlAPI_Impl::destroyActiveClient()
+    {
+        if (m_activeClient) {
+            ControlObjectClient_destroy(m_activeClient);
+            m_activeClient = nullptr;
+        }
+        m_activeClientRef.clear();
+    }
+
+    void IED_ControlAPI_Impl::applyControlFlags(ControlObjectClient client)
+    {
+        ControlObjectClient_setTestMode(client, m_testMode);
+        ControlObjectClient_setInterlockCheck(client, m_interlockCheck);
+        ControlObjectClient_setSynchroCheck(client, m_synchroCheck);
+    }
+
+    void IED_ControlAPI_Impl::setTestMode(bool test)
+    {
+        m_testMode = test;
+        if (m_activeClient) {
+            ControlObjectClient_setTestMode(m_activeClient, test);
+        }
+    }
+
+    void IED_ControlAPI_Impl::setInterlockCheck(bool check)
+    {
+        m_interlockCheck = check;
+        if (m_activeClient) {
+            ControlObjectClient_setInterlockCheck(m_activeClient, check);
+        }
+    }
+
+    void IED_ControlAPI_Impl::setSynchroCheck(bool check)
+    {
+        m_synchroCheck = check;
+        if (m_activeClient) {
+            ControlObjectClient_setSynchroCheck(m_activeClient, check);
         }
     }
 
@@ -433,12 +528,7 @@ namespace Libiec61850
     bool IED_ControlAPI_Impl::controlOperate(const QString &objRef, Cmd::Interface::CtlModel model,
                                               Cmd::Interface::CtlValType valType, const QVariant &value)
     {
-        if (!m_api.m_libConn) {
-            return false;
-        }
-
-        auto ref = objRef.toStdString();
-        ControlObjectClient client = ControlObjectClient_create(ref.c_str(), m_api.m_libConn);
+        ControlObjectClient client = getOrCreateClient(objRef);
         if (!client) {
             return false;
         }
@@ -447,26 +537,18 @@ namespace Libiec61850
 
         MmsValue *val = createCtlVal(valType, value);
         if (!val) {
-            ControlObjectClient_destroy(client);
             return false;
         }
 
         bool ok = ControlObjectClient_operate(client, val, 0);
-
         MmsValue_delete(val);
-        ControlObjectClient_destroy(client);
         return ok;
     }
 
     bool IED_ControlAPI_Impl::controlSelect(const QString &objRef, Cmd::Interface::CtlModel model,
                                              Cmd::Interface::CtlValType valType, const QVariant &value)
     {
-        if (!m_api.m_libConn) {
-            return false;
-        }
-
-        auto ref = objRef.toStdString();
-        ControlObjectClient client = ControlObjectClient_create(ref.c_str(), m_api.m_libConn);
+        ControlObjectClient client = getOrCreateClient(objRef);
         if (!client) {
             return false;
         }
@@ -484,24 +566,18 @@ namespace Libiec61850
             ok = ControlObjectClient_select(client);
         }
 
-        ControlObjectClient_destroy(client);
         return ok;
     }
 
     bool IED_ControlAPI_Impl::controlCancel(const QString &objRef)
     {
-        if (!m_api.m_libConn) {
-            return false;
-        }
-
-        auto ref = objRef.toStdString();
-        ControlObjectClient client = ControlObjectClient_create(ref.c_str(), m_api.m_libConn);
+        ControlObjectClient client = getOrCreateClient(objRef);
         if (!client) {
             return false;
         }
 
         bool ok = ControlObjectClient_cancel(client);
-        ControlObjectClient_destroy(client);
+        destroyActiveClient();
         return ok;
     }
 }

@@ -20,10 +20,174 @@
  * */
 
 #include <gtest/gtest.h>
+#include <QSignalSpy>
+#include <QVariant>
+
+#include "mock_api.hpp"
+#include "cmd/control_cmd.hpp"
+
+using namespace testing;
+using namespace Cmd;
+using namespace Cmd::Interface;
 
 namespace UnitTests
 {
-    TEST(ModelTest, SubTest1)
+    // ── AddCause string mapping ──────────────────────────────────────
+
+    TEST(ControlTypes, AddCauseToString_KnownValues)
     {
+        EXPECT_EQ(addCauseToString(0),  "Unknown");
+        EXPECT_EQ(addCauseToString(1),  "Not supported");
+        EXPECT_EQ(addCauseToString(2),  "Blocked by switching hierarchy");
+        EXPECT_EQ(addCauseToString(3),  "Select failed");
+        EXPECT_EQ(addCauseToString(10), "Blocked by interlocking");
+        EXPECT_EQ(addCauseToString(11), "Blocked by synchrocheck");
+        EXPECT_EQ(addCauseToString(18), "Object not selected");
+        EXPECT_EQ(addCauseToString(25), "None");
+    }
+
+    TEST(ControlTypes, AddCauseToString_UnknownValues)
+    {
+        EXPECT_EQ(addCauseToString(99),  "Unknown (99)");
+        EXPECT_EQ(addCauseToString(-1),  "Unknown (-1)");
+    }
+
+    // ── ControlOperate_Cmd tests ─────────────────────────────────────
+
+    class ControlOperateTest : public ::testing::Test
+    {
+    protected:
+        void SetUp() override {
+            m_api = QSharedPointer<MockIEC61850API>::create();
+        }
+
+        QSharedPointer<MockIEC61850API> m_api;
+    };
+
+    TEST_F(ControlOperateTest, DirectNormal_Operate_Success)
+    {
+        EXPECT_CALL(m_api->mockControl(), controlOperate(
+            QString("LD0/LLN0.GGIO1.SPCSO1"),
+            CtlModel::DirectNormal,
+            CtlValType::Boolean,
+            _))
+            .WillOnce(Return(true));
+
+        auto cmd = ControlOperate_Cmd::create(
+            "LD0/LLN0.GGIO1.SPCSO1",
+            ControlOperate_Cmd::Action::Operate,
+            CtlModel::DirectNormal,
+            CtlValType::Boolean,
+            QVariant(true));
+
+        QSignalSpy resultSpy(cmd.get(), &ControlOperate_Cmd::sigControlResult);
+        QSignalSpy eventSpy(cmd.get(), &CmdInterface::sigCmdEvent);
+
+        cmd->execute(m_api);
+
+        ASSERT_EQ(resultSpy.count(), 1);
+        auto args = resultSpy.takeFirst();
+        EXPECT_EQ(args.at(0).toString(), "LD0/LLN0.GGIO1.SPCSO1");
+        EXPECT_TRUE(args.at(1).toBool());
+
+        // Verify FINISH event with result=true
+        ASSERT_GE(eventSpy.count(), 2); // START + FINISH
+        auto finishArgs = eventSpy.last();
+        CmdEvent ev = finishArgs.at(0).value<CmdEvent>();
+        EXPECT_EQ(ev.m_type, FINISH_EVENT);
+        EXPECT_TRUE(ev.m_result);
+    }
+
+    TEST_F(ControlOperateTest, DirectNormal_Operate_Failure)
+    {
+        EXPECT_CALL(m_api->mockControl(), controlOperate(_, _, _, _))
+            .WillOnce(Return(false));
+
+        auto cmd = ControlOperate_Cmd::create(
+            "LD0/LLN0.GGIO1.SPCSO1",
+            ControlOperate_Cmd::Action::Operate,
+            CtlModel::DirectNormal,
+            CtlValType::Boolean,
+            QVariant(true));
+
+        QSignalSpy resultSpy(cmd.get(), &ControlOperate_Cmd::sigControlResult);
+
+        cmd->execute(m_api);
+
+        ASSERT_EQ(resultSpy.count(), 1);
+        auto args = resultSpy.takeFirst();
+        EXPECT_FALSE(args.at(1).toBool());
+    }
+
+    TEST_F(ControlOperateTest, SBONormal_Select_Success)
+    {
+        EXPECT_CALL(m_api->mockControl(), controlSelect(
+            QString("LD0/LLN0.GGIO1.SPCSO1"),
+            CtlModel::SBONormal,
+            CtlValType::Boolean,
+            _))
+            .WillOnce(Return(true));
+
+        auto cmd = ControlOperate_Cmd::create(
+            "LD0/LLN0.GGIO1.SPCSO1",
+            ControlOperate_Cmd::Action::Select,
+            CtlModel::SBONormal,
+            CtlValType::Boolean,
+            QVariant(true));
+
+        QSignalSpy resultSpy(cmd.get(), &ControlOperate_Cmd::sigControlResult);
+
+        cmd->execute(m_api);
+
+        ASSERT_EQ(resultSpy.count(), 1);
+        auto args = resultSpy.takeFirst();
+        EXPECT_TRUE(args.at(1).toBool());
+    }
+
+    TEST_F(ControlOperateTest, SBOEnhanced_Select_Success)
+    {
+        EXPECT_CALL(m_api->mockControl(), controlSelect(
+            QString("LD0/LLN0.GGIO1.SPCSO1"),
+            CtlModel::SBOEnhanced,
+            CtlValType::Boolean,
+            _))
+            .WillOnce(Return(true));
+
+        auto cmd = ControlOperate_Cmd::create(
+            "LD0/LLN0.GGIO1.SPCSO1",
+            ControlOperate_Cmd::Action::Select,
+            CtlModel::SBOEnhanced,
+            CtlValType::Boolean,
+            QVariant(false));
+
+        QSignalSpy resultSpy(cmd.get(), &ControlOperate_Cmd::sigControlResult);
+
+        cmd->execute(m_api);
+
+        ASSERT_EQ(resultSpy.count(), 1);
+        auto args = resultSpy.takeFirst();
+        EXPECT_TRUE(args.at(1).toBool());
+    }
+
+    TEST_F(ControlOperateTest, Cancel_Success)
+    {
+        EXPECT_CALL(m_api->mockControl(), controlCancel(
+            QString("LD0/LLN0.GGIO1.SPCSO1")))
+            .WillOnce(Return(true));
+
+        auto cmd = ControlOperate_Cmd::create(
+            "LD0/LLN0.GGIO1.SPCSO1",
+            ControlOperate_Cmd::Action::Cancel,
+            CtlModel::StatusOnly,
+            CtlValType::Unknown,
+            QVariant());
+
+        QSignalSpy resultSpy(cmd.get(), &ControlOperate_Cmd::sigControlResult);
+
+        cmd->execute(m_api);
+
+        ASSERT_EQ(resultSpy.count(), 1);
+        auto args = resultSpy.takeFirst();
+        EXPECT_TRUE(args.at(1).toBool());
     }
 }

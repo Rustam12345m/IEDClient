@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include <QString>
 #include <QVariant>
 
 namespace Cmd::Interface
@@ -45,4 +46,27 @@ namespace Cmd::Interface
         CtlModel   model   = CtlModel::StatusOnly;
         CtlValType valType = CtlValType::Unknown;
     };
+
+    inline QString addCauseToString(int addCause)
+    {
+        switch (addCause) {
+        case 0:  return "Unknown";
+        case 1:  return "Not supported";
+        case 2:  return "Blocked by switching hierarchy";
+        case 3:  return "Select failed";
+        case 4:  return "Invalid position";
+        case 5:  return "Position reached";
+        case 8:  return "Blocked by mode";
+        case 9:  return "Blocked by process";
+        case 10: return "Blocked by interlocking";
+        case 11: return "Blocked by synchrocheck";
+        case 12: return "Command already in execution";
+        case 15: return "Abortion by cancel";
+        case 18: return "Object not selected";
+        case 19: return "Object already selected";
+        case 20: return "No access authority";
+        case 25: return "None";
+        default: return QString("Unknown (%1)").arg(addCause);
+        }
+    }
 }

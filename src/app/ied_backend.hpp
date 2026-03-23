@@ -109,6 +109,11 @@ namespace App
                                         int valType, const QVariant &value);
         Q_INVOKABLE void controlCancel(const QString &objRef);
 
+        // Control flags
+        Q_INVOKABLE void setTestMode(bool test);
+        Q_INVOKABLE void setInterlockCheck(bool check);
+        Q_INVOKABLE void setSynchroCheck(bool check);
+
         // GOOSE / SV enable
         Q_INVOKABLE void setGOOSEEnable(int index, bool enable);
         Q_INVOKABLE void setSVEnable(int index, bool enable);
@@ -127,6 +132,7 @@ namespace App
         void sigGOOSE_SVUpdated();
         void sigControlInfo(QString objRef, int ctlModel, int ctlValType);
         void sigControlResult(QString objRef, bool success, QString message);
+        void sigCommandTermination(QString objRef, bool success, QString addCause);
 
     public slots:
         void slotConnected(bool done) override;

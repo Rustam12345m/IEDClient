@@ -58,5 +58,6 @@ namespace Cmd::Interface
     signals:
         void sigFoundNode(const QString path);
         void sigConClosed();
+        void sigCommandTermination(QString objRef, bool success, QString addCause);
     };
 }

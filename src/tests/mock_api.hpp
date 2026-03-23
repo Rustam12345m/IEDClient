@@ -61,6 +61,10 @@ namespace UnitTests
         MOCK_METHOD(bool, controlCancel,
                     (const QString &objRef),
                     (override));
+
+        MOCK_METHOD(void, setTestMode, (bool), (override));
+        MOCK_METHOD(void, setInterlockCheck, (bool), (override));
+        MOCK_METHOD(void, setSynchroCheck, (bool), (override));
     };
 
     class MockStateAPI : public Cmd::Interface::IED_StateAPI

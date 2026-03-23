@@ -63,5 +63,10 @@ namespace Cmd::Interface
         virtual bool controlSelect(const QString &objRef, CtlModel model,
                                    CtlValType valType, const QVariant &value) = 0;
         virtual bool controlCancel(const QString &objRef) = 0;
+
+        // Control flags
+        virtual void setTestMode(bool test) = 0;
+        virtual void setInterlockCheck(bool check) = 0;
+        virtual void setSynchroCheck(bool check) = 0;
     };
 }

@@ -34,12 +34,13 @@ ModalDialog
 
     title: "Control"
     dialogWidth: 420
-    dialogHeight: 340
+    dialogHeight: 390
 
     property string objectRef: ""
     property int ctlModel: -1
     property int ctlValType: -1
     property string statusMsg: ""
+    property bool lastResultSuccess: true
 
     signal sigOperate(string ref, int model, int valType, var value)
     signal sigSelect(string ref, int model, int valType, var value)
@@ -60,6 +61,7 @@ ModalDialog
     }
 
     function setResult(success, message) {
+        lastResultSuccess = success
         statusMsg = message
     }
 
@@ -91,6 +93,16 @@ ModalDialog
         case 2: return "Unsigned"
         case 3: return "Float"
         default: return "Unknown"
+        }
+    }
+
+    Connections {
+        target: iedBackend
+        function onSigCommandTermination(objRef, success, addCause) {
+            if (rootID.visible && objRef === rootID.objectRef) {
+                rootID.lastResultSuccess = success
+                rootID.statusMsg = (success ? "CommandTermination+: " : "CommandTermination-: ") + addCause
+            }
         }
     }
 
@@ -213,6 +225,25 @@ ModalDialog
             }
         }
 
+        // Control flags
+        CheckBox {
+            id: testCheck
+            text: "Test mode"
+            visible: rootID.ctlModel > 0
+        }
+        RowLayout {
+            Layout.fillWidth: true
+            visible: rootID.ctlModel > 0
+            CheckBox {
+                id: interlockCheck
+                text: "Interlock check"
+            }
+            CheckBox {
+                id: synchroCheck
+                text: "Synchrocheck"
+            }
+        }
+
         // Spacer
         Item { Layout.fillHeight: true }
 
@@ -220,7 +251,7 @@ ModalDialog
         Text {
             Layout.fillWidth: true
             text: rootID.statusMsg
-            color: "yellow"
+            color: rootID.lastResultSuccess ? "yellow" : "red"
             font.pixelSize: 12
             wrapMode: Text.WordWrap
             visible: rootID.statusMsg.length > 0
@@ -235,7 +266,11 @@ ModalDialog
                 text: "Select"
                 visible: rootID.ctlModel === 2 || rootID.ctlModel === 4
                 onClicked: {
+                    rootID.lastResultSuccess = true
                     rootID.statusMsg = "Selecting..."
+                    iedBackend.setTestMode(testCheck.checked)
+                    iedBackend.setInterlockCheck(interlockCheck.checked)
+                    iedBackend.setSynchroCheck(synchroCheck.checked)
                     rootID.sigSelect(rootID.objectRef, rootID.ctlModel,
                                      rootID.ctlValType, rootID.getValue())
                 }
@@ -244,7 +279,11 @@ ModalDialog
                 text: "Operate"
                 enabled: rootID.ctlModel > 0
                 onClicked: {
+                    rootID.lastResultSuccess = true
                     rootID.statusMsg = "Operating..."
+                    iedBackend.setTestMode(testCheck.checked)
+                    iedBackend.setInterlockCheck(interlockCheck.checked)
+                    iedBackend.setSynchroCheck(synchroCheck.checked)
                     rootID.sigOperate(rootID.objectRef, rootID.ctlModel,
                                       rootID.ctlValType, rootID.getValue())
                 }
