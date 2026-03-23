@@ -85,7 +85,7 @@ FocusScope
 
             property bool active: section !== "" && section === listView.activeSection
 
-            color: active ? VisualStyle.table.selRowColor : VisualStyle.table.headerColor
+            color: VisualStyle.table.headerColor
             border.color: VisualStyle.table.rowBorderColor2
 
             clip: true
@@ -108,7 +108,7 @@ FocusScope
 
             width: listView.width - vScrollBar.width
             height: defRowHeight
-            color: selected ? VisualStyle.borderColor : VisualStyle.table.rowColor1
+            color: selected ? VisualStyle.table.selRowColor : VisualStyle.table.rowColor1
             border.color: VisualStyle.table.rowBorderColor2
 
             RowLayout {
@@ -129,7 +129,7 @@ FocusScope
                         leftPadding: defTextPadding
                         rightPadding: defTextPadding
                         text: model.name
-                        color: delegateRoot.selected ? "#ffffff" : VisualStyle.textColor
+                        color: VisualStyle.textColor
                     }
                 }
 
@@ -152,7 +152,7 @@ FocusScope
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
                             text: model.mod ? model.mod.text : "?"
-                            color: delegateRoot.selected ? "#ffffff" : VisualStyle.textColor
+                            color: VisualStyle.textColor
                         }
                     }
                 }
@@ -176,7 +176,7 @@ FocusScope
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
                             text: model.beh ? model.beh.text : "?"
-                            color: delegateRoot.selected ? "#ffffff" : VisualStyle.textColor
+                            color: VisualStyle.textColor
                         }
                     }
                 }
@@ -200,7 +200,7 @@ FocusScope
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
                             text: model.health ? model.health.text : "?"
-                            color: delegateRoot.selected ? "#ffffff" : VisualStyle.textColor
+                            color: VisualStyle.textColor
                         }
                     }
                 }

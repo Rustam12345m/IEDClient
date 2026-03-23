@@ -89,3 +89,6 @@ squashfs-root*/
 
 # Tmp
 *.dtmp
+
+# Local task docs
+docs/tasks/

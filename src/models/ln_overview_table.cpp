@@ -87,6 +87,7 @@ namespace App::Models
 
     QVariant LN_OverviewTable::data(const QModelIndex &index, int role) const
     {
+        if (!m_ldev) return QVariant();
         auto ln = m_ldev->getItem<Core::LogicalNode>(index.row());
         if (ln) {
             switch (index.column()) {

@@ -42,7 +42,7 @@ namespace App
         }
 
         bool     isConnected() const {
-            return m_api->isConnected();
+            return m_api && m_api->isConnected();
         }
 
         void     createNewConnection(const Cmd::IEDCredentials &cred) {

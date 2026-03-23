@@ -122,8 +122,6 @@ namespace Libiec61850
 
                     fetchLN_SVCB(builder);
 
-                    m_api.m_state.getValsForLN(builder.lastLN());
-
                     node = LinkedList_getNext(node); // next LN
                 }
                 LinkedList_destroy(lnList);
@@ -184,18 +182,25 @@ namespace Libiec61850
 
         LinkedList dsList = IedConnection_getLogicalNodeDirectory(m_api.m_libConn, &retval,
                                     lnRef.toStdString().data(), ACSI_CLASS_DATA_SET);
+        if (retval != IED_ERROR_OK || dsList == nullptr) {
+            return 0;
+        }
         LinkedList dataSet = LinkedList_getNext(dsList);
         while (dataSet != nullptr) {
             char *dsName = (char *)dataSet->data;
             bool isDeletable = false;
 
-            char dataSetRef[130] = { 0 };
-            sprintf(dataSetRef, "%s.%s", lnRef.toStdString().data(), dsName);
+            char dataSetRef[256] = { 0 };
+            snprintf(dataSetRef, sizeof(dataSetRef), "%s.%s", lnRef.toStdString().data(), dsName);
 
             builder.createDataSet(QString::fromLocal8Bit(dsName), lnRef, isDeletable);
 
             LinkedList dsEntityList = IedConnection_getDataSetDirectory(m_api.m_libConn, &retval,
                                                                         dataSetRef, &isDeletable);
+            if (retval != IED_ERROR_OK || dsEntityList == nullptr) {
+                dataSet = LinkedList_getNext(dataSet);
+                continue;
+            }
             LinkedList dsEntity = LinkedList_getNext(dsEntityList);
             while (dsEntity != nullptr) {
                 QString dsElemRef = QString::fromLocal8Bit((char *)dsEntity->data);

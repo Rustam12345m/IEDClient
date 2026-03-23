@@ -126,10 +126,8 @@ namespace
         }
         case MMS_STRING:
         case MMS_VISIBLE_STRING: {
-            char tmp[256] = { 0 };
-            strncpy(tmp, MmsValue_toString(mmsValue), 256);
-            tmp[255] = 0;
-            QString v = QString::fromLocal8Bit(tmp);
+            const char *src = MmsValue_toString(mmsValue);
+            QString v = src ? QString::fromLocal8Bit(src) : QString();
             vals->push(item, Core::ModelItemValue::ptr::create(v));
             break;
         }
@@ -154,7 +152,8 @@ namespace
         auto ref = item->getReference().toStdString();
 
         MmsValue *rawValue = IedConnection_readObject(con, &retval, ref.data(), fc);
-        if (retval != IED_ERROR_OK) {
+        if (retval != IED_ERROR_OK || rawValue == nullptr) {
+            MmsValue_delete(rawValue);
             return -1;
         }
 
@@ -173,6 +172,7 @@ namespace
 
         for (size_t j=0;j<dataObj->getItemCount();j++) {
             auto daNode = dataObj->getItem< Core::DataAttribute >(j);
+            if (!daNode) continue;
             auto fcNum = (FunctionalConstraint)daNode->fcNum();
 
             getValuesForDataAttribute(daNode, vals, con, fcNum);
@@ -213,11 +213,9 @@ namespace Libiec61850
         for (size_t i=0;i<ld->getItemCount();i++) {
             auto ln = ld->getItem< Core::LogicalNode >(i);
 
-            for (size_t j=0;j<ln->getItemCount();j++) {
-                getValuesForDataObject(ln->getModItem(), vals, m_api.m_libConn);
-                getValuesForDataObject(ln->getBehItem(), vals, m_api.m_libConn);
-                getValuesForDataObject(ln->getHealthItem(), vals, m_api.m_libConn);
-            }
+            getValuesForDataObject(ln->getModItem(), vals, m_api.m_libConn);
+            getValuesForDataObject(ln->getBehItem(), vals, m_api.m_libConn);
+            getValuesForDataObject(ln->getHealthItem(), vals, m_api.m_libConn);
         }
         return vals;
     }
@@ -252,9 +250,8 @@ namespace Libiec61850
             return QString::number(MmsValue_toFloat(mmsValue));
         case MMS_VISIBLE_STRING:
         case MMS_STRING: {
-            char tmp[256] = {0};
-            strncpy(tmp, MmsValue_toString(mmsValue), 255);
-            return QString::fromLocal8Bit(tmp);
+            const char *src = MmsValue_toString(mmsValue);
+            return src ? QString::fromLocal8Bit(src) : QString();
         }
         case MMS_UTC_TIME:
             return convertTimestampMsToUserString(MmsValue_getUtcTimeInMs(mmsValue));

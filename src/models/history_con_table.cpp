@@ -57,6 +57,7 @@ namespace App::Models
 
     QVariant HistConTable::data(const QModelIndex &index, int role) const
     {
+        if (index.row() < 0 || index.row() >= m_con.size()) return QVariant();
         switch (index.column()) {
         case ColumnType::NUMBER: {
             return QVariant(index.row() + 1);

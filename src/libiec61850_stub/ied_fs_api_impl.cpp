@@ -72,7 +72,9 @@ namespace Libiec61850
             IedClientError retval = IED_ERROR_OK;
             LinkedList dirRoot = IedConnection_getFileDirectory(m_api.m_libConn, &retval, path.c_str());
             if (retval != IED_ERROR_OK) {
-                // qDebug() << "ApiAdapter: Error getFileDirectory " << QString::fromStdString(path) << ", retval = " << retval;
+                if (dirRoot) {
+                    LinkedList_destroyDeep(dirRoot, (LinkedListValueDeleteFunction)FileDirectoryEntry_destroy);
+                }
                 return -1;
             }
 

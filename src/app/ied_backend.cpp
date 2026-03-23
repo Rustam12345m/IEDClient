@@ -306,9 +306,10 @@ namespace App
                                                   rptId, datSet, storage);
 
         connect(cmd.get(), &Cmd::CmdInterface::sigCmdEvent, this,
-                [this, model](Cmd::CmdEvent ev) {
+                [this, buffered](Cmd::CmdEvent ev) {
                     if (ev.m_type == Cmd::FINISH_EVENT) {
-                        model->slotDataUpdated(ev.m_result);
+                        auto *m = buffered ? m_brcbComModel : m_urcbComModel;
+                        m->slotDataUpdated(ev.m_result);
                         emit sigRCBUpdated();
                     }
                 }, Qt::QueuedConnection);
@@ -477,6 +478,7 @@ namespace App
 
     QString IED_Backend::ldsPageStatus()
     {
+        if (!m_con.m_ied) return QString();
         return "IED: " + m_con.m_ied->model().getName();
     }
 
