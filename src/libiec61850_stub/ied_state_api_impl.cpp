@@ -339,4 +339,64 @@ namespace Libiec61850
         ClientDataSet_destroy(clientDataSet);
         return vals;
     }
+
+    QString IED_StateAPI_Impl::writeValueByRef(const QString &ref, const QString &fc,
+                                                const QString &value)
+    {
+        if (!m_api.isConnected()) {
+            return QString("Not connected");
+        }
+
+        auto refStd = ref.toStdString();
+        auto fcEnum = (FunctionalConstraint)Core::DataAttribute::fcStringToNum(fc);
+
+        // Read current value to detect MMS type
+        IedClientError readErr = IED_ERROR_OK;
+        MmsValue *current = IedConnection_readObject(
+            m_api.m_libConn, &readErr, refStd.data(), fcEnum);
+
+        if (readErr != IED_ERROR_OK || !current) {
+            return QString("Failed to read current value: %1").arg(IedClientError_toString(readErr));
+        }
+
+        MmsType type = MmsValue_getType(current);
+        MmsValue_delete(current);
+
+        // Write using typed convenience functions
+        IedClientError writeErr = IED_ERROR_OK;
+
+        switch (type) {
+        case MMS_BOOLEAN:
+            IedConnection_writeBooleanValue(m_api.m_libConn, &writeErr,
+                refStd.data(), fcEnum,
+                (value.compare("True", Qt::CaseInsensitive) == 0 || value == "1"));
+            break;
+        case MMS_INTEGER:
+            IedConnection_writeInt32Value(m_api.m_libConn, &writeErr,
+                refStd.data(), fcEnum, value.toInt());
+            break;
+        case MMS_UNSIGNED:
+            IedConnection_writeUnsigned32Value(m_api.m_libConn, &writeErr,
+                refStd.data(), fcEnum, value.toUInt());
+            break;
+        case MMS_FLOAT:
+            IedConnection_writeFloatValue(m_api.m_libConn, &writeErr,
+                refStd.data(), fcEnum, value.toFloat());
+            break;
+        case MMS_VISIBLE_STRING:
+        case MMS_STRING: {
+            auto valStd = value.toStdString();
+            IedConnection_writeVisibleStringValue(m_api.m_libConn, &writeErr,
+                refStd.data(), fcEnum, const_cast<char*>(valStd.c_str()));
+            break;
+        }
+        default:
+            return QString("Unsupported type for write");
+        }
+
+        if (writeErr != IED_ERROR_OK) {
+            return QString("Write failed: %1").arg(IedClientError_toString(writeErr));
+        }
+        return {};
+    }
 }

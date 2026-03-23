@@ -191,6 +191,11 @@ elif [ -n "$BUILD_TYPE" ]; then
     esac
 fi
 
+if [ "$BUILD_TYPE" = "check" ]; then
+    echo "==> Running tests..."
+    cd "$BUILD_DIR" && ctest --output-on-failure && cd "$REPO_DIR"
+fi
+
 if $DO_ARCHIVE; then
     do_appimage
 fi

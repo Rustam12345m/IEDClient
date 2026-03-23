@@ -19,27 +19,22 @@
  *  See COPYING file for the complete license text.
  * */
 
-#pragma once
+#include "write_value_cmd.hpp"
 
-#include "core/data_model.hpp"
-
-#include <QVariantList>
-
-namespace Cmd::Interface
+namespace Cmd
 {
-    class IED_StateAPI
+    void WriteValue_Cmd::execute(Cmd::Interface::IEC61850_API::ptr api)
     {
-    public:
-        virtual ~IED_StateAPI() {}
+        emit sigCmdEvent(CmdEvent::StartEvent(m_ref,
+            QString("Write %1 [%2] = %3").arg(m_ref, m_fc, m_value)));
 
-        virtual Core::ModelStateUpdater::ptr getStatusForAllLD(Core::DataModel::ptr model) = 0;
-        virtual Core::ModelStateUpdater::ptr getStatusForAllLN(Core::LogicalDevice::ptr ld) = 0;
+        QString err = api->state().writeValueByRef(m_ref, m_fc, m_value);
 
-        virtual Core::ModelStateUpdater::ptr getValsForLN(Core::LogicalNode::ptr ln) = 0;
-        virtual Core::ModelStateUpdater::ptr getValsForDS(Core::DataSet::ptr ds) = 0;
+        bool ok = err.isEmpty();
+        QString msg = ok ? QString("Write OK: %1").arg(m_ref)
+                         : QString("Write FAILED: %1 — %2").arg(m_ref, err);
 
-        virtual QVariantList readValuesByRef(const QStringList &refs, const QStringList &fcs) = 0;
-
-        virtual QString writeValueByRef(const QString &ref, const QString &fc, const QString &value) = 0;
-    };
+        emit sigWriteResult(m_ref, ok, msg);
+        emit sigCmdEvent(CmdEvent::FinishEvent(m_ref, msg, ok));
+    }
 }

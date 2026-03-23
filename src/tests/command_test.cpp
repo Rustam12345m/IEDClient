@@ -56,10 +56,22 @@ namespace UnitTests
         auto api = makeMockAPI();
         EXPECT_CALL(api->mockControl(), setRCBValues(_, true, 0x1F, 500u, 2000u, _, _))
             .WillOnce(Return(true));
+        // refreshRCBValues is called after success to re-read server state;
+        // simulate it updating the RCB fields
+        EXPECT_CALL(api->mockControl(), refreshRCBValues(_))
+            .WillOnce([](Core::ReportBlock::ptr r) {
+                r->setRptEna(true);
+                r->setTrgOps(0x1F);
+                r->setBufTm(500);
+                r->setIntgPd(2000);
+                r->setRptId("rptId01");
+                r->setDsRef("dsAnalog");
+                return true;
+            });
 
         cmd->execute(api);
 
-        // RCB model should be updated
+        // RCB model should be updated by refreshRCBValues
         EXPECT_TRUE(rcb->rptEna());
         EXPECT_EQ(rcb->trgOps(), 0x1F);
         EXPECT_EQ(rcb->bufTm(), 500u);
@@ -120,6 +132,12 @@ namespace UnitTests
         auto api = makeMockAPI();
         EXPECT_CALL(api->mockControl(), setRCBValues(_, false, _, _, _, _, _))
             .WillOnce(Return(true));
+        // refreshRCBValues re-reads server state after disable
+        EXPECT_CALL(api->mockControl(), refreshRCBValues(_))
+            .WillOnce([](Core::ReportBlock::ptr r) {
+                r->setRptEna(false);
+                return true;
+            });
 
         cmd->execute(api);
 
@@ -222,7 +240,7 @@ namespace UnitTests
 
         ASSERT_EQ(spy.count(), 2);
         auto finishEvent = spy.at(1).at(0).value<Cmd::CmdEvent>();
-        EXPECT_FALSE(finishEvent.m_result); // 0 updated → false
+        EXPECT_TRUE(finishEvent.m_result); // 0-of-0 is success (empty list is not an error)
     }
 
     // ─── ConnectCmd ─────────────────────────────────────────────────

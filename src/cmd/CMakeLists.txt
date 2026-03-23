@@ -68,6 +68,9 @@ set(SOURCES
 
     update_watchlist_cmd.hpp
     update_watchlist_cmd.cpp
+
+    write_value_cmd.hpp
+    write_value_cmd.cpp
 )
 
 qt_add_library(cmd_lib STATIC ${SOURCES})

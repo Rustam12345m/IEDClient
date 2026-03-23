@@ -80,6 +80,9 @@ namespace UnitTests
                     (Core::DataSet::ptr ds), (override));
         MOCK_METHOD(QVariantList, readValuesByRef,
                     (const QStringList &refs, const QStringList &fcs), (override));
+
+        MOCK_METHOD(QString, writeValueByRef,
+                    (const QString &ref, const QString &fc, const QString &value), (override));
     };
 
     class MockModelAPI : public Cmd::Interface::IED_ModelAPI

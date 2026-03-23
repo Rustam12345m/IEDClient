@@ -25,6 +25,7 @@
 
 #include "mock_api.hpp"
 #include "cmd/control_cmd.hpp"
+#include "cmd/write_value_cmd.hpp"
 
 using namespace testing;
 using namespace Cmd;
@@ -189,5 +190,61 @@ namespace UnitTests
         ASSERT_EQ(resultSpy.count(), 1);
         auto args = resultSpy.takeFirst();
         EXPECT_TRUE(args.at(1).toBool());
+    }
+
+    // ── WriteValue_Cmd tests ─────────────────────────────────────────
+
+    class WriteValueTest : public ::testing::Test
+    {
+    protected:
+        void SetUp() override {
+            m_api = QSharedPointer<MockIEC61850API>::create();
+        }
+
+        QSharedPointer<MockIEC61850API> m_api;
+    };
+
+    TEST_F(WriteValueTest, Write_Success)
+    {
+        EXPECT_CALL(m_api->mockState(), writeValueByRef(
+            QString("LD0/PTOC1.StrVal.setMag.f"),
+            QString("SP"),
+            QString("1.5")))
+            .WillOnce(Return(QString()));
+
+        auto cmd = WriteValue_Cmd::create(
+            "LD0/PTOC1.StrVal.setMag.f", "SP", "1.5");
+
+        QSignalSpy resultSpy(cmd.get(), &WriteValue_Cmd::sigWriteResult);
+        QSignalSpy eventSpy(cmd.get(), &CmdInterface::sigCmdEvent);
+
+        cmd->execute(m_api);
+
+        ASSERT_EQ(resultSpy.count(), 1);
+        auto args = resultSpy.takeFirst();
+        EXPECT_EQ(args.at(0).toString(), "LD0/PTOC1.StrVal.setMag.f");
+        EXPECT_TRUE(args.at(1).toBool());
+
+        ASSERT_GE(eventSpy.count(), 2);
+        CmdEvent ev = eventSpy.last().at(0).value<CmdEvent>();
+        EXPECT_EQ(ev.m_type, FINISH_EVENT);
+        EXPECT_TRUE(ev.m_result);
+    }
+
+    TEST_F(WriteValueTest, Write_Failure)
+    {
+        EXPECT_CALL(m_api->mockState(), writeValueByRef(_, _, _))
+            .WillOnce(Return(QString("Write failed: access-denied")));
+
+        auto cmd = WriteValue_Cmd::create(
+            "LD0/PTOC1.StrVal.setMag.f", "CF", "999");
+
+        QSignalSpy resultSpy(cmd.get(), &WriteValue_Cmd::sigWriteResult);
+
+        cmd->execute(m_api);
+
+        ASSERT_EQ(resultSpy.count(), 1);
+        auto args = resultSpy.takeFirst();
+        EXPECT_FALSE(args.at(1).toBool());
     }
 }

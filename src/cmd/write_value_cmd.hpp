@@ -21,25 +21,31 @@
 
 #pragma once
 
-#include "core/data_model.hpp"
+#include "cmd_interface.hpp"
 
-#include <QVariantList>
-
-namespace Cmd::Interface
+namespace Cmd
 {
-    class IED_StateAPI
+    class WriteValue_Cmd : public CmdInterface
     {
+        Q_OBJECT
     public:
-        virtual ~IED_StateAPI() {}
+        WriteValue_Cmd(const QString &ref, const QString &fc, const QString &value)
+            : m_ref{ref}, m_fc{fc}, m_value{value}
+        {}
+        ~WriteValue_Cmd() override = default;
 
-        virtual Core::ModelStateUpdater::ptr getStatusForAllLD(Core::DataModel::ptr model) = 0;
-        virtual Core::ModelStateUpdater::ptr getStatusForAllLN(Core::LogicalDevice::ptr ld) = 0;
+        void execute(Cmd::Interface::IEC61850_API::ptr api) override;
 
-        virtual Core::ModelStateUpdater::ptr getValsForLN(Core::LogicalNode::ptr ln) = 0;
-        virtual Core::ModelStateUpdater::ptr getValsForDS(Core::DataSet::ptr ds) = 0;
+        static auto create(const QString &ref, const QString &fc, const QString &value) {
+            return QSharedPointer<WriteValue_Cmd>::create(ref, fc, value);
+        }
 
-        virtual QVariantList readValuesByRef(const QStringList &refs, const QStringList &fcs) = 0;
+    signals:
+        void sigWriteResult(QString ref, bool success, QString message);
 
-        virtual QString writeValueByRef(const QString &ref, const QString &fc, const QString &value) = 0;
+    private:
+        QString m_ref;
+        QString m_fc;
+        QString m_value;
     };
 }

@@ -41,6 +41,7 @@ namespace Core
         {}
 
         ModelItem::ptr base() const { return m_dataObject; }
+        ModelItem::ptr valueItem() const { return m_value; }
         QString    name() const { return m_path; }
         QString    fc() const { return m_fc; }
         QString    value() const {

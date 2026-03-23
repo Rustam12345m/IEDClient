@@ -41,6 +41,8 @@ namespace Libiec61850
 
         QVariantList readValuesByRef(const QStringList &refs, const QStringList &fcs) override;
 
+        QString writeValueByRef(const QString &ref, const QString &fc, const QString &value) override;
+
     private:
         ApiAdapter&   m_api;
     };

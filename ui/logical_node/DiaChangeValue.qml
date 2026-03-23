@@ -31,39 +31,79 @@ ModalDialog {
     id: rootID
 
     property string doReference: ""
-    property alias text: msgText.text
-    property alias value: valueBox.text
+    property string fc: ""
+    property string statusMsg: ""
+    property bool lastResultSuccess: true
 
-    signal sigResult(bool user, string ref, string val)
+    signal sigWrite(string ref, string fcStr, string val)
 
-    title: "Change Value"
+    title: "Write Value"
     dialogWidth: 450
-    dialogHeight: 200
+    dialogHeight: 260
     closePolicy: Popup.CloseOnEscape
+
+    function openWrite(ref, fcStr, msg, val) {
+        rootID.doReference = ref
+        rootID.fc = fcStr
+        msgText.text = msg
+        valueBox.text = val
+        rootID.statusMsg = ""
+        rootID.lastResultSuccess = true
+        rootID.open()
+        valueBox.forceActiveFocus()
+        valueBox.selectAll()
+    }
+
+    function setResult(success, message) {
+        lastResultSuccess = success
+        statusMsg = message
+    }
+
+    function isActive() {
+        return rootID.visible
+    }
+
+    function fcDescription(f) {
+        switch (f) {
+        case "SP": return "Setpoint"
+        case "SV": return "Substitution"
+        case "SE": return "Setting (editable)"
+        case "CF": return "Configuration"
+        case "DC": return "Description"
+        case "BL": return "Blocking"
+        default: return f
+        }
+    }
 
     ColumnLayout {
         anchors.fill: parent
-        spacing: 10
+        anchors.margins: 8
+        spacing: 8
 
+        // Reference
         Label {
             id: msgText
-
             Layout.fillWidth: true
-            Layout.topMargin: 10
-
-            horizontalAlignment: Text.AlignHCenter
             color: VisualStyle.statusBar.textColor
-            font.pixelSize: 14
-
+            font.pixelSize: 12
+            elide: Text.ElideMiddle
             text: ""
         }
 
+        // FC
+        Label {
+            Layout.fillWidth: true
+            color: VisualStyle.statusBar.textColor
+            font.pixelSize: 12
+            text: "FC: " + rootID.fc + " (" + fcDescription(rootID.fc) + ")"
+            visible: rootID.fc.length > 0
+        }
+
+        // Value input
         TextField {
             id: valueBox
 
             Layout.fillWidth: true
-            Layout.leftMargin: 10
-            Layout.rightMargin: 10
 
             verticalAlignment: Text.AlignVCenter
             focus: true
@@ -72,16 +112,24 @@ ModalDialog {
             text: ""
 
             Keys.onReturnPressed: {
-                sigResult(true, rootID.doReference, valueBox.text)
-                rootID.close()
+                rootID.sigWrite(rootID.doReference, rootID.fc, valueBox.text)
             }
             Keys.onEnterPressed: {
-                sigResult(true, rootID.doReference, valueBox.text)
-                rootID.close()
+                rootID.sigWrite(rootID.doReference, rootID.fc, valueBox.text)
             }
         }
 
         Item { Layout.fillHeight: true }
+
+        // Status message
+        Text {
+            Layout.fillWidth: true
+            text: rootID.statusMsg
+            color: rootID.lastResultSuccess ? "yellow" : "red"
+            font.pixelSize: 12
+            wrapMode: Text.WordWrap
+            visible: rootID.statusMsg.length > 0
+        }
 
         RowLayout {
             Layout.alignment: Qt.AlignHCenter
@@ -89,29 +137,19 @@ ModalDialog {
             spacing: 20
 
             Button {
-                text: "Ok"
+                text: "Write"
                 onClicked: {
-                    sigResult(true, rootID.doReference, valueBox.text)
-                    rootID.close()
+                    rootID.statusMsg = "Writing..."
+                    rootID.lastResultSuccess = true
+                    rootID.sigWrite(rootID.doReference, rootID.fc, valueBox.text)
                 }
             }
             Button {
-                text: "Cancel"
+                text: "Close"
                 onClicked: {
                     rootID.close()
                 }
             }
         }
-    }
-
-    function isActive() {
-        return rootID.visible
-    }
-
-    function open(ref, msg, val) {
-        rootID.doReference = ref
-        msgText.text = msg
-        valueBox.text = val
-        rootID.open()
     }
 }

@@ -24,6 +24,7 @@
 #include "backend_interface.hpp"
 
 #include "cmd/control_cmd.hpp"
+#include "cmd/write_value_cmd.hpp"
 #include "cmd/update_goose_cbs_cmd.hpp"
 #include "cmd/update_sv_cbs_cmd.hpp"
 #include "cmd/set_goose_enable_cmd.hpp"
@@ -100,6 +101,12 @@ namespace App
                                        int bufTm, int intgPd,
                                        const QString &rptId, const QString &datSet);
 
+        // Write operations
+        Q_INVOKABLE void writeValue(const QString &ref, const QString &fc, const QString &value);
+        Q_INVOKABLE QString getSettingsItemRef(int proxyRow);
+        Q_INVOKABLE QString getSettingsItemFC(int proxyRow);
+        Q_INVOKABLE QString getSettingsItemValue(int proxyRow);
+
         // Control operations
         Q_INVOKABLE QString getControlObjectRef(int proxyRow);
         Q_INVOKABLE void queryControlInfo(const QString &objRef);
@@ -133,6 +140,7 @@ namespace App
         void sigControlInfo(QString objRef, int ctlModel, int ctlValType);
         void sigControlResult(QString objRef, bool success, QString message);
         void sigCommandTermination(QString objRef, bool success, QString addCause);
+        void sigWriteResult(QString ref, bool success, QString message);
 
     public slots:
         void slotConnected(bool done) override;

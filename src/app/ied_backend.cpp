@@ -321,6 +321,69 @@ namespace App
         putCmdToQueue(cmd);
     }
 
+    // ── Write operations ─────────────────────────────────────────────
+
+    void IED_Backend::writeValue(const QString &ref, const QString &fc, const QString &value)
+    {
+        auto cmd = Cmd::WriteValue_Cmd::create(ref, fc, value);
+        connect(cmd.get(), &Cmd::WriteValue_Cmd::sigWriteResult,
+                this, &IED_Backend::sigWriteResult, Qt::QueuedConnection);
+        putCmdToQueue(cmd);
+    }
+
+    QString IED_Backend::getSettingsItemRef(int proxyRow)
+    {
+        QModelIndex proxyIdx = m_sortSettingsModel->index(proxyRow, 0);
+        QModelIndex sourceIdx = m_sortSettingsModel->mapToSource(proxyIdx);
+        int sourceRow = sourceIdx.row();
+
+        auto matrix = m_lnSettingsModel->getCurrectLN()
+                          ? m_lnSettingsModel->getCurrectLN()->getSettingsMatrix()
+                          : nullptr;
+
+        if (!matrix || sourceRow < 0 || sourceRow >= matrix->size()) {
+            return {};
+        }
+
+        auto &rows = matrix->getRows();
+        auto item = rows[sourceRow].valueItem();
+        return item ? item->getReference() : QString();
+    }
+
+    QString IED_Backend::getSettingsItemFC(int proxyRow)
+    {
+        QModelIndex proxyIdx = m_sortSettingsModel->index(proxyRow, 0);
+        QModelIndex sourceIdx = m_sortSettingsModel->mapToSource(proxyIdx);
+        int sourceRow = sourceIdx.row();
+
+        auto matrix = m_lnSettingsModel->getCurrectLN()
+                          ? m_lnSettingsModel->getCurrectLN()->getSettingsMatrix()
+                          : nullptr;
+
+        if (!matrix || sourceRow < 0 || sourceRow >= matrix->size()) {
+            return {};
+        }
+
+        return matrix->fc(sourceRow);
+    }
+
+    QString IED_Backend::getSettingsItemValue(int proxyRow)
+    {
+        QModelIndex proxyIdx = m_sortSettingsModel->index(proxyRow, 0);
+        QModelIndex sourceIdx = m_sortSettingsModel->mapToSource(proxyIdx);
+        int sourceRow = sourceIdx.row();
+
+        auto matrix = m_lnSettingsModel->getCurrectLN()
+                          ? m_lnSettingsModel->getCurrectLN()->getSettingsMatrix()
+                          : nullptr;
+
+        if (!matrix || sourceRow < 0 || sourceRow >= matrix->size()) {
+            return {};
+        }
+
+        return matrix->value(sourceRow);
+    }
+
     // ── Control operations ──────────────────────────────────────────
 
     QString IED_Backend::getControlObjectRef(int proxyRow)

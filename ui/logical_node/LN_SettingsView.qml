@@ -28,7 +28,7 @@ import AppStylesModule
 
 import "qrc:/common/"
 
-// Read-only table of SP/SE/SG (settings) attributes for the selected Logical Node
+// Settings attributes table with double-click to write
 Item
 {
     id: rootID
@@ -99,6 +99,15 @@ Item
                 Globals.toggleSelectedRow(tableID, row)
                 tableID.multiSelect = false
             }
+            onSigDoubleClick: function(row, col) {
+                if (Globals.selectedRowCount(tableID) > 1) return
+                var ref = iedBackend.getSettingsItemRef(row)
+                var fc = iedBackend.getSettingsItemFC(row)
+                var val = iedBackend.getSettingsItemValue(row)
+                if (ref.length > 0) {
+                    writeDialog.openWrite(ref, fc, ref, val)
+                }
+            }
         }
 
         ScrollBar.vertical: ScrollBar {
@@ -145,5 +154,22 @@ Item
         color: VisualStyle.textColor
         font.pixelSize: 14
         visible: tableID.rows === 0
+    }
+
+    DiaChangeValue {
+        id: writeDialog
+
+        onSigWrite: function(ref, fcStr, val) {
+            iedBackend.writeValue(ref, fcStr, val)
+        }
+    }
+
+    Connections {
+        target: iedBackend
+        function onSigWriteResult(ref, success, message) {
+            if (writeDialog.isActive()) {
+                writeDialog.setResult(success, message)
+            }
+        }
     }
 }
