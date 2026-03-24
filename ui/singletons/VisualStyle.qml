@@ -53,7 +53,7 @@ QtObject
     property color statusInactiveColor:     "#878787"
 
     // Feedback colors (operation results, validation)
-    property color successColor:            "#d7af00"
+    property color successColor:            "#d0ffd0"
     property color errorTextColor:          "#ffcccc"
 
     // Secondary/dimmed text
