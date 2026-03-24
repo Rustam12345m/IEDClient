@@ -122,6 +122,8 @@ namespace Libiec61850
 
                     fetchLN_SVCB(builder);
 
+                    fetchLN_SGCB(builder);
+
                     node = LinkedList_getNext(node); // next LN
                 }
                 LinkedList_destroy(lnList);
@@ -385,6 +387,67 @@ namespace Libiec61850
 
         fetchSVCBList(ACSI_CLASS_MSVCB, true,  "MS");
         fetchSVCBList(ACSI_CLASS_USVCB, false, "US");
+        return 0;
+    }
+
+    int IED_ModelAPI_Impl::fetchLN_SGCB(Core::DataModelBuilder &builder)
+    {
+        IedClientError retval = IED_ERROR_OK;
+        QString lnRef = builder.lastLN()->getReference();
+
+        // SGCB only exists on LLN0
+        if (!lnRef.endsWith("/LLN0")) {
+            return 0;
+        }
+
+        LinkedList sgcbList = IedConnection_getLogicalNodeDirectory(m_api.m_libConn, &retval,
+                                  lnRef.toStdString().data(), ACSI_CLASS_SGCB);
+
+        if (retval != IED_ERROR_OK || sgcbList == nullptr) {
+            return 0;
+        }
+
+        // Usually only one SGCB per LD
+        LinkedList sgcb = LinkedList_getNext(sgcbList);
+        if (sgcb != nullptr) {
+            QString name = QString::fromLocal8Bit((char *)sgcb->data);
+            QString sgcbRef = lnRef + "." + name;
+            QString ldRef = lnRef.left(lnRef.indexOf('/'));
+
+            // Read SGCB structure as MMS object with FC=SP
+            MmsValue *sgcbVal = IedConnection_readObject(m_api.m_libConn, &retval,
+                sgcbRef.toStdString().data(), IEC61850_FC_SP);
+
+            if (retval == IED_ERROR_OK && sgcbVal != nullptr
+                && MmsValue_getType(sgcbVal) == MMS_STRUCTURE) {
+
+                int count = MmsValue_getArraySize(sgcbVal);
+                uint8_t numOfSG = 0, actSG = 0, editSG = 0;
+                bool cnfEdit = false;
+                uint64_t lActTm = 0;
+                uint16_t resvTms = 0;
+
+                // Parse by position: NumOfSG[0], ActSG[1], EditSG[2],
+                //                    CnfEdit[3], LActTm[4], ResvTms[5]
+                if (count > 0) numOfSG = (uint8_t)MmsValue_toUint32(MmsValue_getElement(sgcbVal, 0));
+                if (count > 1) actSG   = (uint8_t)MmsValue_toUint32(MmsValue_getElement(sgcbVal, 1));
+                if (count > 2) editSG  = (uint8_t)MmsValue_toUint32(MmsValue_getElement(sgcbVal, 2));
+                if (count > 3) cnfEdit = MmsValue_getBoolean(MmsValue_getElement(sgcbVal, 3));
+                if (count > 4) lActTm  = MmsValue_getUtcTimeInMs(MmsValue_getElement(sgcbVal, 4));
+                if (count > 5) resvTms = (uint16_t)MmsValue_toUint32(MmsValue_getElement(sgcbVal, 5));
+
+                builder.createSGCB(ldRef, numOfSG, actSG);
+                auto sgcbItem = builder.lastSGCB();
+                sgcbItem->setEditSG(editSG);
+                sgcbItem->setCnfEdit(cnfEdit);
+                sgcbItem->setLActTm(lActTm);
+                sgcbItem->setResvTms(resvTms);
+
+                MmsValue_delete(sgcbVal);
+            }
+        }
+
+        LinkedList_destroy(sgcbList);
         return 0;
     }
 }

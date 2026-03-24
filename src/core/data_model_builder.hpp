@@ -43,6 +43,7 @@ namespace Core
         DataModelBuilder& createRCB(const QString &name, const QString &lnRef, bool isBuffered);
         DataModelBuilder& createGOCB(const QString &name, const QString &lnRef);
         DataModelBuilder& createSVCB(const QString &name, const QString &lnRef, bool isMulticast);
+        DataModelBuilder& createSGCB(const QString &ldRef, uint8_t numOfSG, uint8_t actSG);
 
         auto lastLD() const { return m_lastLD; }
         auto lastLN() const { return m_lastLN; }
@@ -54,6 +55,7 @@ namespace Core
         auto lastRCB() const { return m_lastRCB; }
         auto lastGOCB() const { return m_lastGOCB; }
         auto lastSVCB() const { return m_lastSVCB; }
+        auto lastSGCB() const { return m_lastSGCB; }
 
         DataModel::ptr    build(QThread *guiThread);
 
@@ -69,5 +71,6 @@ namespace Core
         ReportBlock::ptr        m_lastRCB;
         GooseControlBlock::ptr  m_lastGOCB;
         SV_ControlBlock::ptr    m_lastSVCB;
+        SGCB::ptr               m_lastSGCB;
     };
 }

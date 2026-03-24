@@ -28,19 +28,28 @@ import AppStylesModule
 
 import "qrc:/common/"
 
-// Settings attributes table with double-click to write
+// Settings attributes table with double-click to write + SGCB panel
 Item
 {
     id: rootID
 
     readonly property int defDelegateHeight: 30
 
+    SGCBPanel {
+        id: sgcbPanel
+        anchors {
+            left: parent.left
+            right: parent.right
+            top: parent.top
+        }
+    }
+
     SortTableHeader {
         id: headerID
 
         anchors {
             left: tableID.left
-            top: parent.top
+            top: sgcbPanel.bottom
             right: parent.right
         }
     }
@@ -104,9 +113,18 @@ Item
                 var ref = iedBackend.getSettingsItemRef(row)
                 var fc = iedBackend.getSettingsItemFC(row)
                 var val = iedBackend.getSettingsItemValue(row)
-                if (ref.length > 0) {
+                if (ref.length === 0) return
+
+                // SE requires active edit session
+                if (fc === "SE" && sgcbPanel.editSG === 0) {
                     writeDialog.openWrite(ref, fc, ref, val)
+                    writeDialog.setResult(false, "Start an edit session first")
+                    return
                 }
+                // SG is read-only
+                if (fc === "SG") return
+
+                writeDialog.openWrite(ref, fc, ref, val)
             }
         }
 
@@ -170,6 +188,16 @@ Item
             if (writeDialog.isActive()) {
                 writeDialog.setResult(success, message)
             }
+        }
+    }
+
+    // Refresh SGCB panel when LN selection changes (model reset)
+    Connections {
+        target: tableID.model
+        function onModelReset() {
+            var ldRef = iedBackend.getCurrentSettingsLDRef()
+            sgcbPanel.ldRef = ldRef
+            sgcbPanel.refresh()
         }
     }
 }

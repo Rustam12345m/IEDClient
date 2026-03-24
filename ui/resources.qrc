@@ -53,6 +53,7 @@
         <file>logical_node/LN_SettingsView.qml</file>
         <file>logical_node/DiaChangeValue.qml</file>
         <file>logical_node/DiaControlOperate.qml</file>
+        <file>logical_node/SGCBPanel.qml</file>
 
         <file>iedtree/Page.qml</file>
         <file>iedtree/WatchlistPanel.qml</file>

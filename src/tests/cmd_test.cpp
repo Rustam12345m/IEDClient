@@ -26,6 +26,7 @@
 #include "mock_api.hpp"
 #include "cmd/control_cmd.hpp"
 #include "cmd/write_value_cmd.hpp"
+#include "core/sgcb.hpp"
 
 using namespace testing;
 using namespace Cmd;
@@ -246,5 +247,38 @@ namespace UnitTests
         ASSERT_EQ(resultSpy.count(), 1);
         auto args = resultSpy.takeFirst();
         EXPECT_FALSE(args.at(1).toBool());
+    }
+
+    // ── SGCB model tests ─────────────────────────────────────────────
+
+    TEST(SGCBModel, DefaultValues)
+    {
+        auto sgcb = Core::SGCB::ptr::create("LD0", 5, 1);
+
+        EXPECT_EQ(sgcb->ldRef(), "LD0");
+        EXPECT_EQ(sgcb->sgcbRef(), "LD0/LLN0.SGCB");
+        EXPECT_EQ(sgcb->numOfSG(), 5);
+        EXPECT_EQ(sgcb->actSG(), 1);
+        EXPECT_EQ(sgcb->editSG(), 0);
+        EXPECT_FALSE(sgcb->cnfEdit());
+        EXPECT_EQ(sgcb->lActTm(), 0u);
+        EXPECT_EQ(sgcb->resvTms(), 0);
+    }
+
+    TEST(SGCBModel, SettersAndGetters)
+    {
+        auto sgcb = Core::SGCB::ptr::create("LD0", 3, 1);
+
+        sgcb->setActSG(2);
+        sgcb->setEditSG(1);
+        sgcb->setCnfEdit(true);
+        sgcb->setLActTm(1711234567000ULL);
+        sgcb->setResvTms(300);
+
+        EXPECT_EQ(sgcb->actSG(), 2);
+        EXPECT_EQ(sgcb->editSG(), 1);
+        EXPECT_TRUE(sgcb->cnfEdit());
+        EXPECT_EQ(sgcb->lActTm(), 1711234567000ULL);
+        EXPECT_EQ(sgcb->resvTms(), 300);
     }
 }

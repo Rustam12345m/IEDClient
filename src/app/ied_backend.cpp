@@ -321,6 +321,123 @@ namespace App
         putCmdToQueue(cmd);
     }
 
+    // ── SGCB operations ─────────────────────────────────────────────
+
+    static Core::SGCB::ptr findSGCB(Core::IED::ptr ied, const QString &ldRef)
+    {
+        for (const auto &sgcb : ied->model().getSGCBList()) {
+            if (sgcb->ldRef() == ldRef) return sgcb;
+        }
+        return nullptr;
+    }
+
+    void IED_Backend::setActiveSG(const QString &ldRef, int sg)
+    {
+        QString ref = ldRef + "/LLN0.SGCB.ActSG";
+        auto cmd = Cmd::WriteValue_Cmd::create(ref, "SP", QString::number(sg));
+        connect(cmd.get(), &Cmd::WriteValue_Cmd::sigWriteResult,
+                this, [this, ldRef](QString, bool ok, QString msg) {
+                    if (ok) {
+                        auto sgcb = findSGCB(m_con.m_ied, ldRef);
+                        if (sgcb) {
+                            auto refresh = Cmd::RefreshSGCB_Cmd::create(sgcb);
+                            connect(refresh.get(), &Cmd::RefreshSGCB_Cmd::sigSGCBRefreshed,
+                                    this, &IED_Backend::sigSGCBUpdated, Qt::QueuedConnection);
+                            putCmdToQueue(refresh);
+                        }
+                    }
+                    emit sigWriteResult(ldRef, ok, msg);
+                }, Qt::QueuedConnection);
+        putCmdToQueue(cmd);
+    }
+
+    void IED_Backend::selectEditSG(const QString &ldRef, int sg)
+    {
+        QString ref = ldRef + "/LLN0.SGCB.EditSG";
+        auto cmd = Cmd::WriteValue_Cmd::create(ref, "SP", QString::number(sg));
+        connect(cmd.get(), &Cmd::WriteValue_Cmd::sigWriteResult,
+                this, [this, ldRef](QString, bool ok, QString msg) {
+                    if (ok) {
+                        auto sgcb = findSGCB(m_con.m_ied, ldRef);
+                        if (sgcb) {
+                            auto refresh = Cmd::RefreshSGCB_Cmd::create(sgcb);
+                            connect(refresh.get(), &Cmd::RefreshSGCB_Cmd::sigSGCBRefreshed,
+                                    this, &IED_Backend::sigSGCBUpdated, Qt::QueuedConnection);
+                            putCmdToQueue(refresh);
+                        }
+                    }
+                    emit sigWriteResult(ldRef, ok, msg);
+                }, Qt::QueuedConnection);
+        putCmdToQueue(cmd);
+    }
+
+    void IED_Backend::confirmEditSG(const QString &ldRef)
+    {
+        QString ref = ldRef + "/LLN0.SGCB.CnfEdit";
+        auto cmd = Cmd::WriteValue_Cmd::create(ref, "SP", "True");
+        connect(cmd.get(), &Cmd::WriteValue_Cmd::sigWriteResult,
+                this, [this, ldRef](QString, bool ok, QString msg) {
+                    if (ok) {
+                        auto sgcb = findSGCB(m_con.m_ied, ldRef);
+                        if (sgcb) {
+                            auto refresh = Cmd::RefreshSGCB_Cmd::create(sgcb);
+                            connect(refresh.get(), &Cmd::RefreshSGCB_Cmd::sigSGCBRefreshed,
+                                    this, &IED_Backend::sigSGCBUpdated, Qt::QueuedConnection);
+                            putCmdToQueue(refresh);
+                        }
+                    }
+                    emit sigWriteResult(ldRef, ok, msg);
+                }, Qt::QueuedConnection);
+        putCmdToQueue(cmd);
+    }
+
+    void IED_Backend::cancelEditSG(const QString &ldRef)
+    {
+        QString ref = ldRef + "/LLN0.SGCB.EditSG";
+        auto cmd = Cmd::WriteValue_Cmd::create(ref, "SP", "0");
+        connect(cmd.get(), &Cmd::WriteValue_Cmd::sigWriteResult,
+                this, [this, ldRef](QString, bool ok, QString msg) {
+                    if (ok) {
+                        auto sgcb = findSGCB(m_con.m_ied, ldRef);
+                        if (sgcb) {
+                            auto refresh = Cmd::RefreshSGCB_Cmd::create(sgcb);
+                            connect(refresh.get(), &Cmd::RefreshSGCB_Cmd::sigSGCBRefreshed,
+                                    this, &IED_Backend::sigSGCBUpdated, Qt::QueuedConnection);
+                            putCmdToQueue(refresh);
+                        }
+                    }
+                    emit sigWriteResult(ldRef, ok, msg);
+                }, Qt::QueuedConnection);
+        putCmdToQueue(cmd);
+    }
+
+    QVariantMap IED_Backend::getSGCBInfo(const QString &ldRef)
+    {
+        QVariantMap info;
+        auto sgcb = findSGCB(m_con.m_ied, ldRef);
+        if (!sgcb) return info;
+
+        info["numOfSG"] = sgcb->numOfSG();
+        info["actSG"]   = sgcb->actSG();
+        info["editSG"]  = sgcb->editSG();
+        info["cnfEdit"] = sgcb->cnfEdit();
+        info["lActTm"]  = (qulonglong)sgcb->lActTm();
+        info["resvTms"] = sgcb->resvTms();
+        return info;
+    }
+
+    bool IED_Backend::hasSGCB(const QString &ldRef)
+    {
+        return findSGCB(m_con.m_ied, ldRef) != nullptr;
+    }
+
+    QString IED_Backend::getCurrentSettingsLDRef()
+    {
+        auto ln = m_lnSettingsModel->getCurrectLN();
+        if (!ln || !ln->getParent()) return {};
+        return ln->getParent()->getName();
+    }
+
     // ── Write operations ─────────────────────────────────────────────
 
     void IED_Backend::writeValue(const QString &ref, const QString &fc, const QString &value)

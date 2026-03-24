@@ -21,29 +21,30 @@
 
 #pragma once
 
-#include "cmd/interface/ied_model_api.hpp"
+#include "cmd_interface.hpp"
+#include "core/sgcb.hpp"
 
-namespace Libiec61850
+namespace Cmd
 {
-    class ApiAdapter;
-
-    class IED_ModelAPI_Impl : public Cmd::Interface::IED_ModelAPI
+    class RefreshSGCB_Cmd : public CmdInterface
     {
+        Q_OBJECT
     public:
-        IED_ModelAPI_Impl(ApiAdapter &api) : m_api(api) {};
-        ~IED_ModelAPI_Impl() override = default;
+        RefreshSGCB_Cmd(Core::SGCB::ptr sgcb)
+            : m_sgcb{sgcb}
+        {}
+        ~RefreshSGCB_Cmd() override = default;
 
-        int     fetchDataModel(Core::DataModelBuilder &builder) override;
+        void execute(Cmd::Interface::IEC61850_API::ptr api) override;
+
+        static auto create(Core::SGCB::ptr sgcb) {
+            return QSharedPointer<RefreshSGCB_Cmd>::create(sgcb);
+        }
+
+    signals:
+        void sigSGCBRefreshed(QString ldRef);
 
     private:
-        int     fetchLN_DO(Core::DataModelBuilder &builder);
-        int     fetchLN_DS(Core::DataModelBuilder &builder);
-        int     fetchLN_RCB(Core::DataModelBuilder &builder);
-        int     fetchLN_GOCB(Core::DataModelBuilder &builder);
-        int     fetchLN_SVCB(Core::DataModelBuilder &builder);
-        int     fetchLN_SGCB(Core::DataModelBuilder &builder);
-
-    private:
-        ApiAdapter&   m_api;
+        Core::SGCB::ptr m_sgcb;
     };
-};
+}

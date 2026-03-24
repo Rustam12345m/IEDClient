@@ -25,6 +25,7 @@ set(CORE_SOURCES
     report_control_block.hpp
     goose_control_block.hpp
     sv_control_block.hpp
+    sgcb.hpp
 
     fs_model.hpp
 

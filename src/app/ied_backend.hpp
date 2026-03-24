@@ -25,6 +25,7 @@
 
 #include "cmd/control_cmd.hpp"
 #include "cmd/write_value_cmd.hpp"
+#include "cmd/refresh_sgcb_cmd.hpp"
 #include "cmd/update_goose_cbs_cmd.hpp"
 #include "cmd/update_sv_cbs_cmd.hpp"
 #include "cmd/set_goose_enable_cmd.hpp"
@@ -101,6 +102,15 @@ namespace App
                                        int bufTm, int intgPd,
                                        const QString &rptId, const QString &datSet);
 
+        // SGCB operations
+        Q_INVOKABLE void setActiveSG(const QString &ldRef, int sg);
+        Q_INVOKABLE void selectEditSG(const QString &ldRef, int sg);
+        Q_INVOKABLE void confirmEditSG(const QString &ldRef);
+        Q_INVOKABLE void cancelEditSG(const QString &ldRef);
+        Q_INVOKABLE QVariantMap getSGCBInfo(const QString &ldRef);
+        Q_INVOKABLE bool hasSGCB(const QString &ldRef);
+        Q_INVOKABLE QString getCurrentSettingsLDRef();
+
         // Write operations
         Q_INVOKABLE void writeValue(const QString &ref, const QString &fc, const QString &value);
         Q_INVOKABLE QString getSettingsItemRef(int proxyRow);
@@ -141,6 +151,7 @@ namespace App
         void sigControlResult(QString objRef, bool success, QString message);
         void sigCommandTermination(QString objRef, bool success, QString addCause);
         void sigWriteResult(QString ref, bool success, QString message);
+        void sigSGCBUpdated(QString ldRef);
 
     public slots:
         void slotConnected(bool done) override;

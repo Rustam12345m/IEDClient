@@ -23,6 +23,7 @@
 
 #include "logical_device.hpp"
 #include "report_storage.hpp"
+#include "sgcb.hpp"
 
 namespace Core
 {
@@ -48,11 +49,13 @@ namespace Core
         const auto getReportCBList() { return m_rcb; }
         const auto getGO_CBList() { return m_gocb; }
         const auto getSV_CBList() { return m_svcb; }
+        const auto getSGCBList() { return m_sgcbs; }
 
         void pushDataSet(DataSet::ptr ds);
         void pushReportCB(ReportBlock::ptr cb);
         void pushGooseCB(GooseControlBlock::ptr cb);
         void pushSV_CB(SV_ControlBlock::ptr cb);
+        void pushSGCB(SGCB::ptr cb);
 
         ReportStorage* getOrCreateReportStorage(const QString &rcbRef);
 
@@ -67,6 +70,7 @@ namespace Core
         QList< ReportBlock::ptr >         m_rcb;
         QList< GooseControlBlock::ptr >   m_gocb;
         QList< SV_ControlBlock::ptr >     m_svcb;
+        QList< SGCB::ptr >               m_sgcbs;
         QMap<QString, ReportStorage*>     m_reportStorages;
     
     friend class DataModelBuilder;

@@ -71,6 +71,9 @@ set(SOURCES
 
     write_value_cmd.hpp
     write_value_cmd.cpp
+
+    refresh_sgcb_cmd.hpp
+    refresh_sgcb_cmd.cpp
 )
 
 qt_add_library(cmd_lib STATIC ${SOURCES})

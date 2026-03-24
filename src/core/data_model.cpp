@@ -147,6 +147,11 @@ namespace Core
         m_svcb.push_back(cb);
     }
 
+    void DataModel::pushSGCB(SGCB::ptr cb)
+    {
+        m_sgcbs.push_back(cb);
+    }
+
     ReportStorage* DataModel::getOrCreateReportStorage(const QString &rcbRef)
     {
         auto it = m_reportStorages.find(rcbRef);

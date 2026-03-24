@@ -103,6 +103,13 @@ namespace Core
         return *this;
     }
 
+    DataModelBuilder& DataModelBuilder::createSGCB(const QString &ldRef, uint8_t numOfSG, uint8_t actSG)
+    {
+        m_lastSGCB = SGCB::ptr::create(ldRef, numOfSG, actSG);
+        m_model->pushSGCB(m_lastSGCB);
+        return *this;
+    }
+
     QSharedPointer<DataModel> DataModelBuilder::build(QThread *guiThread)
     {
         m_model->resolveIEDName();
