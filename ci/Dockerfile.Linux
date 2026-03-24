@@ -41,11 +41,11 @@ RUN ARCH=$(uname -m) && \
     rm /tmp/linuxdeploy.AppImage /tmp/linuxdeploy-plugin-qt.AppImage
 
 # Install dump_syms for Breakpad symbol extraction
-# Pin Rust 1.85 to avoid goblin crate version conflict in dump_syms 2.3.x
+# --locked uses the bundled Cargo.lock to avoid transitive dep version conflicts
 RUN apt-get update && apt-get install -y --no-install-recommends curl && \
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain 1.85.0 && \
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal && \
     . /root/.cargo/env && \
-    CARGO_INSTALL_ROOT=/usr/local cargo install dump_syms@2.3.6 && \
+    CARGO_INSTALL_ROOT=/usr/local cargo install dump_syms@2.3.6 --locked && \
     rustup self uninstall -y && \
     apt-get purge -y curl && apt-get autoremove -y && rm -rf /var/lib/apt/lists/*
 

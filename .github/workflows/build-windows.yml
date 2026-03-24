@@ -21,11 +21,8 @@ jobs:
           arch: win64_mingw
           tools: tools_mingw1310
 
-      - name: Install Rust toolchain 1.85 (pinned for dump_syms compatibility)
-        run: rustup default 1.85.0
-
       - name: Install dump_syms
-        run: cargo install dump_syms@2.3.6
+        run: cargo install dump_syms@2.3.6 --locked
 
       - name: Configure
         run: >
