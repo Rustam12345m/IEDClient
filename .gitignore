@@ -90,5 +90,12 @@ squashfs-root*/
 # Tmp
 *.dtmp
 
-# Local task docs
+# Local docs (tasks, internal notes)
 docs/tasks/
+docs/architecture.md
+docs/invariants.md
+docs/control_operations.md
+docs/setting_groups.md
+docs/implementation_gaps.md
+docs/mms_feature_comparison.md
+docs/mms_write_operations.md
