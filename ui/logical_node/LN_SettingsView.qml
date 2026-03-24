@@ -97,7 +97,7 @@ Item
             delegateHeight: defDelegateHeight
             selected: { tableID.selVer; return tableID.selectionModel.isSelected(tableID.model.index(row, 0)) }
 
-            textAlign: (column == 0) ? Text.AlignLeft : Text.AlignRight
+            textAlign: (column === 0 || column === 5) ? Text.AlignLeft : Text.AlignRight
             text: model.display
 
             onSigClick: function(row, col) {
