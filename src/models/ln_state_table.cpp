@@ -124,7 +124,8 @@ namespace App::Models
                     return QVariant(doTable->fc(row));
                 }
                 case DO_VALUE_COLUMN: {
-                    return QVariant(doTable->value(row));
+                    auto v = doTable->value(row);
+                    return QVariant(v.isEmpty() ? QStringLiteral(" - ") : v);
                 }
                 case DO_QUALITY_COLUMN: {
                     return QVariant(doTable->quality(row));
@@ -146,7 +147,8 @@ namespace App::Models
                     return QVariant(doTable->fc(row));
                 }
                 case DO_VALUE_COLUMN: {
-                    return QVariant(doTable->value(row));
+                    auto v = doTable->value(row);
+                    return QVariant(v.isEmpty() ? QStringLiteral(" - ") : v);
                 }
                 case DO_QUALITY_COLUMN: {
                     return QVariant(doTable->quality(row));
