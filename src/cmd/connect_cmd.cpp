@@ -36,7 +36,7 @@ namespace Cmd
         QString err = api->connect(m_cred);
         if (!err.isEmpty()) {
             emit sigCmdEvent(CmdEvent::FinishEvent(m_cred.ip(),
-                    QString(tr("Cannot connect to %1:%2\n%3"))
+                    QString(tr("Cannot connect to %1:%2 — %3"))
                             .arg(m_cred.ip()).arg(m_cred.port()).arg(err),
                     false));
             return;
