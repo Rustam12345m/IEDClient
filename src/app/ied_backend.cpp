@@ -426,7 +426,10 @@ namespace App
     {
         auto cmd = Cmd::WriteValue_Cmd::create(ref, fc, value);
         connect(cmd.get(), &Cmd::WriteValue_Cmd::sigWriteResult,
-                this, &IED_Backend::sigWriteResult, Qt::QueuedConnection);
+                this, [this](QString r, bool ok, QString msg) {
+                    emit sigWriteResult(r, ok, msg);
+                    if (ok) updateLN_TreeValues();
+                }, Qt::QueuedConnection);
         putCmdToQueue(cmd);
     }
 
@@ -521,7 +524,10 @@ namespace App
             value);
 
         connect(cmd.get(), &Cmd::ControlOperate_Cmd::sigControlResult,
-                this, &IED_Backend::sigControlResult, Qt::QueuedConnection);
+                this, [this](QString r, bool ok, QString msg) {
+                    emit sigControlResult(r, ok, msg);
+                    if (ok) updateLN_TreeValues();
+                }, Qt::QueuedConnection);
         putCmdToQueue(cmd);
     }
 
@@ -535,7 +541,10 @@ namespace App
             value);
 
         connect(cmd.get(), &Cmd::ControlOperate_Cmd::sigControlResult,
-                this, &IED_Backend::sigControlResult, Qt::QueuedConnection);
+                this, [this](QString r, bool ok, QString msg) {
+                    emit sigControlResult(r, ok, msg);
+                    if (ok) updateLN_TreeValues();
+                }, Qt::QueuedConnection);
         putCmdToQueue(cmd);
     }
 
@@ -548,7 +557,10 @@ namespace App
             QVariant());
 
         connect(cmd.get(), &Cmd::ControlOperate_Cmd::sigControlResult,
-                this, &IED_Backend::sigControlResult, Qt::QueuedConnection);
+                this, [this](QString r, bool ok, QString msg) {
+                    emit sigControlResult(r, ok, msg);
+                    if (ok) updateLN_TreeValues();
+                }, Qt::QueuedConnection);
         putCmdToQueue(cmd);
     }
 
