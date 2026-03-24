@@ -40,7 +40,19 @@ namespace App::Models
             DO_VALUE_COLUMN,
             DO_QUALITY_COLUMN,
             DO_TS_COLUMN,
-            DO_DESC_COLUMN
+            DO_DESC_COLUMN,
+            COLUMN_COUNT = 6
+        };
+
+        enum ControlColumnType {
+            CO_NAME = 0,
+            CO_TYPE,
+            CO_VALUE,
+            CO_MODEL,
+            CO_SELD,
+            CO_OPOK,
+            CO_DESC,
+            CO_COLUMN_COUNT = 7
         };
 
     public:

@@ -63,31 +63,42 @@ namespace App::Models
         endResetModel();
     }
 
+    static QString ctlModelToString(const QString &val)
+    {
+        if (val == "0") return "Status";
+        if (val == "1") return "Direct";
+        if (val == "2") return "SBO";
+        if (val == "3") return "Dir+Enh";
+        if (val == "4") return "SBO+Enh";
+        return val.isEmpty() ? " - " : val;
+    }
+
     QVariant LN_SignalTable::headerData(int column, Qt::Orientation orientation, int role) const
     {
         if (orientation != Qt::Horizontal) {
             return QVariant();
         }
 
+        if (m_type == MatrixType::Controls) {
+            switch (column) {
+            case CO_NAME:  return QVariant::fromValue(SortHeaderValue("Name", true));
+            case CO_TYPE:  return QVariant::fromValue(SortHeaderValue("Type", true));
+            case CO_VALUE: return QVariant::fromValue(SortHeaderValue("Value", true));
+            case CO_MODEL: return QVariant::fromValue(SortHeaderValue("Model", true));
+            case CO_SELD:  return QVariant::fromValue(SortHeaderValue("Seld", true));
+            case CO_OPOK:  return QVariant::fromValue(SortHeaderValue("opOk", true));
+            case CO_DESC:  return QVariant::fromValue(SortHeaderValue("Description", false));
+            }
+            return QVariant("");
+        }
+
         switch (column) {
-        case DO_NAME_COLUMN: {
-            return QVariant::fromValue(SortHeaderValue("Name", true));
-        }
-        case DO_FC_COLUMN: {
-            return QVariant::fromValue(SortHeaderValue("FC", true));
-        }
-        case DO_VALUE_COLUMN: {
-            return QVariant::fromValue(SortHeaderValue("Value", true));
-        }
-        case DO_QUALITY_COLUMN: {
-            return QVariant::fromValue(SortHeaderValue("Quality", true));
-        }
-        case DO_TS_COLUMN: {
-            return QVariant::fromValue(SortHeaderValue("Timestamp", true));
-        }
-        case DO_DESC_COLUMN: {
-            return QVariant::fromValue(SortHeaderValue("Description", false));
-        }
+        case DO_NAME_COLUMN:    return QVariant::fromValue(SortHeaderValue("Name", true));
+        case DO_FC_COLUMN:      return QVariant::fromValue(SortHeaderValue("FC", true));
+        case DO_VALUE_COLUMN:   return QVariant::fromValue(SortHeaderValue("Value", true));
+        case DO_QUALITY_COLUMN: return QVariant::fromValue(SortHeaderValue("Quality", true));
+        case DO_TS_COLUMN:      return QVariant::fromValue(SortHeaderValue("Timestamp", true));
+        case DO_DESC_COLUMN:    return QVariant::fromValue(SortHeaderValue("Description", false));
         }
         return QVariant("");
     }
@@ -105,61 +116,53 @@ namespace App::Models
 
     int LN_SignalTable::columnCount(const QModelIndex &parent) const
     {
-        return 6;
+        return (m_type == MatrixType::Controls) ? int(CO_COLUMN_COUNT) : int(COLUMN_COUNT);
+    }
+
+    static inline QString orDash(const QString &v)
+    {
+        return v.isEmpty() ? QStringLiteral(" - ") : v;
     }
 
     QVariant LN_SignalTable::data(const QModelIndex &index, int role) const
     {
         int row = index.row(), col = index.column();
 
-        auto doTable = getMatrix();
-        if (doTable) {
-            if (role == ComRoles::ROLE_SORT_VALUE) {
-                // for sorting process
-                switch (col) {
-                case DO_NAME_COLUMN: {
-                    return QVariant(doTable->name(row));
-                }
-                case DO_FC_COLUMN: {
-                    return QVariant(doTable->fc(row));
-                }
-                case DO_VALUE_COLUMN: {
-                    auto v = doTable->value(row);
-                    return QVariant(v.isEmpty() ? QStringLiteral(" - ") : v);
-                }
-                case DO_QUALITY_COLUMN: {
-                    return QVariant(doTable->quality(row));
-                }
-                case DO_TS_COLUMN: {
-                    return QVariant(doTable->timestamp(row));
-                }
-                case DO_DESC_COLUMN: {
-                    return QVariant(doTable->description(row));
-                }
-                }
-            } else {
-                // for user interface
-                switch (col) {
-                case DO_NAME_COLUMN: {
-                    return QVariant(removeSomeParts(doTable->name(row)));
-                }
-                case DO_FC_COLUMN: {
-                    return QVariant(doTable->fc(row));
-                }
-                case DO_VALUE_COLUMN: {
-                    auto v = doTable->value(row);
-                    return QVariant(v.isEmpty() ? QStringLiteral(" - ") : v);
-                }
-                case DO_QUALITY_COLUMN: {
-                    return QVariant(doTable->quality(row));
-                }
-                case DO_TS_COLUMN: {
-                    return QVariant(doTable->timestamp(row));
-                }
-                case DO_DESC_COLUMN: {
-                    return QVariant(doTable->description(row));
-                }
-                }
+        auto matrix = getMatrix();
+        if (!matrix) return QVariant(" ? ");
+
+        // Controls table — different column layout
+        if (m_type == MatrixType::Controls) {
+            switch (col) {
+            case CO_NAME:  return QVariant(matrix->name(row));
+            case CO_TYPE:  return QVariant(orDash(matrix->ctlType(row)));
+            case CO_VALUE: return QVariant(orDash(matrix->value(row)));
+            case CO_MODEL: return QVariant(ctlModelToString(matrix->ctlModel(row)));
+            case CO_SELD:  return QVariant(orDash(matrix->stSeld(row)));
+            case CO_OPOK:  return QVariant(orDash(matrix->opOk(row)));
+            case CO_DESC:  return QVariant(orDash(matrix->description(row)));
+            }
+            return QVariant(" ? ");
+        }
+
+        // State / Settings tables — original 6-column layout
+        if (role == ComRoles::ROLE_SORT_VALUE) {
+            switch (col) {
+            case DO_NAME_COLUMN:    return QVariant(matrix->name(row));
+            case DO_FC_COLUMN:      return QVariant(matrix->fc(row));
+            case DO_VALUE_COLUMN:   return QVariant(orDash(matrix->value(row)));
+            case DO_QUALITY_COLUMN: return QVariant(matrix->quality(row));
+            case DO_TS_COLUMN:      return QVariant(matrix->timestamp(row));
+            case DO_DESC_COLUMN:    return QVariant(matrix->description(row));
+            }
+        } else {
+            switch (col) {
+            case DO_NAME_COLUMN:    return QVariant(removeSomeParts(matrix->name(row)));
+            case DO_FC_COLUMN:      return QVariant(matrix->fc(row));
+            case DO_VALUE_COLUMN:   return QVariant(orDash(matrix->value(row)));
+            case DO_QUALITY_COLUMN: return QVariant(matrix->quality(row));
+            case DO_TS_COLUMN:      return QVariant(matrix->timestamp(row));
+            case DO_DESC_COLUMN:    return QVariant(matrix->description(row));
             }
         }
         return QVariant(" ? ");
@@ -176,9 +179,12 @@ namespace App::Models
         auto matrixPtr = getMatrix();
         if (!matrixPtr) return;
         auto matrix = matrixPtr->getRows();
+        int lastCol = (m_type == MatrixType::Controls)
+                          ? (CO_COLUMN_COUNT - 1)
+                          : DO_TS_COLUMN;
         for (size_t i=0;i<matrix.size();i++) {
             if (matrix[i].base().get() == doItem) {
-                emit dataChanged(index(i, DO_VALUE_COLUMN), index(i, DO_TS_COLUMN));
+                emit dataChanged(index(i, 0), index(i, lastCol));
             }
         }
     }

@@ -21,6 +21,7 @@
 
 #include "ln_signal_matrix.hpp"
 #include "logical_node.hpp"
+#include "data_object.hpp"
 
 namespace Core
 {
@@ -88,5 +89,68 @@ namespace Core
                 recursiveFillMatrix(table, root, child, rowPrototype, fcFilter);
             }
         }
+    }
+
+    namespace
+    {
+        bool hasCOChildren(ModelItem::ptr item)
+        {
+            for (size_t i = 0; i < item->getItemCount(); i++) {
+                auto da = item->getItem(i).dynamicCast<DataAttribute>();
+                if (da && da->fcStr() == "CO") return true;
+            }
+            return false;
+        }
+
+        QString inferCDCType(ModelItem::ptr doItem)
+        {
+            // Check child names to infer CDC type
+            for (size_t i = 0; i < doItem->getItemCount(); i++) {
+                QString name = doItem->getItem(i)->getName();
+                if (name == "stVal") {
+                    auto da = doItem->getItem(i).dynamicCast<DataAttribute>();
+                    if (!da) continue;
+                    // Boolean → SPC, Dbpos (enum/integer with 4 states) → DPC, INT32 → INC
+                    QString val = da->getValue();
+                    if (val == "True" || val == "False") return "SPC";
+                    // Check if it looks like Dbpos (intermediate-state/off/on/bad-state)
+                    bool ok = false;
+                    int intVal = val.toInt(&ok);
+                    if (ok && intVal >= 0 && intVal <= 3) return "DPC";
+                    if (ok) return "INC";
+                    return "SPC";
+                }
+                if (name == "mag") return "APC";
+                if (name == "valWTr") return "BSC";
+            }
+            return " - ";
+        }
+    }
+
+    LN_SignalMatrix::ptr LN_SignalMatrixBuilder::createControlsMatrix(
+        QSharedPointer<LogicalNode> ln)
+    {
+        auto matrix = LN_SignalMatrix::ptr::create();
+
+        for (auto &item : ln->getItemList()) {
+            if (!hasCOChildren(item)) continue;
+
+            SignalMatrixRow row;
+            row.m_dataObject = item;
+            row.m_path = item->getName();
+            row.m_fc = "CO";
+
+            // Resolve all attributes once during build (cached as pointers)
+            row.m_value    = item->findSubItem("stVal");
+            if (!row.m_value) row.m_value = item->findSubItem("mag");
+            row.m_desc     = item->findSubItem("d");
+            row.m_ctlModel = item->findSubItem("ctlModel");
+            row.m_stSeld   = item->findSubItem("stSeld");
+            row.m_opOk     = item->findSubItem("opOk");
+            row.m_ctlType  = inferCDCType(item);
+
+            matrix->m_signals.emplace_back(row);
+        }
+        return matrix;
     }
 }

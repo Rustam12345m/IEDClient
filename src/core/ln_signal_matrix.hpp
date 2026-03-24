@@ -69,6 +69,18 @@ namespace Core
             return QString();
         }
 
+        // Control-specific accessors (resolved once during matrix build)
+        QString    ctlType() const { return m_ctlType; }
+        QString    ctlModel() const {
+            return m_ctlModel ? m_ctlModel->getValue() : QString();
+        }
+        QString    stSeld() const {
+            return m_stSeld ? m_stSeld->getValue() : QString();
+        }
+        QString    opOk() const {
+            return m_opOk ? m_opOk->getValue() : QString();
+        }
+
     private:
         ModelItem::ptr    m_dataObject;
         QString           m_path;
@@ -77,6 +89,12 @@ namespace Core
         ModelItem::ptr    m_quality;
         ModelItem::ptr    m_timestamp;
         ModelItem::ptr    m_desc;
+
+        // Control-specific (populated only by createControlsMatrix)
+        QString           m_ctlType;    // CDC: "SPC", "DPC", "INC", "APC", "BSC"
+        ModelItem::ptr    m_ctlModel;   // ctlModel (CF)
+        ModelItem::ptr    m_stSeld;     // stSeld (ST, optional)
+        ModelItem::ptr    m_opOk;       // opOk (ST, optional)
 
         friend class LN_SignalMatrixBuilder;
     };
@@ -149,6 +167,35 @@ namespace Core
             return "";
         }
 
+        QString     ctlType(int row) const
+        {
+            if (row >= 0 && row < m_signals.size()) {
+                return m_signals[row].ctlType();
+            }
+            return "";
+        }
+        QString     ctlModel(int row) const
+        {
+            if (row >= 0 && row < m_signals.size()) {
+                return m_signals[row].ctlModel();
+            }
+            return "";
+        }
+        QString     stSeld(int row) const
+        {
+            if (row >= 0 && row < m_signals.size()) {
+                return m_signals[row].stSeld();
+            }
+            return "";
+        }
+        QString     opOk(int row) const
+        {
+            if (row >= 0 && row < m_signals.size()) {
+                return m_signals[row].opOk();
+            }
+            return "";
+        }
+
         auto&       getRows() const {
             return m_signals;
         }
@@ -167,6 +214,7 @@ namespace Core
     public:
         static LN_SignalMatrix::ptr create(QSharedPointer< LogicalNode > ln,
                                            const QList<QString> &fcFilter);
+        static LN_SignalMatrix::ptr createControlsMatrix(QSharedPointer< LogicalNode > ln);
 
     private:
         static void recursiveFillMatrix(LN_SignalMatrix::ptr table,
