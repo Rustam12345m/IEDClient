@@ -54,7 +54,7 @@ QtObject
 
     // Feedback colors (operation results, validation)
     property color successColor:            "#d7af00"
-    property color errorTextColor:          "#ff4444"
+    property color errorTextColor:          "#ffcccc"
 
     // Secondary/dimmed text
     property color secondaryTextColor:      "#666666"
