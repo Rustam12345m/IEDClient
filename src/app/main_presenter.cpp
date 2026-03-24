@@ -66,8 +66,6 @@ namespace App
 
     void MainPresenter::connectTo(const QVariantMap &data)
     {
-        // qDebug() << "MainPresenter: Connect cmd";
-
         Cmd::IEDCredentials cred(data);
         m_con.createNewConnection(cred);
 
@@ -80,26 +78,12 @@ namespace App
 
     void MainPresenter::disconnectFrom()
     {
-        // qDebug() << "MainPresenter: Disconnect cmd";
-
         auto cmd = Cmd::DisConnectCmd::create(m_con.m_ied);
         m_con.m_cmdThread->putCommand(cmd);
     }
 
     void MainPresenter::toolDumpModel(const QVariantMap &data)
     {
-        /*
-        Cmd::IEDCredentials con(data);
-        QString dir = data.value("path").toString();
-
-        Tools::DumpModel *dump = new Tools::DumpModel(this);
-
-        connect(dump, &Tools::DumpModel::sigFinished, this, &MainPresenter::slotCmdFinished);
-        connect(dump, &Tools::DumpModel::sigProgress, this, &MainPresenter::slotCmdProgress);
-        */
-
-        // dump->init(dir, ip, port, tls, name, pass);
-        // dump->start();
     }
 
     void MainPresenter::copyToClipboard(const QString &text)

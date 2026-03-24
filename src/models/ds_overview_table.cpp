@@ -76,6 +76,5 @@ namespace App::Models
 
     void DS_OverviewTable::slotDataUpdated()
     {
-        //emit dataChanged(index(0, DS_LD_Column), index(rowCount() - 1, COLUMN_COUNT));
     }
 }

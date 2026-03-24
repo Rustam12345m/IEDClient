@@ -99,8 +99,6 @@ namespace App::Models
 
     QVariant IED_FileTable::data(const QModelIndex &index, int role) const
     {
-        //qDebug() << "FS: Data " << index.column() << " role = " << role;
-
         int row = index.row();
         if ((row >= 0) && (row < m_ied->fs().m_dir.m_file.size())) {
             if (role == ComRoles::ROLE_SORT_VALUE) {

@@ -31,8 +31,6 @@ namespace Core
         {
             auto &nodeList = item->getItemList();
             for (auto node : nodeList) {
-                // qDebug().noquote() << prefix << node->getName();
-
                 printTree(prefix + "  ", node);
             }
         }
@@ -112,17 +110,13 @@ namespace Core
             names.push_back(ref.mid(inx, ref.size() - inx));
         }
 
-        // qDebug() << "GetItemByRef: ref = " << ref << ", ldName = " << ldName << ", nameList = " << names;
         return recFindModelItem(names, 0, findSubItem(ldName));
     }
 
     void DataModel::print()
     {
-        // qDebug() << "IED: " << m_name;
-
         auto &ldList = m_items;
         for (auto ld : ldList) {
-            // qDebug() << "  LD: " << ld->getName();
             printTree("    ", ld);
         }
     }

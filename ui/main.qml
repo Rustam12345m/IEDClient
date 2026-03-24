@@ -88,14 +88,6 @@ ApplicationWindow
                 }
                 spacing: 4
 
-                // Delimiter
-                // Rectangle {
-                //     Layout.alignment: Qt.AlignVCenter
-
-                //     width: 1
-                //     height: toolBar.btnHeight - 4
-                //     color: VisualStyle.modalColor
-                // }
                 // Home
                 ToolBarButton {
                     Layout.alignment: Qt.AlignVCenter
@@ -137,41 +129,14 @@ ApplicationWindow
                         presenter.disconnectFrom()
                     }
                 }
-                // Navigation screen
-                // ToolBarButton {
-                //     Layout.alignment: Qt.AlignVCenter
-                //     width: toolBar.btnHeight
-                //     height: toolBar.btnHeight
-                //     icon: "qrc:/img/icons/view_comfy_alt.svg"
-                //     prompt: "Navigation window"
-                //     onSigClicked: function() {
-                //         console.log("Clicked: " + prompt)
-                //         rootWindowID.showNavigationGrid()
-                //     }
-                // }
                 // Delimiter
                 Rectangle {
-                    // anchors.verticalCenter: parent.verticalCenter
                     Layout.alignment: Qt.AlignVCenter
 
                     width: 1
                     height: toolBar.btnHeight - 4
                     color: VisualStyle.modalColor
                 }
-                // Table's columns to content size
-                // ToolBarButton {
-                //     Layout.alignment: Qt.AlignVCenter
-                //     width: toolBar.btnHeight
-                //     height: toolBar.btnHeight
-
-                //     icon: "qrc:/img/icons/code.svg"
-                //     prompt: "Set appropriate width for columns"
-
-                //     onSigClicked: function() {
-                //         console.log("Clicked: " + prompt)
-                //         rootWindowID.resizeColumnsOnPage()
-                //     }
-                // }
                 // Update
                 ToolBarButton {
                     Layout.alignment: Qt.AlignVCenter
@@ -194,7 +159,6 @@ ApplicationWindow
 
                 // Delimiter
                 Rectangle {
-                    // anchors.verticalCenter: parent.verticalCenter
                     Layout.alignment: Qt.AlignVCenter
 
                     width: 1
@@ -662,9 +626,6 @@ ApplicationWindow
             appConnStatus: presenter.iedConStatus
         }
 
-        Keys.onPressed: function(event) {
-            // console.log("Window: Key pressed " + event.key)
-        }
     }
 
     // Window-level shortcuts — fire regardless of which item holds focus.
@@ -693,7 +654,6 @@ ApplicationWindow
         repeat: false
 
         onTriggered: {
-            // console.log("Hide modal window by timeout")
             globalProgressBar.finishLoad()
         }
     }
@@ -816,7 +776,6 @@ ApplicationWindow
         mainTabBarID.currentIndex = page
     }
     function setActivePanel(index) {
-        //console.log("ActivatePanel: new index = " + index)
         if (index == Globals.Panel.HIDE) {
             propertyPanel.visible = false
         } else {
@@ -883,8 +842,6 @@ ApplicationWindow
 
     // Process
     function updateActivePage() {
-        // console.log("F5: Update active page")
-
         switch (mainStackID.currentIndex) {
         case Globals.Page.START: {
             break;
@@ -971,15 +928,4 @@ ApplicationWindow
     }
 
     // Debug
-    Timer {
-        id: debugTimerID
-
-        interval: 5000
-        //running: true
-        repeat: true
-
-        onTriggered: {
-            // console.log("Currently focused item:", rootWindowID.activeFocusItem)
-        }
-    }
 }

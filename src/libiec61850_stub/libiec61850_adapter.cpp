@@ -67,9 +67,6 @@ namespace Libiec61850
             IedConnection_installConnectionClosedHandler(m_libConn, &callback_ConnectionHandler, this);
 
             IedConnection_getDeviceModelFromServer(m_libConn, &retval);
-            if (retval != IED_ERROR_OK) {
-                // qDebug() << "!!! ERROR !!!: Connect, get model with error = " << retval;
-            }
         } else {
             IedConnection_destroy(m_libConn);
             m_libConn = nullptr;

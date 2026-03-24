@@ -108,14 +108,12 @@ FocusScope {
     }
 
     Keys.onPressed: function(event) {
-        //console.log("LD_Page: Key pressed " + event.key)
         if (event.key == Qt.Key_Return || event.key == Qt.Key_Enter) {
             sigActivatePage(Globals.Page.LN)
         }
     }
 
     onVisibleChanged: {
-        //console.log("LD_Grid: Focus " + visible)
         if (visible) {
             gridView.focus = true
         } else {

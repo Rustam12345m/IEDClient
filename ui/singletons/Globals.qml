@@ -50,7 +50,6 @@ QtObject
     function setSelectedRow(tableID, row)
     {
         if (tableID.currentRow === row) {
-            // return;
         }
 
         let idx = tableID.model.index(row, 0);

@@ -80,8 +80,6 @@ namespace App::Models
 
     void HistConTable::removeFromHistory(int idx)
     {
-        // qDebug() << "Remove from history index: " << idx;
-
         if (idx >= 0 && idx < m_con.size()) {
             beginResetModel();
             m_con.removeAt(idx);

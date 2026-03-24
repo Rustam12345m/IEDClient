@@ -48,7 +48,6 @@ namespace App::Models
 
     void LN_OverviewTable::setSelectedLN(int inx)
     {
-        //qDebug() << "LNs_Table: Selected LN = " << inx;
         emit sigLNSelected(m_ldevIndex, inx);
     }
 

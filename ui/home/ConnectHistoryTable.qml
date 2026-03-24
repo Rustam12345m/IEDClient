@@ -101,7 +101,6 @@ FocusScope
             }
 
             onSigDoubleClick: function(row, col) {
-                //console.log("On double click: row = " + row + ", col = " + col)
             }
         }
 

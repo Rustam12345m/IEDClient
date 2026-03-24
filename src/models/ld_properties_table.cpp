@@ -182,6 +182,5 @@ namespace App::Models
         beginResetModel();
         m_currentLD = ld;
         endResetModel();
-        //emit dataChanged(index(0, 0), index(rowCount() - 1, 0), { SECTION_ROLE, NAME_ROLE, VALUE_ROLE });
     }
 }

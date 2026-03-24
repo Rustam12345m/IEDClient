@@ -170,7 +170,6 @@ namespace App::Models
         }
 
         Core::ModelItem *doItem = nodes->front();
-        // qDebug() << "LN_SignalTable: slotDataUpdated, do =" << doItem->getName();
 
         auto matrixPtr = getMatrix();
         if (!matrixPtr) return;
@@ -180,12 +179,10 @@ namespace App::Models
                 emit dataChanged(index(i, DO_VALUE_COLUMN), index(i, DO_TS_COLUMN));
             }
         }
-        // emit dataChanged(index(0, DO_NAME_COLUMN), index(rowCount() - 1, DO_DESC_COLUMN));
     }
 
     void LN_SignalTable::slotLNSelected(int ld, int ln)
     {
-        // qDebug() << "LN_SignalTable: ld = " << ld << " ln = " << ln;
         Core::LogicalNode::ptr lnNode = m_ied->model().getLogicalNode(ld, ln);
         if (lnNode != m_lnode) {
             if (m_lnode) {

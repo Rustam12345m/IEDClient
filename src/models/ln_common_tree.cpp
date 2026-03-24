@@ -163,8 +163,6 @@ namespace App::Models
 
     void LN_CommonTree::slotLNSelected(int ld, int ln)
     {
-        // qDebug() << "LN_CommonTree: ld = " << ld << " ln = " << ln;
-
         Core::LogicalNode::ptr lnNode = m_ied->model().getLogicalNode(ld, ln);
         if (lnNode != m_lnode) {
             if (m_lnode) {

@@ -72,8 +72,6 @@ Item
         fsBackend.downloadFile(getFilename(row), getFileSize(row))
     }
     function cmdRemoveFile(row) {
-        // console.log("Control: Remove file N" + row)
-
         fsBackend.removeFile(getFilename(row), row)
     }
 

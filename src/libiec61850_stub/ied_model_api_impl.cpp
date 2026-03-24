@@ -91,7 +91,6 @@ namespace Libiec61850
 
         LinkedList ldList = IedConnection_getLogicalDeviceList(m_api.m_libConn, &retval);
         if (retval != IED_ERROR_OK) {
-            //printf("Failed to read device list (error code: %i)\n", retval);
             return -2;
         }
 

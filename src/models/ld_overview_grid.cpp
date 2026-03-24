@@ -86,7 +86,6 @@ namespace App::Models
 
     void LD_OverviewGrid::setSelectedLD(int ld)
     {
-        //qDebug() << "LD_OverviewGrid: Selected LD = " << ld;
         emit sigLDSelected(ld);
     }
 
@@ -109,8 +108,6 @@ namespace App::Models
 
     void LD_OverviewGrid::slotDataUpdated(Core::ModelItem::ptrList nodes)
     {
-        // qDebug() << "LD_OverviewGrid: Data updated";
-
         beginResetModel();
         endResetModel();
     }

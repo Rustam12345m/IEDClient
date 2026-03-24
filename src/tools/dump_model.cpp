@@ -33,7 +33,6 @@ namespace Tools
 
     DumpModel::~DumpModel()
     {
-        // qDebug() << "DumpModel: Destructor";
     }
 
     void DumpModel::init(const QString &dir, const QString &ip, unsigned int port,
@@ -49,14 +48,11 @@ namespace Tools
 
     void DumpModel::run()
     {
-        // qDebug() << "DumpModel start process";
         for (int i=0;i<10;i++) {
             emit sigProgress(i * 5, QString("Progress is %1").arg(i * 5));
             QThread::sleep(1);
         }
         emit sigFinished(true);
-
-        // qDebug() << "DumpModel finish";
         this->deleteLater();
     }
 }

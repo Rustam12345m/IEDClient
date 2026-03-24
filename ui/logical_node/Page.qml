@@ -38,7 +38,6 @@ FocusScope
     property int modelVer: 0
 
     function resizeColumnsOnPage() {
-        // console.log("LN_Page: resizeColumnsOnPage")
         tableDO.resizeColumnsToContent()
     }
 

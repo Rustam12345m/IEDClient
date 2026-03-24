@@ -59,7 +59,6 @@ namespace App
 
     void IED_FS_Backend::removeFile(const QString &filename, int row)
     {
-        // qDebug() << "IED_FS_Backend: Remove file " << filename;
         auto cmd = Cmd::RemoveFileCMD::create(filename, row);
 
         connect(cmd.get(), &Cmd::RemoveFileCMD::sigFileRemoved, m_fsModel, &Models::IED_FileTable::slotRemoveFile);

@@ -86,8 +86,6 @@ namespace App
 
     void IED_Backend::updateLDs_Status()
     {
-        // qDebug() << "IED_Backend: Update LDs";
-
         auto cmd = Cmd::UpdateLDs_StatusCmd::create(m_con.m_ied);
         connect(cmd.get(), &Cmd::UpdateLDs_StatusCmd::sigModelValues,
                 this, &IED_Backend::slotUpdateItems, Qt::QueuedConnection);
@@ -97,8 +95,6 @@ namespace App
 
     void IED_Backend::updateLNs_Status()
     {
-        // qDebug() << "IED_Backend: Update LNs";
-
         auto cmd = Cmd::UpdateLNs_StatusCmd::create(m_con.m_ied, m_lnsModel->getLogicalDevice());
         connect(cmd.get(), &Cmd::UpdateLNs_StatusCmd::sigModelValues,
                 this, &IED_Backend::slotUpdateItems, Qt::QueuedConnection);
@@ -108,8 +104,6 @@ namespace App
 
     void IED_Backend::updateRCBs_Status()
     {
-        // qDebug() << "IED_Backend: Update RCBs";
-
         auto cmd = Cmd::UpdateRCBs_Cmd::create(m_con.m_ied);
 
         connect(cmd.get(), &Cmd::CmdInterface::sigCmdEvent, this,
@@ -126,8 +120,6 @@ namespace App
 
     void IED_Backend::updateGOOSE_Status()
     {
-        // qDebug() << "IED_Backend: Update GOOSE CBs";
-
         auto cmd = Cmd::UpdateGooseCBs_Cmd::create(m_con.m_ied);
 
         connect(cmd.get(), &Cmd::CmdInterface::sigCmdEvent, this,
@@ -143,8 +135,6 @@ namespace App
 
     void IED_Backend::updateSV_Status()
     {
-        // qDebug() << "IED_Backend: Update SV CBs";
-
         auto cmd = Cmd::UpdateSVCBs_Cmd::create(m_con.m_ied);
 
         connect(cmd.get(), &Cmd::CmdInterface::sigCmdEvent, this,
@@ -162,7 +152,6 @@ namespace App
     {
         const auto &gocbList = m_con.m_ied->model().getGO_CBList();
         if (index < 0 || index >= gocbList.size()) {
-            // qDebug() << "IED_Backend: Invalid GOOSE index" << index;
             return;
         }
 
@@ -184,7 +173,6 @@ namespace App
     {
         const auto &svcbList = m_con.m_ied->model().getSV_CBList();
         if (index < 0 || index >= svcbList.size()) {
-            // qDebug() << "IED_Backend: Invalid SV index" << index;
             return;
         }
 
@@ -233,11 +221,8 @@ namespace App
 
     void IED_Backend::updateLN_TreeValues()
     {
-        // qDebug() << "IED_Backend: Update LN command";
-
         auto lnode = m_lnStateModel->getCurrectLN();
         if (lnode == nullptr) {
-            // qDebug() << "IED_Backend: LNode not found!";
             return;
         }
 
@@ -250,8 +235,6 @@ namespace App
 
     void IED_Backend::updateDS_Values()
     {
-        // qDebug() << "IED_Backend: Update DataSet";
-
         Core::DataSet::ptr ds = m_dsSigModel->getDataSet();
         auto cmd = Cmd::UpdateDataSet_Cmd::create(m_con.m_ied, ds);
         connect(cmd.get(), &Cmd::UpdateDataSet_Cmd::sigModelValues, this,
@@ -274,7 +257,6 @@ namespace App
         model->setSelectedRCB(index);
         auto rcb = model->getSelectedReportBlock();
         if (!rcb) {
-            // qDebug() << "IED_Backend: No RCB selected";
             return;
         }
 
