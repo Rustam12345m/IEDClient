@@ -5,6 +5,8 @@ Rules and patterns established during development that must be maintained.
 ## Build & CI
 
 - **Always use `./ci/build_local.sh --release --check --archive`** for building; it produces an AppImage via Docker. Never build manually with cmake outside the container.
+- **`--check` runs unit tests**: After building with sanitizers + linter, `ctest --output-on-failure` executes in the build directory. Works with `--hack --check` for incremental builds too.
+- **GitHub CI runs tests before packaging**: The `test` job gates the `appimage` job via `needs: test`.
 - **Suppress verbose output** during AppImage packaging: `cmake --install` and `linuxdeploy` calls redirect stdout to `/dev/null`.
 - **Don't auto-build** after every change. The user will check manually. Only build when explicitly asked.
 
@@ -13,7 +15,8 @@ Rules and patterns established during development that must be maintained.
 - **libiec61850 callbacks run on an internal network thread**, not the Qt main thread. All `MmsValue` data must be copied to `QString`/Qt types inside the callback before returning (pointers are invalid after callback returns).
 - **`ReportStorage::addReport()`** is mutex-guarded (same pattern as `EventStorage`).
 - **`sigReportReceived`** must be connected with `Qt::QueuedConnection` so it arrives on the Qt main thread.
-- **On disconnect**: uninstall all report handlers BEFORE calling `IedConnection_abort()` to prevent dangling callback pointers.
+- **On disconnect**: uninstall all report handlers and destroy active control client BEFORE calling `IedConnection_abort()` to prevent dangling callback pointers.
+- **`sigCommandTermination`** fires from libiec61850 network thread. Connected with `Qt::QueuedConnection` to cross to the Qt main thread (same pattern as `sigConClosed`).
 
 ## Report Handler Lifecycle
 
@@ -211,3 +214,30 @@ Rules and patterns established during development that must be maintained.
 
 - **`updateActivePage()` must handle all page types**: Every `Globals.Page.*` value needs a case in the switch. `IED_TREE` calls `iedBackend.updateWatchlistValues()`.
 - **Global `Shortcut` intercepts F5 before local `Keys.onPressed`**: Page-level F5 handlers are unreachable — all F5 logic must go through `updateActivePage()` in `main.qml`.
+
+## Control Operations (Direct Control / SBO)
+
+- **`ControlObjectClient` persists across SBO sequence**: `getOrCreateClient(objRef)` reuses the existing client if the objRef matches, otherwise destroys the old one and creates new. This is required because SBO Select and Operate must use the same client instance — the server tracks selection per client.
+- **`CommandTerminationHandler` installed on every new control client**: For ctlModel 3/4 (Enhanced Security), the callback fires asynchronously after physical execution. Emits `sigCommandTermination(objRef, success, addCause)` through `IEC61850_API`.
+- **CommandTermination+ detection**: `lastErr.error == CONTROL_ERROR_NO_ERROR && lastErr.addCause == ADD_CAUSE_UNKNOWN`. Any other `addCause` value indicates CommandTermination-.
+- **Control flags (Test, Interlock, Synchro)**: Stored in `IED_ControlAPI_Impl` members, applied to the active client before each operation. Backend setters call through directly (no command needed — just sets bools).
+- **`controlCancel()` destroys the active client**: After cancel, the SBO reservation is released.
+- **`getControlInfo()` uses temporary client**: Read-only operation, no persistence needed.
+- **`addCauseToString(int)`**: Maps IEC 61850 AddCause codes (0-27) to human-readable strings in `control_types.hpp`.
+
+## MMS Write Operations
+
+- **`writeValueByRef(ref, fc, value)` auto-detects MMS type**: Reads the current value first via `IedConnection_readObject` to get the MMS type, then uses the corresponding typed write function (`writeBooleanValue`, `writeInt32Value`, `writeFloatValue`, `writeVisibleStringValue`, etc.). Returns empty string on success, error message on failure.
+- **`WriteValue_Cmd`**: Standard command pattern. Emits `sigWriteResult(ref, success, message)` + CmdEvent FINISH.
+- **Settings tab double-click to write**: `getSettingsItemRef/FC/Value(proxyRow)` resolve the proxy row through the sort model to the settings matrix. `valueItem()` accessor on `SignalMatrixRow` provides the `ModelItem` for `getReference()`.
+- **`DiaChangeValue.openWrite()`**: Named `openWrite` not `open` to avoid shadowing `Popup.open()`. Signal parameter `fcStr` not `fc` to avoid shadowing the property `fc`.
+- **FC writability in Settings tab**: SP always writable, SE writable only during SGCB edit session, SG always read-only.
+
+## Setting Groups (SGCB)
+
+- **SGCB exists only on LLN0**: `fetchLN_SGCB()` skips non-LLN0 logical nodes. One SGCB per LD maximum.
+- **SGCB discovery uses generic MMS read**: No dedicated client API in libiec61850. Uses `ACSI_CLASS_SGCB` for discovery, then `IedConnection_readObject(ref, IEC61850_FC_SP)` to read the 6-field MMS structure.
+- **SGCB structure fields by position**: NumOfSG[0], ActSG[1], EditSG[2], CnfEdit[3], LActTm[4], ResvTms[5].
+- **All SGCB operations reuse `WriteValue_Cmd`**: `setActiveSG` writes `SGCB.ActSG`, `selectEditSG` writes `SGCB.EditSG`, `confirmEditSG` writes `SGCB.CnfEdit=True`, `cancelEditSG` writes `SGCB.EditSG=0`. All with FC=SP.
+- **Write → Refresh pattern**: After each SGCB write, a `RefreshSGCB_Cmd` is queued to re-read the SGCB state, then `sigSGCBUpdated(ldRef)` is emitted to update QML.
+- **SGCBPanel visibility**: Only shown when `numOfSG > 0`. Refreshes on LN selection change via `onModelReset` signal from the settings table model.
