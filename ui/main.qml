@@ -498,7 +498,7 @@ ApplicationWindow
                             onVisibleChanged: {
                                 if (visible) {
                                     focus = true
-                                    setPageStatusText("")
+                                    setPageStatusText("IED Tree")
                                     setActivePanel(Globals.Panel.HIDE)
                                 } else {
                                     focus = false

@@ -79,9 +79,11 @@ Rectangle
 
             id: pageStatusTextID
             height: parent.height
+            Layout.maximumWidth: 400
 
             horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter
+            elide: Text.ElideRight
 
             font.bold: VisualStyle.boldHeaderText
             color: VisualStyle.statusBar.textColor
