@@ -62,7 +62,7 @@ Window
                 text: qsTr("IEDClient - An Open-Source Client for IEC 61850 Protocols")
                 padding: 5
                 font.bold: true
-                font.pointSize: 12
+                font.pixelSize: VisualStyle.fontSizeMedium
             }
         }
         Rectangle {
@@ -103,7 +103,7 @@ Window
 
                             text: name
                             padding: 5
-                            font.pointSize: 10
+                            font.pixelSize: VisualStyle.fontSizeSmall
 
                             horizontalAlignment: TextEdit.AlignRight
                         }
@@ -118,7 +118,7 @@ Window
 
                             text: desc
                             padding: 5
-                            font.pointSize: 10
+                            font.pixelSize: VisualStyle.fontSizeSmall
                             font.bold: true
 
                             horizontalAlignment: TextEdit.AlignLeft    
@@ -135,7 +135,7 @@ Window
 
                             text: "<a href='" + web + "'>" + web + "</a>"
                             padding: 5
-                            font.pointSize: 10
+                            font.pixelSize: VisualStyle.fontSizeSmall
 
                             horizontalAlignment: TextEdit.AlignLeft    
 

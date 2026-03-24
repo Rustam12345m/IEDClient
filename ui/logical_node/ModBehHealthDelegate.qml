@@ -50,7 +50,6 @@ Item
         anchors.fill: parent
 
         clip: true
-        // border.color: (selected ? "black" : "lightgray")
         border.color: VisualStyle.table.rowBorderColor2
         color: (selected ? VisualStyle.table.selRowColor : VisualStyle.table.rowColor1)
 

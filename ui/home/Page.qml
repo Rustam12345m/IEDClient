@@ -162,7 +162,7 @@ Item {
                                 width:          parent.width
                                 text:           "    " + rootID.getField(cardID.index, 1) +
                                                 "  ·  " + rootID.getField(cardID.index, 4)
-                                color:          "#666666"
+                                color:          VisualStyle.secondaryTextColor
                                 font.pixelSize: 11
                                 font.family:    VisualStyle.fontFamily
                                 elide:          Text.ElideRight

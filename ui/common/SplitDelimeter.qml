@@ -33,7 +33,7 @@ Rectangle
     implicitWidth: VisualStyle.delimeterWidth
     width: VisualStyle.delimeterWidth
 
-    color: rootID.pressed ? "#707070" : VisualStyle.borderColor
+    color: rootID.pressed ? VisualStyle.delimiterPressedColor : VisualStyle.borderColor
 
     Rectangle {
         anchors.centerIn: parent
@@ -42,8 +42,7 @@ Rectangle
         height: 40
         radius: 1
 
-        // color: rootID.pressed ? "#202020" : "#707070"
-        color: rootID.pressed ? "white" : "#707070"
+        color: rootID.pressed ? "white" : VisualStyle.delimiterPressedColor
     }
 
     containmentMask: Item {

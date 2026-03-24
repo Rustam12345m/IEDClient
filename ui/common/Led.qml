@@ -22,6 +22,8 @@
 import QtQuick
 import QtQuick.Controls
 
+import AppStylesModule
+
 Item
 {
     property alias color: led.color
@@ -44,10 +46,7 @@ Item
         width: 16
         radius: height/2
 
-        // border.width: 1
-        // border.color: "black"
-
-        color: "gray"
+        color: VisualStyle.statusInactiveColor
 
         MouseArea {
             id: mouseArea

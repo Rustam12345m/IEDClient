@@ -43,7 +43,7 @@ Item
 
     function loadFromModel() {
         if (!svModel) return
-        svEnaLed.color    = svModel.selectedSvEna() ? "#4CAF50" : "gray"
+        svEnaLed.color    = svModel.selectedSvEna() ? VisualStyle.statusActiveColor : VisualStyle.statusInactiveColor
         svEnaText.text    = svModel.selectedSvEna() ? "Yes" : "No"
         svTypeText.text   = svModel.selectedIsMulticast() ? "MSVCB" : "USVCB"
         svIdText.text     = svModel.selectedSvId()
@@ -102,7 +102,7 @@ Item
                         id: svEnaLed
                         anchors.verticalCenter: parent.verticalCenter
                         width: 12; height: 12; radius: 6
-                        color: "gray"
+                        color: VisualStyle.statusInactiveColor
                     }
                     Text {
                         id: svEnaText

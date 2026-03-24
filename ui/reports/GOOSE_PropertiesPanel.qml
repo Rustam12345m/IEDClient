@@ -43,7 +43,7 @@ Item
 
     function loadFromModel() {
         if (!gooseModel) return
-        gooseEnaLed.color   = gooseModel.selectedGoEna() ? "#4CAF50" : "gray"
+        gooseEnaLed.color   = gooseModel.selectedGoEna() ? VisualStyle.statusActiveColor : VisualStyle.statusInactiveColor
         gooseEnaText.text   = gooseModel.selectedGoEna() ? "Yes" : "No"
         gooseIdField.text   = gooseModel.selectedGoId()
         datSetField.text    = gooseModel.selectedDatSet()
@@ -104,7 +104,7 @@ Item
                         id: gooseEnaLed
                         anchors.verticalCenter: parent.verticalCenter
                         width: 12; height: 12; radius: 6
-                        color: "gray"
+                        color: VisualStyle.statusInactiveColor
                     }
                     Text {
                         id: gooseEnaText

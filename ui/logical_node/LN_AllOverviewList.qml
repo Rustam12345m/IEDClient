@@ -147,7 +147,7 @@ FocusScope
                         Rectangle {
                             anchors.verticalCenter: parent.verticalCenter
                             width: 12; height: 12; radius: 6
-                            color: model.mod ? model.mod.color : "gray"
+                            color: model.mod ? model.mod.color : VisualStyle.statusInactiveColor
                         }
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
@@ -171,7 +171,7 @@ FocusScope
                         Rectangle {
                             anchors.verticalCenter: parent.verticalCenter
                             width: 12; height: 12; radius: 6
-                            color: model.beh ? model.beh.color : "gray"
+                            color: model.beh ? model.beh.color : VisualStyle.statusInactiveColor
                         }
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
@@ -195,7 +195,7 @@ FocusScope
                         Rectangle {
                             anchors.verticalCenter: parent.verticalCenter
                             width: 12; height: 12; radius: 6
-                            color: model.health ? model.health.color : "gray"
+                            color: model.health ? model.health.color : VisualStyle.statusInactiveColor
                         }
                         Text {
                             anchors.verticalCenter: parent.verticalCenter

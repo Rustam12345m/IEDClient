@@ -120,12 +120,12 @@ ModalDialog
                 text: "Object:"
                 color: VisualStyle.statusBar.textColor
                 font.bold: true
-                font.pixelSize: 12
+                font.pixelSize: VisualStyle.fontSizeMedium
             }
             Text {
                 text: rootID.objectRef
                 color: VisualStyle.statusBar.textColor
-                font.pixelSize: 12
+                font.pixelSize: VisualStyle.fontSizeMedium
                 Layout.fillWidth: true
                 elide: Text.ElideMiddle
             }
@@ -138,12 +138,12 @@ ModalDialog
                 text: "Model:"
                 color: VisualStyle.statusBar.textColor
                 font.bold: true
-                font.pixelSize: 12
+                font.pixelSize: VisualStyle.fontSizeMedium
             }
             Text {
                 text: modelName(rootID.ctlModel)
                 color: VisualStyle.statusBar.textColor
-                font.pixelSize: 12
+                font.pixelSize: VisualStyle.fontSizeMedium
             }
         }
 
@@ -155,12 +155,12 @@ ModalDialog
                 text: "Type:"
                 color: VisualStyle.statusBar.textColor
                 font.bold: true
-                font.pixelSize: 12
+                font.pixelSize: VisualStyle.fontSizeMedium
             }
             Text {
                 text: valTypeName(rootID.ctlValType)
                 color: VisualStyle.statusBar.textColor
-                font.pixelSize: 12
+                font.pixelSize: VisualStyle.fontSizeMedium
             }
         }
 
@@ -180,7 +180,7 @@ ModalDialog
                 text: "Value:"
                 color: VisualStyle.statusBar.textColor
                 font.bold: true
-                font.pixelSize: 12
+                font.pixelSize: VisualStyle.fontSizeMedium
             }
             Switch {
                 id: boolSwitch
@@ -196,7 +196,7 @@ ModalDialog
                 text: "Value:"
                 color: VisualStyle.statusBar.textColor
                 font.bold: true
-                font.pixelSize: 12
+                font.pixelSize: VisualStyle.fontSizeMedium
             }
             SpinBox {
                 id: intSpin
@@ -215,7 +215,7 @@ ModalDialog
                 text: "Value:"
                 color: VisualStyle.statusBar.textColor
                 font.bold: true
-                font.pixelSize: 12
+                font.pixelSize: VisualStyle.fontSizeMedium
             }
             TextField {
                 id: floatField
@@ -251,8 +251,8 @@ ModalDialog
         Text {
             Layout.fillWidth: true
             text: rootID.statusMsg
-            color: rootID.lastResultSuccess ? "yellow" : "red"
-            font.pixelSize: 12
+            color: rootID.lastResultSuccess ? VisualStyle.successColor : VisualStyle.errorTextColor
+            font.pixelSize: VisualStyle.fontSizeMedium
             wrapMode: Text.WordWrap
             visible: rootID.statusMsg.length > 0
         }

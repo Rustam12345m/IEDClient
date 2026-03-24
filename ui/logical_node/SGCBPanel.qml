@@ -69,15 +69,15 @@ Item {
         Text {
             text: "Setting Groups"
             font.bold: true
-            font.pixelSize: 12
+            font.pixelSize: VisualStyle.fontSizeMedium
             color: VisualStyle.section.text
         }
 
         // Active SG row
         RowLayout {
             spacing: 8
-            Text { text: "Groups: " + rootID.numOfSG; font.pixelSize: 12; color: VisualStyle.textColor }
-            Text { text: "Active:"; font.pixelSize: 12; color: VisualStyle.textColor }
+            Text { text: "Groups: " + rootID.numOfSG; font.pixelSize: VisualStyle.fontSizeMedium; color: VisualStyle.textColor }
+            Text { text: "Active:"; font.pixelSize: VisualStyle.fontSizeMedium; color: VisualStyle.textColor }
             ComboBox {
                 id: actSGCombo
                 model: buildModel(rootID.numOfSG)
@@ -95,7 +95,7 @@ Item {
         // Edit session row
         RowLayout {
             spacing: 8
-            Text { text: "Edit:"; font.pixelSize: 12; color: VisualStyle.textColor }
+            Text { text: "Edit:"; font.pixelSize: VisualStyle.fontSizeMedium; color: VisualStyle.textColor }
             ComboBox {
                 id: editSGCombo
                 model: buildModel(rootID.numOfSG)
@@ -129,7 +129,7 @@ Item {
         // Status
         Text {
             text: rootID.statusMsg
-            font.pixelSize: 11
+            font.pixelSize: VisualStyle.fontSizeSmall
             color: rootID.editSG > 0 ? "#2e7d32" : VisualStyle.textColor
             visible: rootID.statusMsg.length > 0
         }

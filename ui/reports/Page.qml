@@ -183,7 +183,7 @@ FocusScope
                                     Rectangle {
                                         anchors.verticalCenter: parent.verticalCenter
                                         width: 12; height: 12; radius: 6
-                                        color: model.display === "Yes" ? "#4CAF50" : "gray"
+                                        color: model.display === "Yes" ? VisualStyle.statusActiveColor : VisualStyle.statusInactiveColor
                                     }
                                     Text {
                                         anchors.verticalCenter: parent.verticalCenter

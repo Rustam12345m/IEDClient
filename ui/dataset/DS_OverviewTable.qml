@@ -103,7 +103,6 @@ FocusScope
                         border.color: VisualStyle.table.rowBorderColor2
 
                         clip: true
-                        // color: (index === listViewID.selectedIndex) ? "lightgray" : "white"
                         color: (index === listViewID.selectedIndex) ? VisualStyle.table.selRowColor : VisualStyle.table.rowColor1
 
                         Text {
@@ -128,7 +127,6 @@ FocusScope
                         border.color: VisualStyle.table.rowBorderColor2
 
                         clip: true
-                        // color: (index === listViewID.selectedIndex) ? "lightgray" : "white"
                         color: (index === listViewID.selectedIndex) ? VisualStyle.table.selRowColor : VisualStyle.table.rowColor1
 
                         Text {

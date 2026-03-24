@@ -85,7 +85,7 @@ ModalDialog {
             id: msgText
             Layout.fillWidth: true
             color: VisualStyle.statusBar.textColor
-            font.pixelSize: 12
+            font.pixelSize: VisualStyle.fontSizeMedium
             elide: Text.ElideMiddle
             text: ""
         }
@@ -94,7 +94,7 @@ ModalDialog {
         Label {
             Layout.fillWidth: true
             color: VisualStyle.statusBar.textColor
-            font.pixelSize: 12
+            font.pixelSize: VisualStyle.fontSizeMedium
             text: "FC: " + rootID.fc + " (" + fcDescription(rootID.fc) + ")"
             visible: rootID.fc.length > 0
         }
@@ -125,8 +125,8 @@ ModalDialog {
         Text {
             Layout.fillWidth: true
             text: rootID.statusMsg
-            color: rootID.lastResultSuccess ? "yellow" : "red"
-            font.pixelSize: 12
+            color: rootID.lastResultSuccess ? VisualStyle.successColor : VisualStyle.errorTextColor
+            font.pixelSize: VisualStyle.fontSizeMedium
             wrapMode: Text.WordWrap
             visible: rootID.statusMsg.length > 0
         }

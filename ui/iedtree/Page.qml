@@ -47,14 +47,14 @@ FocusScope {
         handle: Rectangle {
             implicitWidth: VisualStyle.delimeterWidth
             height: splitView.height
-            color: SplitHandle.pressed ? "#707070" : VisualStyle.borderColor
+            color: SplitHandle.pressed ? VisualStyle.delimiterPressedColor : VisualStyle.borderColor
 
             Rectangle {
                 anchors.centerIn: parent
                 width: 2
                 height: 40
                 radius: 1
-                color: SplitHandle.pressed ? "white" : "#707070"
+                color: SplitHandle.pressed ? "white" : VisualStyle.delimiterPressedColor
             }
         }
 

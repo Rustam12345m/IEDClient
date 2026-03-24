@@ -82,7 +82,7 @@ Item {
                     elide: Text.ElideRight
 
                     font.bold: selected
-                    font.pointSize: 12
+                    font.pixelSize: VisualStyle.fontSizeMedium
                     color: selected ? "#ffffff" : VisualStyle.textColor
 
                     text: "LD: " + ld_object.name
@@ -122,7 +122,7 @@ Item {
 
                                 text: model.param
 
-                                font.pointSize: 10
+                                font.pixelSize: VisualStyle.fontSizeSmall
                             }
                             Led {
                                 Layout.preferredWidth: 16
@@ -137,7 +137,7 @@ Item {
                                 text: model.value
                                 color: VisualStyle.textColor
 
-                                font.pointSize: 10
+                                font.pixelSize: VisualStyle.fontSizeSmall
                                 font.bold: VisualStyle.boldHeaderText
                             }
                         }

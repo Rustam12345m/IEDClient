@@ -28,7 +28,9 @@ QtObject
     // Font
     readonly property string fontFamily:    "Noto Sans Mono"
     readonly property int fontSizeSmall:    11
+    readonly property int fontSizeMedium:   12
     readonly property int fontSizeNormal:   13
+    readonly property int fontSizeHeading:  14
     readonly property int fontSizeLarge:    16
 
     // Window & Common
@@ -45,6 +47,20 @@ QtObject
     // Modal
     property color modalColor:              "#0087af"
     property color errorModalColor:         "#8b0000"
+
+    // Status indicators (LEDs, enabled/disabled markers)
+    property color statusActiveColor:       "#4CAF50"
+    property color statusInactiveColor:     "#878787"
+
+    // Feedback colors (operation results, validation)
+    property color successColor:            "#d7af00"
+    property color errorTextColor:          "#ff4444"
+
+    // Secondary/dimmed text
+    property color secondaryTextColor:      "#666666"
+
+    // Delimiter pressed state
+    property color delimiterPressedColor:   "#707070"
 
     // Overlay (modal backdrop, navigation grid shade)
     property color overlayColor:            "#2a2a2a"
@@ -86,21 +102,6 @@ QtObject
         property color border:             "#b0b0b0"
         property color text:               "#0D0D0D"
         property color placeholder:        "#a0a0a0"
-    }
-
-    // Action buttons (confirm / danger)
-    property QtObject button: QtObject {
-        property color successBg:          "#2e7d32"
-        property color successText:        "#ffffff"
-        property color dangerBg:           "#b71c1c"
-        property color dangerText:         "#ffffff"
-    }
-
-    // Progress / loading dialog
-    property QtObject progress: QtObject {
-        property color bg:                 "#0087af"
-        property color shade:              "#1a1a1a"
-        property color text:               "#eeeeee"
     }
 
     // LD grid styles

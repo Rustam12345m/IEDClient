@@ -161,7 +161,7 @@ Item
                         width: dataSetID.width
                         contentItem: Text {
                             text: modelData
-                            color: (index === 0 && dataSetID.unknownValue) ? "red" : palette.text
+                            color: (index === 0 && dataSetID.unknownValue) ? VisualStyle.errorTextColor : VisualStyle.textColor
                             font.bold: index === dataSetID.currentIndex
                             elide: Text.ElideRight
                         }
