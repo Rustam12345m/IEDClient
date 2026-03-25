@@ -394,22 +394,32 @@ namespace Libiec61850
         Cmd::Interface::CtlValType mmsTypeToCtlValType(MmsType type)
         {
             switch (type) {
-            case MMS_BOOLEAN:  return Cmd::Interface::CtlValType::Boolean;
-            case MMS_INTEGER:  return Cmd::Interface::CtlValType::Integer;
-            case MMS_UNSIGNED: return Cmd::Interface::CtlValType::Unsigned;
-            case MMS_FLOAT:    return Cmd::Interface::CtlValType::Float;
-            default:           return Cmd::Interface::CtlValType::Unknown;
+            case MMS_BOOLEAN:   return Cmd::Interface::CtlValType::Boolean;
+            case MMS_INTEGER:   return Cmd::Interface::CtlValType::Integer;
+            case MMS_UNSIGNED:  return Cmd::Interface::CtlValType::Unsigned;
+            case MMS_FLOAT:     return Cmd::Interface::CtlValType::Float;
+            case MMS_STRUCTURE: return Cmd::Interface::CtlValType::Float; // APC AnalogueValue
+            default:            return Cmd::Interface::CtlValType::Unknown;
             }
         }
 
-        MmsValue *createCtlVal(Cmd::Interface::CtlValType type, const QVariant &value)
+        MmsValue *createCtlVal(Cmd::Interface::CtlValType type, const QVariant &value,
+                               MmsType origType = MMS_FLOAT)
         {
             using VT = Cmd::Interface::CtlValType;
             switch (type) {
             case VT::Boolean:  return MmsValue_newBoolean(value.toBool());
             case VT::Integer:  return MmsValue_newIntegerFromInt32(value.toInt());
             case VT::Unsigned: return MmsValue_newUnsignedFromUint32(static_cast<uint32_t>(value.toUInt()));
-            case VT::Float:    return MmsValue_newFloat(value.toFloat());
+            case VT::Float: {
+                // APC: ctlVal is AnalogueValue structure wrapping f or i
+                if (origType == MMS_STRUCTURE) {
+                    MmsValue *av = MmsValue_createEmptyStructure(1);
+                    MmsValue_setElement(av, 0, MmsValue_newFloat(value.toFloat()));
+                    return av;
+                }
+                return MmsValue_newFloat(value.toFloat());
+            }
             default:           return nullptr;
             }
         }
@@ -535,7 +545,8 @@ namespace Libiec61850
 
         ControlObjectClient_setControlModel(client, static_cast<ControlModel>(static_cast<int>(model)));
 
-        MmsValue *val = createCtlVal(valType, value);
+        MmsType origType = ControlObjectClient_getCtlValType(client);
+        MmsValue *val = createCtlVal(valType, value, origType);
         if (!val) {
             return false;
         }
@@ -557,7 +568,8 @@ namespace Libiec61850
 
         bool ok = false;
         if (model == Cmd::Interface::CtlModel::SBOEnhanced) {
-            MmsValue *val = createCtlVal(valType, value);
+            MmsType origType = ControlObjectClient_getCtlValType(client);
+            MmsValue *val = createCtlVal(valType, value, origType);
             if (val) {
                 ok = ControlObjectClient_selectWithValue(client, val);
                 MmsValue_delete(val);

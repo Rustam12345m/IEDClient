@@ -166,11 +166,9 @@ namespace Core
             // SPC/DPC/INC use stVal; APC uses mag.f (FLOAT32) or mag.i (INT32)
             row.m_value = item->findSubItem("stVal");
             if (!row.m_value) {
-                auto mag = item->findSubItem("mag");
-                if (mag) {
-                    row.m_value = mag->findSubItem("f");
-                    if (!row.m_value) row.m_value = mag->findSubItem("i");
-                }
+                row.m_value = item->findSubItem("mag", "f");
+                if (!row.m_value) row.m_value = item->findSubItem("mag", "i");
+                if (!row.m_value) row.m_value = item->findSubItem("mag");
             }
             row.m_desc     = item->findSubItem("d");
             row.m_ctlModel = item->findSubItem("ctlModel");
