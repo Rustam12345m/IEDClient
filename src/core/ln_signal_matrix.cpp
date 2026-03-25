@@ -104,26 +104,48 @@ namespace Core
 
         QString inferCDCType(ModelItem::ptr doItem)
         {
-            // Check child names to infer CDC type
+            bool hasStVal = false;
+            bool hasMag = false;
+            bool hasValWTr = false;
+
             for (size_t i = 0; i < doItem->getItemCount(); i++) {
                 QString name = doItem->getItem(i)->getName();
-                if (name == "stVal") {
-                    auto da = doItem->getItem(i).dynamicCast<DataAttribute>();
-                    if (!da) continue;
-                    // Boolean → SPC, Dbpos (enum/integer with 4 states) → DPC, INT32 → INC
-                    QString val = da->getValue();
-                    if (val == "True" || val == "False") return "SPC";
-                    // Check if it looks like Dbpos (intermediate-state/off/on/bad-state)
-                    bool ok = false;
-                    int intVal = val.toInt(&ok);
-                    if (ok && intVal >= 0 && intVal <= 3) return "DPC";
-                    if (ok) return "INC";
-                    return "SPC";
-                }
-                if (name == "mag") return "APC";
-                if (name == "valWTr") return "BSC";
+                if (name == "stVal")  hasStVal = true;
+                if (name == "mag")    hasMag = true;
+                if (name == "valWTr") hasValWTr = true;
             }
-            return " - ";
+
+            // APC: has mag (analogue magnitude structure)
+            if (hasMag) return "APC";
+            // BSC: has valWTr (value with transient)
+            if (hasValWTr) return "BSC";
+
+            if (!hasStVal) return " - ";
+
+            // Distinguish SPC/DPC/INC by checking stVal type:
+            // SPC.stVal is Boolean, DPC.stVal is Dbpos (INT, 0-3), INC.stVal is INT32
+            // Check Oper.ctlVal children to distinguish DPC from INC:
+            // DPC Oper.ctlVal is a leaf (Dbpos), INC Oper.ctlVal is also a leaf (INT32)
+            // Use stVal value heuristic: Boolean → SPC, otherwise check for 'q' sibling
+            // that indicates it's a status attribute
+            auto stVal = doItem->findSubItem("stVal");
+            if (stVal) {
+                QString val = stVal->getValue();
+                if (val == "True" || val == "False") return "SPC";
+            }
+
+            // DPC vs INC: DPC has Cancel sub-object typically,
+            // but both can have it. Use naming convention as fallback.
+            // INC stVal range is unbounded, DPC stVal is 0-3.
+            // Best effort: check if Oper.ctlVal has Dbpos-range value
+            auto ctlVal = doItem->findSubItem("ctlVal");
+            if (ctlVal && !ctlVal->getValue().isEmpty()) {
+                bool ok = false;
+                int v = ctlVal->getValue().toInt(&ok);
+                if (ok && v >= 0 && v <= 3) return "DPC";
+            }
+
+            return "INC";
         }
     }
 
@@ -141,8 +163,15 @@ namespace Core
             row.m_fc = "CO";
 
             // Resolve all attributes once during build (cached as pointers)
-            row.m_value    = item->findSubItem("stVal");
-            if (!row.m_value) row.m_value = item->findSubItem("mag");
+            // SPC/DPC/INC use stVal; APC uses mag.f (FLOAT32) or mag.i (INT32)
+            row.m_value = item->findSubItem("stVal");
+            if (!row.m_value) {
+                auto mag = item->findSubItem("mag");
+                if (mag) {
+                    row.m_value = mag->findSubItem("f");
+                    if (!row.m_value) row.m_value = mag->findSubItem("i");
+                }
+            }
             row.m_desc     = item->findSubItem("d");
             row.m_ctlModel = item->findSubItem("ctlModel");
             row.m_stSeld   = item->findSubItem("stSeld");
