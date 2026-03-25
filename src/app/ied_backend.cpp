@@ -579,6 +579,11 @@ namespace App
         m_con.m_api->control().setSynchroCheck(check);
     }
 
+    void IED_Backend::setOrigin(const QString &orIdent, int orCat)
+    {
+        m_con.m_api->control().setOrigin(orIdent, orCat);
+    }
+
     // ── Watchlist ─────────────────────────────────────────────────
 
     void IED_Backend::addToWatchlist(const QString &ref, const QString &fc, const QString &value)

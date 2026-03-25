@@ -68,5 +68,6 @@ namespace Cmd::Interface
         virtual void setTestMode(bool test) = 0;
         virtual void setInterlockCheck(bool check) = 0;
         virtual void setSynchroCheck(bool check) = 0;
+        virtual void setOrigin(const QString &orIdent, int orCat) = 0;
     };
 }

@@ -466,7 +466,9 @@ namespace Libiec61850
         ControlObjectClient_setCommandTerminationHandler(
             m_activeClient, commandTerminationHandler, this);
 
-        ControlObjectClient_setOrigin(m_activeClient, nullptr, CONTROL_ORCAT_STATION_CONTROL);
+        auto orIdentUtf8 = m_orIdent.toUtf8();
+        ControlObjectClient_setOrigin(m_activeClient,
+            m_orIdent.isEmpty() ? nullptr : orIdentUtf8.constData(), m_orCat);
 
         applyControlFlags(m_activeClient);
 
@@ -510,6 +512,17 @@ namespace Libiec61850
         m_synchroCheck = check;
         if (m_activeClient) {
             ControlObjectClient_setSynchroCheck(m_activeClient, check);
+        }
+    }
+
+    void IED_ControlAPI_Impl::setOrigin(const QString &orIdent, int orCat)
+    {
+        m_orIdent = orIdent;
+        m_orCat = orCat;
+        if (m_activeClient) {
+            auto utf8 = orIdent.toUtf8();
+            ControlObjectClient_setOrigin(m_activeClient,
+                orIdent.isEmpty() ? nullptr : utf8.constData(), orCat);
         }
     }
 

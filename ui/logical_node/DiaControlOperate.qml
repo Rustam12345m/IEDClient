@@ -34,7 +34,7 @@ ModalDialog
 
     title: "Control"
     dialogWidth: 420
-    dialogHeight: 390
+    dialogHeight: 470
 
     property string objectRef: ""
     property int ctlModel: -1
@@ -244,6 +244,33 @@ ModalDialog
             }
         }
 
+        // Origin
+        RowLayout {
+            Layout.fillWidth: true
+            visible: rootID.ctlModel > 0
+            spacing: 8
+            Text {
+                text: "Origin:"
+                color: VisualStyle.statusBar.textColor
+                font.bold: true
+                font.pixelSize: VisualStyle.fontSizeMedium
+            }
+            ComboBox {
+                id: orCatCombo
+                model: ["not-supported", "bay-control", "station-control",
+                        "remote-control", "automatic-bay", "automatic-station",
+                        "automatic-remote", "maintenance", "process"]
+                currentIndex: 2
+                implicitWidth: 160
+            }
+            TextField {
+                id: orIdentField
+                placeholderText: "orIdent"
+                Layout.fillWidth: true
+                font.pixelSize: VisualStyle.fontSizeMedium
+            }
+        }
+
         // Spacer
         Item { Layout.fillHeight: true }
 
@@ -271,6 +298,7 @@ ModalDialog
                     iedBackend.setTestMode(testCheck.checked)
                     iedBackend.setInterlockCheck(interlockCheck.checked)
                     iedBackend.setSynchroCheck(synchroCheck.checked)
+                    iedBackend.setOrigin(orIdentField.text, orCatCombo.currentIndex)
                     rootID.sigSelect(rootID.objectRef, rootID.ctlModel,
                                      rootID.ctlValType, rootID.getValue())
                 }
@@ -284,6 +312,7 @@ ModalDialog
                     iedBackend.setTestMode(testCheck.checked)
                     iedBackend.setInterlockCheck(interlockCheck.checked)
                     iedBackend.setSynchroCheck(synchroCheck.checked)
+                    iedBackend.setOrigin(orIdentField.text, orCatCombo.currentIndex)
                     rootID.sigOperate(rootID.objectRef, rootID.ctlModel,
                                       rootID.ctlValType, rootID.getValue())
                 }

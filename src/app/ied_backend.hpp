@@ -130,6 +130,7 @@ namespace App
         Q_INVOKABLE void setTestMode(bool test);
         Q_INVOKABLE void setInterlockCheck(bool check);
         Q_INVOKABLE void setSynchroCheck(bool check);
+        Q_INVOKABLE void setOrigin(const QString &orIdent, int orCat);
 
         // GOOSE / SV enable
         Q_INVOKABLE void setGOOSEEnable(int index, bool enable);

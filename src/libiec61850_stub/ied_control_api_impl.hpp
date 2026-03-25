@@ -69,6 +69,7 @@ namespace Libiec61850
         void setTestMode(bool test) override;
         void setInterlockCheck(bool check) override;
         void setSynchroCheck(bool check) override;
+        void setOrigin(const QString &orIdent, int orCat) override;
 
     private:
         static void staticReportCallback(void *param, void *report);
@@ -89,5 +90,7 @@ namespace Libiec61850
         bool m_testMode = false;
         bool m_interlockCheck = false;
         bool m_synchroCheck = false;
+        QString m_orIdent;
+        int m_orCat = 2; // CONTROL_ORCAT_STATION_CONTROL
     };
 };
