@@ -205,7 +205,7 @@ namespace Libiec61850
 
     Core::ModelStateUpdater::ptr IED_StateAPI_Impl::getStatusForAllLN(Core::LogicalDevice::ptr ld)
     {
-        if (!m_api.isConnected()) {
+        if (!ld || !m_api.isConnected()) {
             return nullptr;
         }
 
