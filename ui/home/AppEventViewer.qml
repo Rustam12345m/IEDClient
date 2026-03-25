@@ -25,6 +25,8 @@ import QtQuick.Controls
 import GlobalVarsModule
 import AppStylesModule
 
+import "qrc:/common/"
+
 // Event log table — embedded as content in a modal SubWindow
 FocusScope
 {
@@ -36,8 +38,7 @@ FocusScope
         if (visible) tableID.forceActiveFocus()
     }
 
-    // Column header synced to the table below
-    HorizontalHeaderView {
+    ResizableHeaderView {
         id: headerID
 
         anchors {
@@ -46,21 +47,9 @@ FocusScope
             right: parent.right
         }
 
-        syncView: tableID
-        boundsBehavior: Flickable.StopAtBounds
-
-        delegate: Rectangle {
-            implicitHeight: VisualStyle.rowHeight
-            color: VisualStyle.section.bg
-            border.color: VisualStyle.section.border
-
-            Text {
-                anchors.centerIn: parent
-                text: model[headerID.textRole]
-                color: VisualStyle.section.text
-                font.bold: VisualStyle.boldHeaderText
-            }
-        }
+        tableRef: tableID
+        columnNames: ["Date and Time", "Source", "Description"]
+        defaultWidths: [170, 240, -1]
     }
 
     // Scrollable event table
@@ -83,45 +72,41 @@ FocusScope
         keyNavigationEnabled: true
         boundsBehavior: Flickable.StopAtBounds
 
-        selectionBehavior: TableView.SelectRows
-        selectionModel: ItemSelectionModel {
-            model: tableID.model
-        }
-
         columnWidthProvider: function(col) {
-            if (col === 0) return 170
-            if (col === 1) return 240
-            return Math.max(200, tableID.width - 410)
+            return headerID.getColumnWidth(col)
         }
 
         onWidthChanged: forceLayout()
 
-        delegate: Rectangle {
-            required property bool selected
+        property int selVer: 0
+        property bool multiSelect: false
 
-            implicitHeight: VisualStyle.rowHeight
-            color: selected ? VisualStyle.table.selRowColor : VisualStyle.table.rowColor1
-            border.color: VisualStyle.table.rowBorderColor2
-            border.width: 1
+        selectionBehavior: TableView.SelectRows
+        selectionModel: ItemSelectionModel {
+            model: tableID.model
+            onSelectionChanged: tableID.selVer++
+        }
 
-            Text {
-                anchors {
-                    verticalCenter: parent.verticalCenter
-                    left: parent.left
-                    leftMargin: 4
-                    right: parent.right
-                    rightMargin: 4
-                }
-                text: display
-                color: VisualStyle.textColor
-                elide: Text.ElideRight
+        onCurrentRowChanged: {
+            if (currentRow >= 0 && !multiSelect) {
+                Globals.setSelectedRow(tableID, currentRow)
             }
+        }
 
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    Globals.setSelectedRow(tableID, row)
-                }
+        delegate: TextDelegate {
+            delegateHeight: VisualStyle.rowHeight
+            selected: { tableID.selVer; return tableID.selectionModel.isSelected(tableID.model.index(row, 0)) }
+
+            textAlign: Text.AlignLeft
+            text: model.display
+
+            onSigClick: function(row, col) {
+                Globals.setSelectedRow(tableID, row)
+            }
+            onSigCtrlClick: function(row, col) {
+                tableID.multiSelect = true
+                Globals.toggleSelectedRow(tableID, row)
+                tableID.multiSelect = false
             }
         }
 
@@ -137,7 +122,16 @@ FocusScope
 
         Keys.onPressed: function(event) {
             if (event.key === Qt.Key_C && (event.modifiers & Qt.ControlModifier)) {
-                Globals.copyRowToClipboard(tableID)
+                Globals.copySelectedRowsToClipboard(tableID)
+                event.accepted = true
+                return
+            }
+            if (event.key === Qt.Key_A && (event.modifiers & Qt.ControlModifier)) {
+                for (var i = 0; i < tableID.rows; i++) {
+                    tableID.selectionModel.select(
+                        tableID.model.index(i, 0),
+                        ItemSelectionModel.Select | ItemSelectionModel.Rows)
+                }
                 event.accepted = true
                 return
             }
