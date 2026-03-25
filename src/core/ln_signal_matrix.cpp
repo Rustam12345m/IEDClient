@@ -104,27 +104,17 @@ namespace Core
 
         QString inferCDCType(ModelItem::ptr doItem)
         {
-            // Check structural markers first
             if (doItem->findSubItem("mag"))    return "APC";
             if (doItem->findSubItem("valWTr")) return "BSC";
 
-            // Check stVal type for SPC (Boolean stVal)
             auto stVal = doItem->findSubItem("stVal");
             if (stVal) {
                 QString val = stVal->getValue();
                 if (val == "True" || val == "False") return "SPC";
+                // Both DPC (Dbpos 0-3) and INC (INT32) have integer stVal.
+                // Cannot reliably distinguish without MMS type metadata.
+                return "INT";
             }
-
-            // DPC vs INC: check Oper.ctlVal type
-            // DPC.Oper.ctlVal is Boolean (open/close command)
-            // INC.Oper.ctlVal is INT32
-            auto operCtlVal = doItem->findSubItem("Oper", "ctlVal");
-            if (operCtlVal) {
-                QString val = operCtlVal->getValue();
-                if (val == "True" || val == "False") return "DPC";
-            }
-
-            if (stVal) return "INC";
             return " - ";
         }
     }
