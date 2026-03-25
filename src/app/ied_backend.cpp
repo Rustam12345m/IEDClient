@@ -95,7 +95,10 @@ namespace App
 
     void IED_Backend::updateLNs_Status()
     {
-        auto cmd = Cmd::UpdateLNs_StatusCmd::create(m_con.m_ied, m_lnsModel->getLogicalDevice());
+        auto ld = m_lnsModel->getLogicalDevice();
+        if (!ld) return;
+
+        auto cmd = Cmd::UpdateLNs_StatusCmd::create(m_con.m_ied, ld);
         connect(cmd.get(), &Cmd::UpdateLNs_StatusCmd::sigModelValues,
                 this, &IED_Backend::slotUpdateItems, Qt::QueuedConnection);
 
@@ -236,6 +239,8 @@ namespace App
     void IED_Backend::updateDS_Values()
     {
         Core::DataSet::ptr ds = m_dsSigModel->getDataSet();
+        if (!ds) return;
+
         auto cmd = Cmd::UpdateDataSet_Cmd::create(m_con.m_ied, ds);
         connect(cmd.get(), &Cmd::UpdateDataSet_Cmd::sigModelValues, this,
                 [this](Core::ModelStateUpdater::ptr vals) {
