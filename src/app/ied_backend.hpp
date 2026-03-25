@@ -48,6 +48,7 @@
 #include "models/goose_overview_table.hpp"
 #include "models/sv_overview_table.hpp"
 #include "models/watchlist_model.hpp"
+#include "models/ld_settings_table.hpp"
 #include "config/conf_connection_info.hpp"
 
 namespace App
@@ -69,6 +70,7 @@ namespace App
         Q_INVOKABLE QAbstractItemModel*  getLN_StateModel()    const { return m_sortDOModel; }
         Q_INVOKABLE QAbstractItemModel*  getLN_ControlsModel() const { return m_sortControlsModel; }
         Q_INVOKABLE QAbstractItemModel*  getLN_SettingsModel() const { return m_sortSettingsModel; }
+        Q_INVOKABLE QAbstractItemModel*  getLD_SettingsModel() const { return m_sortLDSettingsModel; }
         Q_INVOKABLE QAbstractItemModel*  getLN_TreeModel()     const { return m_lnTreeModel; }
         Q_INVOKABLE QAbstractItemModel*  getIED_TreeModel()    const { return m_iedTreeFilter; }
         Q_INVOKABLE void setTreeFilter(const QString &text) { m_iedTreeFilter->setFilter(text); }
@@ -96,6 +98,7 @@ namespace App
         Q_INVOKABLE void updateGOOSE_Status();
         Q_INVOKABLE void updateSV_Status();
         Q_INVOKABLE void updateLN_TreeValues();
+        Q_INVOKABLE void updateLD_SettingsValues();
         Q_INVOKABLE void updateDS_Values();
         Q_INVOKABLE void setRCBEnable(bool buffered, int index,
                                        bool enable, int trgOps,
@@ -116,6 +119,9 @@ namespace App
         Q_INVOKABLE QString getSettingsItemRef(int proxyRow);
         Q_INVOKABLE QString getSettingsItemFC(int proxyRow);
         Q_INVOKABLE QString getSettingsItemValue(int proxyRow);
+        Q_INVOKABLE QString getLD_SettingsItemRef(int proxyRow);
+        Q_INVOKABLE QString getLD_SettingsItemFC(int proxyRow);
+        Q_INVOKABLE QString getLD_SettingsItemValue(int proxyRow);
 
         // Control operations
         Q_INVOKABLE QString getControlObjectRef(int proxyRow);
@@ -182,5 +188,7 @@ namespace App
         Models::IED_ModelTree*       m_iedTreeModel  = nullptr;
         Models::TreeFilterProxy*     m_iedTreeFilter = nullptr;
         Models::WatchlistModel*      m_watchlistModel = nullptr;
+        Models::LD_SettingsTable*    m_ldSettingsModel = nullptr;
+        Models::SortProxyModel*      m_sortLDSettingsModel = nullptr;
     };
 }

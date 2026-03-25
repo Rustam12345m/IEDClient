@@ -21,6 +21,7 @@
 
 #include "ln_signal_matrix.hpp"
 #include "logical_node.hpp"
+#include "logical_device.hpp"
 #include "data_object.hpp"
 
 namespace Core
@@ -148,6 +149,34 @@ namespace Core
 
             matrix->m_signals.emplace_back(row);
         }
+        return matrix;
+    }
+
+    LN_SignalMatrix::ptr LN_SignalMatrixBuilder::createLD_SettingsMatrix(
+        QSharedPointer<LogicalDevice> ld)
+    {
+        auto matrix = LN_SignalMatrix::ptr::create();
+
+        auto appendLN = [&](LogicalNode::ptr ln, const QList<QString> &fcFilter) {
+            if (!ln) return;
+            auto lnMatrix = create(ln, fcFilter);
+            for (auto &row : lnMatrix->m_signals) {
+                row.m_lnName = ln->getName();
+                matrix->m_signals.emplace_back(row);
+            }
+        };
+
+        // LLN0 first with SP+SG+SE
+        appendLN(ld->lln0(), {"SP", "SG", "SE"});
+
+        // Then all other LNs with SG+SE only
+        for (size_t i = 0; i < ld->getItemCount(); i++) {
+            auto ln = ld->getItem<LogicalNode>(i);
+            if (ln && ln != ld->lln0()) {
+                appendLN(ln, {"SG", "SE"});
+            }
+        }
+
         return matrix;
     }
 }

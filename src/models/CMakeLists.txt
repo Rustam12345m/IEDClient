@@ -61,6 +61,9 @@ set(SOURCES
 
     watchlist_model.hpp
     watchlist_model.cpp
+
+    ld_settings_table.hpp
+    ld_settings_table.cpp
 )
 
 qt_add_library(models_lib STATIC ${SOURCES})

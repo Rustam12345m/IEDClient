@@ -21,11 +21,13 @@
 
 #include "ied_backend.hpp"
 #include "cmd/set_rcb_values_cmd.hpp"
+#include "cmd/update_ln_cmd.hpp"
 #include "core/dataset.hpp"
 #include "core/data_attribute.hpp"
 #include "core/data_object.hpp"
 
 #include <QCoreApplication>
+#include <QSet>
 
 namespace App
 {
@@ -61,6 +63,10 @@ namespace App
         m_sortSettingsModel = new Models::SortProxyModel(this);
         m_sortSettingsModel->setSourceModel(m_lnSettingsModel);
 
+        m_ldSettingsModel = new Models::LD_SettingsTable(this, m_con.m_ied);
+        m_sortLDSettingsModel = new Models::SortProxyModel(this);
+        m_sortLDSettingsModel->setSourceModel(m_ldSettingsModel);
+
         // Selection process LD -> LN -> DO
         connect(m_ldsModel, &Models::LD_OverviewGrid::sigLDSelected, m_ldPropModel, &Models::LD_PropertiesTable::slotLDSelected);        
         connect(m_ldsModel, &Models::LD_OverviewGrid::sigLDSelected, m_lnsModel, &Models::LN_OverviewTable::slotLDSelected);
@@ -68,11 +74,13 @@ namespace App
         connect(m_lnsModel, &Models::LN_OverviewTable::sigLNSelected, m_lnStateModel,    &Models::LN_SignalTable::slotLNSelected);
         connect(m_lnsModel, &Models::LN_OverviewTable::sigLNSelected, m_lnControlsModel, &Models::LN_SignalTable::slotLNSelected);
         connect(m_lnsModel, &Models::LN_OverviewTable::sigLNSelected, m_lnSettingsModel, &Models::LN_SignalTable::slotLNSelected);
+        connect(m_lnsModel, &Models::LN_OverviewTable::sigLNSelected, m_ldSettingsModel, &Models::LD_SettingsTable::slotLNSelected);
         connect(m_lnsModel, &Models::LN_OverviewTable::sigLNSelected, m_lnTreeModel,     &Models::LN_CommonTree::slotLNSelected);
 
         connect(m_lnAllModel, &Models::LN_AllOverviewTable::sigLNSelected, m_lnStateModel,    &Models::LN_SignalTable::slotLNSelected);
         connect(m_lnAllModel, &Models::LN_AllOverviewTable::sigLNSelected, m_lnControlsModel, &Models::LN_SignalTable::slotLNSelected);
         connect(m_lnAllModel, &Models::LN_AllOverviewTable::sigLNSelected, m_lnSettingsModel, &Models::LN_SignalTable::slotLNSelected);
+        connect(m_lnAllModel, &Models::LN_AllOverviewTable::sigLNSelected, m_ldSettingsModel, &Models::LD_SettingsTable::slotLNSelected);
         connect(m_lnAllModel, &Models::LN_AllOverviewTable::sigLNSelected, m_lnTreeModel,     &Models::LN_CommonTree::slotLNSelected);
 
         connect(m_dsComModel, &Models::DS_OverviewTable::sigDSSelected, m_dsSigModel, &Models::DS_SignalsTable::slotDataSetSelected);
@@ -234,6 +242,32 @@ namespace App
                 this, &IED_Backend::slotUpdateItems, Qt::QueuedConnection);
 
         putCmdToQueue(cmd);
+    }
+
+    void IED_Backend::updateLD_SettingsValues()
+    {
+        auto ld = m_ldSettingsModel->getLogicalDevice();
+        if (!ld) return;
+
+        auto matrix = ld->getSettingsMatrix();
+        if (!matrix || matrix->size() == 0) return;
+
+        // Collect unique LN names that appear in the LD settings matrix
+        QSet<QString> lnNames;
+        for (auto &row : matrix->getRows()) {
+            lnNames.insert(row.lnName());
+        }
+
+        // Refresh only LNs that have settings rows
+        for (size_t i = 0; i < ld->getItemCount(); i++) {
+            auto ln = ld->getItem<Core::LogicalNode>(i);
+            if (!ln || !lnNames.contains(ln->getName())) continue;
+
+            auto cmd = Cmd::UpdateLNode_Cmd::create(m_con.m_ied, ln);
+            connect(cmd.get(), &Cmd::UpdateLNode_Cmd::sigModelValues,
+                    this, &IED_Backend::slotUpdateItems, Qt::QueuedConnection);
+            putCmdToQueue(cmd);
+        }
     }
 
     void IED_Backend::updateDS_Values()
@@ -420,6 +454,9 @@ namespace App
 
     QString IED_Backend::getCurrentSettingsLDRef()
     {
+        auto ld = m_ldSettingsModel->getLogicalDevice();
+        if (ld) return ld->getName();
+
         auto ln = m_lnSettingsModel->getCurrectLN();
         if (!ln || !ln->getParent()) return {};
         return ln->getParent()->getName();
@@ -487,6 +524,44 @@ namespace App
         if (!matrix || sourceRow < 0 || sourceRow >= matrix->size()) {
             return {};
         }
+
+        return matrix->value(sourceRow);
+    }
+
+    QString IED_Backend::getLD_SettingsItemRef(int proxyRow)
+    {
+        QModelIndex proxyIdx = m_sortLDSettingsModel->index(proxyRow, 0);
+        QModelIndex sourceIdx = m_sortLDSettingsModel->mapToSource(proxyIdx);
+        int sourceRow = sourceIdx.row();
+
+        auto matrix = m_ldSettingsModel->getMatrix();
+        if (!matrix || sourceRow < 0 || sourceRow >= matrix->size()) return {};
+
+        auto &rows = matrix->getRows();
+        auto item = rows[sourceRow].valueItem();
+        return item ? item->getReference() : QString();
+    }
+
+    QString IED_Backend::getLD_SettingsItemFC(int proxyRow)
+    {
+        QModelIndex proxyIdx = m_sortLDSettingsModel->index(proxyRow, 0);
+        QModelIndex sourceIdx = m_sortLDSettingsModel->mapToSource(proxyIdx);
+        int sourceRow = sourceIdx.row();
+
+        auto matrix = m_ldSettingsModel->getMatrix();
+        if (!matrix || sourceRow < 0 || sourceRow >= matrix->size()) return {};
+
+        return matrix->fc(sourceRow);
+    }
+
+    QString IED_Backend::getLD_SettingsItemValue(int proxyRow)
+    {
+        QModelIndex proxyIdx = m_sortLDSettingsModel->index(proxyRow, 0);
+        QModelIndex sourceIdx = m_sortLDSettingsModel->mapToSource(proxyIdx);
+        int sourceRow = sourceIdx.row();
+
+        auto matrix = m_ldSettingsModel->getMatrix();
+        if (!matrix || sourceRow < 0 || sourceRow >= matrix->size()) return {};
 
         return matrix->value(sourceRow);
     }
@@ -726,6 +801,7 @@ namespace App
         m_lnStateModel->setActiveIED(m_con.m_ied);
         m_lnControlsModel->setActiveIED(m_con.m_ied);
         m_lnSettingsModel->setActiveIED(m_con.m_ied);
+        m_ldSettingsModel->setActiveIED(m_con.m_ied);
         m_lnTreeModel->setActiveIED(m_con.m_ied);
         m_dsComModel->setActiveIED(m_con.m_ied);
         m_dsSigModel->setActiveIED(m_con.m_ied);

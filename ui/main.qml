@@ -853,7 +853,11 @@ ApplicationWindow
         }
         case Globals.Page.LN: {
             iedBackend.updateLNs_Status()
-            iedBackend.updateLN_TreeValues()
+            if (iedBackend.getLD_SettingsModel().rowCount() > 0) {
+                iedBackend.updateLD_SettingsValues()
+            } else {
+                iedBackend.updateLN_TreeValues()
+            }
             setPageStatusText(iedBackend.lnsPageStatus())
             break;
         }

@@ -153,7 +153,8 @@ FocusScope
                         rootID.modelVer
                         var arr = []
                         if (iedBackend.getLN_ControlsModel().rowCount() === 0) arr.push(1)
-                        if (iedBackend.getLN_SettingsModel().rowCount() === 0) arr.push(2)
+                        if (iedBackend.getLN_SettingsModel().rowCount() === 0 &&
+                            iedBackend.getLD_SettingsModel().rowCount() === 0) arr.push(2)
                         return arr
                     }
 
@@ -165,6 +166,12 @@ FocusScope
                     }
                     Connections {
                         target: iedBackend.getLN_SettingsModel()
+                        function onModelReset() { rootID.modelVer++ }
+                        function onRowsInserted() { rootID.modelVer++ }
+                        function onRowsRemoved() { rootID.modelVer++ }
+                    }
+                    Connections {
+                        target: iedBackend.getLD_SettingsModel()
                         function onModelReset() { rootID.modelVer++ }
                         function onRowsInserted() { rootID.modelVer++ }
                         function onRowsRemoved() { rootID.modelVer++ }

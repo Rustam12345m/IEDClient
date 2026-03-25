@@ -28,6 +28,7 @@ namespace Core
     // Forward declaration
     class DataObject;
     class LogicalNode;
+    class LogicalDevice;
 
     class SignalMatrixRow
     {
@@ -81,6 +82,9 @@ namespace Core
             return m_opOk ? m_opOk->getValue() : QString();
         }
 
+        // LD-level settings (populated only by createLD_SettingsMatrix)
+        QString    lnName() const { return m_lnName; }
+
     private:
         ModelItem::ptr    m_dataObject;
         QString           m_path;
@@ -89,6 +93,9 @@ namespace Core
         ModelItem::ptr    m_quality;
         ModelItem::ptr    m_timestamp;
         ModelItem::ptr    m_desc;
+
+        // LD-level settings (populated only by createLD_SettingsMatrix)
+        QString           m_lnName;     // LN name (e.g., "LLN0", "PTOC1")
 
         // Control-specific (populated only by createControlsMatrix)
         QString           m_ctlType;    // CDC: "SPC", "DPC", "INC", "APC", "BSC"
@@ -196,6 +203,14 @@ namespace Core
             return "";
         }
 
+        QString     lnName(int row) const
+        {
+            if (row >= 0 && row < m_signals.size()) {
+                return m_signals[row].lnName();
+            }
+            return "";
+        }
+
         auto&       getRows() const {
             return m_signals;
         }
@@ -215,6 +230,7 @@ namespace Core
         static LN_SignalMatrix::ptr create(QSharedPointer< LogicalNode > ln,
                                            const QList<QString> &fcFilter);
         static LN_SignalMatrix::ptr createControlsMatrix(QSharedPointer< LogicalNode > ln);
+        static LN_SignalMatrix::ptr createLD_SettingsMatrix(QSharedPointer< LogicalDevice > ld);
 
     private:
         static void recursiveFillMatrix(LN_SignalMatrix::ptr table,

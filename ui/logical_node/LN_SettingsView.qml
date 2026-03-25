@@ -28,152 +28,160 @@ import AppStylesModule
 
 import "qrc:/common/"
 
-// Settings attributes table with double-click to write + SGCB panel
+// Settings view container — switches between LD-wide and per-LN views
 Item
 {
     id: rootID
 
     readonly property int defDelegateHeight: 30
+    readonly property bool ldViewActive: ldContent.tableRows > 0
 
-    SGCBPanel {
-        id: sgcbPanel
-        anchors {
-            left: parent.left
-            right: parent.right
-            top: parent.top
+    // LD-wide view (LLN0 selected) — own file with own tableID scope
+    LD_SettingsContent {
+        id: ldContent
+        anchors.fill: parent
+        visible: rootID.ldViewActive
+
+        onSigWriteRequested: function(ref, fc, val, editSG) {
+            // SE requires active edit session
+            if (fc === "SE" && editSG === 0) {
+                writeDialog.openWrite(ref, fc, ref, val)
+                writeDialog.setResult(false, "Start an edit session first")
+                return
+            }
+            // SG is read-only
+            if (fc === "SG") return
+
+            writeDialog.openWrite(ref, fc, ref, val)
         }
     }
 
-    SortTableHeader {
-        id: headerID
+    // Per-LN view (non-LLN0 selected) — uses tableID for SortTableHeader compat
+    Item {
+        id: lnViewID
+        anchors.fill: parent
+        visible: !rootID.ldViewActive
 
-        anchors {
-            left: tableID.left
-            top: sgcbPanel.bottom
-            right: parent.right
-        }
-    }
-
-    TableView {
-        id: tableID
-
-        anchors {
-            left: parent.left
-            right: parent.right
-            top: headerID.bottom
-            bottom: parent.bottom
-        }
-
-        model: iedBackend.getLN_SettingsModel()
-
-        focus: true
-        keyNavigationEnabled: true
-        reuseItems: true
-
-        clip: true
-        interactive: true
-        boundsBehavior: Flickable.StopAtBounds
-
-        columnWidthProvider: function(column) {
-            return Globals.columnWidthCalculator(headerID, tableID, column)
-        }
-
-        property int selVer: 0
-        property bool multiSelect: false
-
-        selectionBehavior: TableView.SelectRows
-        selectionModel: ItemSelectionModel {
-            model: tableID.model
-            onSelectionChanged: tableID.selVer++
-        }
-
-        onCurrentRowChanged: {
-            if (currentRow >= 0 && !multiSelect) {
-                Globals.setSelectedRow(tableID, currentRow)
+        SortTableHeader {
+            id: headerID
+            anchors {
+                left: tableID.left
+                top: parent.top
+                right: parent.right
             }
         }
 
-        delegate: TextDelegate {
-            delegateHeight: defDelegateHeight
-            selected: { tableID.selVer; return tableID.selectionModel.isSelected(tableID.model.index(row, 0)) }
+        TableView {
+            id: tableID
 
-            textAlign: (column === 0 || column === 5) ? Text.AlignLeft : Text.AlignRight
-            text: model.display
-
-            onSigClick: function(row, col) {
-                Globals.setSelectedRow(tableID, row)
+            anchors {
+                left: parent.left
+                right: parent.right
+                top: headerID.bottom
+                bottom: parent.bottom
             }
-            onSigCtrlClick: function(row, col) {
-                tableID.multiSelect = true
-                Globals.toggleSelectedRow(tableID, row)
-                tableID.multiSelect = false
-            }
-            onSigDoubleClick: function(row, col) {
-                if (Globals.selectedRowCount(tableID) > 1) return
-                var ref = iedBackend.getSettingsItemRef(row)
-                var fc = iedBackend.getSettingsItemFC(row)
-                var val = iedBackend.getSettingsItemValue(row)
-                if (ref.length === 0) return
 
-                // SE requires active edit session
-                if (fc === "SE" && sgcbPanel.editSG === 0) {
+            model: iedBackend.getLN_SettingsModel()
+
+            focus: !rootID.ldViewActive
+            keyNavigationEnabled: true
+            reuseItems: true
+
+            clip: true
+            interactive: true
+            boundsBehavior: Flickable.StopAtBounds
+
+            columnWidthProvider: function(column) {
+                return Globals.columnWidthCalculator(headerID, tableID, column)
+            }
+
+            property int selVer: 0
+            property bool multiSelect: false
+
+            selectionBehavior: TableView.SelectRows
+            selectionModel: ItemSelectionModel {
+                model: tableID.model
+                onSelectionChanged: tableID.selVer++
+            }
+
+            onCurrentRowChanged: {
+                if (currentRow >= 0 && !multiSelect) {
+                    Globals.setSelectedRow(tableID, currentRow)
+                }
+            }
+
+            delegate: TextDelegate {
+                delegateHeight: defDelegateHeight
+                selected: { tableID.selVer; return tableID.selectionModel.isSelected(tableID.model.index(row, 0)) }
+
+                textAlign: (column === 0 || column === 5) ? Text.AlignLeft : Text.AlignRight
+                text: model.display
+
+                onSigClick: function(row, col) {
+                    Globals.setSelectedRow(tableID, row)
+                }
+                onSigCtrlClick: function(row, col) {
+                    tableID.multiSelect = true
+                    Globals.toggleSelectedRow(tableID, row)
+                    tableID.multiSelect = false
+                }
+                onSigDoubleClick: function(row, col) {
+                    if (Globals.selectedRowCount(tableID) > 1) return
+                    var ref = iedBackend.getSettingsItemRef(row)
+                    var fc = iedBackend.getSettingsItemFC(row)
+                    var val = iedBackend.getSettingsItemValue(row)
+                    if (ref.length === 0) return
+
+                    // SG is read-only
+                    if (fc === "SG") return
+
                     writeDialog.openWrite(ref, fc, ref, val)
-                    writeDialog.setResult(false, "Start an edit session first")
+                }
+            }
+
+            ScrollBar.vertical: ScrollBar {
+                policy: ScrollBar.AsNeeded
+                active: true
+                stepSize: 0.25
+                onActiveChanged: { if (!active) { active = true } }
+            }
+            ScrollBar.horizontal: ScrollBar {
+                policy: ScrollBar.AsNeeded
+                active: true
+                stepSize: 0.25
+                onActiveChanged: { if (!active) { active = true } }
+            }
+
+            Keys.onPressed: function(event) {
+                if (event.key === Qt.Key_C && (event.modifiers & Qt.ControlModifier)) {
+                    Globals.copySelectedRowsToClipboard(tableID)
+                    event.accepted = true
                     return
                 }
-                // SG is read-only
-                if (fc === "SG") return
-
-                writeDialog.openWrite(ref, fc, ref, val)
-            }
-        }
-
-        ScrollBar.vertical: ScrollBar {
-            policy: ScrollBar.AsNeeded
-            active: true
-            stepSize: 0.25
-
-            onActiveChanged: {
-                if (!active) { active = true }
-            }
-        }
-        ScrollBar.horizontal: ScrollBar {
-            policy: ScrollBar.AsNeeded
-            active: true
-            stepSize: 0.25
-
-            onActiveChanged: {
-                if (!active) { active = true }
-            }
-        }
-
-        Keys.onPressed: function(event) {
-            if (event.key === Qt.Key_C && (event.modifiers & Qt.ControlModifier)) {
-                Globals.copySelectedRowsToClipboard(tableID)
-                event.accepted = true
-                return
-            }
-            if (event.key === Qt.Key_A && (event.modifiers & Qt.ControlModifier)) {
-                for (var i = 0; i < tableID.rows; i++) {
-                    tableID.selectionModel.select(
-                        tableID.model.index(i, 0),
-                        ItemSelectionModel.Select | ItemSelectionModel.Rows)
+                if (event.key === Qt.Key_A && (event.modifiers & Qt.ControlModifier)) {
+                    for (var i = 0; i < tableID.rows; i++) {
+                        tableID.selectionModel.select(
+                            tableID.model.index(i, 0),
+                            ItemSelectionModel.Select | ItemSelectionModel.Rows)
+                    }
+                    event.accepted = true
+                    return
                 }
-                event.accepted = true
-                return
+                event.accepted = false
             }
-            event.accepted = false
         }
     }
 
+    // Empty-state label
     Text {
         anchors.centerIn: parent
         text: "No settings"
         color: VisualStyle.textColor
         font.pixelSize: 14
-        visible: tableID.rows === 0
+        visible: ldContent.tableRows === 0 && tableID.rows === 0
     }
 
+    // Shared write dialog
     DiaChangeValue {
         id: writeDialog
 
@@ -188,16 +196,6 @@ Item
             if (writeDialog.isActive()) {
                 writeDialog.setResult(success, message)
             }
-        }
-    }
-
-    // Refresh SGCB panel when LN selection changes (model reset)
-    Connections {
-        target: tableID.model
-        function onModelReset() {
-            var ldRef = iedBackend.getCurrentSettingsLDRef()
-            sgcbPanel.ldRef = ldRef
-            sgcbPanel.refresh()
         }
     }
 }

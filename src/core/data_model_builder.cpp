@@ -123,8 +123,11 @@ namespace Core
 
                 ln->m_sigMatrix      = LN_SignalMatrixBuilder::create(ln, {"ST", "MX", "SP"});
                 ln->m_coMatrix       = LN_SignalMatrixBuilder::createControlsMatrix(ln);
-                ln->m_settingsMatrix = LN_SignalMatrixBuilder::create(ln, {"SP", "SE", "SG"});
+                ln->m_settingsMatrix = LN_SignalMatrixBuilder::create(ln, {"SP", "SG"});
             }
+
+            // Build LD-level settings matrix (LLN0 SP+SG+SE, other LNs SG+SE)
+            ld->m_settingsMatrix = LN_SignalMatrixBuilder::createLD_SettingsMatrix(ld);
         }
 
         // Resolve dsRefItem in the model

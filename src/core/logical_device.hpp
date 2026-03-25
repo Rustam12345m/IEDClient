@@ -43,6 +43,8 @@ namespace Core
         LogicalNode::ptr     lln0() const { return m_lln0; }
         LogicalNode::ptr     lphd1() const { return m_lphd1; }
 
+        auto& getSettingsMatrix() const { return m_settingsMatrix; }
+
         void    addSubItem(ModelItem::ptr node) override {
             QString nodeName = node->getName();
             if (nodeName.contains("LLN0")) {
@@ -64,10 +66,12 @@ namespace Core
         };
 
     protected:
-        LogicalNode::ptr    m_lln0; // LN0
-        LogicalNode::ptr    m_lphd1; // LPHD1
+        LogicalNode::ptr        m_lln0; // LN0
+        LogicalNode::ptr        m_lphd1; // LPHD1
+        LN_SignalMatrix::ptr    m_settingsMatrix; // LD-wide SG/SE settings
 
     friend class DataModel;
     friend class DataModelBuilder;
+    friend class LN_SignalMatrixBuilder;
     };
 }
