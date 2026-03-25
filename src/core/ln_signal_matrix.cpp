@@ -104,48 +104,28 @@ namespace Core
 
         QString inferCDCType(ModelItem::ptr doItem)
         {
-            bool hasStVal = false;
-            bool hasMag = false;
-            bool hasValWTr = false;
+            // Check structural markers first
+            if (doItem->findSubItem("mag"))    return "APC";
+            if (doItem->findSubItem("valWTr")) return "BSC";
 
-            for (size_t i = 0; i < doItem->getItemCount(); i++) {
-                QString name = doItem->getItem(i)->getName();
-                if (name == "stVal")  hasStVal = true;
-                if (name == "mag")    hasMag = true;
-                if (name == "valWTr") hasValWTr = true;
-            }
-
-            // APC: has mag (analogue magnitude structure)
-            if (hasMag) return "APC";
-            // BSC: has valWTr (value with transient)
-            if (hasValWTr) return "BSC";
-
-            if (!hasStVal) return " - ";
-
-            // Distinguish SPC/DPC/INC by checking stVal type:
-            // SPC.stVal is Boolean, DPC.stVal is Dbpos (INT, 0-3), INC.stVal is INT32
-            // Check Oper.ctlVal children to distinguish DPC from INC:
-            // DPC Oper.ctlVal is a leaf (Dbpos), INC Oper.ctlVal is also a leaf (INT32)
-            // Use stVal value heuristic: Boolean → SPC, otherwise check for 'q' sibling
-            // that indicates it's a status attribute
+            // Check stVal type for SPC (Boolean stVal)
             auto stVal = doItem->findSubItem("stVal");
             if (stVal) {
                 QString val = stVal->getValue();
                 if (val == "True" || val == "False") return "SPC";
             }
 
-            // DPC vs INC: DPC has Cancel sub-object typically,
-            // but both can have it. Use naming convention as fallback.
-            // INC stVal range is unbounded, DPC stVal is 0-3.
-            // Best effort: check if Oper.ctlVal has Dbpos-range value
-            auto ctlVal = doItem->findSubItem("ctlVal");
-            if (ctlVal && !ctlVal->getValue().isEmpty()) {
-                bool ok = false;
-                int v = ctlVal->getValue().toInt(&ok);
-                if (ok && v >= 0 && v <= 3) return "DPC";
+            // DPC vs INC: check Oper.ctlVal type
+            // DPC.Oper.ctlVal is Boolean (open/close command)
+            // INC.Oper.ctlVal is INT32
+            auto operCtlVal = doItem->findSubItem("Oper", "ctlVal");
+            if (operCtlVal) {
+                QString val = operCtlVal->getValue();
+                if (val == "True" || val == "False") return "DPC";
             }
 
-            return "INC";
+            if (stVal) return "INC";
+            return " - ";
         }
     }
 
