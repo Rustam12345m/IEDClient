@@ -104,7 +104,8 @@ Item
                 Globals.setSelectedRow(tableID, row)
                 var ref = iedBackend.getControlObjectRef(row)
                 if (ref.length > 0) {
-                    controlDialog.openControl(ref)
+                    var val = iedBackend.getControlObjectValue(row)
+                    controlDialog.openControl(ref, val)
                     iedBackend.queryControlInfo(ref)
                 }
             }

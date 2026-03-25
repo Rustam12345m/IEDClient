@@ -119,6 +119,7 @@ namespace App
 
         // Control operations
         Q_INVOKABLE QString getControlObjectRef(int proxyRow);
+        Q_INVOKABLE QString getControlObjectValue(int proxyRow);
         Q_INVOKABLE void queryControlInfo(const QString &objRef);
         Q_INVOKABLE void controlOperate(const QString &objRef, int ctlModel,
                                          int valType, const QVariant &value);

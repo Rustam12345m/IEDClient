@@ -506,6 +506,23 @@ namespace App
         return base ? base->getReference() : QString();
     }
 
+    QString IED_Backend::getControlObjectValue(int proxyRow)
+    {
+        QModelIndex proxyIdx = m_sortControlsModel->index(proxyRow, 0);
+        QModelIndex sourceIdx = m_sortControlsModel->mapToSource(proxyIdx);
+        int sourceRow = sourceIdx.row();
+
+        auto matrix = m_lnControlsModel->getCurrectLN()
+                          ? m_lnControlsModel->getCurrectLN()->getControlsMatrix()
+                          : nullptr;
+
+        if (!matrix || sourceRow < 0 || sourceRow >= matrix->size()) {
+            return {};
+        }
+
+        return matrix->value(sourceRow);
+    }
+
     void IED_Backend::queryControlInfo(const QString &objRef)
     {
         auto cmd = Cmd::GetControlInfo_Cmd::create(objRef);

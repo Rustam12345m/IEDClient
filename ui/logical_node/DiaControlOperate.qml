@@ -46,8 +46,11 @@ ModalDialog
     signal sigSelect(string ref, int model, int valType, var value)
     signal sigCancel(string ref)
 
-    function openControl(ref) {
+    property string currentValue: ""
+
+    function openControl(ref, curValue) {
         objectRef = ref
+        currentValue = curValue || ""
         ctlModel = -1
         ctlValType = -1
         statusMsg = "Loading..."
@@ -58,6 +61,19 @@ ModalDialog
         ctlModel = model
         ctlValType = valType
         statusMsg = (model === 0) ? "Status only — not controllable" : ""
+        // Set input fields to current value
+        switch (valType) {
+        case 0: // Boolean
+            boolSwitch.checked = (currentValue === "True" || currentValue === "1")
+            break
+        case 1: // Integer
+        case 2: // Unsigned
+            intSpin.value = parseInt(currentValue) || 0
+            break
+        case 3: // Float
+            floatField.text = currentValue || "0.0"
+            break
+        }
     }
 
     function setResult(success, message) {
