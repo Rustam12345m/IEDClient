@@ -40,11 +40,10 @@ Item
 
     signal sigEnable()
     signal sigDisable()
+    signal sigGoToDataSet(string dsRef)
 
     function loadFromModel() {
         if (!svModel) return
-        svEnaLed.color    = svModel.selectedSvEna() ? VisualStyle.statusActiveColor : VisualStyle.statusInactiveColor
-        svEnaText.text    = svModel.selectedSvEna() ? "Yes" : "No"
         svTypeText.text   = svModel.selectedIsMulticast() ? "MSVCB" : "USVCB"
         svIdText.text     = svModel.selectedSvId()
         datSetText.text   = svModel.selectedDatSet()
@@ -80,38 +79,6 @@ Item
                     verticalAlignment: Text.AlignVCenter
                     text: qsTr("SV Control Block")
                 }
-            }
-
-            // Enabled
-            RowLayout {
-                width: parent.width
-                height: defRowHeight + 2
-
-                Text {
-                    Layout.preferredWidth: 60
-                    height: defRowHeight
-                    text: "Enabled"
-                    horizontalAlignment: Text.AlignRight
-                    verticalAlignment: Text.AlignVCenter
-                }
-                Row {
-                    spacing: 5
-                    Layout.leftMargin: defTextPadding
-
-                    Rectangle {
-                        id: svEnaLed
-                        anchors.verticalCenter: parent.verticalCenter
-                        width: 12; height: 12; radius: 6
-                        color: VisualStyle.statusInactiveColor
-                    }
-                    Text {
-                        id: svEnaText
-                        anchors.verticalCenter: parent.verticalCenter
-                        text: "No"
-                        color: VisualStyle.textColor
-                    }
-                }
-                Item { Layout.fillWidth: true }
             }
 
             // Type (read-only)
@@ -161,7 +128,7 @@ Item
                 }
             }
 
-            // DataSet (read-only)
+            // DataSet (read-only + go-to button)
             RowLayout {
                 width: parent.width
                 height: defRowHeight + 2
@@ -182,6 +149,13 @@ Item
                     verticalAlignment: Text.AlignVCenter
                     color: VisualStyle.textColor
                     elide: Text.ElideRight
+                }
+                Button {
+                    width: defRowHeight
+                    height: defRowHeight
+                    icon.source: "qrc:/img/icons/arrow_forward.svg"
+                    focusPolicy: Qt.NoFocus
+                    onClicked: sigGoToDataSet(datSetText.text)
                 }
             }
 

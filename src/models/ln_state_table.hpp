@@ -55,6 +55,14 @@ namespace App::Models
             CO_COLUMN_COUNT = 7
         };
 
+        enum SettingsColumnType {
+            SET_NAME = 0,
+            SET_FC,
+            SET_VALUE,
+            SET_DESC,
+            SET_COLUMN_COUNT = 4
+        };
+
     public:
         enum class MatrixType { State, Controls, Settings };
 

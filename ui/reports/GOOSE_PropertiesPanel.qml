@@ -40,19 +40,32 @@ Item
 
     signal sigEnable(string goId, string datSet)
     signal sigDisable()
+    signal sigGoToDataSet(string dsRef)
 
     function loadFromModel() {
         if (!gooseModel) return
-        gooseEnaLed.color   = gooseModel.selectedGoEna() ? VisualStyle.statusActiveColor : VisualStyle.statusInactiveColor
-        gooseEnaText.text   = gooseModel.selectedGoEna() ? "Yes" : "No"
         gooseIdField.text   = gooseModel.selectedGoId()
-        datSetField.text    = gooseModel.selectedDatSet()
         confRevText.text    = String(gooseModel.selectedConfRev())
         minTimeText.text    = gooseModel.selectedMinTime() + " ms"
         maxTimeText.text    = gooseModel.selectedMaxTime() + " ms"
         appIdText.text      = "0x" + ("0000" + gooseModel.selectedAppId().toString(16)).slice(-4).toUpperCase()
         vlanIdText.text     = String(gooseModel.selectedVlanId())
         vlanPriText.text    = String(gooseModel.selectedVlanPriority())
+
+        // Populate DataSet ComboBox
+        var refs = iedBackend.getDataSetRefs()
+        var currentDs = gooseModel.selectedDatSet()
+        var idx = refs.indexOf(currentDs)
+
+        if (currentDs.length > 0 && idx < 0) {
+            refs.unshift(currentDs)
+            datSetCombo.unknownValue = true
+            idx = 0
+        } else {
+            datSetCombo.unknownValue = false
+        }
+        datSetCombo.model = refs
+        datSetCombo.currentIndex = idx >= 0 ? idx : 0
     }
 
     onGooseModelChanged: loadFromModel()
@@ -84,45 +97,13 @@ Item
                 }
             }
 
-            // Enabled
-            RowLayout {
-                width: parent.width
-                height: defRowHeight + 2
-
-                Text {
-                    Layout.preferredWidth: 60
-                    height: defRowHeight
-                    text: "Enabled"
-                    horizontalAlignment: Text.AlignRight
-                    verticalAlignment: Text.AlignVCenter
-                }
-                Row {
-                    spacing: 5
-                    Layout.leftMargin: defTextPadding
-
-                    Rectangle {
-                        id: gooseEnaLed
-                        anchors.verticalCenter: parent.verticalCenter
-                        width: 12; height: 12; radius: 6
-                        color: VisualStyle.statusInactiveColor
-                    }
-                    Text {
-                        id: gooseEnaText
-                        anchors.verticalCenter: parent.verticalCenter
-                        text: "No"
-                        color: VisualStyle.textColor
-                    }
-                }
-                Item { Layout.fillWidth: true }
-            }
-
             // GOOSE ID (editable)
             RowLayout {
                 width: parent.width
                 height: defRowHeight + 2
 
                 Text {
-                    Layout.preferredWidth: 60
+                    Layout.preferredWidth: 70
                     height: defRowHeight
                     text: "ID"
                     horizontalAlignment: Text.AlignRight
@@ -138,25 +119,46 @@ Item
                 }
             }
 
-            // DataSet (editable)
+            // DataSet (editable via ComboBox)
             RowLayout {
                 width: parent.width
                 height: defRowHeight + 2
 
                 Text {
-                    Layout.preferredWidth: 60
+                    Layout.preferredWidth: 70
                     height: defRowHeight
                     text: "DataSet"
                     horizontalAlignment: Text.AlignRight
                     verticalAlignment: Text.AlignVCenter
                 }
-                TextField {
+                ComboBox {
                     Layout.fillWidth: true
-                    id: datSetField
+                    id: datSetCombo
+
+                    property bool unknownValue: false
+
+                    delegate: ItemDelegate {
+                        width: datSetCombo.width
+                        contentItem: Text {
+                            text: modelData
+                            color: (index === 0 && datSetCombo.unknownValue) ? VisualStyle.errorTextColor : VisualStyle.textColor
+                            font.bold: index === datSetCombo.currentIndex
+                            elide: Text.ElideRight
+                        }
+                        highlighted: datSetCombo.highlightedIndex === index
+                        background: Rectangle {
+                            color: index === datSetCombo.currentIndex
+                                   ? VisualStyle.table.selRowColor
+                                   : (highlighted ? palette.highlight : "transparent")
+                        }
+                    }
+                }
+                Button {
+                    width: defRowHeight
                     height: defRowHeight
-                    text: ""
-                    activeFocusOnPress: true
-                    selectByMouse: true
+                    icon.source: "qrc:/img/icons/arrow_forward.svg"
+                    focusPolicy: Qt.NoFocus
+                    onClicked: sigGoToDataSet(datSetCombo.currentText)
                 }
             }
 
@@ -166,7 +168,7 @@ Item
                 height: defRowHeight + 2
 
                 Text {
-                    Layout.preferredWidth: 60
+                    Layout.preferredWidth: 70
                     height: defRowHeight
                     text: "ConfRev"
                     horizontalAlignment: Text.AlignRight
@@ -210,7 +212,7 @@ Item
                 height: defRowHeight + 2
 
                 Text {
-                    Layout.preferredWidth: 60
+                    Layout.preferredWidth: 70
                     height: defRowHeight
                     text: "MinTime"
                     horizontalAlignment: Text.AlignRight
@@ -231,7 +233,7 @@ Item
                 height: defRowHeight + 2
 
                 Text {
-                    Layout.preferredWidth: 60
+                    Layout.preferredWidth: 70
                     height: defRowHeight
                     text: "MaxTime"
                     horizontalAlignment: Text.AlignRight
@@ -275,7 +277,7 @@ Item
                 height: defRowHeight + 2
 
                 Text {
-                    Layout.preferredWidth: 60
+                    Layout.preferredWidth: 70
                     height: defRowHeight
                     text: "AppId"
                     horizontalAlignment: Text.AlignRight
@@ -296,7 +298,7 @@ Item
                 height: defRowHeight + 2
 
                 Text {
-                    Layout.preferredWidth: 60
+                    Layout.preferredWidth: 70
                     height: defRowHeight
                     text: "VLAN Id"
                     horizontalAlignment: Text.AlignRight
@@ -317,7 +319,7 @@ Item
                 height: defRowHeight + 2
 
                 Text {
-                    Layout.preferredWidth: 60
+                    Layout.preferredWidth: 70
                     height: defRowHeight
                     text: "VLAN Pri"
                     horizontalAlignment: Text.AlignRight
@@ -353,7 +355,7 @@ Item
                 Button {
                     Layout.fillWidth: true
                     text: "Enable"
-                    onClicked: sigEnable(gooseIdField.text, datSetField.text)
+                    onClicked: sigEnable(gooseIdField.text, datSetCombo.currentText)
                 }
                 Button {
                     Layout.fillWidth: true

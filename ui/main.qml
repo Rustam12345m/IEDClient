@@ -568,6 +568,12 @@ ApplicationWindow
                             onSigDisable: {
                                 iedBackend.setGOOSEEnable(rcbPageID.selectedRCBIndex, false)
                             }
+                            onSigGoToDataSet: function(dsRef) {
+                                setActivePage(Globals.Page.DS)
+                                Qt.callLater(function() {
+                                    iedBackend.selectDataSetByRef(dsRef)
+                                })
+                            }
 
                             Connections {
                                 target: iedBackend
@@ -586,6 +592,12 @@ ApplicationWindow
                             }
                             onSigDisable: {
                                 iedBackend.setSVEnable(rcbPageID.selectedRCBIndex, false)
+                            }
+                            onSigGoToDataSet: function(dsRef) {
+                                setActivePage(Globals.Page.DS)
+                                Qt.callLater(function() {
+                                    iedBackend.selectDataSetByRef(dsRef)
+                                })
                             }
 
                             Connections {
@@ -682,7 +694,7 @@ ApplicationWindow
 
         title: "About IEDClient"
         dialogWidth: 600
-        dialogHeight: 300
+        dialogHeight: 250
 
         Column {
             anchors {
@@ -774,6 +786,10 @@ ApplicationWindow
     function setActivePage(page) {
         mainStackID.currentIndex = page
         mainTabBarID.currentIndex = page
+
+        if (page === Globals.Page.IED_TREE) {
+            iedBackend.updateWatchlistValues()
+        }
     }
     function setActivePanel(index) {
         if (index == Globals.Panel.HIDE) {

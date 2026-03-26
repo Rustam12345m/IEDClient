@@ -92,6 +92,16 @@ namespace App::Models
             return QVariant("");
         }
 
+        if (m_type == MatrixType::Settings) {
+            switch (column) {
+            case SET_NAME:  return QVariant::fromValue(SortHeaderValue("Name", true));
+            case SET_FC:    return QVariant::fromValue(SortHeaderValue("FC", true));
+            case SET_VALUE: return QVariant::fromValue(SortHeaderValue("Value", true));
+            case SET_DESC:  return QVariant::fromValue(SortHeaderValue("Description", false));
+            }
+            return QVariant("");
+        }
+
         switch (column) {
         case DO_NAME_COLUMN:    return QVariant::fromValue(SortHeaderValue("Name", true));
         case DO_FC_COLUMN:      return QVariant::fromValue(SortHeaderValue("FC", true));
@@ -116,7 +126,9 @@ namespace App::Models
 
     int LN_SignalTable::columnCount(const QModelIndex &parent) const
     {
-        return (m_type == MatrixType::Controls) ? int(CO_COLUMN_COUNT) : int(COLUMN_COUNT);
+        if (m_type == MatrixType::Controls) return int(CO_COLUMN_COUNT);
+        if (m_type == MatrixType::Settings) return int(SET_COLUMN_COUNT);
+        return int(COLUMN_COUNT);
     }
 
     static inline QString orDash(const QString &v)
@@ -145,7 +157,27 @@ namespace App::Models
             return QVariant(" ? ");
         }
 
-        // State / Settings tables — original 6-column layout
+        // Settings table — 4-column layout (no Quality/Timestamp)
+        if (m_type == MatrixType::Settings) {
+            if (role == ComRoles::ROLE_SORT_VALUE) {
+                switch (col) {
+                case SET_NAME:  return QVariant(matrix->name(row));
+                case SET_FC:    return QVariant(matrix->fc(row));
+                case SET_VALUE: return QVariant(orDash(matrix->value(row)));
+                case SET_DESC:  return QVariant(matrix->description(row));
+                }
+            } else {
+                switch (col) {
+                case SET_NAME:  return QVariant(removeSomeParts(matrix->name(row)));
+                case SET_FC:    return QVariant(matrix->fc(row));
+                case SET_VALUE: return QVariant(orDash(matrix->value(row)));
+                case SET_DESC:  return QVariant(matrix->description(row));
+                }
+            }
+            return QVariant(" ? ");
+        }
+
+        // State table — 6-column layout
         if (role == ComRoles::ROLE_SORT_VALUE) {
             switch (col) {
             case DO_NAME_COLUMN:    return QVariant(matrix->name(row));
@@ -179,9 +211,9 @@ namespace App::Models
         auto matrixPtr = getMatrix();
         if (!matrixPtr) return;
         auto matrix = matrixPtr->getRows();
-        int lastCol = (m_type == MatrixType::Controls)
-                          ? (CO_COLUMN_COUNT - 1)
-                          : DO_TS_COLUMN;
+        int lastCol = (m_type == MatrixType::Controls) ? int(CO_COLUMN_COUNT - 1)
+                    : (m_type == MatrixType::Settings) ? int(SET_VALUE)
+                    : int(DO_TS_COLUMN);
         for (size_t i=0;i<matrix.size();i++) {
             if (matrix[i].base().get() == doItem) {
                 emit dataChanged(index(i, 0), index(i, lastCol));
