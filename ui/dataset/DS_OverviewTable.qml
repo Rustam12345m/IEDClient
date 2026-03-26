@@ -149,7 +149,7 @@ FocusScope
                     anchors.fill: parent
                     onClicked: {
                         listViewID.selectedIndex = index
-                        listViewID.focus = true
+                        listViewID.forceActiveFocus()
                     }
                 }
             }

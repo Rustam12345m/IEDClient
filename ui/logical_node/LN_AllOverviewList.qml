@@ -50,6 +50,7 @@ FocusScope
             bottomMargin: 2
         }
         boundsBehavior: Flickable.StopAtBounds
+        flickDeceleration: 100000
         clip: true
         focus: true
 
@@ -118,12 +119,13 @@ FocusScope
                 // LN Name
                 Rectangle {
                     Layout.fillWidth: true
+                    Layout.minimumWidth: 100
                     height: defRowHeight
                     color: "transparent"
 
                     Text {
                         anchors.fill: parent
-                        horizontalAlignment: Text.AlignHCenter
+                        horizontalAlignment: Text.AlignRight
                         verticalAlignment: Text.AlignVCenter
                         elide: Text.ElideRight
                         leftPadding: defTextPadding
@@ -210,6 +212,7 @@ FocusScope
                 anchors.fill: parent
                 onClicked: {
                     listView.currentIndex = index
+                    listView.forceActiveFocus()
                 }
             }
         }

@@ -36,7 +36,8 @@ namespace
 
     inline QString orDash(const QString &v)
     {
-        return v.isEmpty() ? QStringLiteral(" - ") : v;
+        if (v.isEmpty() || v.startsWith("error ")) return QStringLiteral(" - ");
+        return v;
     }
 }
 
@@ -76,12 +77,10 @@ namespace App::Models
     {
         if (orientation != Qt::Horizontal) return QVariant();
         switch (column) {
-        case COL_LN:      return QVariant::fromValue(SortHeaderValue("LN", true));
+        case COL_LN:      return QVariant::fromValue(SortHeaderValue("Name", true));
         case COL_REF:     return QVariant::fromValue(SortHeaderValue("Reference", true));
         case COL_FC:      return QVariant::fromValue(SortHeaderValue("FC", true));
         case COL_VALUE:   return QVariant::fromValue(SortHeaderValue("Value", true));
-        case COL_QUALITY: return QVariant::fromValue(SortHeaderValue("Quality", true));
-        case COL_TS:      return QVariant::fromValue(SortHeaderValue("Timestamp", true));
         case COL_DESC:    return QVariant::fromValue(SortHeaderValue("Description", false));
         }
         return QVariant("");
@@ -104,8 +103,6 @@ namespace App::Models
             case COL_REF:     return QVariant(matrix->name(row));
             case COL_FC:      return QVariant(matrix->fc(row));
             case COL_VALUE:   return QVariant(orDash(matrix->value(row)));
-            case COL_QUALITY: return QVariant(matrix->quality(row));
-            case COL_TS:      return QVariant(matrix->timestamp(row));
             case COL_DESC:    return QVariant(matrix->description(row));
             }
         } else {
@@ -114,8 +111,6 @@ namespace App::Models
             case COL_REF:     return QVariant(removeSomeParts(matrix->name(row)));
             case COL_FC:      return QVariant(matrix->fc(row));
             case COL_VALUE:   return QVariant(orDash(matrix->value(row)));
-            case COL_QUALITY: return QVariant(matrix->quality(row));
-            case COL_TS:      return QVariant(matrix->timestamp(row));
             case COL_DESC:    return QVariant(matrix->description(row));
             }
         }
@@ -132,7 +127,7 @@ namespace App::Models
         auto &rows = matrixPtr->getRows();
         for (int i = 0; i < rows.size(); i++) {
             if (rows[i].base().get() == doItem) {
-                emit dataChanged(index(i, 0), index(i, COL_TS));
+                emit dataChanged(index(i, 0), index(i, COL_VALUE));
             }
         }
     }

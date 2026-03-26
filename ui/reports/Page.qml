@@ -220,7 +220,7 @@ FocusScope
                             delegateHeight: 30
                             selected: (rootID.selectedRCBIndex == row)
 
-                            textAlign: (column === 0) ? Text.AlignHCenter : Text.AlignLeft
+                            textAlign: (column === 0 || column === 1) ? Text.AlignHCenter : Text.AlignLeft
                             text: model.display
 
                             onSigClick: function(row, col) {

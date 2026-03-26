@@ -63,7 +63,7 @@ FocusScope
 
         // Area for LogicalNode's list (all LDs)
         Rectangle {
-            SplitView.preferredWidth: 300
+            SplitView.preferredWidth: 340
             SplitView.fillWidth: false
 
             color: VisualStyle.input.bg

@@ -105,6 +105,7 @@ Item {
 
                 ListView {
                     anchors.fill: parent
+                    anchors.topMargin: 2
 
                     model: rootID.ldValsModel
 
@@ -114,6 +115,7 @@ Item {
 
                         RowLayout {
                             anchors.fill: parent
+                            anchors.leftMargin: 10
                             spacing: 0
 
                             Text {

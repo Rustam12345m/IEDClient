@@ -40,10 +40,8 @@ namespace App::Models
             COL_REF,
             COL_FC,
             COL_VALUE,
-            COL_QUALITY,
-            COL_TS,
             COL_DESC,
-            COLUMN_COUNT = 7
+            COLUMN_COUNT = 5
         };
 
     public:

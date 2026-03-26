@@ -169,11 +169,17 @@ namespace Core
         // LLN0 first with SP+SG+SE
         appendLN(ld->lln0(), {"SP", "SG", "SE"});
 
-        // Then all other LNs with SG+SE only
+        // Then all other LNs: SG first, then SE
         for (size_t i = 0; i < ld->getItemCount(); i++) {
             auto ln = ld->getItem<LogicalNode>(i);
             if (ln && ln != ld->lln0()) {
-                appendLN(ln, {"SG", "SE"});
+                appendLN(ln, {"SG"});
+            }
+        }
+        for (size_t i = 0; i < ld->getItemCount(); i++) {
+            auto ln = ld->getItem<LogicalNode>(i);
+            if (ln && ln != ld->lln0()) {
+                appendLN(ln, {"SE"});
             }
         }
 
