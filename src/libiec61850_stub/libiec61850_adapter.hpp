@@ -52,6 +52,9 @@ namespace Libiec61850
         Cmd::Interface::IED_ControlAPI&    control() override { return m_control; }
         Cmd::Interface::IED_FS_API&        fs() override { return m_fs; }
 
+        uint64_t getTxBytes() const override;
+        uint64_t getRxBytes() const override;
+
     public:
         void     callbackOnCloseEvent();
 

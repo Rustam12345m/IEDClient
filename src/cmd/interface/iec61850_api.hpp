@@ -55,6 +55,10 @@ namespace Cmd::Interface
         virtual IED_ControlAPI& control() = 0;
         virtual IED_FS_API&     fs() = 0;
 
+        // Socket statistics
+        virtual uint64_t getTxBytes() const = 0;
+        virtual uint64_t getRxBytes() const = 0;
+
     signals:
         void sigFoundNode(const QString path);
         void sigConClosed();

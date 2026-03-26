@@ -66,6 +66,56 @@ Rectangle
                 }
             }
         }
+        // TX/RX byte counters
+        RowLayout {
+            spacing: 4
+            visible: appConnStatus.isConnected
+
+            property string txText: "0"
+            property string rxText: "0"
+
+            function formatKB(bytes) {
+                return (bytes / 1024).toFixed(1)
+            }
+
+            Text {
+                text: "\u2191" // ↑
+                color: VisualStyle.statusBar.textColor
+                font.pixelSize: VisualStyle.fontSizeSmall
+                Layout.alignment: Qt.AlignVCenter
+            }
+            Text {
+                id: txValueText
+                text: parent.txText + " KB"
+                color: VisualStyle.statusBar.textColor
+                font.pixelSize: VisualStyle.fontSizeSmall
+                Layout.alignment: Qt.AlignVCenter
+            }
+            Text {
+                text: "\u2193" // ↓
+                color: VisualStyle.statusBar.textColor
+                font.pixelSize: VisualStyle.fontSizeSmall
+                Layout.alignment: Qt.AlignVCenter
+                Layout.leftMargin: 4
+            }
+            Text {
+                id: rxValueText
+                text: parent.rxText + " KB"
+                color: VisualStyle.statusBar.textColor
+                font.pixelSize: VisualStyle.fontSizeSmall
+                Layout.alignment: Qt.AlignVCenter
+            }
+
+            Timer {
+                interval: 1000
+                running: appConnStatus.isConnected
+                repeat: true
+                onTriggered: {
+                    parent.txText = parent.formatKB(presenter.getTxBytes())
+                    parent.rxText = parent.formatKB(presenter.getRxBytes())
+                }
+            }
+        }
         Rectangle {
             Layout.alignment: Qt.AlignVCenter
 

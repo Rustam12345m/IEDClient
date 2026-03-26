@@ -102,6 +102,16 @@ namespace Libiec61850
         return true;
     }
 
+    uint64_t ApiAdapter::getTxBytes() const
+    {
+        return m_libConn ? IedConnection_getTxBytes(m_libConn) : 0;
+    }
+
+    uint64_t ApiAdapter::getRxBytes() const
+    {
+        return m_libConn ? IedConnection_getRxBytes(m_libConn) : 0;
+    }
+
     QString ApiAdapter::getVersion() const
     {
         char *pv = LibIEC61850_getVersionString();

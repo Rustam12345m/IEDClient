@@ -55,6 +55,12 @@ namespace App
         Q_INVOKABLE QString connectionAddress() const {
             return m_con.m_cred.ip() + ":" + QString::number(m_con.m_cred.port());
         }
+        Q_INVOKABLE quint64 getTxBytes() const {
+            return m_con.m_api ? m_con.m_api->getTxBytes() : 0;
+        }
+        Q_INVOKABLE quint64 getRxBytes() const {
+            return m_con.m_api ? m_con.m_api->getRxBytes() : 0;
+        }
 
     public slots:
         void slotCmdEvent(Cmd::CmdEvent ev);

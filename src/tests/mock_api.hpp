@@ -122,6 +122,9 @@ namespace UnitTests
         Cmd::Interface::IED_ControlAPI& control() override { return m_mockControl; }
         Cmd::Interface::IED_FS_API&     fs() override      { return m_mockFS; }
 
+        uint64_t getTxBytes() const override { return 0; }
+        uint64_t getRxBytes() const override { return 0; }
+
         MockControlAPI& mockControl() { return m_mockControl; }
         MockStateAPI&   mockState()   { return m_mockState; }
         MockModelAPI&   mockModel()   { return m_mockModel; }
