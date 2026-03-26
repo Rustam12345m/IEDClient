@@ -44,6 +44,7 @@ ApplicationWindow
     height: 650
 
     property bool hasConnected: false
+    property bool userDisconnect: false
     minimumWidth: 800
     minimumHeight: 600
 
@@ -126,6 +127,7 @@ ApplicationWindow
                     prompt: "Close the connection"
 
                     onSigClicked: function() {
+                        rootWindowID.userDisconnect = true
                         presenter.disconnectFrom()
                     }
                 }
@@ -649,12 +651,12 @@ ApplicationWindow
     Shortcut { sequence: "F5";    onActivated: updateActivePage()      }
     Shortcut { sequence: "F11";   onActivated: toFullscreenMode()      }
     Shortcut { sequence: "Alt+1"; onActivated: setActivePage(Globals.Page.START) }
-    Shortcut { sequence: "Alt+2"; enabled: presenter.isConnected; onActivated: setActivePage(Globals.Page.LD)    }
-    Shortcut { sequence: "Alt+3"; enabled: presenter.isConnected; onActivated: setActivePage(Globals.Page.LN)    }
-    Shortcut { sequence: "Alt+4"; enabled: presenter.isConnected; onActivated: setActivePage(Globals.Page.DS)    }
-    Shortcut { sequence: "Alt+5"; enabled: presenter.isConnected; onActivated: setActivePage(Globals.Page.RCB)   }
-    Shortcut { sequence: "Alt+6"; enabled: presenter.isConnected; onActivated: setActivePage(Globals.Page.IED_TREE) }
-    Shortcut { sequence: "Alt+7"; enabled: presenter.isConnected; onActivated: setActivePage(Globals.Page.FS)       }
+    Shortcut { sequence: "Alt+2"; enabled: hasConnected; onActivated: setActivePage(Globals.Page.LD)    }
+    Shortcut { sequence: "Alt+3"; enabled: hasConnected; onActivated: setActivePage(Globals.Page.LN)    }
+    Shortcut { sequence: "Alt+4"; enabled: hasConnected; onActivated: setActivePage(Globals.Page.DS)    }
+    Shortcut { sequence: "Alt+5"; enabled: hasConnected; onActivated: setActivePage(Globals.Page.RCB)   }
+    Shortcut { sequence: "Alt+6"; enabled: hasConnected; onActivated: setActivePage(Globals.Page.IED_TREE) }
+    Shortcut { sequence: "Alt+7"; enabled: hasConnected; onActivated: setActivePage(Globals.Page.FS)       }
     Shortcut { sequence: "Ctrl+H"; onActivated: showAbotProgramWindow()          }
 
     // Close modal window timer
@@ -912,7 +914,13 @@ ApplicationWindow
         globalProgressBar.finishLoad()
         if (done) {
             rootWindowID.hasConnected = true
+            rootWindowID.userDisconnect = false
             rootWindowID.setActivePage(Globals.Page.LD)
+        } else {
+            if (rootWindowID.hasConnected && !rootWindowID.userDisconnect) {
+                connectionErrorDialog.showError("Connection lost with " + presenter.connectionAddress())
+            }
+            rootWindowID.userDisconnect = false
         }
     }
     function slotStatusMessage() {

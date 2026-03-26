@@ -52,6 +52,9 @@ namespace App
         Q_INVOKABLE void copyToClipboard(const QString &text);
         Q_PROPERTY(bool isConnected READ isConnected NOTIFY sigIEDConChanged)
         bool isConnected() const { return m_con.isConnected(); }
+        Q_INVOKABLE QString connectionAddress() const {
+            return m_con.m_cred.ip() + ":" + QString::number(m_con.m_cred.port());
+        }
 
     public slots:
         void slotCmdEvent(Cmd::CmdEvent ev);
