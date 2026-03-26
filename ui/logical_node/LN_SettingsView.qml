@@ -83,7 +83,7 @@ Item
 
             model: iedBackend.getLN_SettingsModel()
 
-            focus: !rootID.ldViewActive
+            focus: false
             keyNavigationEnabled: true
             reuseItems: true
 

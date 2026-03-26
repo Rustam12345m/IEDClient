@@ -179,6 +179,7 @@ FocusScope
 
                     onSigTabSelected: function(index) {
                         lnSignalsStack.currentIndex = index
+                        tableLN.forceActiveFocus()
                     }
                 }
             }
@@ -199,14 +200,9 @@ FocusScope
 
     onVisibleChanged: {
         if (visible) {
-            tableLN.focus = true
-            tableDO.focus = false
-
+            tableLN.forceActiveFocus()
             lnPageTimer.start()
         } else {
-            tableLN.focus = false
-            tableDO.focus = false
-
             lnPageTimer.stop()
         }
     }

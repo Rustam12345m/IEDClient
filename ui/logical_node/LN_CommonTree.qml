@@ -87,7 +87,7 @@ FocusScope {
 
         model: iedBackend.getLN_TreeModel()
 
-        focus: true
+        focus: false
         clip: true
         interactive: true
         boundsBehavior: Flickable.StopAtBounds

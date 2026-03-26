@@ -68,7 +68,7 @@ Item
 
         model: iedBackend.getLD_SettingsModel()
 
-        focus: true
+        focus: false
         keyNavigationEnabled: true
         reuseItems: true
 

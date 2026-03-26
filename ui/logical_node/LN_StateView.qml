@@ -65,7 +65,7 @@ Item
 
         model: iedBackend.getLN_StateModel()
 
-        focus: true
+        focus: false
         keyNavigationEnabled: true
         reuseItems: true
 
