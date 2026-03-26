@@ -153,9 +153,10 @@ Item
         }
     }
 
-    // Refresh SGCB panel when LD model resets
+    // Force delegate repaint on value updates (Qt6 TableView caching)
     Connections {
         target: tableID.model
+        function onDataChanged() { tableID.forceLayout() }
         function onModelReset() {
             var ldRef = iedBackend.getCurrentSettingsLDRef()
             sgcbPanel.ldRef = ldRef

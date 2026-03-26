@@ -50,7 +50,7 @@ FocusScope
             bottomMargin: 2
         }
         boundsBehavior: Flickable.StopAtBounds
-        flickDeceleration: 100000
+        flickDeceleration: 60000
         clip: true
         focus: true
 

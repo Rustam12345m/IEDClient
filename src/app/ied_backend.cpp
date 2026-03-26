@@ -366,6 +366,7 @@ namespace App
                                     this, &IED_Backend::sigSGCBUpdated, Qt::QueuedConnection);
                             putCmdToQueue(refresh);
                         }
+                        updateLD_SettingsValues();
                     }
                     emit sigWriteResult(ldRef, ok, msg);
                 }, Qt::QueuedConnection);
@@ -386,6 +387,7 @@ namespace App
                                     this, &IED_Backend::sigSGCBUpdated, Qt::QueuedConnection);
                             putCmdToQueue(refresh);
                         }
+                        updateLD_SettingsValues();
                     }
                     emit sigWriteResult(ldRef, ok, msg);
                 }, Qt::QueuedConnection);
@@ -406,6 +408,7 @@ namespace App
                                     this, &IED_Backend::sigSGCBUpdated, Qt::QueuedConnection);
                             putCmdToQueue(refresh);
                         }
+                        updateLD_SettingsValues();
                     }
                     emit sigWriteResult(ldRef, ok, msg);
                 }, Qt::QueuedConnection);
@@ -426,6 +429,7 @@ namespace App
                                     this, &IED_Backend::sigSGCBUpdated, Qt::QueuedConnection);
                             putCmdToQueue(refresh);
                         }
+                        updateLD_SettingsValues();
                     }
                     emit sigWriteResult(ldRef, ok, msg);
                 }, Qt::QueuedConnection);
@@ -470,7 +474,12 @@ namespace App
         connect(cmd.get(), &Cmd::WriteValue_Cmd::sigWriteResult,
                 this, [this](QString r, bool ok, QString msg) {
                     emit sigWriteResult(r, ok, msg);
-                    if (ok) updateLN_TreeValues();
+                    if (ok) {
+                        if (m_ldSettingsModel->getLogicalDevice())
+                            updateLD_SettingsValues();
+                        else
+                            updateLN_TreeValues();
+                    }
                 }, Qt::QueuedConnection);
         putCmdToQueue(cmd);
     }

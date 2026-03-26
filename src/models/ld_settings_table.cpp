@@ -120,14 +120,19 @@ namespace App::Models
     void LD_SettingsTable::slotDataUpdated(Core::ModelItem::ptrList nodes)
     {
         if (!nodes || nodes->empty()) return;
-        Core::ModelItem *doItem = nodes->front();
 
+        // At LogicalDevice level, nodes = [LN, DO, DA, ...].
+        // Match any node against row base (DataObject).
         auto matrixPtr = getMatrix();
         if (!matrixPtr) return;
         auto &rows = matrixPtr->getRows();
         for (int i = 0; i < rows.size(); i++) {
-            if (rows[i].base().get() == doItem) {
-                emit dataChanged(index(i, 0), index(i, COL_VALUE));
+            auto base = rows[i].base().get();
+            for (auto *node : *nodes) {
+                if (node == base) {
+                    emit dataChanged(index(i, 0), index(i, COL_VALUE));
+                    break;
+                }
             }
         }
     }
