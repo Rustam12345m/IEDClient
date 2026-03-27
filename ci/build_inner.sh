@@ -55,18 +55,7 @@ clean_all() {
 }
 
 apply_patches() {
-    cd "$REPO_DIR/3rdparty/libiec61850"
-    for patch in \
-        "$REPO_DIR/3rdparty/libiec61850-svcb.patch" \
-        "$REPO_DIR/3rdparty/libiec61850-socket-stats.patch"; do
-        if [ -f "$patch" ]; then
-            if git apply --check "$patch" 2>/dev/null; then
-                echo "==> Applying $(basename "$patch")..."
-                git apply "$patch"
-            fi
-        fi
-    done
-    cd "$REPO_DIR"
+    "$SCRIPT_DIR/apply_patches.sh"
 }
 
 do_build() {

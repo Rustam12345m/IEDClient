@@ -26,11 +26,7 @@ jobs:
 
       - name: Apply libiec61850 patches
         shell: bash
-        run: |
-          cd 3rdparty/libiec61850
-          for patch in ../../3rdparty/libiec61850-*.patch; do
-            [ -f "$patch" ] && git apply --check "$patch" 2>/dev/null && git apply "$patch" && echo "Applied $(basename $patch)"
-          done
+        run: ci/apply_patches.sh
 
       - name: Configure
         run: >

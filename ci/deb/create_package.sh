@@ -31,6 +31,9 @@ for arg in "$@"; do
     esac
 done
 
+# --- Patches ---
+"$SCRIPT_DIR/../apply_patches.sh"
+
 # --- Build ---
 if ! $NO_BUILD; then
     echo "==> Configuring (RelWithDebInfo)..."
