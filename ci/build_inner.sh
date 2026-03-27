@@ -63,8 +63,6 @@ do_build() {
     shift
     local extra_args=("$@")
 
-    apply_patches
-
     mkdir -p "$BUILD_DIR"
 
     echo "==> Configuring ($cmake_build_type)..."
@@ -161,6 +159,8 @@ if $DO_CLEAN; then
     clean_all
     exit 0
 fi
+
+apply_patches
 
 if $DO_HACK; then
     echo "==> Incremental rebuild..."
