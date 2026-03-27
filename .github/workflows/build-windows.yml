@@ -26,7 +26,14 @@ jobs:
 
       - name: Apply libiec61850 patches
         shell: bash
-        run: ci/apply_patches.sh
+        run: |
+          cd 3rdparty/libiec61850
+          for patch in ../../3rdparty/libiec61850-*.patch; do
+            [ -f "$patch" ] || continue
+            echo "==> Applying $(basename "$patch")..."
+            git apply "$patch" || echo "WARNING: Failed to apply $patch"
+          done
+          cd ../..
 
       - name: Configure
         run: >
