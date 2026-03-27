@@ -27,14 +27,14 @@ jobs:
       - name: Apply libiec61850 patches
         shell: bash
         run: |
-          echo "Listing patches:"
-          ls -la 3rdparty/libiec61850-*.patch || echo "No patches found!"
           cd 3rdparty/libiec61850
+          git config core.autocrlf false
+          git rm -r --cached . -q
+          git checkout -- .
           for patch in "$GITHUB_WORKSPACE"/3rdparty/libiec61850-*.patch; do
             if [ -f "$patch" ]; then
               echo "==> Applying $(basename "$patch")..."
               git apply "$patch"
-              echo "    Applied successfully."
             fi
           done
 
