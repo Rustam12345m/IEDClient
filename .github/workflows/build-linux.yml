@@ -4,8 +4,8 @@ on: [push, pull_request]
 
 jobs:
 
-  test:
-    name: Build and test
+  appimage:
+    name: Test + AppImage
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -13,29 +13,30 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
-      - name: Build Docker image
-        run: docker build -f ci/Dockerfile.Linux -t iedclient:linux ci/
+      - name: Cache Docker image
+        uses: actions/cache@v4
+        id: cache-docker
+        with:
+          path: /tmp/docker-linux.tar
+          key: docker-linux-${{ hashFiles('ci/Dockerfile.Linux') }}
 
-      - name: Build and run tests
+      - name: Build Docker image
+        if: steps.cache-docker.outputs.cache-hit != 'true'
+        run: |
+          docker build -f ci/Dockerfile.Linux -t iedclient:linux ci/
+          docker save iedclient:linux > /tmp/docker-linux.tar
+
+      - name: Load Docker image
+        if: steps.cache-docker.outputs.cache-hit == 'true'
+        run: docker load < /tmp/docker-linux.tar
+
+      - name: Run tests (Debug + sanitizers + linter)
         run: >
           docker run --rm -v ${{ github.workspace }}:/workdir
           iedclient:linux
           /workdir/ci/build_inner.sh --check
 
-  appimage:
-    name: Build AppImage
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          fetch-depth: 0
-
-      - name: Build Docker image
-        run: docker build -f ci/Dockerfile.Linux -t iedclient:linux ci/
-
-      - name: Build and create AppImage + symbols
+      - name: Build AppImage + symbols (Release)
         run: >
           docker run --rm -v ${{ github.workspace }}:/workdir
           iedclient:linux
@@ -62,8 +63,22 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
+      - name: Cache Docker image
+        uses: actions/cache@v4
+        id: cache-docker
+        with:
+          path: /tmp/docker-ubuntu.tar
+          key: docker-ubuntu-${{ hashFiles('ci/Dockerfile.Ubuntu') }}
+
       - name: Build Docker image
-        run: docker build -f ci/Dockerfile.Ubuntu -t iedclient:ubuntu ci/
+        if: steps.cache-docker.outputs.cache-hit != 'true'
+        run: |
+          docker build -f ci/Dockerfile.Ubuntu -t iedclient:ubuntu ci/
+          docker save iedclient:ubuntu > /tmp/docker-ubuntu.tar
+
+      - name: Load Docker image
+        if: steps.cache-docker.outputs.cache-hit == 'true'
+        run: docker load < /tmp/docker-ubuntu.tar
 
       - name: Build and create .deb
         run: >
@@ -86,8 +101,22 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
+      - name: Cache Docker image
+        uses: actions/cache@v4
+        id: cache-docker
+        with:
+          path: /tmp/docker-fedora.tar
+          key: docker-fedora-${{ hashFiles('ci/Dockerfile.Fedora') }}
+
       - name: Build Docker image
-        run: docker build -f ci/Dockerfile.Fedora -t iedclient:fedora ci/
+        if: steps.cache-docker.outputs.cache-hit != 'true'
+        run: |
+          docker build -f ci/Dockerfile.Fedora -t iedclient:fedora ci/
+          docker save iedclient:fedora > /tmp/docker-fedora.tar
+
+      - name: Load Docker image
+        if: steps.cache-docker.outputs.cache-hit == 'true'
+        run: docker load < /tmp/docker-fedora.tar
 
       - name: Build and create .rpm
         run: >
