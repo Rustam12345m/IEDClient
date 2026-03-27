@@ -24,6 +24,14 @@ jobs:
       - name: Install dump_syms
         run: cargo install dump_syms@2.3.6 --locked
 
+      - name: Apply libiec61850 patches
+        shell: bash
+        run: |
+          cd 3rdparty/libiec61850
+          for patch in ../../3rdparty/libiec61850-*.patch; do
+            [ -f "$patch" ] && git apply --check "$patch" 2>/dev/null && git apply "$patch" && echo "Applied $(basename $patch)"
+          done
+
       - name: Configure
         run: >
           cmake -S . -B build
