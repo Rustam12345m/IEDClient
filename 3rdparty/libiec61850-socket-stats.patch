@@ -5,7 +5,7 @@ index 3b5490a5..1334f8ad 100644
 @@ -382,6 +382,12 @@ Socket_getPeerAddressStatic(Socket self, char* peerAddressString);
  PAL_API void
  Socket_destroy(Socket self);
-
+ 
 +PAL_API uint64_t
 +Socket_getTxBytes(Socket self);
 +
@@ -13,7 +13,7 @@ index 3b5490a5..1334f8ad 100644
 +Socket_getRxBytes(Socket self);
 +
  /*! @} */
-
+ 
  /*! @} */
 diff --git a/hal/socket/linux/socket_linux.c b/hal/socket/linux/socket_linux.c
 index ce435cd8..06a04048 100644
@@ -26,7 +26,7 @@ index ce435cd8..06a04048 100644
 +    uint64_t txBytes;
 +    uint64_t rxBytes;
  };
-
+ 
  struct sServerSocket
 @@ -451,6 +453,8 @@ TcpSocket_create()
          {
@@ -34,18 +34,18 @@ index ce435cd8..06a04048 100644
              self->connectTimeout = 5000;
 +            self->txBytes = 0;
 +            self->rxBytes = 0;
-
+ 
  #if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 37)
              int tcpUserTimeout = 10000;
 @@ -757,6 +761,8 @@ Socket_read(Socket self, uint8_t* buf, int size)
          }
      }
-
+ 
 +    self->rxBytes += read_bytes;
 +
      return read_bytes;
  }
-
+ 
 @@ -781,10 +787,30 @@ Socket_write(Socket self, uint8_t* buf, int size)
                  printf("DEBUG_SOCKET: send returned error (errno=%i)\n", errno);
          }
@@ -54,10 +54,10 @@ index ce435cd8..06a04048 100644
 +    {
 +        self->txBytes += retVal;
 +    }
-
+ 
      return retVal;
  }
-
+ 
 +uint64_t
 +Socket_getTxBytes(Socket self)
 +{
@@ -88,7 +88,7 @@ index 6f6b6c78..ac1e20f8 100644
 +    uint64_t txBytes;
 +    uint64_t rxBytes;
  };
-
+ 
  struct sServerSocket
 @@ -372,6 +374,8 @@ TcpSocket_create()
          {
@@ -96,18 +96,18 @@ index 6f6b6c78..ac1e20f8 100644
              self->connectTimeout = 5000;
 +            self->txBytes = 0;
 +            self->rxBytes = 0;
-
+ 
              socketCount++;
          }
 @@ -670,6 +674,8 @@ Socket_read(Socket self, uint8_t* buf, int size)
              return -1;
      }
-
+ 
 +    self->rxBytes += bytes_read;
 +
      return bytes_read;
  }
-
+ 
 @@ -687,10 +693,30 @@ Socket_write(Socket self, uint8_t* buf, int size)
          else
              bytes_sent = -1;
@@ -116,10 +116,10 @@ index 6f6b6c78..ac1e20f8 100644
 +    {
 +        self->txBytes += bytes_sent;
 +    }
-
+ 
      return bytes_sent;
  }
-
+ 
 +uint64_t
 +Socket_getTxBytes(Socket self)
 +{
@@ -140,16 +140,16 @@ index 6f6b6c78..ac1e20f8 100644
  Socket_destroy(Socket self)
  {
 diff --git a/src/iec61850/client/ied_connection.c b/src/iec61850/client/ied_connection.c
-index a6309296..b7c3e1f0 100644
+index a6309296..aa3192ce 100644
 --- a/src/iec61850/client/ied_connection.c
 +++ b/src/iec61850/client/ied_connection.c
 @@ -30,6 +30,8 @@
-
+ 
  #include "ied_connection_private.h"
  #include "mms_value_internal.h"
 +#include "mms_client_internal.h"
 +#include "iso_client_connection.h"
-
+ 
  #define DEFAULT_CONNECTION_TIMEOUT 10000
  #define DATA_SET_MAX_NAME_LENGTH 64 /* is 32 according to standard! */
 @@ -4711,3 +4713,19 @@ FileDirectoryEntry_getLastModified(FileDirectoryEntry self)
@@ -177,9 +177,9 @@ index 9014a192..e27ddcb3 100644
 --- a/src/iec61850/inc/iec61850_client.h
 +++ b/src/iec61850/inc/iec61850_client.h
 @@ -3153,6 +3153,18 @@ IedConnection_deleteFileAsync(IedConnection self, IedClientError* error, const c
-
+ 
  /**@}*/
-
+ 
 +/**
 + * \brief Get cumulative bytes sent on the underlying socket
 + */
@@ -202,14 +202,14 @@ index 9a09b4f9..e73d6f27 100644
 @@ -106,6 +106,12 @@ IsoClientConnection_allocateTransmitBuffer(IsoClientConnection self);
  LIB61850_INTERNAL void
  IsoClientConnection_releaseTransmitBuffer(IsoClientConnection self);
-
+ 
 +LIB61850_INTERNAL uint64_t
 +IsoClientConnection_getTxBytes(IsoClientConnection self);
 +
 +LIB61850_INTERNAL uint64_t
 +IsoClientConnection_getRxBytes(IsoClientConnection self);
 +
-
+ 
  #ifdef __cplusplus
  }
 diff --git a/src/mms/iso_client/iso_client_connection.c b/src/mms/iso_client/iso_client_connection.c
