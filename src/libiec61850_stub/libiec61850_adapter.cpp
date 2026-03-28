@@ -24,6 +24,16 @@
 extern "C"
 {
 #include <iec61850_client.h>
+
+// Socket byte counters — provided by libiec61850-socket-stats.patch.
+// Declared here so the adapter compiles even if the patch is not applied.
+// When the patch IS applied, these match the declarations in iec61850_client.h.
+#ifndef IedConnection_getTxBytes
+extern "C" {
+    uint64_t IedConnection_getTxBytes(IedConnection self) __attribute__((weak));
+    uint64_t IedConnection_getRxBytes(IedConnection self) __attribute__((weak));
+}
+#endif
 }
 
 namespace Libiec61850
@@ -104,12 +114,16 @@ namespace Libiec61850
 
     uint64_t ApiAdapter::getTxBytes() const
     {
-        return m_libConn ? IedConnection_getTxBytes(m_libConn) : 0;
+        if (m_libConn && IedConnection_getTxBytes)
+            return IedConnection_getTxBytes(m_libConn);
+        return 0;
     }
 
     uint64_t ApiAdapter::getRxBytes() const
     {
-        return m_libConn ? IedConnection_getRxBytes(m_libConn) : 0;
+        if (m_libConn && IedConnection_getRxBytes)
+            return IedConnection_getRxBytes(m_libConn);
+        return 0;
     }
 
     QString ApiAdapter::getVersion() const
