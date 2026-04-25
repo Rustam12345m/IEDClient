@@ -92,3 +92,9 @@ squashfs-root*/
 
 # Private/internal project docs
 docs/project/
+docs/rules/
+docs/tasks/
+
+# Local-only assistant context (never push)
+CLAUDE.md
+memory/

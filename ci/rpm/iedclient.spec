@@ -24,5 +24,5 @@ install -Dm644 %{script_dir}/iedclient.desktop    %{buildroot}/usr/share/applica
 /usr/share/applications/iedclient.desktop
 
 %changelog
-* Mon Mar 09 2026 IEDClient Project <> - 0.0.1-1
-- Initial package
+* Fri Apr 25 2026 IEDClient Project <> - 1.0.0-1
+- First public release

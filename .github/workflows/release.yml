@@ -1,0 +1,233 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+
+  linux-appimage:
+    name: Linux AppImage + symbols
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Cache Docker image
+        uses: actions/cache@v4
+        id: cache-docker
+        with:
+          path: /tmp/docker-linux.tar
+          key: docker-linux-${{ hashFiles('ci/Dockerfile.Linux') }}
+
+      - name: Build Docker image
+        if: steps.cache-docker.outputs.cache-hit != 'true'
+        run: |
+          docker build -f ci/Dockerfile.Linux -t iedclient:linux ci/
+          docker save iedclient:linux > /tmp/docker-linux.tar
+
+      - name: Load Docker image
+        if: steps.cache-docker.outputs.cache-hit == 'true'
+        run: docker load < /tmp/docker-linux.tar
+
+      - name: Run tests (Debug + sanitizers + linter)
+        run: >
+          docker run --rm -v ${{ github.workspace }}:/workdir
+          iedclient:linux
+          /workdir/ci/build_inner.sh --check
+
+      - name: Build AppImage + symbols (Release)
+        run: >
+          docker run --rm -v ${{ github.workspace }}:/workdir
+          iedclient:linux
+          /workdir/ci/build_inner.sh --release --archive --symbols
+
+      - name: Upload AppImage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-linux-appimage
+          path: dist/*.AppImage
+
+      - name: Upload Linux symbols artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-linux-symbols
+          path: dist/*_syms_*.zip
+
+  linux-deb:
+    name: .deb package
+    needs: linux-appimage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Cache Docker image
+        uses: actions/cache@v4
+        id: cache-docker
+        with:
+          path: /tmp/docker-ubuntu.tar
+          key: docker-ubuntu-${{ hashFiles('ci/Dockerfile.Ubuntu') }}
+
+      - name: Build Docker image
+        if: steps.cache-docker.outputs.cache-hit != 'true'
+        run: |
+          docker build -f ci/Dockerfile.Ubuntu -t iedclient:ubuntu ci/
+          docker save iedclient:ubuntu > /tmp/docker-ubuntu.tar
+
+      - name: Load Docker image
+        if: steps.cache-docker.outputs.cache-hit == 'true'
+        run: docker load < /tmp/docker-ubuntu.tar
+
+      - name: Build .deb
+        run: >
+          docker run --rm -v ${{ github.workspace }}:/workdir
+          iedclient:ubuntu
+          /workdir/ci/deb/create_package.sh
+
+      - name: Upload .deb artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-linux-deb
+          path: dist/*.deb
+
+  linux-rpm:
+    name: .rpm package
+    needs: linux-appimage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Cache Docker image
+        uses: actions/cache@v4
+        id: cache-docker
+        with:
+          path: /tmp/docker-fedora.tar
+          key: docker-fedora-${{ hashFiles('ci/Dockerfile.Fedora') }}
+
+      - name: Build Docker image
+        if: steps.cache-docker.outputs.cache-hit != 'true'
+        run: |
+          docker build -f ci/Dockerfile.Fedora -t iedclient:fedora ci/
+          docker save iedclient:fedora > /tmp/docker-fedora.tar
+
+      - name: Load Docker image
+        if: steps.cache-docker.outputs.cache-hit == 'true'
+        run: docker load < /tmp/docker-fedora.tar
+
+      - name: Build .rpm
+        run: >
+          docker run --rm -v ${{ github.workspace }}:/workdir
+          iedclient:fedora
+          /workdir/ci/rpm/create_package.sh
+
+      - name: Upload .rpm artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-linux-rpm
+          path: dist/*.rpm
+
+  windows-zip:
+    name: Windows zip + symbols
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: '6.8.*'
+          arch: win64_mingw
+          tools: tools_mingw1310
+
+      - name: Install dump_syms
+        run: cargo install dump_syms@2.3.6 --locked
+
+      - name: Apply libiec61850 patches
+        shell: bash
+        run: ci/apply_patches.sh
+
+      - name: Configure
+        run: >
+          cmake -S . -B build
+          -G "MinGW Makefiles"
+          -DCMAKE_BUILD_TYPE=RelWithDebInfo
+          -DCMAKE_INSTALL_PREFIX=install
+          -DBUILD_TESTS=OFF
+
+      - name: Build
+        run: cmake --build build --parallel
+
+      - name: Install
+        run: cmake --install build
+
+      - name: Deploy Qt DLLs
+        run: |
+          New-Item -ItemType Directory -Force -Path dist\IEDClient
+          Copy-Item install\bin\IEDClient.exe dist\IEDClient\
+          windeployqt6 --qmldir ui --release dist\IEDClient\IEDClient.exe
+
+      - name: Create zip
+        run: Compress-Archive -Path dist\IEDClient -DestinationPath dist\IEDClient-windows-x86_64.zip
+
+      - name: Extract symbols
+        shell: bash
+        run: |
+          dump_syms install/bin/IEDClient.exe > IEDClient.sym
+          BUILD_ID=$(head -1 IEDClient.sym | awk '{print $4}')
+          mkdir -p dist/symbols/IEDClient.exe/$BUILD_ID/
+          cp IEDClient.sym dist/symbols/IEDClient.exe/$BUILD_ID/IEDClient.exe.sym
+
+      - name: Create symbols zip
+        run: |
+          $version = (Select-String -Path CMakeLists.txt -Pattern 'VERSION "(.+)"').Matches.Groups[1].Value
+          Compress-Archive -Path dist\symbols -DestinationPath dist\IEDClient_syms_windows_$version.zip
+
+      - name: Upload Windows zip artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-windows-zip
+          path: dist\IEDClient-windows-x86_64.zip
+
+      - name: Upload Windows symbols artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-windows-symbols
+          path: dist\*_syms_windows_*.zip
+
+  publish:
+    name: Publish GitHub Release
+    needs: [linux-appimage, linux-deb, linux-rpm, windows-zip]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          pattern: release-*
+          merge-multiple: true
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            --title "$GITHUB_REF_NAME" \
+            --notes-file CHANGELOG \
+            artifacts/*

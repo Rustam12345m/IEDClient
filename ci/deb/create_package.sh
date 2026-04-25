@@ -59,7 +59,7 @@ fi
 
 # --- Package metadata ---
 PKG_NAME="iedclient"
-PKG_VERSION="0.0.1"
+PKG_VERSION="1.0.0"
 PKG_ARCH=$(dpkg --print-architecture)
 PKG_DIR="$DIST_DIR/${PKG_NAME}_${PKG_VERSION}_${PKG_ARCH}"
 

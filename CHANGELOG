@@ -1,3 +1,60 @@
-Changes to version 0.0.1
+Changes to version 1.0.0
 ------------------------
-- 
+
+Connection
+- MMS connect / disconnect over TCP (port 102) and TLS (port 443)
+- Recent connections list, persisted in iedclient_config.xml
+- Connection-lost modal and event log
+
+Data model
+- Full IEC 61850 model browser: LD, LN, DO, DA, SubAttribute
+- FC-aware tree (correct handling of duplicate DA names per FC)
+- Live values for ST and MX attributes with quality and timestamps
+- IED tree page with recursive dot-path filter
+- Per-device watchlist, persisted in iedclient_config.xml
+
+Logical Devices
+- LD grid with Mod / Beh / Health / Sim / Blk status indicators
+- LD properties panel and right-click navigation to LN / DS / RCB
+
+Logical Nodes
+- STATE tab with sortable, copyable signal table
+- CONTROLS tab: Direct and SBO control models
+- Control dialog with Origin (orCat / orIdent), Test, Interlock, Synchrocheck
+- CommandTermination handler for Enhanced Security models (ctlModel 3, 4)
+- SETTINGS tab: SP / SE / SG attributes, double-click to write
+- Setting Group Control Block (SGCB) panel: Set Active SG, Start Edit, Confirm Edit, Cancel Edit
+- TREE tab with per-LN DO / DA / SubAttribute hierarchy
+
+DataSets
+- Browse datasets across all LDs with live signal values
+- [object] expansion for structured values
+
+Reports / GOOSE / SV
+- BRCB and URCB enable / disable, configure RptID, DataSet, TrgOps, BufTm, IntgPd
+- Async report reception with per-RCB storage (100-entry circular buffer)
+- GOOSE control blocks: GoID and DataSet editable, network params read-only
+- Sampled Values control blocks: enable / disable
+- Arrow-button navigation from RCB / GOOSE / SV panels to bound dataset
+
+Files
+- IED file system browse with sortable name / size / date columns
+- Download with per-row progress
+- Delete with confirmation
+
+UI / UX
+- Tab navigation with Alt+1..7 shortcuts
+- Global F5 refresh, F11 fullscreen, F1 / Ctrl+H about
+- Ctrl+C copies any selected table row
+- Ctrl+E opens event log
+- Embedded Noto Sans Mono for consistent rendering
+- TX / RX byte counters in status bar
+
+Tooling
+- MMS Dump tool: snapshot IED data model to text file
+- Crash reporting via Google Breakpad with separately published symbol archives
+
+Build / packaging
+- Linux: AppImage, .deb, .rpm
+- Windows: portable .zip
+- Docker-based reproducible builds via ci/build_local.sh
