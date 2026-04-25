@@ -34,6 +34,7 @@ Build options (passed to ci/build_inner.sh inside the container):
   --release         RelWithDebInfo build (default if no build type given)
   --debug           Debug build
   --check           Debug + clang-tidy + sanitizers
+  --rebuild         Incremental rebuild only (no clean, no reconfigure)
   --archive         Create self-contained AppImage (default when no flags given)
 
 Local options:

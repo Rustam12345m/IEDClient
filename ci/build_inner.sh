@@ -6,7 +6,7 @@
 #   ./ci/build_inner.sh --release             # RelWithDebInfo build
 #   ./ci/build_inner.sh --debug               # Debug build
 #   ./ci/build_inner.sh --check               # Debug + sanitizers + linter
-#   ./ci/build_inner.sh --hack                # Incremental rebuild (no clean)
+#   ./ci/build_inner.sh --rebuild             # Incremental rebuild (no clean)
 #   ./ci/build_inner.sh --release --archive   # Build and create AppImage
 #   ./ci/build_inner.sh --archive             # Package an existing build into AppImage
 #   ./ci/build_inner.sh --clean               # Remove all build artifacts
@@ -26,7 +26,7 @@ BUILD_TYPE=""
 DO_ARCHIVE=false
 DO_SYMBOLS=false
 DO_CLEAN=false
-DO_HACK=false
+DO_REBUILD=false
 
 usage() {
     cat <<EOF
@@ -36,7 +36,7 @@ Build options:
   --release     RelWithDebInfo build
   --debug       Debug build
   --check       Debug + clang-tidy + sanitizers (undefined, leak)
-  --hack        Incremental rebuild only (no clean)
+  --rebuild     Incremental rebuild only (no clean)
 
 Other options:
   --archive     Create self-contained AppImage (binary + libs + Qt plugins)
@@ -144,7 +144,7 @@ while [ "$1" != "" ]; do
         --release)  BUILD_TYPE="release" ;;
         --debug)    BUILD_TYPE="debug" ;;
         --check)    BUILD_TYPE="check" ;;
-        --hack)     DO_HACK=true ;;
+        --rebuild)  DO_REBUILD=true ;;
         --archive)  DO_ARCHIVE=true ;;
         --symbols)  DO_SYMBOLS=true ;;
         --clean)    DO_CLEAN=true ;;
@@ -162,7 +162,7 @@ fi
 
 apply_patches
 
-if $DO_HACK; then
+if $DO_REBUILD; then
     echo "==> Incremental rebuild..."
     cmake --build "$BUILD_DIR" -j "$NPROC"
     cmake --install "$BUILD_DIR" > /dev/null

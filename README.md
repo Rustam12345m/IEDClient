@@ -38,7 +38,7 @@ git submodule update --init --recursive
 
 # Other build modes
 ./ci/build_local.sh --check             # Debug + sanitizers + linter + tests
-./ci/build_local.sh --hack --check      # Incremental rebuild + tests
+./ci/build_local.sh --rebuild --check   # Incremental rebuild + tests
 ./ci/build_local.sh --debug             # Debug build
 ./ci/build_local.sh --rebuild-image     # Force rebuild the Docker image
 ```
