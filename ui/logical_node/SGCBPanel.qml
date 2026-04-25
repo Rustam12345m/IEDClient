@@ -81,7 +81,6 @@ Item {
             ComboBox {
                 id: actSGCombo
                 model: buildModel(rootID.numOfSG)
-                currentIndex: rootID.actSG - 1
                 implicitWidth: 60
             }
             Button {
@@ -99,7 +98,6 @@ Item {
             ComboBox {
                 id: editSGCombo
                 model: buildModel(rootID.numOfSG)
-                currentIndex: rootID.editSG > 0 ? rootID.editSG - 1 : 0
                 implicitWidth: 60
                 enabled: rootID.editSG === 0
             }
@@ -133,6 +131,22 @@ Item {
             color: rootID.editSG > 0 ? "#2e7d32" : VisualStyle.textColor
             visible: rootID.statusMsg.length > 0
         }
+    }
+
+    // ComboBox writes to currentIndex internally when model count changes,
+    // which severs an inline `currentIndex:` binding. Use Binding elements
+    // so rebuilds from refresh() stay reflected in the UI.
+    Binding {
+        target: actSGCombo
+        property: "currentIndex"
+        value: rootID.actSG - 1
+        when: rootID.numOfSG > 0
+    }
+    Binding {
+        target: editSGCombo
+        property: "currentIndex"
+        value: rootID.editSG > 0 ? rootID.editSG - 1 : 0
+        when: rootID.numOfSG > 0
     }
 
     Connections {
