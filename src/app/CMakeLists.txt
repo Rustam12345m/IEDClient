@@ -5,6 +5,9 @@ set(APP_SOURCES
     app_utils.hpp
     app_utils.cpp
 
+    app_logging.hpp
+    app_logging.cpp
+
     app_settings.hpp
     app_settings.cpp
 

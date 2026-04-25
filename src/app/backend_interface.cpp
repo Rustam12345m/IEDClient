@@ -21,6 +21,8 @@
 
 #include "backend_interface.hpp"
 
+#include <QDebug>
+
 namespace App
 {
     void BackendInterface::putCmdToQueue(Cmd::CmdInterface::ptr cmd)
@@ -46,6 +48,9 @@ namespace App
         case Cmd::FINISH_EVENT: {
             emit sigCmdFinished(ev.m_result);
             if (!ev.m_result) {
+                qWarning().noquote()
+                    << "Command failed:" << ev.m_msg
+                    << "(ip:" << ev.m_ip << ")";
                 emit sigCmdError(ev.m_msg);
             }
             break;

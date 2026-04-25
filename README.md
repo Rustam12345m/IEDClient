@@ -57,11 +57,21 @@ Output:
 | [Google Test](https://github.com/google/googletest) | Unit testing framework |
 | [Noto Sans Mono](https://fonts.google.com/noto/specimen/Noto+Sans+Mono) | Embedded monospace font |
 
-## Crash Reporting
+## Logs and Crash Reporting
 
-Crash dumps are saved to `~/.local/share/IEDClient/crashes/` (Linux) or `%LOCALAPPDATA%\IEDClient\crashes\` (Windows). Symbol archives are published alongside release builds.
+IEDClient writes both kinds of forensic data to the same per-user data directory:
 
-See [docs/crash_analysis.md](docs/crash_analysis.md) for analysis instructions.
+| Platform | Location |
+|----------|----------|
+| Linux    | `~/.local/share/IEDClient/` |
+| Windows  | `%LOCALAPPDATA%\IEDClient\` |
+
+Inside that directory:
+
+- `logs/iedclient.log` — running log of connection events, command failures, and warnings. Rotates to `iedclient.log.1` once it crosses 1 MB; only the most recent two files are kept.
+- `crashes/*.dmp` — Breakpad minidumps written if the app crashes. Symbol archives are published alongside each release for offline analysis.
+
+See [docs/crash_analysis.md](docs/crash_analysis.md) for crash dump analysis instructions.
 
 ## Documentation
 
@@ -71,9 +81,11 @@ See [docs/crash_analysis.md](docs/crash_analysis.md) for analysis instructions.
 
 If you encounter a bug, please [open an issue](../../issues) with:
 
-1. Application version (shown in the title bar)
+1. Application version (shown in the About dialog: F1 or Ctrl+H)
 2. Steps to reproduce
-3. Screenshots if applicable
+3. The latest `logs/iedclient.log` (and `iedclient.log.1` if present)
+4. Any `crashes/*.dmp` if the app crashed
+5. Screenshots if applicable
 
 ## License
 

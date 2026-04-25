@@ -33,7 +33,9 @@
 #include <QQuickStyle>
 #include <iostream>
 
+#include "app/app_logging.hpp"
 #include "app/main_presenter.hpp"
+#include "version.hpp"
 
 #if defined(BREAKPAD_LINUX)
 #include "client/linux/handler/exception_handler.h"
@@ -86,6 +88,10 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationDomain("opensource.org");
     QCoreApplication::setApplicationName("IEDClient");
     QThread::currentThread()->setObjectName("GUI");
+
+    App::installLogHandler();
+    qInfo() << "IEDClient" << PROJECT_VERSION
+            << "starting; log file:" << App::logFilePath();
 
     // Singletons
     qmlRegisterSingletonType(QUrl("qrc:/singletons/Globals.qml"), "GlobalVarsModule", 1, 0, "Globals");

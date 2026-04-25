@@ -21,6 +21,8 @@
 
 #include "libiec61850_adapter.hpp"
 
+#include <QDebug>
+
 extern "C"
 {
 #include <iec61850_client.h>
@@ -32,6 +34,7 @@ namespace Libiec61850
     {
         void     callback_ConnectionHandler(void *param, sIedConnection *con)
         {
+            qWarning() << "libiec61850: connection closed by server / network";
             ApiAdapter *adapter = static_cast<ApiAdapter*>(param);
             if (adapter != nullptr) {
                 adapter->callbackOnCloseEvent();
@@ -60,6 +63,8 @@ namespace Libiec61850
     {
         IedClientError retval = IED_ERROR_OK;
 
+        qInfo().noquote() << "Connecting to" << creds.ip() << ":" << creds.port();
+
         m_libConn = IedConnection_create();
         IedConnection_connect(m_libConn, &retval, creds.ip().toStdString().c_str(), creds.port());
         if (retval == IED_ERROR_OK) {
@@ -67,7 +72,13 @@ namespace Libiec61850
             IedConnection_installConnectionClosedHandler(m_libConn, &callback_ConnectionHandler, this);
 
             IedConnection_getDeviceModelFromServer(m_libConn, &retval);
+            if (retval != IED_ERROR_OK) {
+                qWarning().noquote() << "getDeviceModelFromServer failed (code"
+                                     << static_cast<int>(retval) << "):" << iedErrorToString(retval);
+            }
         } else {
+            qWarning().noquote() << "IedConnection_connect failed (code"
+                                 << static_cast<int>(retval) << "):" << iedErrorToString(retval);
             IedConnection_destroy(m_libConn);
             m_libConn = nullptr;
             return iedErrorToString(retval);
