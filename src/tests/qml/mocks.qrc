@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/mocks">
+        <file alias="MockIedBackend.qml">mocks/MockIedBackend.qml</file>
+        <file alias="MockAppBackend.qml">mocks/MockAppBackend.qml</file>
+        <file alias="MockPresenter.qml">mocks/MockPresenter.qml</file>
+        <file alias="MockFsBackend.qml">mocks/MockFsBackend.qml</file>
+    </qresource>
+</RCC>

@@ -24,6 +24,7 @@ find_package(Qt6 REQUIRED COMPONENTS
     Quick
     QuickControls2
     QuickTemplates2
+    QuickTest
     Test
 )
 qt_standard_project_setup()
