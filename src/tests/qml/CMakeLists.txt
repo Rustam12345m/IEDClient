@@ -8,6 +8,16 @@ set(QML_TEST_SOURCES
 # We want Test_* — so list each file here and pass it with -input.
 set(QML_TEST_FILES
     Test_Smoke.qml
+    Test_DiaControlOperate.qml
+    Test_DiaChangeValue.qml
+    Test_SGCBPanel.qml
+    Test_LN_SettingsView.qml
+    Test_LD_SettingsContent.qml
+    Test_HomePage.qml
+    Test_DatasetPage.qml
+    Test_ReportsPage.qml
+    Test_IedTreePage.qml
+    Test_FilesystemPage.qml
 )
 
 # Production UI resources: gives tests access to qrc:/logical_node/…,
