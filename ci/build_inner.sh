@@ -3,12 +3,12 @@
 # (either a Docker container or a host with all dependencies installed).
 #
 # Usage:
-#   ./ci/build_inner.sh --release             # RelWithDebInfo build
+#   ./ci/build_inner.sh --release             # RelWithDebInfo build (symbols auto)
 #   ./ci/build_inner.sh --debug               # Debug build
 #   ./ci/build_inner.sh --check               # Debug + sanitizers + linter
 #   ./ci/build_inner.sh --rebuild             # Incremental rebuild (no clean)
-#   ./ci/build_inner.sh --release --archive   # Build and create AppImage
-#   ./ci/build_inner.sh --archive             # Package an existing build into AppImage
+#   ./ci/build_inner.sh --release --appimage  # Build + symbols + AppImage
+#   ./ci/build_inner.sh --appimage            # Package an existing build into AppImage
 #   ./ci/build_inner.sh --clean               # Remove all build artifacts
 #
 # For building inside Docker from your host, use ci/build_local.sh instead.
@@ -23,7 +23,7 @@ DIST_DIR="$REPO_DIR/dist"
 NPROC=$(nproc 2>/dev/null || echo 4)
 
 BUILD_TYPE=""
-DO_ARCHIVE=false
+DO_APPIMAGE=false
 DO_SYMBOLS=false
 DO_CLEAN=false
 DO_REBUILD=false
@@ -39,12 +39,12 @@ Build options:
   --rebuild     Incremental rebuild only (no clean)
 
 Other options:
-  --archive     Create self-contained AppImage (binary + libs + Qt plugins)
-  --symbols     Extract Breakpad symbols from the binary (for crash dump analysis)
+  --appimage    Create self-contained AppImage (binary + libs + Qt plugins)
+  --symbols     Extract Breakpad symbols from the binary (auto-enabled with --release)
   --clean       Remove build/, install/, and dist/ directories
   --help        Show this help
 
-Options can be combined:  $0 --release --archive --symbols
+Options can be combined:  $0 --release --appimage
 EOF
     exit 0
 }
@@ -145,7 +145,7 @@ while [ "$1" != "" ]; do
         --debug)    BUILD_TYPE="debug" ;;
         --check)    BUILD_TYPE="check" ;;
         --rebuild)  DO_REBUILD=true ;;
-        --archive)  DO_ARCHIVE=true ;;
+        --appimage) DO_APPIMAGE=true ;;
         --symbols)  DO_SYMBOLS=true ;;
         --clean)    DO_CLEAN=true ;;
         --help|-h)  usage ;;
@@ -153,6 +153,11 @@ while [ "$1" != "" ]; do
     esac
     shift
 done
+
+# Symbols are always produced for release builds (needed for crash dump analysis).
+if [ "$BUILD_TYPE" = "release" ]; then
+    DO_SYMBOLS=true
+fi
 
 # --- Execute ---
 if $DO_CLEAN; then
@@ -188,7 +193,7 @@ if [ "$BUILD_TYPE" = "check" ]; then
     cd "$BUILD_DIR" && ctest --output-on-failure && cd "$REPO_DIR"
 fi
 
-if $DO_ARCHIVE; then
+if $DO_APPIMAGE; then
     do_appimage
 fi
 

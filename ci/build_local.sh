@@ -2,12 +2,12 @@
 # Build IEDClient inside a Docker/Podman container and store artifacts locally.
 #
 # Usage:
-#   ./ci/build_local.sh                     # RelWithDebInfo build + package
-#   ./ci/build_local.sh --debug             # Debug build + package
-#   ./ci/build_local.sh --check             # Debug + sanitizers + linter
-#   ./ci/build_local.sh --release           # RelWithDebInfo build only (no package)
-#   ./ci/build_local.sh --release --archive # Explicit build + package
-#   ./ci/build_local.sh --rebuild-image     # Force rebuild the container image
+#   ./ci/build_local.sh                      # RelWithDebInfo build + AppImage
+#   ./ci/build_local.sh --debug              # Debug build + package
+#   ./ci/build_local.sh --check              # Debug + sanitizers + linter
+#   ./ci/build_local.sh --release            # RelWithDebInfo build only (no package)
+#   ./ci/build_local.sh --release --appimage # Explicit build + AppImage
+#   ./ci/build_local.sh --rebuild-image      # Force rebuild the container image
 #
 # Environment:
 #   DOCKER=podman ./ci/build_local.sh       # Use podman instead of docker
@@ -35,7 +35,7 @@ Build options (passed to ci/build_inner.sh inside the container):
   --debug           Debug build
   --check           Debug + clang-tidy + sanitizers
   --rebuild         Incremental rebuild only (no clean, no reconfigure)
-  --archive         Create self-contained AppImage (default when no flags given)
+  --appimage        Create self-contained AppImage (default when no flags given)
 
 Local options:
   --rebuild-image   Force rebuild the container image before building
@@ -45,7 +45,7 @@ Environment variables:
   DOCKER            Container runtime to use (default: podman)
                     Example: DOCKER=docker $0 --release
 
-When called with no arguments, runs: --release --archive
+When called with no arguments, runs: --release --appimage
 
 Artifacts are stored in:
   install/          Installed build output (binary, headers)
@@ -109,9 +109,9 @@ while [ "$1" != "" ]; do
     shift
 done
 
-# Default: --release --archive when no build arguments given
+# Default: --release --appimage when no build arguments given
 if [ ${#BUILD_ARGS[@]} -eq 0 ]; then
-    BUILD_ARGS=(--release --archive)
+    BUILD_ARGS=(--release --appimage)
 fi
 
 init_submodules

@@ -40,7 +40,7 @@ jobs:
         run: >
           docker run --rm -v ${{ github.workspace }}:/workdir
           iedclient:linux
-          /workdir/ci/build_inner.sh --release --archive --symbols
+          /workdir/ci/build_inner.sh --release --appimage
 
       - name: Upload AppImage
         uses: actions/upload-artifact@v4
